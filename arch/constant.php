@@ -19,5 +19,4 @@
 	 const db_charset = 'utf8';
  }
  
- echo Constant::db_name;
  ?>
