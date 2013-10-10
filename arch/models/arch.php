@@ -51,6 +51,31 @@ class Data {
 		}
 	}
 
+    public function insert(){
+        if($this->key==null){
+            return;
+        }
+        $sql = "insert into {$this->table}(";
+        $values = "(";
+        foreach($this->columns as $objCol=>$dbCol){
+            if($this->$objCol){
+                $sql.=$dbCol.",";
+                $values.=$objCol;
+            }
+        }
+        $sql.=") ".$values.")";
+        DataConnector::getConnection();
+        mysql_query($sql) or die(mysql_error());
+
+    }
+
+    public function update(){
+
+    }
+
+    public function delete(){
+
+    }
 
 
 	public function find() {
