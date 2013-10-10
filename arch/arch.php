@@ -51,6 +51,8 @@ class Data {
 		}
 	}
 
+
+
 	public function find() {
 		$result = array();
 		$where = " where 1 = 1 ";

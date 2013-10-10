@@ -1,11 +1,6 @@
  <?php
- /**
-  * @file
-  * Constants definition
-  *
-  * @author: Raysmond
-  *
-  */
+ // Raysmond
+ 
  class Constant{
  
 	 const db_name = 'fdugroup';
@@ -17,6 +12,7 @@
 	 const db_port = '3306';
 	 
 	 const db_charset = 'utf8';
+
  }
- 
+
  ?>
