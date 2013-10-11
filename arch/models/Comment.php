@@ -1,7 +1,8 @@
 <?php
-// Comment
-
-require_once("./arch.php");
+/**
+ * Class Comment
+ * @author: Raysmond
+ */
 
 class Comment extends Tree
 {

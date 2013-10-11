@@ -1,7 +1,8 @@
 <?php
-// Raysmond
-
-require_once("./arch.php");
+/**
+ * Class User
+ * @author: Raysmond
+ */
 
 class User extends Data{
     public $id,$name,$mail,$password,$region,$mobile,$qq,$weibo;

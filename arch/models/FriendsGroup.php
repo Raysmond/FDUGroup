@@ -1,8 +1,8 @@
 <?php
-// Raysmond
-
-require_once("./arch.php");
-
+/**
+ * Class FriendsGroup
+ * @author: Raysmond
+ */
 class FriendsGroup extends Data{
     public $groupId1,$groupId2;
 
