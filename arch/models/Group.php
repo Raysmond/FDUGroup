@@ -1,7 +1,8 @@
 <?php
-// Raysmond
-
-require_once("./arch.php");
+/**
+ * Class Group
+ * @author: Raysmond
+ */
 
 class Group extends Data
 {
