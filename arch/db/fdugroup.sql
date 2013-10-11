@@ -9,16 +9,10 @@ USE `fdugroup` ;
 -- Table `fdugroup`.`catagory`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `fdugroup`.`catagory` (
-  `cat_id` INT NOT NULL,
+  `cat_id` INT NOT NULL AUTO_INCREMENT,
   `cat_name` VARCHAR(45) NOT NULL,
   `cat_pid` INT NOT NULL,
-  PRIMARY KEY (`cat_id`),
-  INDEX `fk_catagory_catagory1_idx` (`cat_pid` ASC),
-  CONSTRAINT `fk_catagory_catagory1`
-    FOREIGN KEY (`cat_pid`)
-    REFERENCES `fdugroup`.`catagory` (`cat_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+  PRIMARY KEY (`cat_id`))
 ENGINE = InnoDB;
 
 
@@ -26,7 +20,7 @@ ENGINE = InnoDB;
 -- Table `fdugroup`.`users`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `fdugroup`.`users` (
-  `u_ID` INT NOT NULL,
+  `u_id` INT NOT NULL AUTO_INCREMENT,
   `u_name` VARCHAR(45) NOT NULL,
   `u_mail` VARCHAR(45) NOT NULL,
   `u_password` VARCHAR(255) NOT NULL,
@@ -34,44 +28,34 @@ CREATE TABLE IF NOT EXISTS `fdugroup`.`users` (
   `u_mobile` VARCHAR(45) NULL COMMENT '手机号',
   `u_qq` VARCHAR(45) NULL,
   `u_weibo` VARCHAR(45) NULL,
-  `u_register_time` DATETIME NOT NULL,
-  `u_status` INT NOT NULL COMMENT '0: 无效用户\n1: 激活用户',
+  `u_register_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `u_status` INT NOT NULL DEFAULT 0 COMMENT '0: 无效用户\n1: 激活用户',
   `u_picture` VARCHAR(45) NULL COMMENT '头像 url',
   `u_intro` TEXT NULL,
   `u_homepage` VARCHAR(45) NULL,
-  `u_credits` INT NULL COMMENT '积分',
+  `u_credits` INT NULL DEFAULT 0 COMMENT '积分',
   `u_permission` INT NULL,
   `u_privacy` INT NULL,
-  PRIMARY KEY (`u_ID`),
-  UNIQUE INDEX `u_name_UNIQUE` (`u_name` ASC),
-  UNIQUE INDEX `u_mail_UNIQUE` (`u_mail` ASC))
+  PRIMARY KEY (`u_id`))
 ENGINE = InnoDB;
 
+CREATE UNIQUE INDEX `u_name_UNIQUE` ON `fdugroup`.`users` (`u_name` ASC);
+
+CREATE UNIQUE INDEX `u_mail_UNIQUE` ON `fdugroup`.`users` (`u_mail` ASC);
+
 
 -- -----------------------------------------------------
--- Table `fdugroup`.`group`
+-- Table `fdugroup`.`groups`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `fdugroup`.`group` (
-  `gro_id` INT NOT NULL,
+CREATE TABLE IF NOT EXISTS `fdugroup`.`groups` (
+  `gro_id` INT NOT NULL AUTO_INCREMENT,
   `gro_creator` INT NOT NULL,
-  `cat_id` INT NOT NULL,
+  `cat_id` INT NULL,
   `gro_name` VARCHAR(45) NOT NULL,
   `gro_member_count` INT NOT NULL,
-  `gro_created_time` DATETIME NOT NULL,
-  `gro_intro` LONGTEXT NOT NULL,
-  PRIMARY KEY (`gro_id`),
-  INDEX `fk_group_catagory1_idx` (`cat_id` ASC),
-  INDEX `fk_group_users1_idx` (`gro_creator` ASC),
-  CONSTRAINT `fk_group_catagory1`
-    FOREIGN KEY (`cat_id`)
-    REFERENCES `fdugroup`.`catagory` (`cat_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_group_users1`
-    FOREIGN KEY (`gro_creator`)
-    REFERENCES `fdugroup`.`users` (`u_ID`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+  `gro_created_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `gro_intro` LONGTEXT NULL,
+  PRIMARY KEY (`gro_id`))
 ENGINE = InnoDB;
 
 
@@ -79,27 +63,15 @@ ENGINE = InnoDB;
 -- Table `fdugroup`.`topic`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `fdugroup`.`topic` (
-  `top_id` INT NOT NULL,
+  `top_id` INT NOT NULL AUTO_INCREMENT,
   `gro_id` INT NOT NULL,
   `u_id` INT NOT NULL,
   `top_title` VARCHAR(45) NOT NULL,
-  `top_created_time` DATETIME NOT NULL,
+  `top_created_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `top_content` LONGTEXT NOT NULL,
-  `top_last_comment_time` DATETIME NOT NULL,
+  `top_last_comment_time` TIMESTAMP NULL,
   `top_comment_count` INT NOT NULL,
-  PRIMARY KEY (`top_id`),
-  INDEX `fk_topic_group1_idx` (`gro_id` ASC),
-  INDEX `fk_topic_users1_idx` (`u_id` ASC),
-  CONSTRAINT `fk_topic_group1`
-    FOREIGN KEY (`gro_id`)
-    REFERENCES `fdugroup`.`group` (`gro_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_topic_users1`
-    FOREIGN KEY (`u_id`)
-    REFERENCES `fdugroup`.`users` (`u_ID`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+  PRIMARY KEY (`top_id`))
 ENGINE = InnoDB;
 
 
@@ -107,31 +79,13 @@ ENGINE = InnoDB;
 -- Table `fdugroup`.`comment`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `fdugroup`.`comment` (
-  `com_id` INT NOT NULL,
+  `com_id` INT NOT NULL AUTO_INCREMENT,
   `com_pid` INT NOT NULL,
   `top_id` INT NOT NULL,
   `u_id` INT NOT NULL,
-  `com_created_time` DATETIME NOT NULL,
+  `com_created_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `com_content` TEXT NOT NULL,
-  PRIMARY KEY (`com_id`),
-  INDEX `fk_comment_topic_idx` (`top_id` ASC),
-  INDEX `fk_comment_comment1_idx` (`com_pid` ASC),
-  INDEX `fk_comment_users1_idx` (`u_id` ASC),
-  CONSTRAINT `fk_comment_topic`
-    FOREIGN KEY (`top_id`)
-    REFERENCES `fdugroup`.`topic` (`top_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_comment_comment1`
-    FOREIGN KEY (`com_pid`)
-    REFERENCES `fdugroup`.`comment` (`com_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_comment_users1`
-    FOREIGN KEY (`u_id`)
-    REFERENCES `fdugroup`.`users` (`u_ID`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+  PRIMARY KEY (`com_id`))
 ENGINE = InnoDB;
 
 
@@ -141,22 +95,10 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `fdugroup`.`group_has_users` (
   `gro_id` INT NOT NULL,
   `u_id` INT NOT NULL,
-  `join_time` DATETIME NOT NULL COMMENT '加入时间',
+  `join_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '加入时间',
   `status` INT NOT NULL,
   `comment` TEXT NULL,
-  PRIMARY KEY (`gro_id`, `u_id`),
-  INDEX `fk_group_has_users_users1_idx` (`u_id` ASC),
-  INDEX `fk_group_has_users_group1_idx` (`gro_id` ASC),
-  CONSTRAINT `fk_group_has_users_group1`
-    FOREIGN KEY (`gro_id`)
-    REFERENCES `fdugroup`.`group` (`gro_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_group_has_users_users1`
-    FOREIGN KEY (`u_id`)
-    REFERENCES `fdugroup`.`users` (`u_ID`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+  PRIMARY KEY (`gro_id`, `u_id`))
 ENGINE = InnoDB;
 
 
@@ -166,9 +108,10 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `fdugroup`.`entity_type` (
   `typ_id` INT NOT NULL AUTO_INCREMENT,
   `typ_name` VARCHAR(45) NOT NULL,
-  PRIMARY KEY (`typ_id`),
-  UNIQUE INDEX `typ_name_UNIQUE` (`typ_name` ASC))
+  PRIMARY KEY (`typ_id`))
 ENGINE = InnoDB;
+
+CREATE UNIQUE INDEX `typ_name_UNIQUE` ON `fdugroup`.`entity_type` (`typ_name` ASC);
 
 
 -- -----------------------------------------------------
@@ -179,13 +122,7 @@ CREATE TABLE IF NOT EXISTS `fdugroup`.`tag` (
   `tag_name` VARCHAR(45) NOT NULL,
   `entity_type` INT NOT NULL,
   `entity_id` INT NULL,
-  PRIMARY KEY (`tag_id`),
-  INDEX `fk_tag_entity_type1_idx` (`entity_type` ASC),
-  CONSTRAINT `fk_tag_entity_type1`
-    FOREIGN KEY (`entity_type`)
-    REFERENCES `fdugroup`.`entity_type` (`typ_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+  PRIMARY KEY (`tag_id`))
 ENGINE = InnoDB;
 
 
@@ -195,22 +132,51 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `fdugroup`.`group_has_group` (
   `group_id1` INT NOT NULL,
   `group_id2` INT NOT NULL,
-  PRIMARY KEY (`group_id1`, `group_id2`),
-  INDEX `fk_group_has_group_group2_idx` (`group_id2` ASC),
-  INDEX `fk_group_has_group_group1_idx` (`group_id1` ASC),
-  CONSTRAINT `fk_group_has_group_group1`
-    FOREIGN KEY (`group_id1`)
-    REFERENCES `fdugroup`.`group` (`gro_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_group_has_group_group2`
-    FOREIGN KEY (`group_id2`)
-    REFERENCES `fdugroup`.`group` (`gro_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+  PRIMARY KEY (`group_id1`, `group_id2`))
 ENGINE = InnoDB;
 
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+-- -----------------------------------------------------
+-- Data for table `fdugroup`.`catagory`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `fdugroup`;
+INSERT INTO `fdugroup`.`catagory` (`cat_id`, `cat_name`, `cat_pid`) VALUES (1, 'Development', 1);
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `fdugroup`.`users`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `fdugroup`;
+INSERT INTO `fdugroup`.`users` (`u_id`, `u_name`, `u_mail`, `u_password`, `u_region`, `u_mobile`, `u_qq`, `u_weibo`, `u_register_time`, `u_status`, `u_picture`, `u_intro`, `u_homepage`, `u_credits`, `u_permission`, `u_privacy`) VALUES (1, 'admin', 'admin@fudan.edu.cn', '123456', 'Shanghai', NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL);
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `fdugroup`.`groups`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `fdugroup`;
+INSERT INTO `fdugroup`.`groups` (`gro_id`, `gro_creator`, `cat_id`, `gro_name`, `gro_member_count`, `gro_created_time`, `gro_intro`) VALUES (1, 1, 1, 'FDUGroup Developers', 1, NULL, NULL);
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `fdugroup`.`entity_type`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `fdugroup`;
+INSERT INTO `fdugroup`.`entity_type` (`typ_id`, `typ_name`) VALUES (1, 'topic');
+INSERT INTO `fdugroup`.`entity_type` (`typ_id`, `typ_name`) VALUES (2, 'group');
+
+COMMIT;
+

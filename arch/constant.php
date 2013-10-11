@@ -2,7 +2,9 @@
  // Raysmond
  
  class Constant{
- 
+
+     const db_host = 'localhost';
+
 	 const db_name = 'fdugroup';
 	 
 	 const db_user = 'fdugroup';
