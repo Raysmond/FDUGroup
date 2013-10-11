@@ -1,7 +1,8 @@
 <?php
-// Raysmond
-
-require_once("./arch.php");
+/**
+ * Class EntityType
+ * @author: Raysmond
+ */
 
 class EntityType extends Data{
     public $typeId,$typeName;

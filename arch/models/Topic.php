@@ -1,8 +1,8 @@
 <?php
-// Raysmond
-
-require_once("./arch.php");
-
+/**
+ * Class Topic
+ * @author: Raysmond
+ */
 class Topic extends Data
 {
     public $group;
