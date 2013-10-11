@@ -1,7 +1,8 @@
 <?php
-// Raysmond
-
-require_once("arch.php");
+/**
+ * Class Tag
+ * @author: Raysmond
+ */
 
 class Tag extends Data{
     public $entity_type;

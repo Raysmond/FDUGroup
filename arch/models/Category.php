@@ -1,7 +1,8 @@
 <?php
-// Raysmond
-
-require_once("./arch.php");
+/**
+ * Class Category
+ * @author: Raysmond
+ */
 
 class Category extends Tree
 {
