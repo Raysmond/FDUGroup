@@ -42,6 +42,24 @@ class UserController extends RController
         $this->redirect(Rays::app()->getBaseUrl());
     }
 
+    public function actionView($userId){
+        $user = new User();
+        $user->load($userId);
+        if($user==null){
+            // not found...
+            // need to be implemented
+            return;
+        }
+        $this->setHeaderTitle($user->name);
+        $this->render('view',array('user'=>$user),false);
+    }
+
+    public function actionRegister(){
+        $this->setHeaderTitle("Register");
+        $this->render('register',null,false);
+        // need to be implemented
+    }
+
     private function verifyLogin($username, $password)
     {
         $user = new User();

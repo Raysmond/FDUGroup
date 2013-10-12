@@ -34,7 +34,16 @@
                 <li class="active"><a href="<?php echo $baseurl;?>">Home</a></li>
                 <li><?php echo HtmlHelper::linkAction("site","About","about",null); ?></li>
                 <li><?php echo HtmlHelper::linkAction("site","Contact","contact",null); ?></li>
-                <li><?php echo HtmlHelper::linkAction("user","Login","login",null); ?></li>
+                <?php
+                    if(!Rays::app()->isUserLogin()){
+                        echo "<li>".HtmlHelper::linkAction("user","Login","login",null)."</li>";
+                        echo "<li>".HtmlHelper::linkAction("user","Register","register",null)."</li>";
+                    }
+                    else{
+                        echo "<li>".HtmlHelper::linkAction("user","Logout","logout",null)."</li>";
+                    }
+
+                ?>
             </ul>
         </div><!-- /.nav-collapse -->
     </div><!-- /.container -->
