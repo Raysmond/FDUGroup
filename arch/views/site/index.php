@@ -1,10 +1,16 @@
-<h1>Welcome to FDUGroup</h1>
+<div class="jumbotron">
+    <h1>Welcome to FDUGroup</h1>
+    <p>
+        Surround yourself with good people. People who are going to be honest with you and look out for your best interests.
+        <br/>
+        Derek Jeter
+    </p>
+</div>
 
 All users:
 <br/>
 <table>
 <?php
-
     foreach($data[0]->columns as $col=>$dbcol){
         echo "<th>".$col."</th>";
     }
@@ -18,6 +24,7 @@ All users:
         }
         echo "</tr>";
     }
+
 ?>
 </table>
 

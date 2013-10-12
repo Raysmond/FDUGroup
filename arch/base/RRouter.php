@@ -76,6 +76,7 @@ class RRouter
         if ($len > 2) {
             $route['params'] = array();
             for ($i = 2; $i < $len; $i++) {
+                if(isset($queryArr[$i])&&$queryArr[$i]!='')
                 $route['params'][$i - 2] = $queryArr[$i];
             }
             $this->_params = $route['params'];

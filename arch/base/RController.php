@@ -73,7 +73,6 @@ class RController
      */
     public function render($view, $data = null, $return = false)
     {
-
         $output = $this->renderPartial($view, $data, true);
         if (($layoutFile = $this->getLayoutFile($this->layout)) !== false)
             $output = $this->renderFile($layoutFile, array('content' => $output), true);
@@ -124,12 +123,27 @@ class RController
             return false;
     }
 
+    public function beforeAction($action){
+        return true;
+    }
+
+    /**
+     * Run an antion
+     * @param $action string action ID
+     * @param $params array parameters
+     */
     public function runAction($action, $params)
     {
         $this->setCurrentAction($action);
         $this->setActionParams($params);
+
+        if(!$this->beforeAction($action)){
+            return;
+        }
+
         $methodName = $this->generateActionMethod();
         $len = count($this->_params);
+
         if (method_exists($this, $methodName)) {
             $p = $this->_params;
             if ($len == 0)
@@ -159,11 +173,31 @@ class RController
         }
     }
 
+    public function addCss($cssPath){
+        Rays::app()->getClientManager()->registerCss($cssPath);
+    }
+
+    public function addJs($jsPath){
+        Rays::app()->getClientManager()->registerScript($jsPath);
+    }
+
+    public function setHeaderTitle($title){
+        Rays::app()->getClientManager()->setHeaderTitle($title);
+    }
+
+    /**
+     * Get current action
+     * @return mixed
+     */
     public function getCurrentAction()
     {
         return $this->_action;
     }
 
+    /**
+     * Set current action
+     * @param $action
+     */
     public function setCurrentAction($action)
     {
         $this->_action = $action;
@@ -172,11 +206,19 @@ class RController
         }
     }
 
+    /**
+     * Get action params array
+     * @return params array
+     */
     public function getActionParams()
     {
         return $this->_params;
     }
 
+    /**
+     * Set parameters for the current action
+     * @param $params
+     */
     public function setActionParams($params)
     {
         $this->_params = $params;
@@ -184,8 +226,16 @@ class RController
             $this->_params = array();
     }
 
+    /**
+     * Generate action method name through action ID
+     * For example:
+     * action ID = 'view', generated method name = 'actionView'
+     * @return string
+     */
     public function generateActionMethod()
     {
         return "action" . ucfirst($this->_action);
     }
+
+
 }
