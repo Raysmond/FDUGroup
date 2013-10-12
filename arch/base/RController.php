@@ -237,5 +237,8 @@ class RController
         return "action" . ucfirst($this->_action);
     }
 
+    public function getHttpRequest(){
+        return Rays::app()->getHttpRequest();
+    }
 
 }
