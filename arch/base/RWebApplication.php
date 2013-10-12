@@ -22,6 +22,7 @@ class RWebApplication extends RBaseApplication
      *    'user' => 'path.to.controller'
      * )
      */
+
     public $controllerMap = array();
 
     public $modelPath;
@@ -33,6 +34,8 @@ class RWebApplication extends RBaseApplication
     public $router;
     public $httpRequestHandler;
 
+    public $clientManager;
+
     public function __construct($config = null)
     {
         parent::__construct($config);
@@ -43,6 +46,8 @@ class RWebApplication extends RBaseApplication
         $this->controllerPath = CONTROLLER_PATH;
         $this->viewPath = VIEW_PATH;
         $this->layoutPath = VIEW_PATH;
+
+        $this->clientManager = new RClient();
 
         if (isset($config['modelPath']))
             $this->modelPath = $config['modelPath'];
@@ -63,6 +68,14 @@ class RWebApplication extends RBaseApplication
             $this->layout = $config['layout'];
     }
 
+    /**
+     * The first method invoked by application
+     */
+    public function run()
+    {
+        parent::run();
+        $this->processRequest();
+    }
 
     /**
      * Processes the request.
@@ -104,13 +117,9 @@ class RWebApplication extends RBaseApplication
         return $this->httpRequestHandler;
     }
 
-    /**
-     * The first method invoked by application
-     */
-    public function run()
+    public function getClientManager()
     {
-        parent::run();
-        $this->processRequest();
+        return $this->clientManager;
     }
 
 }
