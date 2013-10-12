@@ -89,6 +89,10 @@ class RWebApplication extends RBaseApplication
 
         $this->router = new RRouter();
         $this->runController($this->router->getRouteUrl());
+
+        if($_POST){
+            print_r($_POST);
+        }
     }
 
     public function runController($route)

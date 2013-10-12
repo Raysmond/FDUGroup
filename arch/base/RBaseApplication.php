@@ -84,7 +84,7 @@ class RBaseApplication
         $this->_db = $db;
     }
 
-    public function end(){
-
+    public function end($status=0){
+        exit($status);
     }
 }
