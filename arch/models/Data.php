@@ -102,12 +102,11 @@ class Data
         $where = " where 1 = 1 ";
         foreach ($this->columns as $objCol => $dbCol) {
             if ($this->$objCol) {
-                $where .= " and $dbCol = {$this->$objCol}";
+                $where .= " and $dbCol = '{$this->$objCol}'";
             }
         }
 
         $sql = "select * from {$this->table} $where";
-
         DataConnector::getConnection();
         $rs = mysql_query($sql) or die(mysql_error());
         $row = mysql_fetch_assoc($rs);
