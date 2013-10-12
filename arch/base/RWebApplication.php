@@ -36,6 +36,8 @@ class RWebApplication extends RBaseApplication
 
     public $clientManager;
 
+    public $httpSession;
+
     public function __construct($config = null)
     {
         parent::__construct($config);
@@ -124,6 +126,13 @@ class RWebApplication extends RBaseApplication
     public function getClientManager()
     {
         return $this->clientManager;
+    }
+
+    public function getHttpSession(){
+        if(!isset($this->httpSession)){
+            $this->httpSession = new RSessionManager();
+        }
+        return $this->httpSession;
     }
 
 }
