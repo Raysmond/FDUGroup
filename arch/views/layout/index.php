@@ -64,23 +64,25 @@
                     <li><a href="#">Link</a></li>
                     <li><a href="#">Link</a></li>
                     <li><a href="#">Link</a></li>
-                    <li>Sidebar</li>
-                    <li><a href="#">Link</a></li>
-                    <li><a href="#">Link</a></li>
                 </ul>
             </div><!--/.well -->
+
+            <div class="well">
+                <?php
+                    $this->module("new_users",array('id'=>'new_users','name'=>"New Users"));
+                ?>
+            </div>
+
         </div><!--/span-->
     </div><!--/row-->
 
     <hr>
 
     <footer>
-        <p>&copy; Company 2013</p>
+        <p><?php echo HtmlHelper::encode(Rays::getCopyright()); ?></p>
     </footer>
 
 </div><!--/.container-->
-
-
 
 <!-- Bootstrap core JavaScript
     ================================================== -->

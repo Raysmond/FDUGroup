@@ -9,6 +9,8 @@ class RSessionManager {
     public $prefix = "RAYS_SESSION";
     public $cookieDuration = 86400; // 3600*24
 
+    //public $flashMessage = array();
+
     public function __construct(){
         session_start();
         //$this->prefix = $_SERVER['HTTP_POST'];

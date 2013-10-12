@@ -16,6 +16,8 @@ defined('VIEW_PATH') or define('VIEW_PATH', SYSTEM_PATH . '/views');
 
 defined('UTILITIES_PATH') or define('UTILITIES_PATH',SYSTEM_PATH.'/utilities');
 
+defined('MODULES_PATH') or define('MODULES_PATH',SYSTEM_PATH.'/modules');
+
 
 /**
  * Class RaysBase is a basic helper class for common framework functionalities.
@@ -25,8 +27,11 @@ class RaysBase
 {
 
     public static $classMap = array();
+    public static $moduleMap = array();
 
     public static $_app;
+
+    public static $copyright;
 
     public static $_includePaths = array(
         CONTROLLER_PATH,
@@ -34,6 +39,7 @@ class RaysBase
         VIEW_PATH,
         SYSTEM_CORE_PATH,
         UTILITIES_PATH,
+        MODULES_PATH,
     );
 
     public static function getVersion()
@@ -64,6 +70,14 @@ class RaysBase
         return SYSTEM_PATH;
     }
 
+    public static function importModule($moduleId){
+        if(!isset(self::$moduleMap[$moduleId])){
+            $path = Rays::app()->modulePath."/".$moduleId."/".$moduleId.".php";
+            self::$moduleMap[$moduleId] = $path;
+            require($path);
+        }
+    }
+
     /**
      * Class autoload loader
      * This method is invoked within an __antoload() magic method
@@ -71,18 +85,25 @@ class RaysBase
      */
     public static function autoload($classname){
         if(isset(self::$classMap[$classname]))
-            include(self::$classMap[$classname]);
+            require(self::$classMap[$classname]);
         else{
             foreach(self::$_includePaths as $path)
             {
                 $classFile = $path.DIRECTORY_SEPARATOR.$classname.'.php';
                 if(is_file($classFile))
                 {
-                    include($classFile);
+                    require($classFile);
                     break;
                 }
             }
         }
+    }
+
+    public static function getCopyright(){
+        if(!isset(self::$copyright)){
+            return "© Copyright ".self::app()->name." 2013, All Rights Reserved.";
+        }
+        else return self::$copyright;
     }
 }
 

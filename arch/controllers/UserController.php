@@ -21,8 +21,7 @@ class UserController extends RController
             if ($login instanceof User) {
                 $session->set("user", $username);
                 $session->flash("message", "Login successfully.");
-                header('location: '.Rays::app()->getBaseUrl());
-
+                $this->redirect(Rays::app()->getBaseUrl());
             } else {
                 $session->flash("message", $login);
             }
@@ -36,10 +35,11 @@ class UserController extends RController
     }
 
     public function actionLogout(){
-        $session = Rays::app()->getHttpSession();
-        $session->deleteSession("user");
-        //Rays::app()->end();
-        header('location: '.Rays::app()->getBaseUrl());
+        if(Rays::app()->isUserLogin()){
+            $this->getSession()->deleteSession("user");
+            $this->getSession()->flash("message","You have already logout.");
+        }
+        $this->redirect(Rays::app()->getBaseUrl());
     }
 
     private function verifyLogin($username, $password)
