@@ -84,4 +84,7 @@ class RBaseApplication
         $this->_db = $db;
     }
 
+    public function end(){
+
+    }
 }

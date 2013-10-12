@@ -4,7 +4,8 @@
  * User: Raysmond
  */
 
-class RWebApplication extends RBaseApplication{
+class RWebApplication extends RBaseApplication
+{
 
     public $defaultController = 'site';
 
@@ -30,8 +31,10 @@ class RWebApplication extends RBaseApplication{
     public $controller;
 
     public $router;
+    public $httpRequestHandler;
 
-    public function __construct($config=null){
+    public function __construct($config = null)
+    {
         parent::__construct($config);
 
         Rays::setApplication($this);
@@ -41,106 +44,71 @@ class RWebApplication extends RBaseApplication{
         $this->viewPath = VIEW_PATH;
         $this->layoutPath = VIEW_PATH;
 
-        if(isset($config['modelPath']))
+        if (isset($config['modelPath']))
             $this->modelPath = $config['modelPath'];
 
-        if(isset($config['controllerPath']))
+        if (isset($config['controllerPath']))
             $this->controllerPath = $config['controllerPath'];
 
-        if(isset($config['viewPath']))
+        if (isset($config['viewPath']))
             $this->viewPath = $config['viewPath'];
 
-        if(isset($config['layoutPath']))
+        if (isset($config['layoutPath']))
             $this->layoutPath = $config['layoutPath'];
 
-        if(isset($config['controller']))
-            $this->controller = $config['controller'];
-
-        if(isset($config['defaultController']))
+        if (isset($config['defaultController']))
             $this->defaultController = $config['defaultController'];
 
-        if(isset($config['layout']))
+        if (isset($config['layout']))
             $this->layout = $config['layout'];
     }
+
 
     /**
      * Processes the request.
      * The request processing work is done here. It first resolves the request into
      * controller and action, and create a controller to invoke the corresponding action method
      */
-    public function processRequest(){
+    public function processRequest()
+    {
+        $this->httpRequestHandler = new RHttpRequest();
+        $this->httpRequestHandler->normalizeRequest();
+
         $this->router = new RRouter();
-        $routerUrl = $this->router->getRouteUrl();
-        $this->runController($routerUrl);
+        $this->runController($this->router->getRouteUrl());
     }
 
-    public function runController($route){
-        $this->createController($route);
-    }
-
-    /**
-     * Create a concrete controller
-     * @param array $route array contains URL request information
-     */
-    public function createController($route){
+    public function runController($route)
+    {
         $_controller = '';
-        $_model = '';
-        $_action = '';
-        $_params = '';
-
-        if(isset($route['controller'])&&$route['controller']!=''){
-            $_controller = $route['controller']."Controller";
-        }
-        else{
-            $_controller = $this->defaultController."Controller";
+        if (isset($route['controller']) && $route['controller'] != '') {
+            $_controller = $route['controller'] . "Controller";
+        } else {
+            $_controller = $this->defaultController . "Controller";
             $route['controller'] = $this->defaultController;
         }
         $_controller = ucfirst($_controller);
+        $controllerFile = $this->controllerPath . "/" . $_controller . ".php";
 
-        if(isset($route['action'])&&$route['action']!=''){
-            $_action = $route['action'];
-        }
-
-        if(isset($route['params'])&&$route['params']!=''){
-            $_params = $route['params'];
-        }
-        $controllerFile = $this->controllerPath."/".$_controller.".php";
-
-        if(is_file($controllerFile)&&class_exists($_controller)){
+        if (class_exists($_controller)) {
             $_controller = new $_controller;
             $_controller->setId($route['controller']);
-            // If no action is provided by the URL,
-            // set it to the default action of the controller
-            if(!isset($_action)||$_action==""){
-                if(isset($_controller->defaultAction))
-                    $_action = $_controller->defaultAction;
-            }
-            $_action = "action".ucfirst($_action);
-
-            if(isset($_action)){
-                if(method_exists($_controller, $_action)){
-                    if(isset($_params)){
-                        $_controller->$_action($_params);
-                    }
-                    else{
-                        $_controller->$_action();
-                    }
-                }
-                else{
-                    die("Controller method not exists...");
-                }
-            }
-        }
-        else{
-            die("Controller(".$_controller.") not exists....");
+            $_controller->runAction($this->router->getAction(), $this->router->getParams());
+        } else {
+            die("Controller(" . $_controller . ") not exists....");
         }
     }
 
+    public function getHttpRequest()
+    {
+        return $this->httpRequestHandler;
+    }
 
     /**
      * The first method invoked by application
      */
-    public function run(){
+    public function run()
+    {
         parent::run();
         $this->processRequest();
     }

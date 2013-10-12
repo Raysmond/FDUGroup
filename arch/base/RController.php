@@ -16,33 +16,39 @@ class RController
     // default action is provided if there's no action requested from the URL
     public $defaultAction = "index";
 
+    private $_action;
+    private $_params;
+
     // the unique ID of the controller
     private $_id;
 
-    public function __construct($id=null){
-        if($id!=null)
+    public function __construct($id = null)
+    {
+        if ($id != null)
             $this->_id = $id;
     }
 
 
-    public function setId($id){
+    public function setId($id)
+    {
         $this->_id = $id;
     }
 
-    public function getId(){
+    public function getId()
+    {
         return $this->_id;
     }
 
     /**
      * Get controller file
      */
-    public function getControllerFile(){
-        $controller = ucfirst(getId()."Controller");
-        $controllerFile = Rays::app()->controllerPath."/".$controller.".php";
-        if(file_exists($controllerFile)){
+    public function getControllerFile()
+    {
+        $controller = ucfirst(getId() . "Controller");
+        $controllerFile = Rays::app()->controllerPath . "/" . $controller . ".php";
+        if (file_exists($controllerFile)) {
             return $controllerFile;
-        }
-        else return false;
+        } else return false;
     }
 
     /**
@@ -111,11 +117,75 @@ class RController
      */
     public function getViewFile($viewName)
     {
-        $viewFile = Rays::app()->viewPath . "/" .$this->getId(). "/" . $viewName . ".php";
+        $viewFile = Rays::app()->viewPath . "/" . $this->getId() . "/" . $viewName . ".php";
         if (file_exists($viewFile))
             return $viewFile;
         else
             return false;
     }
 
+    public function runAction($action, $params)
+    {
+        $this->setCurrentAction($action);
+        $this->setActionParams($params);
+        $methodName = $this->generateActionMethod();
+        $len = count($this->_params);
+        if (method_exists($this, $methodName)) {
+            $p = $this->_params;
+            if ($len == 0)
+                $this->$methodName();
+            else if ($len == 1)
+                $this->$methodName($p[0]);
+            else if ($len == 2)
+                $this->$methodName($p[0], $p[1]);
+            else if ($len == 3)
+                $this->$methodName($p[0], $p[1], $p[1]);
+            else if ($len == 4)
+                $this->$methodName($p[0], $p[1], $p[2], $p[3]);
+            else if ($len == 5)
+                $this->$methodName($p[0], $p[1], $p[2], $p[3], $p[4]);
+            else if ($len == 6)
+                $this->$methodName($p[0], $p[1], $p[2], $p[3], $p[4], $p[5]);
+            else if ($len == 7)
+                $this->$methodName($p[0], $p[1], $p[2], $p[3], $p[4], $p[5], $p[6]);
+            else if ($len == 8)
+                $this->$methodName($p[0], $p[1], $p[2], $p[3], $p[4], $p[5], $p[6], $p[7]);
+            else if ($len == 9)
+                $this->$methodName($p[0], $p[1], $p[2], $p[3], $p[4], $p[5], $p[6], $p[7], $p[8]);
+            else if ($len == 10)
+                $this->$methodName($p[0], $p[1], $p[2], $p[3], $p[4], $p[5], $p[6], $p[7], $p[8], $p[9]);
+            else
+                die("Too many parameters...");
+        }
+    }
+
+    public function getCurrentAction()
+    {
+        return $this->_action;
+    }
+
+    public function setCurrentAction($action)
+    {
+        $this->_action = $action;
+        if (!isset($this->_action)) {
+            $this->_action = $this->defaultAction;
+        }
+    }
+
+    public function getActionParams()
+    {
+        return $this->_params;
+    }
+
+    public function setActionParams($params)
+    {
+        $this->_params = $params;
+        if ($this->_params == null)
+            $this->_params = array();
+    }
+
+    public function generateActionMethod()
+    {
+        return "action" . ucfirst($this->_action);
+    }
 }
