@@ -25,9 +25,7 @@ class Data
         if ($id == null) {
             $id = $this->$key;
         }
-
         $sql = "select * from {$this->table} where {$this->columns[$key]} = $id";
-        echo $sql;
 
         DataConnector::getConnection();
         $rs = mysql_query($sql) or die(mysql_error());

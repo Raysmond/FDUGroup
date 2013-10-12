@@ -27,6 +27,7 @@ class RaysBase
 {
 
     public static $classMap = array();
+
     public static $moduleMap = array();
 
     public static $_app;
