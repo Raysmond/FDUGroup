@@ -11,7 +11,7 @@
 class RController
 {
     // the layout for the controller
-    public $layout = "main";
+    public $layout = "index";
 
     // default action is provided if there's no action requested from the URL
     public $defaultAction = "index";
@@ -20,7 +20,7 @@ class RController
     private $_params;
 
     // the unique ID of the controller
-    private $_id;
+    private $_id = '';
 
     public function __construct($id = null)
     {
@@ -63,6 +63,22 @@ class RController
             return $viewFile;
         else
             return false;
+    }
+
+    /**
+     * @param string $content
+     * @param bool $return
+     * @return string
+     */
+    public function renderContent($content = '',$return = false)
+    {
+        $output = '';
+        if (($layoutFile = $this->getLayoutFile($this->layout)) !== false)
+            $output = $this->renderFile($layoutFile, array('content' => $content), true);
+        if($return)
+            return $output;
+        else
+            echo $output;
     }
 
     /** Render a view
@@ -144,6 +160,8 @@ class RController
         $methodName = $this->generateActionMethod();
         $len = count($this->_params);
 
+        // It's shame to run action methods this way,
+        // but I didn't figure out other better way
         if (method_exists($this, $methodName)) {
             $p = $this->_params;
             if ($len == 0)
@@ -181,6 +199,11 @@ class RController
         Rays::app()->getClientManager()->registerScript($jsPath);
     }
 
+    /**
+     * Set header title for the page
+     * <title></title>
+     * @param $title
+     */
     public function setHeaderTitle($title){
         Rays::app()->getClientManager()->setHeaderTitle($title);
     }

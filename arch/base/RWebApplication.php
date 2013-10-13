@@ -56,7 +56,6 @@ class RWebApplication extends RBaseApplication
     public $moduleFileExtension = ".module";
 
 
-
     public function __construct($config = null)
     {
         parent::__construct($config);
@@ -140,8 +139,18 @@ class RWebApplication extends RBaseApplication
             $_controller->setId($route['controller']);
             $_controller->runAction($this->router->getAction(), $this->router->getParams());
         } else {
-            die("Controller(" . $_controller . ") not exists....");
+            // No controller found
+            //die("Controller(" . $_controller . ") not exists....");
+            $this->page404();
         }
+    }
+
+    /**
+     * Show 404 page.
+     */
+    public function page404()
+    {
+        (new RController())->render('404');
     }
 
     /**
