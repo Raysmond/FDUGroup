@@ -285,7 +285,7 @@ class RController
                 }
             }
         }
-        return HtmlHelper::tryCleanLink($link);
+        return RHtmlHelper::tryCleanLink($link);
     }
 
     /**

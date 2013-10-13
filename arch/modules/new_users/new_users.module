@@ -14,7 +14,7 @@ class new_users_module extends RModule{
         $content = "This is new users module<br/>";
         $users = $this->findNewUsers();
         foreach($users as $user){
-            $content.= HtmlHelper::linkAction('user',$user->name,'view',array('uid'=>$user->id))." ";
+            $content.= RHtmlHelper::linkAction('user',$user->name,'view',array('uid'=>$user->id))." ";
         }
         return $content;
     }
