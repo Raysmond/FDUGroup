@@ -27,14 +27,14 @@ class RFormHelper
     public static function input($data = '', $value = '')
     {
         $name = self::setName($data);
-        $value = self::setValue($value, $name);
-        $defaults = array('type' => 'text', 'name' => $name, 'value' => $value);
+        $defaults = array('type' => 'text', 'name' => $name, 'value' => self::setValue($value, $name));
         return '<input ' . self::parseAttributes($data, $defaults) . ' />';
     }
 
     public static function hidden($data = '', $value = '')
     {
-        $defaults = array('type' => 'hidden', 'name' => (is_array($data) ? '' : $data), 'value' => $value);
+        $name = self::setName($data);
+        $defaults = array('type' => 'hidden', 'name' => $name, 'value' => self::setValue($value, $name));
         return '<input ' . self::parseAttributes($data, $defaults) . ' />';
     }
 
@@ -52,7 +52,7 @@ class RFormHelper
 
     public static function textarea($data = '', $value = '')
     {
-
+        $name = self::setName($data);
     }
 
     private static function parseAttributes($attributes, $defaults = array())

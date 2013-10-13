@@ -1,6 +1,5 @@
 <?php
     $form = array();
-$form['username'] = "Jiankun Lei";
     if(isset($registerForm)){
         $form = $registerForm;
     }

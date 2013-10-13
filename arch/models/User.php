@@ -33,6 +33,4 @@ class User extends Data{
         );
         parent::init($option);
     }
-
-
 }
