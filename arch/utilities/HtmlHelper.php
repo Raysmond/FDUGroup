@@ -17,6 +17,12 @@ class HtmlHelper
         return htmlspecialchars_decode($content, ENT_QUOTES);
     }
 
+    public static function tryCleanLink($link){
+        if(Rays::app()->isCleanUri())
+            return str_replace("?q=","",$link);
+        else return $link;
+    }
+
     public static function linkAction($controller, $name, $action = null, $params = null)
     {
         $link = "?q=" . $controller;
@@ -36,12 +42,12 @@ class HtmlHelper
 
     public static function link($title, $content, $href)
     {
-        return '<a title="' . $title . '" href="' . $href . '" >' . self::encode($content) . '</a>';
+        return '<a title="' . $title . '" href="' . self::tryCleanLink($href) . '" >' . self::encode($content) . '</a>';
     }
 
     public static function linkWithTarget($title, $content, $href, $target)
     {
-        return '<a title="' . $title . '" href="' . $href . '" target="' . $target . '" >' . self::encode($content) . '</a>';
+        return '<a title="' . $title . '" href="' . self::tryCleanLink($href) . '" target="' . $target . '" >' . self::encode($content) . '</a>';
     }
 
     public static function linkCssArray($cssArray)

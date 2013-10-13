@@ -17,11 +17,13 @@ class RBaseApplication
 
     private $_db;
 
+    private $_config = array();
+
     public function __construct($config = null)
     {
+        $this->setConfig($config);
+        $config = $this->getConfig();
 
-        if (is_string($config))
-            $config = require($config);
         if (isset($config['name']))
             $this->name = $config['name'];
         if (isset($config['basePath']))
@@ -86,5 +88,15 @@ class RBaseApplication
 
     public function end($status=0){
         exit($status);
+    }
+
+    public function getConfig(){
+        return $this->_config;
+    }
+
+    public function setConfig($config){
+        if (is_string($config))
+            $config = require($config);
+        $this->_config = $config;
     }
 }
