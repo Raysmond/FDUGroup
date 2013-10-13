@@ -44,7 +44,18 @@ class RWebApplication extends RBaseApplication
 
     public $flashMessage;
 
+    /**
+     * Whether or not user clean uri
+     * For example:
+     *  not a clean uri: http://localhost/FDUGroup/?q=site/about
+     *  clean uri: http://localhost/FDUGroup/site/about
+     * @var bool
+     */
     public $isCleanUri = false;
+
+    public $moduleFileExtension = ".module";
+
+
 
     public function __construct($config = null)
     {
