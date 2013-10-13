@@ -73,7 +73,7 @@ class RaysBase
 
     public static function importModule($moduleId){
         if(!isset(self::$moduleMap[$moduleId])){
-            $path = Rays::app()->modulePath."/".$moduleId."/".$moduleId.".php";
+            $path = Rays::app()->modulePath."/".$moduleId."/".$moduleId.self::app()->moduleFileExtension;
             self::$moduleMap[$moduleId] = $path;
             require($path);
         }
