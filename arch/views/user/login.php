@@ -27,5 +27,5 @@ if ($session->get("user") == false) {
 <?php
 } else {
     echo "<br/>";
-    echo HtmlHelper::linkAction('user', 'Logout', 'logout', null);
+    echo RHtmlHelper::linkAction('user', 'Logout', 'logout', null);
 }?>

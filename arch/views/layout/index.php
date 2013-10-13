@@ -5,7 +5,7 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-    <title><?php echo HtmlHelper::encode(Rays::app()->getClientManager()->getHeaderTitle()); ?></title>
+    <title><?php echo RHtmlHelper::encode(Rays::app()->getClientManager()->getHeaderTitle()); ?></title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <meta name="language" content="en"/>
     <meta name="description" content=""/>
@@ -14,7 +14,7 @@
     <link rel="stylesheet" type="text/css" href="<?php echo $baseurl; ?>/public/css/main.css"/>
     <?php
         // link custom css files
-        echo HtmlHelper::linkCssArray(Rays::app()->getClientManager()->css);
+        echo RHtmlHelper::linkCssArray(Rays::app()->getClientManager()->css);
     ?>
 </head>
 
@@ -27,20 +27,20 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#"><?php echo HtmlHelper::encode(Rays::app()->name); ?></a>
+            <a class="navbar-brand" href="#"><?php echo RHtmlHelper::encode(Rays::app()->name); ?></a>
         </div>
         <div class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
                 <li class="active"><a href="<?php echo $baseurl;?>">Home</a></li>
-                <li><?php echo HtmlHelper::linkAction("site","About","about",null); ?></li>
-                <li><?php echo HtmlHelper::linkAction("site","Contact","contact",null); ?></li>
+                <li><?php echo RHtmlHelper::linkAction("site","About","about",null); ?></li>
+                <li><?php echo RHtmlHelper::linkAction("site","Contact","contact",null); ?></li>
                 <?php
                     if(!Rays::app()->isUserLogin()){
-                        echo "<li>".HtmlHelper::linkAction("user","Login","login",null)."</li>";
-                        echo "<li>".HtmlHelper::linkAction("user","Register","register",null)."</li>";
+                        echo "<li>".RHtmlHelper::linkAction("user","Login","login",null)."</li>";
+                        echo "<li>".RHtmlHelper::linkAction("user","Register","register",null)."</li>";
                     }
                     else{
-                        echo "<li>".HtmlHelper::linkAction("user","Logout","logout",null)."</li>";
+                        echo "<li>".RHtmlHelper::linkAction("user","Logout","logout",null)."</li>";
                     }
 
                 ?>
@@ -88,7 +88,7 @@
     <hr>
 
     <footer>
-        <p><?php echo HtmlHelper::encode(Rays::getCopyright()); ?></p>
+        <p><?php echo RHtmlHelper::encode(Rays::getCopyright()); ?></p>
     </footer>
 
 </div><!--/.container-->
@@ -101,7 +101,7 @@
 <script type="text/javascript" src="<?php echo $baseurl; ?>/public/js/main.js"></script>
 <?php
     // link custom script files
-    echo HtmlHelper::linkScriptArray(Rays::app()->getClientManager()->script);
+    echo RHtmlHelper::linkScriptArray(Rays::app()->getClientManager()->script);
 ?>
 </body>
 

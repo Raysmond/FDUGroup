@@ -4,7 +4,7 @@
  * @author: Raysmond
  */
 
-class HtmlHelper
+class RHtmlHelper
 {
 
     public static function encode($content)
