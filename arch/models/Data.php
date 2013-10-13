@@ -25,9 +25,7 @@ class Data
         if ($id == null) {
             $id = $this->$key;
         }
-
         $sql = "select * from {$this->table} where {$this->columns[$key]} = $id";
-        echo $sql;
 
         DataConnector::getConnection();
         $rs = mysql_query($sql) or die(mysql_error());
@@ -96,18 +94,34 @@ class Data
     }
 
 
-    public function find()
+    /**
+     * Find records that meet requirements
+     * @param int $limit_start
+     * @param int $limit_end
+     * @param array $order should be like array('key'=>'key_col','order'=>'asc or desc')
+     * @return array
+     */
+    public function find($limit_start=0,$limit_end=0,$order=array())
     {
         $result = array();
         $where = " where 1 = 1 ";
         foreach ($this->columns as $objCol => $dbCol) {
             if ($this->$objCol) {
-                $where .= " and $dbCol = {$this->$objCol}";
+                $where .= " and $dbCol = '{$this->$objCol}'";
             }
         }
 
         $sql = "select * from {$this->table} $where";
 
+        if(count($order)>0&&isset($order['key'])&&isset($order['order'])){
+            $sql.=" order by {$order['key']} {$order['order']}";
+        }
+
+        if($limit_start!=0){
+            $sql.=" LIMIT {$limit_start}";
+            if($limit_end!=0)
+                $sql.=",".$limit_end;
+        }
         DataConnector::getConnection();
         $rs = mysql_query($sql) or die(mysql_error());
         $row = mysql_fetch_assoc($rs);
@@ -119,7 +133,7 @@ class Data
             $result[] = $o;
             $row = mysql_fetch_assoc($rs);
         }
-
         return $result;
     }
+
 }

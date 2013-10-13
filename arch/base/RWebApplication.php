@@ -29,6 +29,7 @@ class RWebApplication extends RBaseApplication
     public $controllerPath;
     public $viewPath;
     public $layoutPath;
+    public $modulePath;
     public $controller;
 
     public $router;
@@ -36,18 +37,39 @@ class RWebApplication extends RBaseApplication
 
     public $clientManager;
 
+    public $httpSession;
+
+    // current login user
+    public $user;
+
+    public $flashMessage;
+
+    /**
+     * Whether or not user clean uri
+     * For example:
+     *  not a clean uri: http://localhost/FDUGroup/?q=site/about
+     *  clean uri: http://localhost/FDUGroup/site/about
+     * @var bool
+     */
+    public $isCleanUri = false;
+
+    public $moduleFileExtension = ".module";
+
+
+
     public function __construct($config = null)
     {
         parent::__construct($config);
+        $config = $this->getConfig();
 
         Rays::setApplication($this);
+        $this->clientManager = new RClient();
 
         $this->modelPath = MODEL_PATH;
         $this->controllerPath = CONTROLLER_PATH;
         $this->viewPath = VIEW_PATH;
         $this->layoutPath = VIEW_PATH;
-
-        $this->clientManager = new RClient();
+        $this->modulePath = MODULES_PATH;
 
         if (isset($config['modelPath']))
             $this->modelPath = $config['modelPath'];
@@ -61,11 +83,17 @@ class RWebApplication extends RBaseApplication
         if (isset($config['layoutPath']))
             $this->layoutPath = $config['layoutPath'];
 
+        if (isset($config['modulePath']))
+            $this->layoutPath = $config['modulePath'];
+
         if (isset($config['defaultController']))
             $this->defaultController = $config['defaultController'];
 
         if (isset($config['layout']))
             $this->layout = $config['layout'];
+
+        if (isset($config['isCleanUri']))
+            $this->isCleanUri = $config['isCleanUri'];
     }
 
     /**
@@ -90,7 +118,7 @@ class RWebApplication extends RBaseApplication
         $this->router = new RRouter();
         $this->runController($this->router->getRouteUrl());
 
-        if($_POST){
+        if ($_POST) {
             print_r($_POST);
         }
     }
@@ -116,14 +144,53 @@ class RWebApplication extends RBaseApplication
         }
     }
 
+    /**
+     * Get http request handler
+     * @return mixed
+     */
     public function getHttpRequest()
     {
         return $this->httpRequestHandler;
     }
 
+    /**
+     * Get client manager
+     * @return RClient
+     */
     public function getClientManager()
     {
         return $this->clientManager;
+    }
+
+    /**
+     * Get session manager
+     * @return RSessionManager
+     */
+    public function getHttpSession()
+    {
+        if (!isset($this->httpSession)) {
+            $this->httpSession = new RSessionManager();
+        }
+        return $this->httpSession;
+    }
+
+    /**
+     * Return current login user
+     * @return bool login user or false
+     */
+    public function getLoginUser()
+    {
+        return isset($this->user) ? $this->user : false;
+    }
+
+    public function isUserLogin()
+    {
+        return $this->getHttpSession()->get("user") != false;
+    }
+
+    public function isCleanUri()
+    {
+        return $this->isCleanUri != false;
     }
 
 }

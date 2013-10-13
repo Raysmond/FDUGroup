@@ -9,5 +9,5 @@
 
 <?php
     echo "Follow the project development: ";
-    echo HtmlHelper::link("FDUGroup github page",$githubLink,$githubLink);
+    echo RHtmlHelper::link("FDUGroup github page",$githubLink,$githubLink);
 ?>

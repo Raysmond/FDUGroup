@@ -1,10 +1,10 @@
 <?php
 /**
- * HtmlHelper class file.
+ * RHtmlHelper class file.
  * @author: Raysmond
  */
 
-class HtmlHelper
+class RHtmlHelper
 {
 
     public static function encode($content)
@@ -15,6 +15,22 @@ class HtmlHelper
     public static function decode($content)
     {
         return htmlspecialchars_decode($content, ENT_QUOTES);
+    }
+
+    public static function tryCleanLink($link)
+    {
+        if (Rays::app()->isCleanUri())
+            return str_replace("?q=", "", $link);
+        else return $link;
+    }
+
+    /**
+     * Return site url
+     * @param $url like "site/about"
+     */
+    public static function siteUrl($url)
+    {
+        return self::tryCleanLink(Rays::app()->getBaseUrl() . "/" . $url);
     }
 
     public static function linkAction($controller, $name, $action = null, $params = null)
@@ -36,12 +52,12 @@ class HtmlHelper
 
     public static function link($title, $content, $href)
     {
-        return '<a title="' . $title . '" href="' . $href . '" >' . self::encode($content) . '</a>';
+        return '<a title="' . $title . '" href="' . self::tryCleanLink($href) . '" >' . self::encode($content) . '</a>';
     }
 
     public static function linkWithTarget($title, $content, $href, $target)
     {
-        return '<a title="' . $title . '" href="' . $href . '" target="' . $target . '" >' . self::encode($content) . '</a>';
+        return '<a title="' . $title . '" href="' . self::tryCleanLink($href) . '" target="' . $target . '" >' . self::encode($content) . '</a>';
     }
 
     public static function linkCssArray($cssArray)

@@ -237,8 +237,95 @@ class RController
         return "action" . ucfirst($this->_action);
     }
 
+    /**
+     * Get http request handler
+     * @return mixed
+     */
     public function getHttpRequest(){
         return Rays::app()->getHttpRequest();
     }
 
+    /**
+     * Redirect to a new URL
+     * @param $url
+     */
+    public function redirect($url){
+        header('location: '.$url);
+    }
+
+    /**
+     * Redirect to an action page
+     * @param $action
+     * @param $params
+     */
+    public function redirectAction($action,$params){
+        header('location: '.$this->generateActionLink($this->getId(),$action,$params));
+    }
+
+
+    /**
+     * Generate action link
+     * @param $controller
+     * @param $action
+     * @param $params action parameters
+     * @return string action link
+     */
+    public function generateActionLink($controller,$action,$params){
+        if($controller==null)
+            $controller = $this->getId();
+        $link = "?q=" . $controller;
+        if (isset($action) && $action != '')
+            $link .= "/" . $action;
+        if (isset($params)) {
+            if (!is_array($params)) {
+                $link .= "/" . $params;
+            } else {
+                foreach ($params as $param) {
+                    $link .= "/" . $param;
+                }
+            }
+        }
+        return RHtmlHelper::tryCleanLink($link);
+    }
+
+    /**
+     * Get session manager
+     * @return mixed
+     */
+    public function getSession(){
+        return Rays::app()->getHttpSession();
+    }
+
+    /**
+     * @param $moduleId
+     * @param array $params
+     */
+    public function createModule($moduleId,$params=array()){
+        Rays::importModule($moduleId);
+        $moduleClass = $moduleId."_module";
+        $module = new $moduleClass($params);
+        $module->setId($moduleId);
+        $module->init();
+        return $module;
+    }
+
+    /**
+     * Creates a module and run it
+     * @param $moduleId the unique name of the module
+     * @param array $params module properties array
+     * @param bool $return whether or not return the output content
+     * @return mixed
+     */
+    public function module($moduleId,$params=array(),$return=false){
+        $module = $this->createModule($moduleId,$params);
+        if($return){
+            ob_start();
+            ob_implicit_flush(false);
+            $module->run();
+            return ob_get_clean();
+        }
+        else{
+            $module->run();
+        }
+    }
 }
