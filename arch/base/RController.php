@@ -153,7 +153,7 @@ class RController
         $this->setCurrentAction($action);
         $this->setActionParams($params);
 
-        if(!$this->beforeAction($action)){
+        if($this->beforeAction($action)==false){
             return;
         }
 
@@ -188,6 +188,9 @@ class RController
                 $this->$methodName($p[0], $p[1], $p[2], $p[3], $p[4], $p[5], $p[6], $p[7], $p[8], $p[9]);
             else
                 die("Too many parameters...");
+        }
+        else{
+            Rays::app()->page404();
         }
     }
 
