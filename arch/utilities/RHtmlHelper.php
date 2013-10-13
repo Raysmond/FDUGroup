@@ -1,6 +1,6 @@
 <?php
 /**
- * HtmlHelper class file.
+ * RHtmlHelper class file.
  * @author: Raysmond
  */
 
@@ -17,10 +17,20 @@ class RHtmlHelper
         return htmlspecialchars_decode($content, ENT_QUOTES);
     }
 
-    public static function tryCleanLink($link){
-        if(Rays::app()->isCleanUri())
-            return str_replace("?q=","",$link);
+    public static function tryCleanLink($link)
+    {
+        if (Rays::app()->isCleanUri())
+            return str_replace("?q=", "", $link);
         else return $link;
+    }
+
+    /**
+     * Return site url
+     * @param $url like "site/about"
+     */
+    public static function siteUrl($url)
+    {
+        return self::tryCleanLink(Rays::app()->getBaseUrl() . "/" . $url);
     }
 
     public static function linkAction($controller, $name, $action = null, $params = null)
