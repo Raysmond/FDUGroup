@@ -44,9 +44,12 @@ class RWebApplication extends RBaseApplication
 
     public $flashMessage;
 
+    public $isCleanUri = false;
+
     public function __construct($config = null)
     {
         parent::__construct($config);
+        $config = $this->getConfig();
 
         Rays::setApplication($this);
         $this->clientManager = new RClient();
@@ -77,6 +80,9 @@ class RWebApplication extends RBaseApplication
 
         if (isset($config['layout']))
             $this->layout = $config['layout'];
+
+        if (isset($config['isCleanUri']))
+            $this->isCleanUri = $config['isCleanUri'];
     }
 
     /**
@@ -169,6 +175,11 @@ class RWebApplication extends RBaseApplication
     public function isUserLogin()
     {
         return $this->getHttpSession()->get("user") != false;
+    }
+
+    public function isCleanUri()
+    {
+        return $this->isCleanUri != false;
     }
 
 }

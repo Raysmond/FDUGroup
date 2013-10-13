@@ -21,6 +21,8 @@ return array(
 
     'baseUrl' => "http://localhost/FDUGroup",
 
+    'isCleanUri' => true,
+
     'defaultController' => 'site',
 
     'defaultAction' => 'index',
