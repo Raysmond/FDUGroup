@@ -22,7 +22,7 @@ class RFormValidation
 
     public function run()
     {
-
+        return true;
     }
 
     /**
@@ -55,6 +55,22 @@ class RFormValidation
 
     public function min_length($str,$len)
     {
+        return true;
+    }
+
+    public function max_length($str,$len)
+    {
 
     }
+
+    public function is_email()
+    {
+
+    }
+
+    public function unique($table,$field)
+    {
+
+    }
+
 }
