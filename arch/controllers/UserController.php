@@ -71,6 +71,8 @@ class UserController extends RController
             );
             $validation = new RFormValidationHelper($rules);
             if ($validation->run()) {
+                print_r($validation);
+                /*
                 $user = new User();
                 $user->setDefaults();
                 $user->name = $form['username'];
@@ -79,6 +81,7 @@ class UserController extends RController
                 $user->insert();
                 $user = $user->find()[0];
                 $this->redirectAction('user', 'view', $user->id);
+                */
             }
         }
         $this->render('register', array('registerForm' => $form), false);
