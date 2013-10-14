@@ -31,7 +31,22 @@ class GroupUser extends Data
         if ($groupId != null) {
             $this->groupId = $groupId;
         }
+        else return null;
         return $this->find();
+    }
+
+    public function userGroups($userId = null)
+    {
+        if($userId == null) return null;
+        $result = null;
+        $this->userId = $userId;
+        $userGroups = $this->find();
+        foreach($userGroups as $userGroup){
+            $group = new Group();
+            $group->id = $userGroup->groupId;
+            array_merge($result,$group->find());
+        }
+        return $result;
     }
 }
 

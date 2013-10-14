@@ -46,8 +46,8 @@ class RFormHelper
 
     public static function button($data = '', $value = '')
     {
-        $defaults = array('name' => (is_array($data) ? '' : $data), 'value' => $value);
-        return '<input ' . self::parseAttributes($data, $defaults) . ' />';
+        $defaults = array('name' => (is_array($data) ? '' : $data));
+        return '<button ' . self::parseAttributes($data, $defaults) . '>'.$value.'</button>';
     }
 
     public static function textarea($data = '', $value = '')
