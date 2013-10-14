@@ -78,16 +78,18 @@ class UserController extends RController
                 $user->mail = $form['email'];
                 $user->insert();
                 $user = $user->find()[0];
+                $this->flash("message","Hello,".$user->name.", please ".RHtmlHelper::linkAction('user','login','login')." !");
                 $this->redirectAction('user', 'view', $user->id);
             }
             else{
                 //echo '<pre>';
                 //print_r($validation->getErrors());
                 //echo '</pre>';
-                $this->render('register', array('validation_errors' => $validation->getErrors()), false);
+                $this->render('register',
+                    array('validation_errors' => $validation->getErrors(),'registerForm'=>$form), false);
             }
         }
-        $this->render('register', array('registerForm' => $form), false);
+        else $this->render('register', null, false);
     }
 
     private function verifyLogin($username, $password)

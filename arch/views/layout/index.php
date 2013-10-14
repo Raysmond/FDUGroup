@@ -82,7 +82,7 @@
                     ?>
                 </div>
             </div>
-            
+
             <div class="well sidebar-nav">
                 <ul class="nav">
                     <li>Sidebar</li>
