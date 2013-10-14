@@ -13,7 +13,7 @@ class Category extends Tree
         $option = array(
             "key" => "id",
             "pkey" => "pid",
-            "table" => "category",
+            "table" => "catagory",
             "columns" => array(
                 "id" => "cat_id",
                 "name" => "cat_name",

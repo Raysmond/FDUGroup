@@ -38,13 +38,14 @@ class GroupUser extends Data
     public function userGroups($userId = null)
     {
         if($userId == null) return null;
-        $result = null;
+        $result = array();
         $this->userId = $userId;
         $userGroups = $this->find();
         foreach($userGroups as $userGroup){
             $group = new Group();
             $group->id = $userGroup->groupId;
-            array_merge($result,$group->find());
+            $group->load();
+            array_push($result,$group);
         }
         return $result;
     }

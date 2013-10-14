@@ -35,7 +35,8 @@
                 <li><?php echo RHtmlHelper::linkAction("site","About","about",null); ?></li>
                 <li><?php echo RHtmlHelper::linkAction("site","Contact","contact",null); ?></li>
                 <li><?php echo RHtmlHelper::linkAction("group","Find Group","find",null); ?></li>
-                <li><?php echo RHtmlHelper::linkAction("group","My Group","view",null); ?></li>
+                <li><?php echo RHtmlHelper::linkAction("group","My Group","view",
+                        Rays::app()->isUserLogin()?Rays::app()->getLoginUser()->id:null); ?></li>
 
             </ul>
             <ul class="nav navbar-nav navbar-right">
