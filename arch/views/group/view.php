@@ -5,10 +5,6 @@
  * Date: 13-10-14
  * Time: 下午1:53
  */
-    $form = array();
-    if(isset($registerForm)){
-        $form = $registerForm;
-    }
     echo RFormHelper::openForm('group/view',
         array('id'=>'viewFrom', 'class'=>'.form-signin registerForm'));
 
@@ -24,10 +20,12 @@
     foreach($data as $group){
         echo '<tr><div class="alert alert-success">';
         echo "<td>";
-        foreach($group->columns as $col=>$coldb){
-            if(isset($group->$col))
-                echo RFormHelper::label($group->$col)."      ";
+        echo '<p><b>'.$group->name.'</b></p>';
+        echo $group->memberCount." members";
+        if(strlen($group->intro)>100){
+            echo '<p>'.substr($group->intro,0,100).'...</p>';
         }
+        else echo '<p>'.$group->intro.'</p>';
         echo "</td><td>";
         echo "&nbsp;&nbsp;";
         echo RHtmlHelper::linkAction('group','Exit group','exit',$group->id);

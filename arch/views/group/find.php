@@ -34,8 +34,23 @@
             echo '<p>'.substr($group->intro,0,100).'...</p>';
         }
         else echo '<p>'.$group->intro.'</p>';
-        echo RHtmlHelper::linkAction('group','Join the group','join',$group->id,
-            array('class'=>'btn btn-xs btn-info','style'=>'position:absolute;top:135px;'));
+
+        if(Rays::app()->isUserLogin()){
+            $g_u = new GroupUser();
+            $g_u->userId = Rays::app()->getLoginUser()->id;
+            $g_u->groupId = $group->id;
+            if(count($g_u->find())==0){
+                echo RHtmlHelper::linkAction('group','+ Join the group','join',$group->id,
+                    array('class'=>'btn btn-xs btn-info','style'=>'position:absolute;top:135px;'));
+            }else{
+                echo RHtmlHelper::linkAction('group','- Exit group','exit',$group->id,
+                    array('class'=>'btn btn-xs btn-info','style'=>'position:absolute;top:135px;'));
+            }
+        }else{
+            echo RHtmlHelper::linkAction('group','+ Join the group','join',$group->id,
+                array('class'=>'btn btn-xs btn-info','style'=>'position:absolute;top:135px;'));
+        }
+
         echo "</div></div></div>";
         $flag = ($flag+1)%3;
     }
