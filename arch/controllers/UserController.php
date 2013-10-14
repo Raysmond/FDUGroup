@@ -67,7 +67,9 @@ class UserController extends RController
                 array('field' => 'username', 'label' => 'User name', 'rules' => 'required|min_length[5]|max_length[20]'),
                 array('field' => 'password', 'label' => 'Password', 'rules' => 'required|min_length[6]|max_length[20]'),
                 array('field' => 'password-confirm', 'label' => 'Password Confirm', 'rules' => 'required|equals[password]'),
-                array('field' => 'email', 'label' => 'Email', 'rules' => 'required|is_email')
+                array('field' => 'email', 'label' => 'Email', 'rules' => 'required|is_email','errors'=>array(
+         
+                ))
             );
             $validation = new RFormValidationHelper($rules);
             if ($validation->run()) {
