@@ -19,15 +19,15 @@ class UserController extends RController
             $data = array("username" => $username);
             $login = $this->verifyLogin($username, $password);
             if ($login instanceof User) {
-                $session->set("user", $username);
+                $session->set("user", $login->id);
                 $session->flash("message", "Login successfully.");
                 $this->redirect(Rays::app()->getBaseUrl());
             } else {
                 $session->flash("message", $login);
             }
         }
-        if ($session->get("user") != false) {
-            $session->flash("message", $session->get("user") . ", you have already login...");
+        if (Rays::app()->isUserLogin()) {
+            $session->flash("message", Rays::app()->getLoginUser()->name . ", you have already login...");
         }
         $this->setHeaderTitle("Login");
         $this->addCss('/public/css/form.css');
@@ -64,14 +64,14 @@ class UserController extends RController
             $form = $_POST;
             // validate the form data
             $rules = array(
-                array('field' => 'username', 'label' => 'User name', 'rules' => 'trim|required|min_length[5]|max_length[20]'),
-                array('field' => 'password', 'label' => 'Password', 'rules' => 'trim|required|min_length[6]|max_length[20]'),
-                array('field' => 'password-confirm', 'label' => 'Password Confirm', 'rules' => 'trim|required|equals[password]'),
-                array('field' => 'email', 'label' => 'Email', 'rules' => 'trim|required|is_email')
+                array('field' => 'username', 'label' => 'User name', 'rules' => 'required|min_length[5]|max_length[20]'),
+                array('field' => 'password', 'label' => 'Password', 'rules' => 'required|min_length[6]|max_length[20]'),
+                array('field' => 'password-confirm', 'label' => 'Password Confirm', 'rules' => 'required|equals[password]'),
+                array('field' => 'email', 'label' => 'Email', 'rules' => 'required|is_email')
             );
             $validation = new RFormValidationHelper($rules);
             if ($validation->run()) {
-                print_r($validation);
+
                 /*
                 $user = new User();
                 $user->setDefaults();
@@ -82,6 +82,11 @@ class UserController extends RController
                 $user = $user->find()[0];
                 $this->redirectAction('user', 'view', $user->id);
                 */
+            }
+            else{
+                echo '<pre>';
+                print_r($validation->getErrors());
+                echo '</pre>';
             }
         }
         $this->render('register', array('registerForm' => $form), false);
