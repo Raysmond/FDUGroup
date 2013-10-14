@@ -8,6 +8,7 @@
 class RFormValidationHelper
 {
     protected $_fields = array();
+    protected $_labels = array();
     protected $_rules = array();
     protected $_errors = array();
 
@@ -16,38 +17,65 @@ class RFormValidationHelper
         foreach ($rules as $rule) {
             if (!isset($rule['field']))
                 continue;
-            if (!isset($rule['label']))
+            if (!isset($rule['label'])) {
                 $rule['label'] = $rule['field'];
-            if (!isset($rule['rules']))
+            }
+            if (!isset($rule['rules'])) {
                 $rule['rules'] = '';
-            $this->setRules($rule['field'], $rule['label'], $rule['rules']);
+            }
+            $_field = $rule['field'];
+            $_label = $rule['label'];
+            $_rule = $rule['rules'];
+            unset($rule['field']);
+            unset($rule['label']);
+            unset($rule['rules']);
+            $this->setRules($_field, $_label, $_rule, $rule);
         }
     }
 
-    public function setRules($field = '', $label = '', $rules = '')
+    public function setRules($field = '', $label = '', $rules = '', $extra = '')
     {
         if ($rules != '') {
             $rules = explode('|', $rules);
             for ($i = 0; $i < count($rules); $i++) {
-                if (($pos = strpos('[', $rules[$i])) > 0) {
+                if (($pos = strpos($rules[$i], '[')) > 0) {
                     $rules[$i] = array(
                         'rule' => substr($rules[$i], 0, $pos),
-                        'param' => substr($rules[$i], $pos + 1, strlen($rules[$i]) - $pos - 1)
+                        'param' => substr($rules[$i], $pos + 1, strlen($rules[$i]) - $pos - 2)
                     );
                 }
             }
         } else $rules = array();
-        //$errors = array();
-        //if(isset($rules['error'])&&!is_array($rules['error']))
-        //    array_push($errors,$rules['error']);
         $rule = array(
             'field' => $field,
             'label' => $label,
             'rules' => $rules,
         );
+        if ($extra != '') {
+            $rule = array_merge($rule, $extra);
+        }
+        $this->_labels[$field] = $label;
         array_push($this->_fields, $field);
         array_push($this->_rules, $rule);
     }
+
+    public function getError($field, $label, $param)
+    {
+        if ($field == 'required') {
+            return $label . " cannot be empty!";
+        } elseif ($field == 'is_email') {
+            return $label . " must be an email form, like username@example.com!";
+        } elseif ($field == 'min_length') {
+            return $label . " length must be greater than " . $param . "!";
+        } elseif ($field == 'max_length') {
+            return $label . " length must be shorter than " . $param . "!";
+        } elseif ($field == 'unique') {
+            return $label . " must be unique. Please try another!";
+        } elseif ($field == 'equals') {
+            return $label . " must be equal to " . $this->_labels[$param] . "!";
+        }
+    }
+
 
     public function run()
     {
@@ -56,24 +84,35 @@ class RFormValidationHelper
             $rule = $this->_rules[$i];
             if (!empty($rule['rules'])) {
                 foreach ($rule['rules'] as $r) {
+                    $field = $rule['field'];
+                    // $r is array like
+                    // $r = array('rule'=>'min_length','param'=>5)
                     if (is_array($r)) {
-                        echo $r['rule'];
-                        if (method_exists($this, $r) && ($this->$r['rule']($_POST[$rule['field']], $r['param']) == false)) {
+                        $method = $r['rule'];
+                        if (method_exists($this, $method) && ($this->$method($_POST[$field], $r['param']) == false)) {
                             $error = array();
-                            $error[$r] = $rule['label'] . " not meet requirement \"" . $r['rule'] . "\"";
-                            if(!isset($this->_errors[$rule['field']])) $this->_errors[$rule['field']] = array();
-                            array_push($this->_errors[$rule['field']],$error);
+                            if (!isset($rule['errors'][$method]))
+                                $error[$method] = $this->getError($method, $rule['label'], $r['param']);
+                            else
+                                $error[$method] = $rule['errors'][$method];
+
+                            if (!isset($this->_errors[$field])) $this->_errors[$field] = array();
+                            array_push($this->_errors[$field], $error);
                             $isValid = false;
                             continue;
                         }
                     } else {
+                        // The method is not a object method,it's a common php method like 'trim'
                         if (!method_exists($this, $r) && function_exists($r))
-                            $r($_POST[$rule['field']]);
-                        else if (method_exists($this, $r) && ($this->$r($_POST[$rule['field']]) == false)) {
+                            $r = $r($_POST[$field]);
+                        else if (method_exists($this, $r) && ($this->$r($_POST[$field]) == false)) {
                             $error = array();
-                            $error[$r] = $rule['label'] . " not meet requirement \"" . $r . "\"";
-                            if(!isset($this->_errors[$rule['field']])) $this->_errors[$rule['field']] = array();
-                            array_push($this->_errors[$rule['field']],$error);
+                            if (!isset($rule['errors'][$r]))
+                                $error[$r] = $this->getError($r, $rule['label'], '');
+                            else
+                                $error[$r] = $rule['errors'][$r];
+                            if (!isset($this->_errors[$field])) $this->_errors[$field] = array();
+                            array_push($this->_errors[$field], $error);
                             $isValid = false;
                             continue;
                         }
@@ -146,7 +185,9 @@ class RFormValidationHelper
 
     public function is_number($val)
     {
-        return preg_match("/[^0-9]/", $val) ? true : false;
+        if (is_numeric($val))
+            return true;
+        else return preg_match("/[^0-9]/", $val) ? true : false;
     }
 
     public function getErrors()

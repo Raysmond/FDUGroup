@@ -15,18 +15,32 @@ class UserController extends RController
         if (Rays::app()->isUserLogin()) {
             $this->flash("message", Rays::app()->getLoginUser()->name . ", you have already login...");
             $this->redirect(Rays::app()->getBaseUrl());
+            return;
         }
         if ($this->getHttpRequest()->isPostRequest()) {
-            $username = $this->getHttpRequest()->getParam("username");
-            $password = $this->getHttpRequest()->getParam("password");
-            $data = array("username" => $username);
-            $login = $this->verifyLogin($username, $password);
-            if ($login instanceof User) {
-                $this->getSession()->set("user", $login->id);
-                $this->flash("message", "Login successfully.");
-                $this->redirect(Rays::app()->getBaseUrl());
-            } else {
-                $this->flash("message", $login);
+            $form = $_POST;
+            $validation = new RFormValidationHelper(array(
+                array('field'=>'username','label'=>'User name','rules'=>'trim|required'),
+                array('field'=>'password','label'=>'password','rules'=>'trim|required')
+            ));
+
+            if($validation->run()){
+                $login = $this->verifyLogin($form['username'], $form['password']);
+                if ($login instanceof User)
+                {
+                    $this->getSession()->set("user", $login->id);
+                    $this->flash("message", "Login successfully.");
+                    $this->redirect(Rays::app()->getBaseUrl());
+                    return;
+                } else
+                {
+                    $this->flash("error", $login);
+                    $data = array('loginForm'=>$form);
+                }
+            }
+            else
+            {
+                $data = array('validation_errors' => $validation->getErrors(),'loginForm'=>$form);
             }
         }
         $this->setHeaderTitle("Login");
@@ -64,10 +78,14 @@ class UserController extends RController
             $form = $_POST;
             // validate the form data
             $rules = array(
-                array('field' => 'username', 'label' => 'User name', 'rules' => 'trim|required|min_length[5]|max_length[20]'),
-                array('field' => 'password', 'label' => 'Password', 'rules' => 'trim|required|min_length[6]|max_length[20]'),
-                array('field' => 'password-confirm', 'label' => 'Password Confirm', 'rules' => 'trim|required|equals[password]'),
-                array('field' => 'email', 'label' => 'Email', 'rules' => 'trim|required|is_email','errors'=>array( ))
+                array('field' => 'username', 'label' => 'User name',
+                    'rules' => 'trim|required|min_length[5]|max_length[20]' ),
+                array('field' => 'password', 'label' => 'Password',
+                    'rules' => 'trim|required|min_length[6]|max_length[20]'),
+                array('field' => 'password-confirm', 'label' => 'Password Confirm',
+                    'rules' => 'trim|required|equals[password]'),
+                array('field' => 'email', 'label' => 'Email',
+                    'rules' => 'trim|required|is_email')
             );
 
             $validation = new RFormValidationHelper($rules);
@@ -81,11 +99,9 @@ class UserController extends RController
                 $user = $user->find()[0];
                 $this->flash("message","Hello,".$user->name.", please ".RHtmlHelper::linkAction('user','login','login')." !");
                 $this->redirectAction('user', 'view', $user->id);
+                return;
             }
             else{
-                //echo '<pre>';
-                //print_r($validation->getErrors());
-                //echo '</pre>';
                 $this->render('register',
                     array('validation_errors' => $validation->getErrors(),'registerForm'=>$form), false);
             }
@@ -113,6 +129,7 @@ class UserController extends RController
         if(Rays::app()->isUserLogin()==false){
             $this->flash("message","Please login first.");
             $this->redirectAction('user','login');
+            return;
         }
         $user = new User();
 

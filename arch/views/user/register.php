@@ -1,13 +1,6 @@
 <?php
     if(isset($validation_errors)){
-        echo '<div class="alert alert-danger">';
-        foreach($validation_errors as $error){
-            foreach($error as $e)
-                foreach($e as $one){
-                    echo $one."<br/>";
-                }
-        }
-        echo '</div>';
+        RHtmlHelper::showValidationErrors($validation_errors);
     }
     $form = array();
     if(isset($registerForm)){

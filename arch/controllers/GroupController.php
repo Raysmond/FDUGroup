@@ -28,6 +28,7 @@ class GroupController extends RController {
         if(! Rays::app()->isUserLogin()){
             $this->flash("message","Please login first!");
             $this->redirectAction('user','login');
+            return;
         }
         $userGroup = new GroupUser();
         $userGroup = $userGroup->userGroups($userId);
@@ -57,7 +58,7 @@ class GroupController extends RController {
                 $group = new Group();
                 $group->setDefaults();
                 $group->name = $form['group-name'];
-                $group->categoryId = $form['category']; //initial id 0 : other category to be decided by sys manager
+                $group->categoryId = $form['category'];
                 $group->intro = $form['intro'];
                 $group->creator = Rays::app()->getLoginUser()->id;
                 $group->insert();
@@ -98,6 +99,7 @@ class GroupController extends RController {
         if(Rays::app()->isUserLogin()==false){
             $this->flash("message","Please login first.");
             $this->redirectAction('user','login');
+            return;
         }
         else{
             $groupUser = new GroupUser();
@@ -123,6 +125,7 @@ class GroupController extends RController {
         if(Rays::app()->isUserLogin()==false){
             $this->flash("message","Please login first.");
             $this->redirectAction('user','login');
+            return;
         }
         else{
             $groupUser = new GroupUser();

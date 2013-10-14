@@ -15,14 +15,14 @@ class RSessionManager {
         session_start();
         //$this->prefix = $_SERVER['HTTP_POST'];
 
-        if($this->get('flash')) {
-            foreach($_SESSION[$this->prefix]['flash'] as $name=>$vals) {
-                ++$_SESSION[$this->prefix]['flash'][$name]['counter'];
-                if($_SESSION[$this->prefix]['flash'][$name]['counter']>1) {
-                    unset($_SESSION[$this->prefix]['flash'][$name]);
-                }
-            }
-        }
+        //if($this->get('flash')) {
+        //    foreach($_SESSION[$this->prefix]['flash'] as $name=>$vals) {
+        //        ++$_SESSION[$this->prefix]['flash'][$name]['counter'];
+        //        if($_SESSION[$this->prefix]['flash'][$name]['counter']>1) {
+        //            unset($_SESSION[$this->prefix]['flash'][$name]);
+        //        }
+         //   }
+        //}
     }
 
     function get($id) {
@@ -69,13 +69,16 @@ class RSessionManager {
 
     function flash($id,$value) {
         if(!isset($_SESSION[$this->prefix]['flash'][$id]))
-            $_SESSION[$this->prefix]['flash'][$id] = array('val'=>array(),'counter'=>0);
-        array_push($_SESSION[$this->prefix]['flash'][$id]['val'],$value);
+            $_SESSION[$this->prefix]['flash'][$id] = array();
+        array_push($_SESSION[$this->prefix]['flash'][$id],$value);
     }
 
     function getFlash($id) {
-        if(isset($_SESSION[$this->prefix]['flash'][$id]['val']))
-            return $_SESSION[$this->prefix]['flash'][$id]['val'];
+        if(isset($_SESSION[$this->prefix]['flash'][$id])){
+            $val =$_SESSION[$this->prefix]['flash'][$id];
+            unset($_SESSION[$this->prefix]['flash'][$id]);
+            return $val;
+        }
         else return false;
     }
 }
