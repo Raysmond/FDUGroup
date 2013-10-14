@@ -93,6 +93,28 @@ class RModule
     }
 
     /**
+     * Render a module view and get render content
+     * @param string $viewFileName
+     * @param string $data
+     * @return string
+     */
+    public function render($viewFileName='', $data='')
+    {
+        $viewFile = $this->getModuleDir()."/".$viewFileName.".php";
+        if(file_exists($viewFile)){
+            if (is_array($data))
+                extract($data);
+            ob_start();
+            ob_implicit_flush(false);
+            require($viewFile);
+            return ob_get_clean();
+        }
+        else{
+            die("Module view file not exists: ".$viewFile);
+        }
+    }
+
+    /**
      * Whether the current page can access the module
      */
     public function canAccess()

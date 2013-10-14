@@ -1,0 +1,16 @@
+<?php
+/**
+ * Group categories module
+ * @author: Raysmond
+ */
+
+class group_categories_module extends RModule{
+    public $access = array();
+
+    public function module_content()
+    {
+        $categories = new Category();
+        $categories = $categories->find();
+        return $this->render('group_categories',array('title'=>$this->getName(),'categories'=>$categories));
+    }
+}
