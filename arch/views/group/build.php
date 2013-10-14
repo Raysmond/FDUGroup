@@ -14,21 +14,13 @@ echo RFormHelper::input(
         'placeholder'=>'Group name',
     ),$form);
 
-echo RFormHelper::label('Group Category','category',array());
-echo RFormHelper::input(
-    array('id'=>'category',
-        'name'=>'category',
-        'class'=>'form-control',
-        'placeholder'=>'Group category',
-    ),$form);
-
 echo RFormHelper::select('category1',array(
     array('value'=>"1","text"=>"tx2",'attributes'=>array('class'=>"asdlfkajsd")),array('value'=>"2","text"=>'text2'))
 ,array(),array('class'=>'myselectclass'));
 
 echo RFormHelper::label('Group Introduction','intro',array());
 echo '<br/>';
-echo RFormHelper::textarea(array('name'=>'intro','cols'=>'50','rows'=>'5'));
+echo RFormHelper::textarea(array('name'=>'intro','cols'=>'100','rows'=>'15'));
 
 echo '<br/><br/>';
 echo RFormHelper::input(
