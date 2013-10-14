@@ -40,7 +40,7 @@
 
     echo "<br/>";
 
-    echo RFormHelper::button(
+    echo RFormHelper::input(
         array('class'=>'btn btn-lg btn-primary btn-block','type'=>'submit','value'=>'Register'));
     echo RFormHelper::endForm();
 
