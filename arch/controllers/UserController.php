@@ -104,4 +104,18 @@ class UserController extends RController
             return $user;
         } else return "User name and password not match...";
     }
+
+
+
+    public function actionUserEdit($userId){
+        $user = new User();
+        $user->load($userId);
+        if($user==null){
+            // not found...
+            // need to be implemented
+            return;
+        }
+        $this->setHeaderTitle($user->name);
+        $this->render('useredit',array('user'=>$user),false);
+    }
 }
