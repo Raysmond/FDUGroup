@@ -57,7 +57,7 @@ class GroupController extends RController {
                 $group = new Group();
                 $group->setDefaults();
                 $group->name = $form['group-name'];
-                $group->categoryId = $form['category'];
+                $group->categoryId = 0; //initial id 0 : other category to be decided by sys manager
                 $group->intro = $form['intro'];
                 $group->creator = Rays::app()->getLoginUser()->id;
                 $group->insert();
@@ -88,6 +88,11 @@ class GroupController extends RController {
         $this->render('build',null,false);
     }
 
+    public function actionEdit($groupId=null)
+    {
+        $this->render('edit',array('groupId'=>$groupId),false);
+    }
+
     public function actionJoin($groupId=null)
     {
         if(Rays::app()->isUserLogin()==false){
@@ -102,6 +107,11 @@ class GroupController extends RController {
             $groupUser->joinTime = date('Y-m-d H:i:s');
             $groupUser->status = 1;
             $groupUser->insert();
+
+            $group = new Group();
+            $group->load($groupId);
+            $group->memberCount++;
+            $group->update();
 
             $this->flash("message","Congratulations. You have joined the group successfully.");
             $this->redirectAction('group','view',Rays::app()->getLoginUser()->id);
