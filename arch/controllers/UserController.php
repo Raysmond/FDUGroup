@@ -59,9 +59,28 @@ class UserController extends RController
         $form = '';
         if($this->getHttpRequest()->isPostRequest()){
             $form = $_POST;
+            // validate the form data
+            $rules = array(
+                array('field'=>'username','label'=>'User name','rules'=>'trim|required|min_length[5]|max_length[20]'),
+                array('field'=>'password','label'=>'Password','rules'=>'trim|required|min_length[6]|max_length[20]'),
+                array('field'=>'password-confirm','label'=>'Password Confirm','rules'=>'trim|required|equals[password]'),
+                array('field'=>'email','label'=>'Email','rules'=>'trim|required|is_email')
+            );
+            $validation = new RFormValidation();
+            if($validation->run()){
+                $user = new User();
+                $user->name = $form['username'];
+                $user->password = $form['password'];
+                $user->mail = $form['email'];
+                $user->status = 1;
+                date_default_timezone_set('PRC');
+                $user->registerTime = date('Y-m-d H:i:s');
+                $user->insert();
+                $user = $user->find()[0];
+                //print_r($user);
+                $this->redirect(RHtmlHelper::siteUrl($this->generateActionLink('user','view',$user->id)));
+            }
         }
-        // validate the form data
-        if($form['username']!=''&&$form['password']!='')
         $this->render('register',array('registerForm'=>$form),false);
         // Rays::app()->getHttpRequest()->getParam('username');
         // need to be implemented
