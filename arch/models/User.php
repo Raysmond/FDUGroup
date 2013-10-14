@@ -7,6 +7,10 @@
 class User extends Data{
     public $id,$name,$mail,$password,$region,$mobile,$qq,$weibo;
     public $registerTime,$status,$picture,$intro,$homepage,$credits,$permission,$privacy;
+    public $defaults = array(
+        'status'=>1,
+        'credits'=>1,
+    );
 
     public function __construct(){
         $option = array(
@@ -32,5 +36,17 @@ class User extends Data{
             )
         );
         parent::init($option);
+    }
+
+    public function setDefaults()
+    {
+        foreach($this->defaults as $key=>$val){
+            if(!isset($this->$key))
+                $this->$key = $val;
+        }
+        if(!isset($this->registerTime)){
+            date_default_timezone_set(Rays::app()->getTimeZone());
+            $this->registerTime = date('Y-m-d H-i-s');
+        }
     }
 }
