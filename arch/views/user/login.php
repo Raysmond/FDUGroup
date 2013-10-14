@@ -3,25 +3,36 @@
  * User login view
  * @author: Raysmond
  */
+
+if(isset($validation_errors)){
+    RHtmlHelper::showValidationErrors($validation_errors);
+}
+$form = array();
+if(isset($loginForm)){
+    $form = $loginForm;
+}
+echo RFormHelper::openForm('user/login',
+    array('id'=>'loginForm', 'class'=>'form-signin login-form'));
+echo '<h2 class="form-signin-heading">Login</h2>';
+
+echo RFormHelper::label("User name",'username');
+echo RFormHelper::input(
+    array('id'=>'username',
+        'name'=>'username',
+        'class'=>'form-control',
+        'placeholder'=>'User name',
+    ),$form);
+
+echo RFormHelper::label("Password",'password');
+echo RFormHelper::input(
+    array('id'=>'password',
+        'name'=>'password',
+        'type'=>'password',
+        'class'=>'form-control',
+        'placeholder'=>'Password',
+    ),$form);
+
+echo RFormHelper::input(
+    array('class'=>'btn btn-lg btn-primary btn-block','type'=>'submit','value'=>'Login'));
+echo RFormHelper::endForm();
 ?>
-<form id="singin-form" class="form-signin" method="post" action="#">
-<?php
-if (Rays::app()->isUserLogin() == false) {
-    ?>
-
-    <h2 class="form-signin-heading">Please sign in</h2>
-    <input name="username" type="text" class="form-control" placeholder="User name" autofocus>
-    <input name="password" type="password" class="form-control" placeholder="Password">
-    <!--
-    <label class="checkbox">
-        <input name="rememberMe" type="checkbox" value="remember-me"> Remember me
-    </label>
-    -->
-    <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-    </form>
-
-<?php
-} else {
-    echo "<br/>";
-    echo RHtmlHelper::linkAction('user', 'Logout', 'logout', null);
-}?>

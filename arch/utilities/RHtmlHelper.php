@@ -133,4 +133,17 @@ class RHtmlHelper
         return $html;
     }
 
+    public static function showValidationErrors($validation_errors){
+        if(isset($validation_errors)){
+            echo '<div class="alert alert-danger">';
+            foreach($validation_errors as $error){
+                foreach($error as $e)
+                    foreach($e as $one){
+                        echo $one."<br/>";
+                    }
+            }
+            echo '</div>';
+        }
+    }
+
 }
