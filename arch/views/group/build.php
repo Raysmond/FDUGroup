@@ -14,9 +14,14 @@ echo RFormHelper::input(
         'placeholder'=>'Group name',
     ),$form);
 
-echo RFormHelper::select('category1',array(
-    array('value'=>"1","text"=>"tx2",'attributes'=>array('class'=>"asdlfkajsd")),array('value'=>"2","text"=>'text2'))
-,array(),array('class'=>'myselectclass'));
+echo "<br/>";
+echo RFormHelper::label("Category:",'category')."&nbsp;&nbsp;";
+$cats = array();
+foreach($categories as $cat){
+    array_push($cats,array('value'=>$cat->id,'text'=>$cat->name));
+}
+echo RFormHelper::select('category',$cats,array($cats[0]['value']));
+echo "<br/>";
 
 echo RFormHelper::label('Group Introduction','intro',array());
 echo '<br/>';

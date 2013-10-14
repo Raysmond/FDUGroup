@@ -65,6 +65,8 @@ class RFormHelper
             if(!isset($option['value']))
                 continue;
             $optionAttr = (isset($option['attributes']))?$option['attributes']:array();
+            if(!empty($selected)&&in_array($option['value'],$selected))
+                $optionAttr['selected'] = 'selected';
             $html.='<option value="'.$option['value'].'" '.self::parseAttributes($optionAttr).'>';
             $html.=((isset($option['text']))?$option['text']:$option['value']).'</option>';
         }
