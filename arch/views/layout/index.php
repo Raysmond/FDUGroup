@@ -46,6 +46,10 @@
                     echo "<li>".RHtmlHelper::linkAction("user","Register","register",null)."</li>";
                 }
                 else{
+                    echo "<li>".RHtmlHelper::linkAction("user",
+                            Rays::app()->getLoginUser()->name,
+                            "view",
+                            Rays::app()->getLoginUser()->id)."</li>";
                     echo "<li>".RHtmlHelper::linkAction("user","Logout","logout",null)."</li>";
                 }
                 ?>

@@ -78,6 +78,8 @@ class Data
         }
         $sql .= $where;
 
+        echo $sql;
+
         DataConnector::getConnection();
         mysql_query($sql) or die(mysql_error());
     }

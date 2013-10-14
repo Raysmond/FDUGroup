@@ -107,9 +107,25 @@ class UserController extends RController
 
 
 
-    public function actionUserEdit($userId){
+    public function actionUserEdit($userId=null){
+        if(Rays::app()->isUserLogin()==false){
+            $this->flash("message","Please login first.");
+            $this->redirectAction('user','login');
+        }
         $user = new User();
-        $user->load($userId);
+
+        $user->load(($userId==null)?Rays::app()->getLoginUser()->id:$userId);
+        if($this->getHttpRequest()->isPostRequest()){
+            $form = $_POST;
+            foreach($user->columns as $objCol=>$dbCol){
+                if(isset($form[$objCol])){
+                    $user->$objCol = $form[$objCol];
+                }
+            }
+            $user->update();
+
+        }
+
         if($user==null){
             // not found...
             // need to be implemented
