@@ -36,15 +36,17 @@
                 <li><?php echo RHtmlHelper::linkAction("site","Contact","contact",null); ?></li>
                 <li><?php echo RHtmlHelper::linkAction("group","Find Group","find",null); ?></li>
                 <li><?php echo RHtmlHelper::linkAction("group","My Group","view",null); ?></li>
-                <?php
-                    if(!Rays::app()->isUserLogin()){
-                        echo "<li>".RHtmlHelper::linkAction("user","Login","login",null)."</li>";
-                        echo "<li>".RHtmlHelper::linkAction("user","Register","register",null)."</li>";
-                    }
-                    else{
-                        echo "<li>".RHtmlHelper::linkAction("user","Logout","logout",null)."</li>";
-                    }
 
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <?php
+                if(!Rays::app()->isUserLogin()){
+                    echo "<li>".RHtmlHelper::linkAction("user","Login","login",null)."</li>";
+                    echo "<li>".RHtmlHelper::linkAction("user","Register","register",null)."</li>";
+                }
+                else{
+                    echo "<li>".RHtmlHelper::linkAction("user","Logout","logout",null)."</li>";
+                }
                 ?>
             </ul>
         </div><!-- /.nav-collapse -->
@@ -70,6 +72,17 @@
         </div><!--/span-->
 
         <div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar" role="navigation">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h3 class="panel-title">New Users</h3>
+                </div>
+                <div class="panel-body">
+                    <?php
+                    $this->module("new_users",array('id'=>'new_users','name'=>"New Users"));
+                    ?>
+                </div>
+            </div>
+            
             <div class="well sidebar-nav">
                 <ul class="nav">
                     <li>Sidebar</li>
@@ -83,11 +96,7 @@
                 </ul>
             </div><!--/.well -->
 
-            <div class="well">
-                <?php
-                    $this->module("new_users",array('id'=>'new_users','name'=>"New Users"));
-                ?>
-            </div>
+
 
         </div><!--/span-->
     </div><!--/row-->
