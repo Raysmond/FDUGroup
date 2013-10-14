@@ -66,7 +66,7 @@ class UserController extends RController
                 array('field'=>'password-confirm','label'=>'Password Confirm','rules'=>'trim|required|equals[password]'),
                 array('field'=>'email','label'=>'Email','rules'=>'trim|required|is_email')
             );
-            $validation = new RFormValidation();
+            $validation = new RFormValidationHelper($rules);
             if($validation->run()){
                 $user = new User();
                 $user->name = $form['username'];
@@ -81,8 +81,6 @@ class UserController extends RController
             }
         }
         $this->render('register',array('registerForm'=>$form),false);
-        // Rays::app()->getHttpRequest()->getParam('username');
-        // need to be implemented
     }
 
     private function verifyLogin($username, $password)

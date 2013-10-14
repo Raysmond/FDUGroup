@@ -4,7 +4,8 @@
  * @author: Raysmond
  */
 
-class RFormValidation
+// need to be implemented
+class RFormValidationHelper
 {
     protected $_fields = array();
     protected $_rules = array();
