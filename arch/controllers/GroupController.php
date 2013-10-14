@@ -72,10 +72,17 @@ class GroupController extends RController {
                 $groupUser->insert();
 
                 $this->flash("message","Group was built successfully.");
+                $this->redirectAction('group','view',Rays::app()->getLoginUser()->id);
             }
             else{
                 // failed
+                $this->flash("error","Errors.");
             }
+        }
+        else{
+            $category = new Category();
+            $categories =  $category->find();
+            $this->render('build',array('categories'=>$categories),false);
         }
         $this->render('build',null,false);
     }
