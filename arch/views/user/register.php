@@ -4,7 +4,7 @@
         $form = $registerForm;
     }
     echo RFormHelper::openForm('user/register',
-        array('id'=>'registerForm', 'class'=>'.form-signin registerForm'));
+        array('id'=>'registerForm', 'class'=>'form-signin registerForm'));
     echo '<h2 class="form-signin-heading">Register</h2>';
 
     echo RFormHelper::label("User name",'username');

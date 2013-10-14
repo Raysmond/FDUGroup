@@ -44,4 +44,11 @@ class Group extends Data
         $groupusers->groupId = $this->id;
         return $groupusers->find();
     }
+
+    public function setDefaults(){
+        if(!isset($this->memberCount))
+            $this->memberCount = 1;
+        date_default_timezone_set(Rays::app()->getTimeZone());
+        $this->createdTime = date('Y-m-d H:i:s');
+    }
 }

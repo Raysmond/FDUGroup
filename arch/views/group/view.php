@@ -12,7 +12,7 @@
     echo RFormHelper::openForm('group/view',
         array('id'=>'viewFrom', 'class'=>'.form-signin registerForm'));
 
-    echo RFormHelper::button(array('type'=>'submit','class'=>'btn btn-success'),'Build My Group Now!');
+    echo RHtmlHelper::linkAction('group','Build my group','build');
     if($data == null){
         echo "<p>You have not joint any groups!</p>";
         return null;
@@ -26,7 +26,10 @@
                 echo RFormHelper::label($group->$col)."      ";
         }
         echo "</td><td>";
-        echo RFormHelper::button(array('type'=>'submit','class'=>'btn btn-success'),'Exit Group');
+        echo "&nbsp;&nbsp;";
+        echo RHtmlHelper::linkAction('group','Exit group','exit',$group->id);
+        echo "&nbsp;&nbsp;";
+        echo RHtmlHelper::linkAction('group','View details','detail',$group->id);
         echo '</td></div></tr>';
     }
 

@@ -35,18 +35,91 @@ class GroupController extends RController {
         $this->render("view",$userGroup,false);
     }
 
+    public function actionDetail($groupId){
+        $this->setHeaderTitle("Group details");
+        $group = new Group();
+        $group->load($groupId);
+        $group->category->load();
+        $group->groupCreator->load();
+        $this->render('detail',array('group'=>$group),false);
+
+    }
+
     public function actionBuild()
     {
+        $this->setHeaderTitle("Build my group");
+        if($this->getHttpRequest()->isPostRequest()){
+            $form = $_POST;
+            $rules = array();
+            $validation = new RFormValidationHelper($rules);
+            if($validation->run()){
+                // success
+                $group = new Group();
+                $group->setDefaults();
+                $group->name = $form['group-name'];
+                $group->categoryId = $form['category'];
+                $group->intro = $form['intro'];
+                $group->creator = Rays::app()->getLoginUser()->id;
+                $group->insert();
+                $group = $group->find()[0];
 
+                $groupUser = new GroupUser();
+                $groupUser->groupId = $group->id;
+                $groupUser->userId = $group->creator;
+                date_default_timezone_set(Rays::app()->getTimeZone());
+                $groupUser->joinTime = date('Y-m-d H:i:s');
+                $groupUser->status = 1;
+                $groupUser->insert();
+
+                $this->flash("message","Group was built successfully.");
+            }
+            else{
+                // failed
+            }
+        }
+        $this->render('build',null,false);
     }
 
-    public function actionJoin()
+    public function actionJoin($groupId=null)
     {
+        if(Rays::app()->isUserLogin()==false){
+            $this->flash("message","Please login first.");
+            $this->redirectAction('user','login');
+        }
+        else{
+            $groupUser = new GroupUser();
+            $groupUser->groupId = $groupId;
+            $groupUser->userId = Rays::app()->getLoginUser()->id;
+            date_default_timezone_set(Rays::app()->getTimeZone());
+            $groupUser->joinTime = date('Y-m-d H:i:s');
+            $groupUser->status = 1;
+            $groupUser->insert();
 
+            $this->flash("message","Congratulations. You have joined the group successfully.");
+            $this->redirectAction('group','view',Rays::app()->getLoginUser()->id);
+        }
     }
 
-    public function actionExit()
+    public function actionExit($groupId=null)
     {
+        if(Rays::app()->isUserLogin()==false){
+            $this->flash("message","Please login first.");
+            $this->redirectAction('user','login');
+        }
+        else{
+            $groupUser = new GroupUser();
+            $groupUser->groupId = $groupId;
+            $groupUser->userId = Rays::app()->getLoginUser()->id;
 
+            $group = new Group();
+            $group->load($groupId);
+            $group->memberCount--;
+            $group->update();
+
+            $groupUser->delete();
+
+            $this->flash("message","You have exited the group successfully.");
+            $this->redirectAction('group','view',Rays::app()->getLoginUser()->id);
+        }
     }
 }

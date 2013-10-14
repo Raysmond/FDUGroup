@@ -26,7 +26,10 @@
         echo "<div class='panel panel-default'>";
         echo "<div class='panel-heading'>";
         echo RFormHelper::label($group->name);
-        echo RFormHelper::button(array('type'=>'submit','class'=>'btn btn-success'),'Join In');
+        echo '&nbsp;&nbsp;';
+        echo RHtmlHelper::linkAction('group','Join','join',$group->id);
+        echo '&nbsp;&nbsp;';
+        echo RHtmlHelper::linkAction('group','View details','detail',$group->id);
         echo "</div>";
         echo "<div class='panel-body'>";
         foreach($group->columns as $col=>$coldb){
