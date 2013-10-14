@@ -79,6 +79,7 @@
         <div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar" role="navigation">
 
                     <?php
+                    $this->module("group_categories",array('id'=>'group_categories','name'=>"Categories"));
                     $this->module("new_users",array('id'=>'new_users','name'=>"New Users"));
                     ?>
 
