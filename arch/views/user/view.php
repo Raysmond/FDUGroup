@@ -6,8 +6,8 @@
 ?>
 <div class="jumbotron">
     <h1><font align = "left" >Hi!<?php echo " ".$user->name; ?>
-    <marquee directio=left><font face=华文楷体 size=5 color = #5f9ea0>Welcome to FDUGroup ! This is your user view page,
-            you can find your information in there.</font></marquee>
+    <marquee directio=left>Welcome to FDUGroup ! This is your user view page,
+            you can find your information in there.</marquee>
     </h1>
     </br>
     <p>

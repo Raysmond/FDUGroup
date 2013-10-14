@@ -22,6 +22,10 @@ echo RFormHelper::input(
         'placeholder'=>'Group category',
     ),$form);
 
+echo RFormHelper::select('category1',array(
+    array('value'=>"1","text"=>"tx2",'attributes'=>array('class'=>"asdlfkajsd")),array('value'=>"2","text"=>'text2'))
+,array(),array('class'=>'myselectclass'));
+
 echo RFormHelper::label('Group Introduction','intro',array());
 echo '<br/>';
 echo RFormHelper::textarea(array('name'=>'intro','cols'=>'50','rows'=>'5'));
