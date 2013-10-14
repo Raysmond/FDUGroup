@@ -27,11 +27,11 @@
     ?>
 </h2>
 <div class="jumbotron">
-<p><h4>
+<p>
     create time:<?php echo $group->createdTime; ?> &nbsp &nbsp
     created by: <?php echo RHtmlHelper::linkAction('user',$group->groupCreator->name,'view',$group->creator) ?> &nbsp &nbsp
     group type: <?php echo RHtmlHelper::linkAction('category',$group->category->name,'view',$group->category->id); ?> <br/>
     Group members: <?php echo $group->memberCount; ?> <br/>
     <br/>Group introduction: <?php echo $group->intro; ?> <br/>
-</h4></p>
+</p>
 </div>

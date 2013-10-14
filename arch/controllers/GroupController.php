@@ -57,7 +57,7 @@ class GroupController extends RController {
                 $group = new Group();
                 $group->setDefaults();
                 $group->name = $form['group-name'];
-                $group->categoryId = 0; //initial id 0 : other category to be decided by sys manager
+                $group->categoryId = $form['category']; //initial id 0 : other category to be decided by sys manager
                 $group->intro = $form['intro'];
                 $group->creator = Rays::app()->getLoginUser()->id;
                 $group->insert();
