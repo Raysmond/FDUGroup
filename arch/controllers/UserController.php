@@ -56,7 +56,13 @@ class UserController extends RController
 
     public function actionRegister(){
         $this->setHeaderTitle("Register");
-        $this->render('register',null,false);
+        $form = '';
+        if($this->getHttpRequest()->isPostRequest()){
+            $form = $_POST;
+        }
+        // validate the form data
+        if($form['username']!=''&&$form['password']!='')
+        $this->render('register',array('registerForm'=>$form),false);
         // Rays::app()->getHttpRequest()->getParam('username');
         // need to be implemented
     }
