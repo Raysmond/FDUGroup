@@ -33,7 +33,7 @@ class RHtmlHelper
         return self::tryCleanLink(Rays::app()->getBaseUrl() . "/" . $url);
     }
 
-    public static function linkAction($controller, $name, $action = null, $params = null)
+    public static function linkAction($controller, $name, $action = null, $params = null,$attributes=array())
     {
         $link = "?q=" . $controller;
         if (isset($action) && $action != '')
@@ -47,12 +47,12 @@ class RHtmlHelper
                 }
             }
         }
-        return self::link($name, $name, Rays::app()->getBaseUrl() . "/" . $link);
+        return self::link($name, $name, Rays::app()->getBaseUrl() . "/" . $link,$attributes);
     }
 
-    public static function link($title, $content, $href)
+    public static function link($title, $content, $href, $attributes=array())
     {
-        return '<a title="' . $title . '" href="' . self::tryCleanLink($href) . '" >' . self::encode($content) . '</a>';
+        return '<a '.self::parseAttributes($attributes).' title="' . $title . '" href="' . self::tryCleanLink($href) . '" >' . self::encode($content) . '</a>';
     }
 
     public static function linkWithTarget($title, $content, $href, $target)
@@ -113,6 +113,24 @@ class RHtmlHelper
                 $messages.='<div class="alert alert-danger">' .$error. '</div>';
         }
         return $messages;
+    }
+
+    private static function parseAttributes($attributes, $defaults = array())
+    {
+        if (is_array($attributes)) {
+            foreach ($defaults as $key => $val) {
+                if (isset($attributes[$key]))
+                    $defaults[$key] = $attributes[$key];
+                unset($attributes[$key]);
+            }
+            if (count($attributes) > 0)
+                $defaults = array_merge($defaults, $attributes);
+        }
+        $html = '';
+        foreach ($defaults as $key => $val) {
+            $html .= $key . '="' . RHtmlHelper::encode($val) . '" ';
+        }
+        return $html;
     }
 
 }

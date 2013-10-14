@@ -12,7 +12,10 @@
     echo RFormHelper::openForm('group/view',
         array('id'=>'viewFrom', 'class'=>'.form-signin registerForm'));
 
-    echo RHtmlHelper::linkAction('group','Build my group','build');
+    echo RHtmlHelper::linkAction('group','Build my group','build',null,array('class'=>'btn btn-success'));
+
+    echo "<br/><br/>";
+
     if($data == null){
         echo "<p>You have not joint any groups!</p>";
         return null;
