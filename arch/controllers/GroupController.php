@@ -26,6 +26,7 @@ class GroupController extends RController {
     public function actionView($userId = null)
     {
         if(! Rays::app()->isUserLogin()){
+            Rays::app()->getHttpSession()->flash("message","Please login first!");
             $this->redirectAction('user','login');
         }
         $userGroup = new GroupUser();
