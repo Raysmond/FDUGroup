@@ -25,7 +25,7 @@ class GroupController extends RController {
      */
     public function actionView($userId = null)
     {
-        if($userId == null){
+        if(! Rays::app()->isUserLogin()){
             $this->redirectAction('user','login');
         }
         $userGroup = new GroupUser();
