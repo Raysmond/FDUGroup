@@ -6,11 +6,7 @@
 ?>
 <form id="singin-form" class="form-signin" method="post" action="#">
 <?php
-$session = Rays::app()->getHttpSession();
-if ($session->getFlash("message") != false)
-    echo $session->getFlash("message");
-
-if ($session->get("user") == false) {
+if (Rays::app()->isUserLogin() == false) {
     ?>
 
     <h2 class="form-signin-heading">Please sign in</h2>

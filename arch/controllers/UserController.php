@@ -12,22 +12,22 @@ class UserController extends RController
     public function actionLogin()
     {
         $data = null;
-        $session = Rays::app()->getHttpSession();
+        if (Rays::app()->isUserLogin()) {
+            $this->flash("message", Rays::app()->getLoginUser()->name . ", you have already login...");
+            $this->redirect(Rays::app()->getBaseUrl());
+        }
         if ($this->getHttpRequest()->isPostRequest()) {
             $username = $this->getHttpRequest()->getParam("username");
             $password = $this->getHttpRequest()->getParam("password");
             $data = array("username" => $username);
             $login = $this->verifyLogin($username, $password);
             if ($login instanceof User) {
-                $session->set("user", $login->id);
-                $session->flash("message", "Login successfully.");
+                $this->getSession()->set("user", $login->id);
+                $this->flash("message", "Login successfully.");
                 $this->redirect(Rays::app()->getBaseUrl());
             } else {
-                $session->flash("message", $login);
+                $this->flash("message", $login);
             }
-        }
-        if (Rays::app()->isUserLogin()) {
-            $session->flash("message", Rays::app()->getLoginUser()->name . ", you have already login...");
         }
         $this->setHeaderTitle("Login");
         $this->addCss('/public/css/form.css');
@@ -38,7 +38,7 @@ class UserController extends RController
     {
         if (Rays::app()->isUserLogin()) {
             $this->getSession()->deleteSession("user");
-            $this->getSession()->flash("message", "You have already logout.");
+            $this->flash("message", "You have already logout.");
         }
         $this->redirect(Rays::app()->getBaseUrl());
     }

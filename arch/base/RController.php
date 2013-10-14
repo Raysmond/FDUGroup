@@ -327,6 +327,16 @@ class RController
     }
 
     /**
+     * Set flash messages
+     * @param $key "message","warinng","error"
+     * @param $message
+     */
+    public function flash($key,$message)
+    {
+        $this->getSession()->flash($key,$message);
+    }
+
+    /**
      * @param $moduleId
      * @param array $params
      */
