@@ -13,14 +13,14 @@ class RFormValidationHelper
 
     public function __construct($rules = array())
     {
-        foreach($rules as $rule){
-            if(!isset($rule['field']))
+        foreach ($rules as $rule) {
+            if (!isset($rule['field']))
                 continue;
-            if(!isset($rule['label']))
+            if (!isset($rule['label']))
                 $rule['label'] = $rule['field'];
-            if(!isset($rule['rules']))
+            if (!isset($rule['rules']))
                 $rule['rules'] = '';
-            $this->setRules($rule['field'],$rule['label'],$rule['rules']);
+            $this->setRules($rule['field'], $rule['label'], $rule['rules']);
         }
     }
 
@@ -36,53 +36,52 @@ class RFormValidationHelper
                     );
                 }
             }
-        }
-        else $rules = array();
+        } else $rules = array();
+        //$errors = array();
+        //if(isset($rules['error'])&&!is_array($rules['error']))
+        //    array_push($errors,$rules['error']);
         $rule = array(
             'field' => $field,
             'label' => $label,
             'rules' => $rules,
-            'error' => ''
         );
-        array_push($this->_fields,$field);
-        array_push($this->_rules,$rule);
+        array_push($this->_fields, $field);
+        array_push($this->_rules, $rule);
     }
 
     public function run()
     {
-        $isError = false;
-        foreach($this->_rules as $rule)
-        {
-            if(!empty($rule['rules'])){
-                foreach($rule['rules'] as $r)
-                {
-                    if(is_array($r)){
-                        if(method_exists($this,$r)&&($this->$r['rule']($_POST[$rule['field']],$r['param'])==false))
-                        {
-                            if($rule['error']=='')
-                                $rule['error'] = $rule['label']." not meet requirement \"".$r['rule']."\"";
-                            $this->_errors[$rule['field']] = $rule['error'];
-                            $isError = true;
+        $isValid = true;
+        for ($i = 0; $i < count($this->_rules); $i++) {
+            $rule = $this->_rules[$i];
+            if (!empty($rule['rules'])) {
+                foreach ($rule['rules'] as $r) {
+                    if (is_array($r)) {
+                        echo $r['rule'];
+                        if (method_exists($this, $r) && ($this->$r['rule']($_POST[$rule['field']], $r['param']) == false)) {
+                            $error = array();
+                            $error[$r] = $rule['label'] . " not meet requirement \"" . $r['rule'] . "\"";
+                            if(!isset($this->_errors[$rule['field']])) $this->_errors[$rule['field']] = array();
+                            array_push($this->_errors[$rule['field']],$error);
+                            $isValid = false;
                             continue;
                         }
-                    }
-                    else
-                    {
-                        if(!method_exists($this,$r)&&function_exists($r))
+                    } else {
+                        if (!method_exists($this, $r) && function_exists($r))
                             $r($_POST[$rule['field']]);
-                        else if(method_exists($this,$r)&&($this->$r($_POST[$rule['field']])==false))
-                        {
-                            if($rule['error']=='')
-                                $rule['error'] = $rule['label']." not meet requirement \"".$r."\"";
-                            $this->_errors[$rule['field']] = $rule['error'];
-                            $isError = true;
+                        else if (method_exists($this, $r) && ($this->$r($_POST[$rule['field']]) == false)) {
+                            $error = array();
+                            $error[$r] = $rule['label'] . " not meet requirement \"" . $r . "\"";
+                            if(!isset($this->_errors[$rule['field']])) $this->_errors[$rule['field']] = array();
+                            array_push($this->_errors[$rule['field']],$error);
+                            $isValid = false;
                             continue;
                         }
                     }
                 }
             }
         }
-        return $isError = true;;
+        return $isValid;
     }
 
     /**
@@ -115,14 +114,14 @@ class RFormValidationHelper
     {
         if (!$this->is_number($len))
             return false;
-        return strlen($str) < $len ? false : true;
+        return (strlen($str) < $len) ? false : true;
     }
 
     public function max_length($str, $len)
     {
         if (!$this->is_number($len))
             return false;
-        return strlen($str) > $len ? false : true;
+        return (strlen($str) > $len) ? false : true;
     }
 
     public function is_email($mail)
@@ -147,7 +146,12 @@ class RFormValidationHelper
 
     public function is_number($val)
     {
-        return preg_match("/[^0-9]/", $val);
+        return preg_match("/[^0-9]/", $val) ? true : false;
+    }
+
+    public function getErrors()
+    {
+        return $this->_errors;
     }
 
 }

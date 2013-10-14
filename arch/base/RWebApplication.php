@@ -189,7 +189,13 @@ class RWebApplication extends RBaseApplication
      */
     public function getLoginUser()
     {
-        return isset($this->user) ? $this->user : false;
+        if($this->isUserLogin()){
+            $id = $this->getHttpSession()->get("user");
+            $user = new User();
+            $user->load($id);
+            return $user;
+        }
+        else return null;
     }
 
     public function isUserLogin()
