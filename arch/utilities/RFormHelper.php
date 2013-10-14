@@ -27,14 +27,14 @@ class RFormHelper
     public static function input($data = '', $value = '')
     {
         $name = self::setName($data);
-        $value = self::setValue($value, $name);
-        $defaults = array('type' => 'text', 'name' => $name, 'value' => $value);
+        $defaults = array('type' => 'text', 'name' => $name, 'value' => self::setValue($value, $name));
         return '<input ' . self::parseAttributes($data, $defaults) . ' />';
     }
 
     public static function hidden($data = '', $value = '')
     {
-        $defaults = array('type' => 'hidden', 'name' => (is_array($data) ? '' : $data), 'value' => $value);
+        $name = self::setName($data);
+        $defaults = array('type' => 'hidden', 'name' => $name, 'value' => self::setValue($value, $name));
         return '<input ' . self::parseAttributes($data, $defaults) . ' />';
     }
 
@@ -46,13 +46,15 @@ class RFormHelper
 
     public static function button($data = '', $value = '')
     {
-        $defaults = array('name' => (is_array($data) ? '' : $data), 'value' => $value);
-        return '<input ' . self::parseAttributes($data, $defaults) . ' />';
+        $defaults = array('name' => (is_array($data) ? '' : $data));
+        return '<button ' . self::parseAttributes($data, $defaults) . ' >'.$value.'</button>';
     }
 
     public static function textarea($data = '', $value = '')
     {
-
+        $name = self::setName($data);
+        $defaults = array('name'=>$name,'value'=>self::setValue($value,$name));
+        return '<textarea ' . self::parseAttributes($data, $defaults) . ' >'.$value.'</textarea>';
     }
 
     private static function parseAttributes($attributes, $defaults = array())

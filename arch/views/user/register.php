@@ -1,11 +1,10 @@
 <?php
     $form = array();
-$form['username'] = "Jiankun Lei";
     if(isset($registerForm)){
         $form = $registerForm;
     }
     echo RFormHelper::openForm('user/register',
-        array('id'=>'registerForm', 'class'=>'.form-signin registerForm'));
+        array('id'=>'registerForm', 'class'=>'form-signin registerForm'));
     echo '<h2 class="form-signin-heading">Register</h2>';
 
     echo RFormHelper::label("User name",'username');
@@ -21,7 +20,7 @@ $form['username'] = "Jiankun Lei";
         array('id'=>'email',
             'name'=>'email',
             'class'=>'form-control',
-            'placeholder'=>'email@host.com'));
+            'placeholder'=>'email@host.com'),$form);
 
     echo RFormHelper::label("Password",'password');
     echo RFormHelper::input(
@@ -29,7 +28,7 @@ $form['username'] = "Jiankun Lei";
             'name'=>'password',
             'type'=>'password',
             'class'=>'form-control',
-            'placeholder'=>'Password'));
+            'placeholder'=>'Password'),$form);
 
     echo RFormHelper::label("Password confirm",'password-confirm');
     echo RFormHelper::input(array(
@@ -37,11 +36,11 @@ $form['username'] = "Jiankun Lei";
         'name'=>'password-confirm',
         'type'=>'password',
         'class'=>'form-control',
-        'placeholder'=>'Password confirm'));
+        'placeholder'=>'Password confirm'),$form);
 
     echo "<br/>";
 
-    echo RFormHelper::button(
+    echo RFormHelper::input(
         array('class'=>'btn btn-lg btn-primary btn-block','type'=>'submit','value'=>'Register'));
     echo RFormHelper::endForm();
 

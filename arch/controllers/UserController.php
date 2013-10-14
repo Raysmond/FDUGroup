@@ -12,52 +12,84 @@ class UserController extends RController
     public function actionLogin()
     {
         $data = null;
-        $session = Rays::app()->getHttpSession();
+        if (Rays::app()->isUserLogin()) {
+            $this->flash("message", Rays::app()->getLoginUser()->name . ", you have already login...");
+            $this->redirect(Rays::app()->getBaseUrl());
+        }
         if ($this->getHttpRequest()->isPostRequest()) {
             $username = $this->getHttpRequest()->getParam("username");
             $password = $this->getHttpRequest()->getParam("password");
             $data = array("username" => $username);
             $login = $this->verifyLogin($username, $password);
             if ($login instanceof User) {
-                $session->set("user", $username);
-                $session->flash("message", "Login successfully.");
+                $this->getSession()->set("user", $login->id);
+                $this->flash("message", "Login successfully.");
                 $this->redirect(Rays::app()->getBaseUrl());
             } else {
-                $session->flash("message", $login);
+                $this->flash("message", $login);
             }
-        }
-        if($session->get("user")!=false){
-            $session->flash("message",$session->get("user").", you have already login...");
         }
         $this->setHeaderTitle("Login");
         $this->addCss('/public/css/form.css');
         $this->render('login', $data, false);
     }
 
-    public function actionLogout(){
-        if(Rays::app()->isUserLogin()){
+    public function actionLogout()
+    {
+        if (Rays::app()->isUserLogin()) {
             $this->getSession()->deleteSession("user");
-            $this->getSession()->flash("message","You have already logout.");
+            $this->flash("message", "You have already logout.");
         }
         $this->redirect(Rays::app()->getBaseUrl());
     }
 
-    public function actionView($userId){
+    public function actionView($userId)
+    {
         $user = new User();
         $user->load($userId);
-        if($user==null){
+        if ($user == null) {
             // not found...
             // need to be implemented
             return;
         }
         $this->setHeaderTitle($user->name);
-        $this->render('useredit',array('user'=>$user),false);
+        $this->render('view', array('user' => $user), false);
     }
 
-    public function actionRegister(){
+    public function actionRegister()
+    {
         $this->setHeaderTitle("Register");
-        $this->render('register',null,false);
-        // need to be implemented
+        $form = '';
+        if ($this->getHttpRequest()->isPostRequest()) {
+            $form = $_POST;
+            // validate the form data
+            $rules = array(
+                array('field' => 'username', 'label' => 'User name', 'rules' => 'required|min_length[5]|max_length[20]'),
+                array('field' => 'password', 'label' => 'Password', 'rules' => 'required|min_length[6]|max_length[20]'),
+                array('field' => 'password-confirm', 'label' => 'Password Confirm', 'rules' => 'required|equals[password]'),
+                array('field' => 'email', 'label' => 'Email', 'rules' => 'required|is_email')
+            );
+            $validation = new RFormValidationHelper($rules);
+            if ($validation->run()) {
+                $user = new User();
+                $user->setDefaults();
+                $user->name = $form['username'];
+                $user->password = $form['password'];
+                $user->mail = $form['email'];
+                $user->insert();
+                $user = $user->find()[0];
+                $this->flash("message","Hello,".$user->name.", please ".RHtmlHelper::linkAction('user','login','login')." !");
+                $this->redirectAction('user', 'view', $user->id);
+            }
+            else{
+                //echo '<pre>';
+                //print_r($validation->getErrors());
+                //echo '</pre>';
+                $this->render('register',
+                    array('validation_errors' => $validation->getErrors(),'registerForm'=>$form), false);
+            }
+        }
+        else $this->render('register', null, false);
     }
 
     private function verifyLogin($username, $password)

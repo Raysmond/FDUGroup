@@ -11,6 +11,8 @@ class new_users_module extends RModule{
      * @return string|void
      */
     public function module_content(){
+
+
         $content = "This is new users module<br/>";
         $users = $this->findNewUsers();
         foreach($users as $user){

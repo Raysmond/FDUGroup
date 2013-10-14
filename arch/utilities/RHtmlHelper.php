@@ -96,4 +96,23 @@ class RHtmlHelper
         return '<script type="text/javascript" src="' . Rays::app()->getBaseUrl() . $scriptPath . '"></script>';
     }
 
+    public static function showFlashMessages(){
+        $session = Rays::app()->getHttpSession();
+        $messages = '';
+        if(($message = $session->getFlash("message"))!=false){
+            //print_r($message);
+            foreach($message as $m)
+                $messages.='<div class="alert alert-info">' .$m. '</div>';
+        }
+        if(($warnings = $session->getFlash("warning"))!=false){
+            foreach($warnings as $warning)
+                $messages.='<div class="alert alert-warning">' .$warning. '</div>';
+        }
+        if(($errors = $session->getFlash("error"))!=false){
+            foreach($errors as $error)
+                $messages.='<div class="alert alert-danger">' .$error. '</div>';
+        }
+        return $messages;
+    }
+
 }

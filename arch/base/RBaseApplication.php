@@ -11,6 +11,8 @@ class RBaseApplication
 
     public $charset = "UTF-8";
 
+    public $timeZone = 'PRC';
+
     private $_basePath;
 
     private $_baseUrl;
@@ -34,6 +36,8 @@ class RBaseApplication
             $this->charset = $config['charset'];
         if (isset($config['db']))
             $this->_db = $config['db'];
+        if (isset($config['timeZone']))
+            $this->timeZone = $config['timeZone'];
     }
 
     public function run()
@@ -86,17 +90,30 @@ class RBaseApplication
         $this->_db = $db;
     }
 
-    public function end($status=0){
+    public function end($status = 0)
+    {
         exit($status);
     }
 
-    public function getConfig(){
+    public function getConfig()
+    {
         return $this->_config;
     }
 
-    public function setConfig($config){
+    public function setConfig($config)
+    {
         if (is_string($config))
             $config = require($config);
         $this->_config = $config;
+    }
+
+    public function setTimeZone($timeZone)
+    {
+        $this->timeZone = $timeZone;
+    }
+
+    public function getTimeZone()
+    {
+        return $this->timeZone;
     }
 }

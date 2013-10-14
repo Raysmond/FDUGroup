@@ -68,7 +68,9 @@ class RSessionManager {
     }
 
     function flash($id,$value) {
-        $_SESSION[$this->prefix]['flash'][$id] = array('val'=>$value,'counter'=>0);
+        if(!isset($_SESSION[$this->prefix]['flash'][$id]))
+            $_SESSION[$this->prefix]['flash'][$id] = array('val'=>array(),'counter'=>0);
+        array_push($_SESSION[$this->prefix]['flash'][$id]['val'],$value);
     }
 
     function getFlash($id) {
