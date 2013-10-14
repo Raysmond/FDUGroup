@@ -62,6 +62,8 @@ class RRouter
      */
     public function processQueryUrl()
     {
+        // uri info form:
+        // user/view/1
         $query = Rays::app()->getHttpRequest()->getRequestUriInfo();
 
         $queryArr = explode('/', $query);

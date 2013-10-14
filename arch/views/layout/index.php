@@ -77,16 +77,11 @@
         </div><!--/span-->
 
         <div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar" role="navigation">
-            <div class="panel panel-info">
-                <div class="panel-heading">
-                    <h3 class="panel-title">New Users</h3>
-                </div>
-                <div class="panel-body">
+
                     <?php
                     $this->module("new_users",array('id'=>'new_users','name'=>"New Users"));
                     ?>
-                </div>
-            </div>
+
 
             <div class="well sidebar-nav">
                 <ul class="nav">
