@@ -57,6 +57,21 @@ class RFormHelper
         return '<textarea ' . self::parseAttributes($data, $defaults) . ' >'.$value.'</textarea>';
     }
 
+    public static function select($name = '', $options = array(), $selected = array(), $attr = '')
+    {
+        $name = self::setName($name);
+        $html = '<select '.self::parseAttributes($attr,array('name'=>$name)).'>';
+        foreach($options as $option){
+            if(!isset($option['value']))
+                continue;
+            $optionAttr = (isset($option['attributes']))?$option['attributes']:array();
+            $html.='<option value="'.$option['value'].'" '.self::parseAttributes($optionAttr).'>';
+            $html.=((isset($option['text']))?$option['text']:$option['value']).'</option>';
+        }
+        $html.='</select>';
+        return $html;
+    }
+
     private static function parseAttributes($attributes, $defaults = array())
     {
         if (is_array($attributes)) {
