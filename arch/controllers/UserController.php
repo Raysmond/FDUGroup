@@ -51,7 +51,7 @@ class UserController extends RController
             return;
         }
         $this->setHeaderTitle($user->name);
-        $this->render('view',array('user'=>$user),false);
+        $this->render('useredit',array('user'=>$user),false);
     }
 
     public function actionRegister(){
@@ -71,5 +71,19 @@ class UserController extends RController
         if ($user->password == $password) {
             return $user;
         } else return "User name and password not match...";
+    }
+
+
+
+    public function actionUserEdit($userId){
+        $user = new User();
+        $user->load($userId);
+        if($user==null){
+            // not found...
+            // need to be implemented
+            return;
+        }
+        $this->setHeaderTitle($user->name);
+        $this->render('useredit',array('user'=>$user),false);
     }
 }
