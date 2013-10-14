@@ -26,8 +26,7 @@ class GroupController extends RController {
     public function actionView($userId = null)
     {
         if($userId == null){
-            $this->redirect();
-            return null;
+            $this->redirectAction('user','login');
         }
         $userGroup = new GroupUser();
         $userGroup = $userGroup->userGroups($userId);
