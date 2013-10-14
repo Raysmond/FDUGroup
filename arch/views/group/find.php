@@ -5,13 +5,36 @@
  * Date: 13-10-14
  * Time: 下午1:52
  */
+    $form = array();
+    if(isset($registerForm)){
+        $form = $registerForm;
+    }
+    echo RFormHelper::openForm('group/find',
+        array('id'=>'findFrom', 'class'=>'.form-signin registerForm'));
+    echo '<h2 class="form-signin-heading">Find Groups</h2>';
+
+    $flag = 0; $isFirstRow = 1;
     foreach($data as $group){
-        echo '<div class="jumbotron">';
+        if($flag == 0) {
+            if($isFirstRow){
+                $isFirstRow = 0;
+                echo '<div class="row">';
+            }
+            else
+                echo '</div><div class="row">';
+        }
+        echo "<div class='panel panel-default'>";
+        echo "<div class='panel-heading'>";
+        echo RFormHelper::label($group->name);
+        echo RFormHelper::button(array('type'=>'submit','class'=>'btn btn-success'),'Join In');
+        echo "</div>";
+        echo "<div class='panel-body'>";
         foreach($group->columns as $col=>$coldb){
             if(isset($group->$col))
-                echo $group->$col.'      s';
+                echo RFormHelper::label($group->$col)."      ";
         }
-        $data = null;
-        echo RFormHelper::button($data,'apply');
-        echo '</div>';
+        echo "</div></div>";
+        $flag = ($flag+1)%3;
     }
+    echo "</div>";
+    echo RFormHelper::endForm();
