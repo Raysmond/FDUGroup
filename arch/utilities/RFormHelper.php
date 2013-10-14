@@ -52,7 +52,8 @@ class RFormHelper
 
     public static function textarea($data = '', $value = '')
     {
-        $defaults = array('name' => (is_array($data) ? '' : $data));
+        $name = self::setName($data);
+        $defaults = array('name'=>$name,'value'=>self::setValue($value,$name));
         return '<textarea ' . self::parseAttributes($data, $defaults) . ' >'.$value.'</textarea>';
     }
 

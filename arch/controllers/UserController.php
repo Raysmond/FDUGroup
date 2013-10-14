@@ -71,8 +71,6 @@ class UserController extends RController
             );
             $validation = new RFormValidationHelper($rules);
             if ($validation->run()) {
-
-                /*
                 $user = new User();
                 $user->setDefaults();
                 $user->name = $form['username'];
@@ -81,12 +79,12 @@ class UserController extends RController
                 $user->insert();
                 $user = $user->find()[0];
                 $this->redirectAction('user', 'view', $user->id);
-                */
             }
             else{
-                echo '<pre>';
-                print_r($validation->getErrors());
-                echo '</pre>';
+                //echo '<pre>';
+                //print_r($validation->getErrors());
+                //echo '</pre>';
+                $this->render('register', array('validation_errors' => $validation->getErrors()), false);
             }
         }
         $this->render('register', array('registerForm' => $form), false);

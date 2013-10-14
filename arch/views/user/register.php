@@ -20,7 +20,7 @@
         array('id'=>'email',
             'name'=>'email',
             'class'=>'form-control',
-            'placeholder'=>'email@host.com'));
+            'placeholder'=>'email@host.com'),$form);
 
     echo RFormHelper::label("Password",'password');
     echo RFormHelper::input(
@@ -28,7 +28,7 @@
             'name'=>'password',
             'type'=>'password',
             'class'=>'form-control',
-            'placeholder'=>'Password'));
+            'placeholder'=>'Password'),$form);
 
     echo RFormHelper::label("Password confirm",'password-confirm');
     echo RFormHelper::input(array(
@@ -36,7 +36,7 @@
         'name'=>'password-confirm',
         'type'=>'password',
         'class'=>'form-control',
-        'placeholder'=>'Password confirm'));
+        'placeholder'=>'Password confirm'),$form);
 
     echo "<br/>";
 
