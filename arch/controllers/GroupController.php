@@ -83,6 +83,7 @@ class GroupController extends RController {
             $category = new Category();
             $categories =  $category->find();
             $this->render('build',array('categories'=>$categories),false);
+            return;
         }
         $this->render('build',null,false);
     }
