@@ -77,8 +77,7 @@ class UserController extends RController
                 $user->registerTime = date('Y-m-d H:i:s');
                 $user->insert();
                 $user = $user->find()[0];
-                //print_r($user);
-                $this->redirect(RHtmlHelper::siteUrl($this->generateActionLink('user','view',$user->id)));
+                $this->redirectAction('user','view',$user->id);
             }
         }
         $this->render('register',array('registerForm'=>$form),false);

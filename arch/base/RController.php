@@ -70,12 +70,12 @@ class RController
      * @param bool $return
      * @return string
      */
-    public function renderContent($content = '',$return = false)
+    public function renderContent($content = '', $return = false)
     {
         $output = '';
         if (($layoutFile = $this->getLayoutFile($this->layout)) !== false)
             $output = $this->renderFile($layoutFile, array('content' => $content), true);
-        if($return)
+        if ($return)
             return $output;
         else
             echo $output;
@@ -139,7 +139,8 @@ class RController
             return false;
     }
 
-    public function beforeAction($action){
+    public function beforeAction($action)
+    {
         return true;
     }
 
@@ -153,7 +154,7 @@ class RController
         $this->setCurrentAction($action);
         $this->setActionParams($params);
 
-        if($this->beforeAction($action)==false){
+        if ($this->beforeAction($action) == false) {
             return;
         }
 
@@ -188,17 +189,18 @@ class RController
                 $this->$methodName($p[0], $p[1], $p[2], $p[3], $p[4], $p[5], $p[6], $p[7], $p[8], $p[9]);
             else
                 die("Too many parameters...");
-        }
-        else{
+        } else {
             Rays::app()->page404();
         }
     }
 
-    public function addCss($cssPath){
+    public function addCss($cssPath)
+    {
         Rays::app()->getClientManager()->registerCss($cssPath);
     }
 
-    public function addJs($jsPath){
+    public function addJs($jsPath)
+    {
         Rays::app()->getClientManager()->registerScript($jsPath);
     }
 
@@ -207,7 +209,8 @@ class RController
      * <title></title>
      * @param $title
      */
-    public function setHeaderTitle($title){
+    public function setHeaderTitle($title)
+    {
         Rays::app()->getClientManager()->setHeaderTitle($title);
     }
 
@@ -267,7 +270,8 @@ class RController
      * Get http request handler
      * @return mixed
      */
-    public function getHttpRequest(){
+    public function getHttpRequest()
+    {
         return Rays::app()->getHttpRequest();
     }
 
@@ -275,17 +279,15 @@ class RController
      * Redirect to a new URL
      * @param $url
      */
-    public function redirect($url){
-        header('location: '.$url);
+    public function redirect($url)
+    {
+        header('location: ' . $url);
     }
 
-    /**
-     * Redirect to an action page
-     * @param $action
-     * @param $params
-     */
-    public function redirectAction($action,$params){
-        header('location: '.$this->generateActionLink($this->getId(),$action,$params));
+    public function redirectAction($controller = '', $action = '', $params)
+    {
+        if ($controller == '') $controller = $this->getId();
+        header('location: ' . RHtmlHelper::siteUrl($this->generateActionLink($controller, $action, $params)));
     }
 
 
@@ -296,8 +298,9 @@ class RController
      * @param $params action parameters
      * @return string action link
      */
-    public function generateActionLink($controller,$action,$params){
-        if($controller==null)
+    public function generateActionLink($controller, $action, $params)
+    {
+        if ($controller == null)
             $controller = $this->getId();
         $link = "?q=" . $controller;
         if (isset($action) && $action != '')
@@ -318,7 +321,8 @@ class RController
      * Get session manager
      * @return mixed
      */
-    public function getSession(){
+    public function getSession()
+    {
         return Rays::app()->getHttpSession();
     }
 
@@ -326,9 +330,10 @@ class RController
      * @param $moduleId
      * @param array $params
      */
-    public function createModule($moduleId,$params=array()){
+    public function createModule($moduleId, $params = array())
+    {
         Rays::importModule($moduleId);
-        $moduleClass = $moduleId."_module";
+        $moduleClass = $moduleId . "_module";
         $module = new $moduleClass($params);
         $module->setId($moduleId);
         $module->init();
@@ -342,15 +347,15 @@ class RController
      * @param bool $return whether or not return the output content
      * @return mixed
      */
-    public function module($moduleId,$params=array(),$return=false){
-        $module = $this->createModule($moduleId,$params);
-        if($return){
+    public function module($moduleId, $params = array(), $return = false)
+    {
+        $module = $this->createModule($moduleId, $params);
+        if ($return) {
             ob_start();
             ob_implicit_flush(false);
             $module->run();
             return ob_get_clean();
-        }
-        else{
+        } else {
             $module->run();
         }
     }
