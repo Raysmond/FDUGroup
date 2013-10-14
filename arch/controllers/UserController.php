@@ -64,19 +64,18 @@ class UserController extends RController
             $form = $_POST;
             // validate the form data
             $rules = array(
-                array('field' => 'username', 'label' => 'User name', 'rules' => 'required|min_length[5]|max_length[20]'),
-                array('field' => 'password', 'label' => 'Password', 'rules' => 'required|min_length[6]|max_length[20]'),
-                array('field' => 'password-confirm', 'label' => 'Password Confirm', 'rules' => 'required|equals[password]'),
-                array('field' => 'email', 'label' => 'Email', 'rules' => 'required|is_email','errors'=>array(
-         
-                ))
+                array('field' => 'username', 'label' => 'User name', 'rules' => 'trim|required|min_length[5]|max_length[20]'),
+                array('field' => 'password', 'label' => 'Password', 'rules' => 'trim|required|min_length[6]|max_length[20]'),
+                array('field' => 'password-confirm', 'label' => 'Password Confirm', 'rules' => 'trim|required|equals[password]'),
+                array('field' => 'email', 'label' => 'Email', 'rules' => 'trim|required|is_email','errors'=>array( ))
             );
+
             $validation = new RFormValidationHelper($rules);
             if ($validation->run()) {
                 $user = new User();
                 $user->setDefaults();
                 $user->name = $form['username'];
-                $user->password = $form['password'];
+                $user->password = md5($form['password']);
                 $user->mail = $form['email'];
                 $user->insert();
                 $user = $user->find()[0];
@@ -102,7 +101,8 @@ class UserController extends RController
         if (count($user) == 0)
             return "No such user name.";
         $user = $user[0];
-        if ($user->password == $password) {
+        $password = trim($password);
+        if ($user->password == md5($password)) {
             return $user;
         } else return "User name and password not match...";
     }
