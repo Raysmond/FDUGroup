@@ -8,7 +8,7 @@ class FriendsGroup extends Data{
 
     public function __construct(){
         $option = array(
-            "key1"=>"groupId1",
+            "key"=>"groupId1",
             "key2"=>"groupId2",
             "table"=>"group_has_group",
             "columns"=>array(
@@ -17,5 +17,20 @@ class FriendsGroup extends Data{
             )
         );
         parent::init($option);
+    }
+
+    public function getFriends($groupId='',$friendLimit='')
+    {
+        if($groupId!='')
+            $this->groupId1 = $groupId;
+        $friends = $this->find();
+        $result = array();
+        foreach($friends as $friend){
+            $group = new Group();
+            $group->id = $friend->groupId2;
+            $group->load();
+            array_push($result,$group);
+        }
+        return $result;
     }
 }

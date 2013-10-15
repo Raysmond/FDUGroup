@@ -5,7 +5,7 @@
  */
 
 class group_categories_module extends RModule{
-    public $access = array();
+    public $access = array('group/find');
 
     public function module_content()
     {

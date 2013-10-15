@@ -144,12 +144,13 @@ class RModule
                             $currentUrl = substr($currentUrl, $apartPos + strlen($part));
                         }
                     }
+                    return true;
                 } else {
                     //
                 }
             }
         }
-        return true;
+        return false;
     }
 
 }
