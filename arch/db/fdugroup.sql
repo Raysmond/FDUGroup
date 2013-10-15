@@ -6,9 +6,9 @@ CREATE SCHEMA IF NOT EXISTS `fdugroup` DEFAULT CHARACTER SET utf8 COLLATE utf8_g
 USE `fdugroup` ;
 
 -- -----------------------------------------------------
--- Table `fdugroup`.`catagory`
+-- Table `fdugroup`.`category`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `fdugroup`.`catagory` (
+CREATE TABLE IF NOT EXISTS `fdugroup`.`category` (
   `cat_id` INT NOT NULL AUTO_INCREMENT,
   `cat_name` VARCHAR(45) NOT NULL,
   `cat_pid` INT NOT NULL,
@@ -55,6 +55,7 @@ CREATE TABLE IF NOT EXISTS `fdugroup`.`groups` (
   `gro_member_count` INT NOT NULL,
   `gro_created_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `gro_intro` LONGTEXT NULL,
+  `gro_picture` VARCHAR(255) NULL,
   PRIMARY KEY (`gro_id`))
 ENGINE = InnoDB;
 
@@ -136,16 +137,57 @@ CREATE TABLE IF NOT EXISTS `fdugroup`.`group_has_group` (
 ENGINE = InnoDB;
 
 
+-- -----------------------------------------------------
+-- Table `fdugroup`.`message_type`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `fdugroup`.`message_type` (
+  `msg_type_id` INT NOT NULL AUTO_INCREMENT,
+  `msg_type_name` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`msg_type_id`))
+ENGINE = InnoDB;
+
+CREATE UNIQUE INDEX `msg_type_name_UNIQUE` ON `fdugroup`.`message_type` (`msg_type_name` ASC);
+
+
+-- -----------------------------------------------------
+-- Table `fdugroup`.`messages`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `fdugroup`.`messages` (
+  `msg_id` INT NOT NULL AUTO_INCREMENT,
+  `msg_type_id` INT NOT NULL,
+  `msg_receiver_id` INT NOT NULL,
+  `msg_sender_id` INT NOT NULL COMMENT 'According to message_type\ntype=\'system\', sender_id=0\ntype=\'group\', sender_id=group_id\ntype=\'user\', sender_id = user_id',
+  `msg_title` VARCHAR(45) NULL,
+  `msg_content` TEXT NOT NULL,
+  `msg_status` INT NOT NULL DEFAULT 0 COMMENT '0: not read\n1: read\nothers..',
+  `msg_send_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`msg_id`, `msg_type_id`, `msg_receiver_id`))
+ENGINE = InnoDB;
+
+CREATE UNIQUE INDEX `msg_id_UNIQUE` ON `fdugroup`.`messages` (`msg_id` ASC);
+
+
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
 -- -----------------------------------------------------
--- Data for table `fdugroup`.`catagory`
+-- Data for table `fdugroup`.`category`
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `fdugroup`;
-INSERT INTO `fdugroup`.`catagory` (`cat_id`, `cat_name`, `cat_pid`) VALUES (1, 'Development', 1);
+INSERT INTO `fdugroup`.`category` (`cat_id`, `cat_name`, `cat_pid`) VALUES (1, '兴趣', 0);
+INSERT INTO `fdugroup`.`category` (`cat_id`, `cat_name`, `cat_pid`) VALUES (2, '生活', 0);
+INSERT INTO `fdugroup`.`category` (`cat_id`, `cat_name`, `cat_pid`) VALUES (3, '购物', 0);
+INSERT INTO `fdugroup`.`category` (`cat_id`, `cat_name`, `cat_pid`) VALUES (4, '社会', 0);
+INSERT INTO `fdugroup`.`category` (`cat_id`, `cat_name`, `cat_pid`) VALUES (5, '艺术', 0);
+INSERT INTO `fdugroup`.`category` (`cat_id`, `cat_name`, `cat_pid`) VALUES (6, '学术', 0);
+INSERT INTO `fdugroup`.`category` (`cat_id`, `cat_name`, `cat_pid`) VALUES (7, '情感', 0);
+INSERT INTO `fdugroup`.`category` (`cat_id`, `cat_name`, `cat_pid`) VALUES (8, '闲聊', 0);
+INSERT INTO `fdugroup`.`category` (`cat_id`, `cat_name`, `cat_pid`) VALUES (9, '旅行', 1);
+INSERT INTO `fdugroup`.`category` (`cat_id`, `cat_name`, `cat_pid`) VALUES (10, '摄影', 1);
+INSERT INTO `fdugroup`.`category` (`cat_id`, `cat_name`, `cat_pid`) VALUES (11, '影视', 1);
+INSERT INTO `fdugroup`.`category` (`cat_id`, `cat_name`, `cat_pid`) VALUES (12, '音乐', 1);
 
 COMMIT;
 
@@ -155,7 +197,8 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `fdugroup`;
-INSERT INTO `fdugroup`.`users` (`u_id`, `u_name`, `u_mail`, `u_password`, `u_region`, `u_mobile`, `u_qq`, `u_weibo`, `u_register_time`, `u_status`, `u_picture`, `u_intro`, `u_homepage`, `u_credits`, `u_permission`, `u_privacy`) VALUES (1, 'admin', 'admin@fudan.edu.cn', '123456', 'Shanghai', NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `fdugroup`.`users` (`u_id`, `u_name`, `u_mail`, `u_password`, `u_region`, `u_mobile`, `u_qq`, `u_weibo`, `u_register_time`, `u_status`, `u_picture`, `u_intro`, `u_homepage`, `u_credits`, `u_permission`, `u_privacy`) VALUES (1, 'admin', 'admin@fudan.edu.cn', '96e79218965eb72c92a549dd5a330112', 'shanghai', NULL, NULL, NULL, '', 1, NULL, NULL, NULL, 0, NULL, NULL);
+INSERT INTO `fdugroup`.`users` (`u_id`, `u_name`, `u_mail`, `u_password`, `u_region`, `u_mobile`, `u_qq`, `u_weibo`, `u_register_time`, `u_status`, `u_picture`, `u_intro`, `u_homepage`, `u_credits`, `u_permission`, `u_privacy`) VALUES (2, 'Raysmond', 'jiankunlei@126.com', '96e79218965eb72c92a549dd5a330112', 'shanghai', '18801734441', '913282582', 'http://weibo.com/leijiankun', NULL, 1, NULL, NULL, 'http://raysmond.com', 0, NULL, NULL);
 
 COMMIT;
 
@@ -165,7 +208,17 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `fdugroup`;
-INSERT INTO `fdugroup`.`groups` (`gro_id`, `gro_creator`, `cat_id`, `gro_name`, `gro_member_count`, `gro_created_time`, `gro_intro`) VALUES (1, 1, 1, 'FDUGroup Developers', 1, NULL, NULL);
+INSERT INTO `fdugroup`.`groups` (`gro_id`, `gro_creator`, `cat_id`, `gro_name`, `gro_member_count`, `gro_created_time`, `gro_intro`, `gro_picture`) VALUES (1, 1, 1, 'FDUGroup Developers', 1, NULL, NULL, NULL);
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `fdugroup`.`group_has_users`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `fdugroup`;
+INSERT INTO `fdugroup`.`group_has_users` (`gro_id`, `u_id`, `join_time`, `status`, `comment`) VALUES (1, 1, NULL, 1, NULL);
 
 COMMIT;
 

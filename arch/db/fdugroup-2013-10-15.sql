@@ -17,10 +17,23 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
+-- Table `fdugroup`.`user_role`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `fdugroup`.`user_role` (
+  `rol_id` INT NOT NULL AUTO_INCREMENT,
+  `rol_name` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`rol_id`))
+ENGINE = InnoDB;
+
+CREATE UNIQUE INDEX `rol_name_UNIQUE` ON `fdugroup`.`user_role` (`rol_name` ASC);
+
+
+-- -----------------------------------------------------
 -- Table `fdugroup`.`users`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `fdugroup`.`users` (
   `u_id` INT NOT NULL AUTO_INCREMENT,
+  `u_role_id` INT NOT NULL,
   `u_name` VARCHAR(45) NOT NULL,
   `u_mail` VARCHAR(45) NOT NULL,
   `u_password` VARCHAR(255) NOT NULL,
@@ -36,7 +49,7 @@ CREATE TABLE IF NOT EXISTS `fdugroup`.`users` (
   `u_credits` INT NULL DEFAULT 0 COMMENT '积分',
   `u_permission` INT NULL,
   `u_privacy` INT NULL,
-  PRIMARY KEY (`u_id`))
+  PRIMARY KEY (`u_id`, `u_role_id`))
 ENGINE = InnoDB;
 
 CREATE UNIQUE INDEX `u_name_UNIQUE` ON `fdugroup`.`users` (`u_name` ASC);
@@ -137,6 +150,36 @@ CREATE TABLE IF NOT EXISTS `fdugroup`.`group_has_group` (
 ENGINE = InnoDB;
 
 
+-- -----------------------------------------------------
+-- Table `fdugroup`.`message_type`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `fdugroup`.`message_type` (
+  `msg_type_id` INT NOT NULL AUTO_INCREMENT,
+  `msg_type_name` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`msg_type_id`))
+ENGINE = InnoDB;
+
+CREATE UNIQUE INDEX `msg_type_name_UNIQUE` ON `fdugroup`.`message_type` (`msg_type_name` ASC);
+
+
+-- -----------------------------------------------------
+-- Table `fdugroup`.`messages`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `fdugroup`.`messages` (
+  `msg_id` INT NOT NULL AUTO_INCREMENT,
+  `msg_type_id` INT NOT NULL,
+  `msg_receiver_id` INT NOT NULL,
+  `msg_sender_id` INT NOT NULL COMMENT 'According to message_type\ntype=\'system\', sender_id=0\ntype=\'group\', sender_id=group_id\ntype=\'user\', sender_id = user_id',
+  `msg_title` VARCHAR(45) NULL,
+  `msg_content` TEXT NOT NULL,
+  `msg_status` INT NOT NULL DEFAULT 0 COMMENT '0: not read\n1: read\nothers..',
+  `msg_send_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`msg_id`, `msg_type_id`, `msg_receiver_id`))
+ENGINE = InnoDB;
+
+CREATE UNIQUE INDEX `msg_id_UNIQUE` ON `fdugroup`.`messages` (`msg_id` ASC);
+
+
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
@@ -163,12 +206,24 @@ COMMIT;
 
 
 -- -----------------------------------------------------
+-- Data for table `fdugroup`.`user_role`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `fdugroup`;
+INSERT INTO `fdugroup`.`user_role` (`rol_id`, `rol_name`) VALUES (1, 'administrator');
+INSERT INTO `fdugroup`.`user_role` (`rol_id`, `rol_name`) VALUES (2, 'authenticated user');
+INSERT INTO `fdugroup`.`user_role` (`rol_id`, `rol_name`) VALUES (3, 'anonymous user');
+
+COMMIT;
+
+
+-- -----------------------------------------------------
 -- Data for table `fdugroup`.`users`
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `fdugroup`;
-INSERT INTO `fdugroup`.`users` (`u_id`, `u_name`, `u_mail`, `u_password`, `u_region`, `u_mobile`, `u_qq`, `u_weibo`, `u_register_time`, `u_status`, `u_picture`, `u_intro`, `u_homepage`, `u_credits`, `u_permission`, `u_privacy`) VALUES (1, 'admin', 'admin@fudan.edu.cn', '96e79218965eb72c92a549dd5a330112', 'shanghai', NULL, NULL, NULL, '', 1, NULL, NULL, NULL, 0, NULL, NULL);
-INSERT INTO `fdugroup`.`users` (`u_id`, `u_name`, `u_mail`, `u_password`, `u_region`, `u_mobile`, `u_qq`, `u_weibo`, `u_register_time`, `u_status`, `u_picture`, `u_intro`, `u_homepage`, `u_credits`, `u_permission`, `u_privacy`) VALUES (2, 'Raysmond', 'jiankunlei@126.com', '96e79218965eb72c92a549dd5a330112', 'shanghai', '18801734441', '913282582', 'http://weibo.com/leijiankun', NULL, 1, NULL, NULL, 'http://raysmond.com', 0, NULL, NULL);
+INSERT INTO `fdugroup`.`users` (`u_id`, `u_role_id`, `u_name`, `u_mail`, `u_password`, `u_region`, `u_mobile`, `u_qq`, `u_weibo`, `u_register_time`, `u_status`, `u_picture`, `u_intro`, `u_homepage`, `u_credits`, `u_permission`, `u_privacy`) VALUES (1, 1, 'admin', 'admin@fudan.edu.cn', '96e79218965eb72c92a549dd5a330112', 'shanghai', NULL, NULL, NULL, '', 1, NULL, NULL, NULL, 0, NULL, NULL);
+INSERT INTO `fdugroup`.`users` (`u_id`, `u_role_id`, `u_name`, `u_mail`, `u_password`, `u_region`, `u_mobile`, `u_qq`, `u_weibo`, `u_register_time`, `u_status`, `u_picture`, `u_intro`, `u_homepage`, `u_credits`, `u_permission`, `u_privacy`) VALUES (2, 2, 'Raysmond', 'jiankunlei@126.com', '96e79218965eb72c92a549dd5a330112', 'shanghai', '18801734441', '913282582', 'http://weibo.com/leijiankun', NULL, 1, NULL, NULL, 'http://raysmond.com', 0, NULL, NULL);
 
 COMMIT;
 
@@ -200,6 +255,19 @@ START TRANSACTION;
 USE `fdugroup`;
 INSERT INTO `fdugroup`.`entity_type` (`typ_id`, `typ_name`) VALUES (1, 'topic');
 INSERT INTO `fdugroup`.`entity_type` (`typ_id`, `typ_name`) VALUES (2, 'group');
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `fdugroup`.`message_type`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `fdugroup`;
+INSERT INTO `fdugroup`.`message_type` (`msg_type_id`, `msg_type_name`) VALUES (1, 'system');
+INSERT INTO `fdugroup`.`message_type` (`msg_type_id`, `msg_type_name`) VALUES (2, 'private');
+INSERT INTO `fdugroup`.`message_type` (`msg_type_id`, `msg_type_name`) VALUES (3, 'group');
+INSERT INTO `fdugroup`.`message_type` (`msg_type_id`, `msg_type_name`) VALUES (4, 'user');
 
 COMMIT;
 

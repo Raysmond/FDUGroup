@@ -52,7 +52,10 @@ class RHtmlHelper
 
     public static function link($title, $content, $href, $attributes=array())
     {
-        return '<a '.self::parseAttributes($attributes).' title="' . $title . '" href="' . self::tryCleanLink($href) . '" >' . self::encode($content) . '</a>';
+        if(isset($attributes['_encode'])&&$attributes['_encode']!=false){
+            $content = self::encode($content);
+        }
+        return '<a '.self::parseAttributes($attributes).' title="' . $title . '" href="' . self::tryCleanLink($href) . '" >' . $content . '</a>';
     }
 
     public static function linkWithTarget($title, $content, $href, $target)
@@ -128,7 +131,9 @@ class RHtmlHelper
         }
         $html = '';
         foreach ($defaults as $key => $val) {
-            $html .= $key . '="' . RHtmlHelper::encode($val) . '" ';
+            if(isset($defaults['_encode'])&&$defaults['_encode']!=false)
+                $html .= $key . '="' . RHtmlHelper::encode($val) . '" ';
+            else $html .= $key . '="' . ($val) . '" ';
         }
         return $html;
     }

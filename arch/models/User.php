@@ -5,11 +5,15 @@
  */
 
 class User extends Data{
-    public $id,$name,$mail,$password,$region,$mobile,$qq,$weibo;
+    public $id,$roleId,$name,$mail,$password,$region,$mobile,$qq,$weibo;
     public $registerTime,$status,$picture,$intro,$homepage,$credits,$permission,$privacy;
+
+    public $role;
+
     public $defaults = array(
         'status'=>1,
         'credits'=>1,
+
     );
 
     public function __construct(){
@@ -18,6 +22,7 @@ class User extends Data{
             "table" => "users",
             "columns" => array(
                 "id" => "u_id",
+                'roleId'=>'u_role_id',
                 "name" => "u_name",
                 "mail" => "u_mail",
                 "password" => "u_password",
@@ -36,6 +41,13 @@ class User extends Data{
             )
         );
         parent::init($option);
+    }
+
+    public function load($id=null)
+    {
+        parent::load($id);
+        $this->role = new Role();
+        $this->role->roleId = $this->roleId;
     }
 
     public function setDefaults()

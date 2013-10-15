@@ -59,6 +59,7 @@ class Data
         $sql .= ') ' . $values . ') ';
         DataConnector::getConnection();
         mysql_query($sql) or die(mysql_error());
+        return mysql_insert_id();
 
     }
 
