@@ -41,6 +41,7 @@
             echo "From: 系统消息";
         }
         else{
+            //print_r($msg);
             $msg->sender->load();
             if($msg->sender instanceof User){
                 echo "from: ".RHtmlHelper::linkAction('user',$msg->sender->name,'view',$msg->sender->id);
