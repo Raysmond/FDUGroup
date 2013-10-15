@@ -6,6 +6,7 @@
 
 class Message extends Data{
     public $type;
+    public $sender;
     public $id,$typeId,$senderId,$receiverId,$title,$content,$sendTime,$status;
 
     public function __construct()
@@ -32,9 +33,23 @@ class Message extends Data{
         parent::load($id);
         $this->type = new MessageType();
         $this->type->typeId = $this->typeId;
+        $this->type->load();
+        if($this->type->typeName!='system'){
+            if($this->type->typeName=='user'){
+                $this->sender = new User();
+                $this->sender->id = $this->senderId;
+            }
+            else if($this->type->typeName=='group'){
+                $this->sender = new Group();
+                $this->sender->id = $this->senderId;
+            }
+        }
+        else{
+            $this->sender = 'system';
+        }
     }
 
-    public function sendMsg($typeId,$senderId,$receiverId,$title,$content,$sendTime,$status=0)
+    public function sendMsg($typeId,$senderId,$receiverId,$title,$content,$sendTime,$status=1)
     {
         $this->typeId = $typeId;
         $this->senderId = $senderId;
@@ -55,15 +70,16 @@ class Message extends Data{
         if($msgId!='')
             $this->id = $msgId;
         $this->load();
-        $this->status = 1;
+        $this->status = 2;
         $this->update();
+
     }
 
     public function markUnRead($msgId=''){
         if($msgId!='')
             $this->id = $msgId;
         $this->load();
-        $this->status = 0;
+        $this->status = 1;
         $this->update();
     }
 
@@ -73,7 +89,7 @@ class Message extends Data{
             return null;
         }
         $msgs = new Message();
-        $msgs->status = 0;
+        $msgs->status = 1;
         $msgs->receiverId = $receiverId;
         return $msgs->find(0,0,array('key'=>'msg_id','order'=>'desc'));
     }
@@ -84,7 +100,7 @@ class Message extends Data{
             return null;
         }
         $msgs = new Message();
-        $msgs->status = 1;
+        $msgs->status = 2;
         $msgs->receiverId = $receiverId;
         return $msgs->find(0,0,array('key'=>'msg_id','order'=>'desc'));
     }
@@ -99,4 +115,8 @@ class Message extends Data{
         return $msgs->find(0,0,array('key'=>'msg_id','order'=>'desc'));
     }
 
+    public function countUnreadMsgs($receiverId)
+    {
+        return count($this->getUnReadMsgs($receiverId));
+    }
 }
