@@ -80,6 +80,7 @@
 
                     <?php
                     $this->module("group_categories",array('id'=>'group_categories','name'=>"Categories"));
+                    $this->module("friend_groups",array('id'=>'friend_groups','name'=>"Friend Groups"));
                     $this->module("new_users",array('id'=>'new_users','name'=>"New Users"));
                     ?>
 

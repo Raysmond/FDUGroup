@@ -133,6 +133,7 @@ class RWebApplication extends RBaseApplication
         if (class_exists($_controller)) {
             $_controller = new $_controller;
             $_controller->setId($route['controller']);
+            $this->controller = $_controller;
             $_controller->runAction($this->router->getAction(), $this->router->getParams());
         } else {
             // No controller found
@@ -203,5 +204,4 @@ class RWebApplication extends RBaseApplication
     {
         return $this->isCleanUri != false;
     }
-
 }
