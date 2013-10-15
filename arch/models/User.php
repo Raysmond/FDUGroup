@@ -61,4 +61,12 @@ class User extends Data{
             $this->registerTime = date('Y-m-d H-i-s');
         }
     }
+
+    public function countUnreadMsgs()
+    {
+        if(!isset($this->id))
+            return 0;
+        $msg = new Message();
+        return $msg->countUnreadMsgs($this->id);
+    }
 }
