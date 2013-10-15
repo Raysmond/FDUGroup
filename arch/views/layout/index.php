@@ -31,13 +31,13 @@
         </div>
         <div class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
-                <li class="active"><a href="<?php echo $baseurl;?>">Home</a></li>
-                <li><?php echo RHtmlHelper::linkAction("site","About","about",null); ?></li>
-                <li><?php echo RHtmlHelper::linkAction("site","Contact","contact",null); ?></li>
-                <li><?php echo RHtmlHelper::linkAction("group","Find Group","find",null); ?></li>
-                <li><?php echo RHtmlHelper::linkAction("group","My Group","view",
-                        Rays::app()->isUserLogin()?Rays::app()->getLoginUser()->id:null); ?></li>
-
+                <?php $curUrl = Rays::app()->getHttpRequest()->getRequestUriInfo(); //like: site/about ?>
+                <li <?php echo ($curUrl==''?'class="active"':''); ?>><a href="<?php echo $baseurl;?>">Home</a></li>
+                <li <?php echo ($curUrl=='site/about'?'class="active"':''); ?>><?php echo RHtmlHelper::linkAction("site","About","about", null); ?></li>
+                <li <?php echo ($curUrl=='site/contact'?'class="active"':''); ?>><?php echo RHtmlHelper::linkAction("site","Contact","contact", null); ?></li>
+                <li <?php echo ($curUrl=='group/find'?'class="active"':''); ?>><?php echo RHtmlHelper::linkAction("group","Find Group","find", null); ?></li>
+                <li <?php echo ($this->getHttpRequest()->urlMatch('group/view/*')?'class="active"':''); ?>>
+                    <?php echo RHtmlHelper::linkAction("group","My Group","view", Rays::app()->isUserLogin()?Rays::app()->getLoginUser()->id:null); ?></li>
             </ul>
 
 
@@ -47,24 +47,30 @@
                 if(!Rays::app()->isUserLogin()){
                     echo "<li>".RHtmlHelper::linkAction("user","Login","login",null)."</li>";
                     echo "<li>".RHtmlHelper::linkAction("user","Register","register",null)."</li>";
+
                 }
                 else{
                     echo '<li class="dropdown">';
-                    echo RHtmlHelper::linkAction("user",
-                            Rays::app()->getLoginUser()->name,
-                            "view",
-                            Rays::app()->getLoginUser()->id,
+
+                    echo RHtmlHelper::linkAction("user",Rays::app()->getLoginUser()->name,"view",Rays::app()->getLoginUser()->id,
                         array('id'=>'account-dropdown','class'=>'dropdown-toggle','data-toggle'=>'dropdown'));
                     echo '<ul class="dropdown-menu">';
                     echo "<li>".RHtmlHelper::linkAction("user","My profile","view",Rays::app()->getLoginUser()->id)."</li>";
 
+                    echo '<li role="presentation" class="divider"></li>';
+
                     if(($count = Rays::app()->getLoginUser()->countUnreadMsgs())==0)
                         echo "<li>".RHtmlHelper::linkAction("message","Messages","view",null)."</li>";
                     else
-                        echo "<li>".RHtmlHelper::linkAction("message","Messages(".$count." new)","view",'unread',array('style'=>'color:red;'))."</li>";
+                    {
+                        echo '<li><a href="'.RHtmlHelper::siteUrl('message/view').'">';
+                        echo 'Messages&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="badge">3</span></a></li>';
+                    }
+                    echo '<li role="presentation" class="divider"></li>';
                     echo "<li>".RHtmlHelper::linkAction("user","Logout","logout",null)."</li>";
                     echo '</ul>';
                     echo '</li>';
+
                 }
                 ?>
             </ul>

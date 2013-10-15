@@ -119,38 +119,7 @@ class RModule
      */
     public function canAccess()
     {
-        if (!is_array($this->access))
-            return false;
-        // like : user/view/1
-        $currentUrl = Rays::app()->getHttpRequest()->getRequestUriInfo();
-        if($currentUrl=='') // front page
-            $currentUrl = '<front>';
-        foreach ($this->access as $url) {
-            if ($url == $currentUrl)
-                return true;
-            else {
-                if (($pos = strpos($url, '*')) > 0) {
-                    $arr = explode('*', $url);
-                    foreach ($arr as $part) {
-                        if ($part == '') continue;
-                        if (($apartPos = strpos($currentUrl, $part)) == false) {
-                            $sub = substr($currentUrl, 0, strlen($part));
-                            if ($sub != $part) {
-                                return false;
-                            } else {
-                                $currentUrl = substr($currentUrl, strlen($part));
-                            }
-                        } else {
-                            $currentUrl = substr($currentUrl, $apartPos + strlen($part));
-                        }
-                    }
-                    return true;
-                } else {
-                    //
-                }
-            }
-        }
-        return false;
+        return Rays::app()->getHttpRequest()->urlMatch($this->access);
     }
 
 }
