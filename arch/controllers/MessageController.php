@@ -28,18 +28,47 @@ class MessageController extends RController{
     }
 
     // to be implemented
-    public function actionSend()
+    public function actionSend($receiverId)
     {
+        $data = array();
         if($this->getHttpRequest()->isPostRequest()){
             $form = $_POST;
-            $validation = array(
-                array('field'=>'content','label'=>'Content','rules'=>'trim|required')
+            $config = array(
+                array('field'=>'content','label'=>'Content','rules'=>'trim|required'),
+                array('field'=>'receiver_id','label'=>'Receiver','rules'=>'required'),
+                array('field'=>'type','label'=>'Message type','rules'=>'trim|required'),
             );
-            
+            $validation = new RFormValidationHelper($config);
+            if($validation->run()){
+                $message = new Message();
+                $senderId = 0;
+                if(isset($_POST['sender'])){ //mainly for group and system message
+                    $senderId = $_POST['sender'];
+                }
+                else{
+                    $senderId = Rays::app()->getLoginUser()->id;
+                }
+                $title = isset($_POST['title'])?trim($_POST['title']):"";
+                $message->sendMsg($_POST['type'],$senderId,$title,$_POST['content'],null,1);
+                if(isset($message->id)&&$message->id!=''){
+                    $this->flash("message","Send message successfully.");
+                    $this->redirectAction('message','view');
+                    return;
+                }
+                else{
+                    $this->flash("message","Send message failed.");
+                }
+            }
+            $data = array('messageForm'=>$form);
+            if($validation->getErrors()!=''){
+                $data['validation_errors'] = $validation->getErrors();
+            }
+
         }
+        $this->render('send',$data,false);
     }
 
-    // to be implemented
+
     public function actionRead($msgId)
     {
         if(!Rays::app()->isUserLogin()){
@@ -52,28 +81,27 @@ class MessageController extends RController{
         $this->redirectAction('message','view', 'read');
     }
 
-    // to be implemented
-    // view my own messages
+
     // $msgtype='all','unread','read'
-    public function actionView($msgtype='all')
+    public function actionView($msgType='all')
     {
         if(Rays::app()->isUserLogin()){
-            $msgs = new Message();
+            $messages = new Message();
             $userId = Rays::app()->getLoginUser()->id;
-            if($msgtype=='all'){
-                $msgs = $msgs->getUserMsgs($userId);
+            if($msgType=='all'){
+                $messages = $messages->getUserMsgs($userId);
             }
-            else if($msgtype=='read'){
-                $msgs = $msgs->getReadMsgs($userId);
+            else if($msgType=='read'){
+                $messages = $messages->getReadMsgs($userId);
             }
-            else if($msgtype=='unread'){
-                $msgs = $msgs->getUnReadMsgs($userId);
+            else if($msgType=='unread'){
+                $messages = $messages->getUnReadMsgs($userId);
             }
             else{
                 Rays::app()->page404();
                 return;
             }
-            $this->render('view',array('msgs'=>$msgs,'type'=>$msgtype),false);
+            $this->render('view',array('msgs'=>$messages,'type'=>$msgType),false);
         }
         else{
             $this->flash("message","Please login first.");
