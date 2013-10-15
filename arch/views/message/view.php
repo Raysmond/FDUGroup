@@ -25,6 +25,9 @@
 <?php echo RHtmlHelper::linkAction('message',"Unread messages",'view','unread',array('class'=>'btn btn-sm btn-success'));?>
 
 <?php echo RHtmlHelper::linkAction('message',"Read messages",'view','read',array('class'=>'btn btn-sm btn-default'));?>
+
+<?php echo RHtmlHelper::linkAction('message',"My sent messages",'view','send',array('class'=>'btn btn-sm btn-default'));?>
+
 </div>
 <div class="clearfix" style="margin-bottom: 10px;"></div>
 <?php
@@ -55,7 +58,7 @@
         echo "<br/>";
         echo '<p>'.RHtmlHelper::decode($msg->content).'</p>';
 
-        if($msg->status==1):
+        if($msg->status==1&&$msg->receiverId==Rays::app()->getLoginUser()->id):
             echo RHtmlHelper::linkAction('message',"Mark read",'read',$msg->id,array('class'=>'btn btn-sm btn-success'));
         endif;
 
