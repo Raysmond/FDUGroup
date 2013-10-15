@@ -20,8 +20,11 @@
         <div class="navbar-right">
             <?php
 
-            if(isset($user->picture)&&$user->picture!='')
-                echo RHtmlHelper::showImage($user->picture,$user->name,array('class'=>'img-thumbnail','style'=>'width:200px;'));
+            if($pic = (isset($user->picture)&&$user->picture!='')?$user->picture:"public/images/default_pic.png"){
+
+                echo RHtmlHelper::showImage($pic,$user->name,array('class'=>'img-thumbnail','style'=>'width:200px;'));
+            }
+
             ?>
         </div>
         <?php

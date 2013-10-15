@@ -36,3 +36,8 @@
     border-top-right-radius: 0;
 }
 /*---- end signin form ----*/
+
+/* find-group-form */
+.find-group-form input{
+    float:right;
+}
