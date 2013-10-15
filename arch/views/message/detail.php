@@ -25,6 +25,10 @@
     echo '&nbsp;&nbsp;Status: '.($message->status==0?"unread":"read");
     echo "<br/>";
     echo '<p>'.$message->content.'</p>';
+
+    if($message->status==1):
+        echo RHtmlHelper::linkAction('message',"Mark read",'read',$message->id,array('class'=>'btn btn-sm btn-success'));
+    endif;
     ?>
 </div>
 </div>

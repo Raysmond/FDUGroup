@@ -49,9 +49,11 @@ class Message extends Data{
         }
     }
 
-    public function sendMsg($typeId,$senderId,$receiverId,$title,$content,$sendTime,$status=1)
+    public function sendMsg($typeName,$senderId,$receiverId,$title,$content,$sendTime,$status=1)
     {
-        $this->typeId = $typeId;
+        $this->typeId = new MessageType();
+        $this->typeId->typeName = $typeName;
+        $this->typeId = $this->typeId->find()[0]->typeId;
         $this->senderId = $senderId;
         $this->receiverId = $receiverId;
         $this->title = $title;
@@ -112,7 +114,7 @@ class Message extends Data{
         }
         $msgs = new Message();
         $msgs->receiverId = $receiverId;
-        return $msgs->find(0,0,array('key'=>'msg_id','order'=>'desc'));
+        return $msgs->find(0,0,array('key'=>'msg_status,msg_id','order'=>'desc'));
     }
 
     public function countUnreadMsgs($receiverId)

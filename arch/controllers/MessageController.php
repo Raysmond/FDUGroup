@@ -28,43 +28,81 @@ class MessageController extends RController{
     }
 
     // to be implemented
-    public function actionSend($receiverId)
+    // permissions should be considered
+    public function actionSend($type)
     {
-        $data = array();
+        if(!in_array($type,array('system','user','private','group')))
+        {
+            Rays::app()->page404();
+            return;
+        }
+
+        $data = array('type'=>$type);
+
         if($this->getHttpRequest()->isPostRequest()){
+            if(isset($_POST['new'])){
+                if(isset($_POST['receiverName']))
+                    $data['sendForm'] = array('receiver'=>$_POST['receiverName']);
+                $this->render('send',$data,false);
+                return;
+            }
+
             $form = $_POST;
+
             $config = array(
+                array('field'=>'title','label'=>'Title','rules'=>'trim|required'),
                 array('field'=>'content','label'=>'Content','rules'=>'trim|required'),
-                array('field'=>'receiver_id','label'=>'Receiver','rules'=>'required'),
+                array('field'=>'receiver','label'=>'Receiver','rules'=>'required'),
                 array('field'=>'type','label'=>'Message type','rules'=>'trim|required'),
             );
+
             $validation = new RFormValidationHelper($config);
+
             if($validation->run()){
-                $message = new Message();
-                $senderId = 0;
-                if(isset($_POST['sender'])){ //mainly for group and system message
-                    $senderId = $_POST['sender'];
+                $receiver = new User();
+                $receiver->name = $_POST['receiver'];
+                $receiver = $receiver->find();
+                if(empty($receiver)){
+                    $this->flash("error","No such user.");
                 }
-                else{
-                    $senderId = Rays::app()->getLoginUser()->id;
+                else
+                {
+                    $receiver = $receiver[0];
+                    $message = new Message();
+                    $senderId = 0;
+                    if(isset($_POST['sender']))
+                    { //mainly for group and system message
+                        $senderId = $_POST['sender'];
+                    }
+                    else
+                    {
+                        $senderId = Rays::app()->getLoginUser()->id;
+                    }
+
+                    $title = isset($_POST['title'])?trim($_POST['title']):"";
+                    $message->sendMsg($_POST['type'],$senderId,$receiver->id,$title,$_POST['content'],null,1);
+
+                    if(isset($message->id)&&$message->id!='')
+                    {
+                        $this->flash("message","Send message successfully.");
+                        $this->redirectAction('message','view');
+                        return;
+                    }
+                    else
+                    {
+                        $this->flash("message","Send message failed.");
+                    }
                 }
-                $title = isset($_POST['title'])?trim($_POST['title']):"";
-                $message->sendMsg($_POST['type'],$senderId,$title,$_POST['content'],null,1);
-                if(isset($message->id)&&$message->id!=''){
-                    $this->flash("message","Send message successfully.");
-                    $this->redirectAction('message','view');
-                    return;
-                }
-                else{
-                    $this->flash("message","Send message failed.");
-                }
+
             }
-            $data = array('messageForm'=>$form);
+
+            $data['sendForm'] = $form;
             if($validation->getErrors()!=''){
-                $data['validation_errors'] = $validation->getErrors();
+                 $data['validation_errors'] = $validation->getErrors();
             }
 
         }
+
         $this->render('send',$data,false);
     }
 

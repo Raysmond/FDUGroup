@@ -9,7 +9,17 @@
 ?>
 
 <h2><?php echo count($msgs); ?> messages <?php echo ($type=='all'?"":$type); ?></h2>
+<div class="navbar-left">
+    <?php
+    echo RFormHelper::openForm('message/send/user');
+    echo RFormHelper::input(array('type'=>'hidden','name'=>'new','value'=>'true'));
+    echo RFormHelper::input(array('type'=>'submit','value'=>'+ Write a message','class'=>'btn btn-sm btn-info'));
+    echo RFormHelper::endForm();
+    ?>
+</div>
+
 <div class="navbar-right">
+
 <?php echo RHtmlHelper::linkAction('message',"All messages",'view','all',array('class'=>'btn btn-sm btn-primary'));?>
 
 <?php echo RHtmlHelper::linkAction('message',"Unread messages",'view','unread',array('class'=>'btn btn-sm btn-success'));?>
@@ -40,7 +50,7 @@
             }
         }
         echo '&nbsp;&nbsp;Delivery time: '.$msg->sendTime;
-        echo '&nbsp;&nbsp;Status: '.($msg->status==0?"unread":"read");
+        echo '&nbsp;&nbsp;Status: '.($msg->status==1?"unread":"read");
         echo "<br/>";
         echo '<p>'.$msg->content.'</p>';
 
