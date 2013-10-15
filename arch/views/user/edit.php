@@ -17,7 +17,7 @@ if(isset($validation_errors)){
 }
 
 echo RFormHelper::openForm('user/edit/',
-    array('id'=>'user-edit-form', 'class'=>'.form-signin'));
+    array('id'=>'user-edit-form', 'enctype'=>'multipart/form-data','class'=>'.form-signin'));
 echo '<h2 class="form-signin-heading">User Information Edit: </h2>';
 
 echo RFormHelper::label("User name",'username');
@@ -104,6 +104,8 @@ echo RFormHelper::input(
         'value'=>$user->intro,
         'placeholder'=>"your introduction"));
 
+echo RFormHelper::label("Picture");
+echo RFormHelper::input(array('type'=>'file','name'=>'user_picture','accept'=>'image/gif, image/jpeg,image/png'));
 echo "<br/>";
 
 echo RFormHelper::input(array('type'=>'submit','value'=>'Complete edit','class'=>"btn btn-lg btn-primary btn-block"));

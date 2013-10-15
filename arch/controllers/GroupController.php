@@ -65,7 +65,8 @@ class GroupController extends RController {
                 // success
                 $group = new Group();
                 $group = $group->buildGroup($_POST['group-name'],$_POST['category'],$_POST['intro'],Rays::app()->getLoginUser()->id);
-                if(isset($_FILES['group_picture'])){
+                if(isset($_FILES['group_picture'])&&($_FILES['group_picture']['name']!=''))
+                {
                     $upload = new RUploadHelper(array('file_name'=>'group_'.$group->id.RUploadHelper::get_extension($_FILES['group_picture']['name']),
                         'upload_path'=>Rays::getFrameworkPath().'/../public/images/groups/'));
                     $upload->upload('group_picture');

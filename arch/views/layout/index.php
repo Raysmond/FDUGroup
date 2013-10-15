@@ -50,10 +50,16 @@
 
                 }
                 else{
+                    $user = Rays::app()->getLoginUser();
                     echo '<li class="dropdown">';
 
-                    echo RHtmlHelper::linkAction("user",Rays::app()->getLoginUser()->name,"view",Rays::app()->getLoginUser()->id,
-                        array('id'=>'account-dropdown','class'=>'dropdown-toggle','data-toggle'=>'dropdown'));
+                   // echo RHtmlHelper::linkAction("user",Rays::app()->getLoginUser()->name,"view",Rays::app()->getLoginUser()->id,
+                   //     array('id'=>'account-dropdown','class'=>'dropdown-toggle','data-toggle'=>'dropdown'));
+                    echo '<a href="#" id="account-dropdown" class="dropdown-toggle" data-toggle="dropdown" >';
+                    echo '<span class="username">'.$user->name.'</span>';
+                    echo RHtmlHelper::showImage($user->picture,$user->name,array('class'=>'img-thumbnails'));
+                    echo '</a>';
+
                     echo '<ul class="dropdown-menu">';
                     echo "<li>".RHtmlHelper::linkAction("user","My profile","view",Rays::app()->getLoginUser()->id)."</li>";
 

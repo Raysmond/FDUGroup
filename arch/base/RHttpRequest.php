@@ -147,21 +147,25 @@ class RHttpRequest
         if ($currentUrl == '') // front page
         $currentUrl = '<front>';
         //print_r($urlRules);
-        foreach ($urlRules as $url) {
+        foreach ($urlRules as $url)
+        {
             if ($url == $currentUrl)
                 return true;
-            else {
-                if (($pos = strpos($url, '*')) > 0) {
+            else
+            {
+                if (($pos = strpos($url, '*')) > 0)
+                {
                     $arr = explode('*', $url);
                     $match = true;
-                    foreach ($arr as $part) {
+                    foreach ($arr as $part)
+                    {
                         if ($part == '') continue;
-                        if (($apartPos = strpos($currentUrl, $part)) == false) {
+                        if (($apartPos = strpos($currentUrl, $part)) == false)
+                        {
                             $sub = substr($currentUrl, 0, strlen($part));
-                            if ($sub != $part) {
+                            if ($sub != $part) { // current pattern not matched
                                 $match = false;
                                 break;
-                                //return false;
                             } else {
                                 $currentUrl = substr($currentUrl, strlen($part));
                             }
@@ -169,6 +173,7 @@ class RHttpRequest
                             $currentUrl = substr($currentUrl, $apartPos + strlen($part));
                         }
                     }
+                    // one pattern matched
                     if ($match) return true;
                 } else {
                     //

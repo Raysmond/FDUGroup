@@ -161,6 +161,25 @@ class UserController extends RController
                 }
                 $user->update();
                 $this->flash("message","Update information successfully.");
+
+                // if picture selected
+                if(isset($_FILES['user_picture'])&&($_FILES['user_picture']['name']!=''))
+                {
+                    //print_r($_FILES['user_picture']);
+                    $upload = new RUploadHelper(array(
+                        "file_name"=>"pic_u_".$user->id.RUploadHelper::get_extension($_FILES['user_picture']['name']),
+                        "upload_path"=>Rays::getFrameworkPath()."/../public/images/users/"));
+                    $upload->upload('user_picture');
+                    if($upload->error!='')
+                    {
+                        $this->flash("error",$upload->error);
+                    }
+                    else
+                    {
+                        $user->picture = "public/images/users/".$upload->file_name;
+                        $user->update();
+                    }
+                }
                 $this->redirectAction('user','view',$user->id);
                 return;
             }

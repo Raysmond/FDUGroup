@@ -60,3 +60,15 @@ table,th,tr,td{
     color:red;
 }
 
+/* User picture on navigation bar */
+#account-dropdown .img-thumbnails{
+    height:32px;top:10px;right:30px;margin-bottom:20px;position:absolute;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+
+#account-dropdown .username{
+    margin-right: 50px;
+}
