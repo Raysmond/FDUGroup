@@ -51,4 +51,23 @@ class Group extends Data
         date_default_timezone_set(Rays::app()->getTimeZone());
         $this->createdTime = date('Y-m-d H:i:s');
     }
+
+    public function buildGroup($groupName,$categoryId,$introduction,$creatorId){
+        $this->setDefaults();
+        $this->name = $groupName;
+        $this->categoryId = $categoryId;
+        $this->intro = $introduction;
+        $this->creator = $creatorId;
+        $this->insert();
+        $group = $this->find()[0];
+
+        $groupUser = new GroupUser();
+        $groupUser->groupId = $group->id;
+        $groupUser->userId = $group->creator;
+        date_default_timezone_set(Rays::app()->getTimeZone());
+        $groupUser->joinTime = date('Y-m-d H:i:s');
+        $groupUser->status = 1;
+        $groupUser->insert();
+
+    }
 }

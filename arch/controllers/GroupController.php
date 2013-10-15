@@ -64,21 +64,7 @@ class GroupController extends RController {
             if($validation->run()){
                 // success
                 $group = new Group();
-                $group->setDefaults();
-                $group->name = $form['group-name'];
-                $group->categoryId = $form['category'];
-                $group->intro = $form['intro'];
-                $group->creator = Rays::app()->getLoginUser()->id;
-                $group->insert();
-                $group = $group->find()[0];
-
-                $groupUser = new GroupUser();
-                $groupUser->groupId = $group->id;
-                $groupUser->userId = $group->creator;
-                date_default_timezone_set(Rays::app()->getTimeZone());
-                $groupUser->joinTime = date('Y-m-d H:i:s');
-                $groupUser->status = 1;
-                $groupUser->insert();
+                $group->buildGroup($_POST['group-name'],$_POST['category'],$_POST['intro'],Rays::app()->getLoginUser()->id);
 
                 $this->flash("message","Group was built successfully.");
                 $this->redirectAction('group','view',Rays::app()->getLoginUser()->id);
