@@ -146,4 +146,14 @@ class RHtmlHelper
         }
     }
 
+    public static function showImage($src,$title='',$attributes = array()){
+        $defaults = array();
+        if(strpos($src,'://')==false){
+            $src = Rays::app()->getBaseUrl()."/".$src;
+        }
+        $defaults['src'] = $src;
+        $defaults['title'] = $title;
+        return '<img '.self::parseAttributes($attributes,$defaults).' />';
+    }
+
 }
