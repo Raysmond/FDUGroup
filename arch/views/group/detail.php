@@ -28,6 +28,12 @@
 </h2>
 <div class="jumbotron">
 <p>
+    <?php
+        if(isset($group->picture)&&$group->picture!=''){
+            echo RHtmlHelper::showImage($group->picture,$group->name,array('style'=>'width:140px;'));
+            echo '<br/>';
+        }
+    ?>
     create time:<?php echo $group->createdTime; ?> &nbsp &nbsp
     created by: <?php echo RHtmlHelper::linkAction('user',$group->groupCreator->name,'view',$group->creator) ?> &nbsp &nbsp
     group type: <?php echo RHtmlHelper::linkAction('category',$group->category->name,'view',$group->category->id); ?> <br/>
