@@ -6,15 +6,34 @@
  * Time: 下午1:52
  */
     $form = array();
-    if(isset($registerForm)){
-        $form = $registerForm;
+    if(isset($searchForm)){
+        $form = $searchForm;
     }
+    $lastSearchStr = isset($searchstr)?$searchstr:"";
+    if($lastSearchStr!='')
+        $lastSearchStr = urlencode($lastSearchStr);
 echo '<div>';
-    echo '<div class="row">';
-    echo RFormHelper::openForm('group/find',
-        array('id'=>'findFrom', 'class'=>'.form-signin registerForm'));
-    echo '<h2 class="form-signin-heading">Find Groups</h2>';
 
+    echo '<h2 class="form-signin-heading">Find Groups</h2>';
+    echo '<div class="navbar-right" style="position: absolute;top:25px;">';
+    echo RFormHelper::openForm('group/find',array('class'=>'form-signin find-group-form'));
+    //echo RFormHelper::input(array("id"=>'searchstr',"name"=>'searchstr','class'=>'form-control',"placeholder"=>'Search group'));
+    //echo RFormHelper::input(array('type'=>'submit','value'=>'Search','class'=>'btn btn-success'));
+
+    echo '<div class="col-lg-6" style="float:right;">
+    <div class="input-group">
+      <input type="text" class="form-control" name="searchstr" value="'.urldecode($lastSearchStr).'" placeholder="Search Groups">
+      <span class="input-group-btn">
+        <button class="btn btn-default" type="submit">Go!</button>
+      </span>
+    </div><!-- /input-group -->
+  </div><!-- /.col-lg-6 -->';
+
+    echo RFormHelper::endForm();
+    echo '</div>';
+    echo '<div class="clearfix" style="margin-bottom: 10px;"></div>';
+
+echo '<div class="row">';
     $groups = $data['group'];
     foreach($groups as $group){
         echo '<div class="col-6 col-sm-6 col-lg-4" style="height: 190px;">';
@@ -46,11 +65,10 @@ echo '<div>';
         }
         echo "</div></div></div>";
     }
-    echo RFormHelper::endForm();
     echo '</div>';
 
     echo '<ul class="pagination">';
-    echo '<li><a href="'.RHtmlHelper::siteUrl('group/find').'">&laquo;</a></li>';
+    echo '<li><a href="'.RHtmlHelper::siteUrl('group/find/1/'.$lastSearchStr).'">&laquo;</a></li>';
 
     $remain = $data['page_number'] - $data['page'];
     if($data['page'] < 3 && $remain <2){
@@ -73,7 +91,7 @@ echo '<div>';
         $start = $data['page']-2; $end = $data['page']+3;
     }
     for($index = $start; $index <  $end ; $index++)
-        echo '<li><a href="'.RHtmlHelper::siteUrl('group/find/'.$index).'">'.$index.'</a></li>';
-    echo '<li><a href="'.RHtmlHelper::siteUrl('group/find/'.$data['page_number'].'/'.$data['pagesize']).'">&raquo;</a></li>';
+        echo '<li><a href="'.RHtmlHelper::siteUrl('group/find/'.$index.'/'.$lastSearchStr).'">'.$index.'</a></li>';
+    echo '<li><a href="'.RHtmlHelper::siteUrl('group/find/'.$data['page_number'].'/'.$lastSearchStr).'">&raquo;</a></li>';
     echo '</ul>';
 echo '</div>';
