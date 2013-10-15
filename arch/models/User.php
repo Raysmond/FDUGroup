@@ -15,6 +15,7 @@ class User extends Data{
     public $defaults = array(
         'status'=>1,
         'credits'=>1,
+        'roleId'=>2
 
     );
 

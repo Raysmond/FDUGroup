@@ -57,7 +57,8 @@
                    //     array('id'=>'account-dropdown','class'=>'dropdown-toggle','data-toggle'=>'dropdown'));
                     echo '<a href="#" id="account-dropdown" class="dropdown-toggle" data-toggle="dropdown" >';
                     echo '<span class="username">'.$user->name.'</span>';
-                    echo RHtmlHelper::showImage($user->picture,$user->name,array('class'=>'img-thumbnails'));
+                    $pic = (isset($user->picture)&&$user->picture!='')?$user->picture:"public/images/default_pic.png";
+                    echo RHtmlHelper::showImage($pic,$user->name,array('class'=>'img-thumbnails'));
                     echo '</a>';
 
                     echo '<ul class="dropdown-menu">';
@@ -70,7 +71,7 @@
                     else
                     {
                         echo '<li><a href="'.RHtmlHelper::siteUrl('message/view').'">';
-                        echo 'Messages&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="badge">3</span></a></li>';
+                        echo 'Messages&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="badge">'.$count.'</span></a></li>';
                     }
                     echo '<li role="presentation" class="divider"></li>';
                     echo "<li>".RHtmlHelper::linkAction("user","Logout","logout",null)."</li>";
