@@ -1,5 +1,7 @@
 <?php
-
+if(isset($validation_errors)){
+    RHtmlHelper::showValidationErrors($validation_errors);
+}
 $form = array();
 if(isset($buildForm))
     $form = $buildForm;
@@ -16,6 +18,7 @@ echo RFormHelper::input(
 
 echo "<br/>";
 echo RFormHelper::label("Category:",'category')."&nbsp;&nbsp;";
+
 $cats = array();
 foreach($categories as $cat){
     array_push($cats,array('value'=>$cat->id,'text'=>$cat->name));
@@ -25,7 +28,7 @@ echo "<br/>";
 
 echo RFormHelper::label('Group Introduction','intro',array());
 echo '<br/>';
-echo RFormHelper::textarea(array('name'=>'intro','cols'=>'100','rows'=>'15'));
+echo RFormHelper::textarea(array('name'=>'intro','cols'=>'100','rows'=>'15'),$form);
 
 echo '<br/><br/>';
 echo RFormHelper::input(

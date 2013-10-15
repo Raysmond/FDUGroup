@@ -49,9 +49,17 @@ class GroupController extends RController {
     public function actionBuild()
     {
         $this->setHeaderTitle("Build my group");
+        $category = new Category();
+        $categories =  $category->find();
+        $data = array('categories'=>$categories);
         if($this->getHttpRequest()->isPostRequest()){
             $form = $_POST;
-            $rules = array();
+            $rules = array(
+                array('field'=>'group-name','label'=>'Group name','rules'=>'trim|required|min_length[5]|max_length[30]'),
+                array('field'=>'category','label'=>'Category','rules'=>'required'),
+                array('field'=>'intro','label'=>'Group Introduction','rules'=>'trim|required|min_length[10]')
+            );
+
             $validation = new RFormValidationHelper($rules);
             if($validation->run()){
                 // success
@@ -74,19 +82,18 @@ class GroupController extends RController {
 
                 $this->flash("message","Group was built successfully.");
                 $this->redirectAction('group','view',Rays::app()->getLoginUser()->id);
+                return;
             }
             else{
-                // failed
-                $this->flash("error","Errors.");
+                // validation failed
+                $data['validation_errors'] = $validation->getErrors();
+                $data['buildForm'] = $form;
             }
         }
         else{
-            $category = new Category();
-            $categories =  $category->find();
-            $this->render('build',array('categories'=>$categories),false);
-            return;
+            //
         }
-        $this->render('build',null,false);
+        $this->render('build',$data,false);
     }
 
     public function actionEdit($groupId=null)

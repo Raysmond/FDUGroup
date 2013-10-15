@@ -53,8 +53,8 @@ class RFormHelper
     public static function textarea($data = '', $value = '')
     {
         $name = self::setName($data);
-        $defaults = array('name'=>$name,'value'=>self::setValue($value,$name));
-        return '<textarea ' . self::parseAttributes($data, $defaults) . ' >'.$value.'</textarea>';
+        $defaults = array('name'=>$name);
+        return '<textarea ' . self::parseAttributes($data, $defaults) . ' >'.self::setValue($value,$name).'</textarea>';
     }
 
     public static function select($name = '', $options = array(), $selected = array(), $attr = '')
