@@ -104,7 +104,7 @@ class RFormValidationHelper
                     } else {
                         // The method is not a object method,it's a common php method like 'trim'
                         if (!method_exists($this, $r) && function_exists($r))
-                            $r = $_POST[$field] = $r($_POST[$field]);
+                            $r = $_POST[$field] = $r(@$_POST[$field]);
 
                         else if (method_exists($this, $r) && ($this->$r($_POST[$field]) == false)) {
                             $error = array();

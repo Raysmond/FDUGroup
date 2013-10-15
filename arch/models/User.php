@@ -5,6 +5,8 @@
  */
 
 class User extends Data{
+    public static $roles = array('administrator','authenticated user','anonymous user');
+
     public $id,$roleId,$name,$mail,$password,$region,$mobile,$qq,$weibo;
     public $registerTime,$status,$picture,$intro,$homepage,$credits,$permission,$privacy;
 

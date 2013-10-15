@@ -122,7 +122,7 @@ class UserController extends RController
         } else return "User name and password not match...";
     }
 
-    public function actionUserEdit($userId=null){
+    public function actionEdit($userId=null){
         if(Rays::app()->isUserLogin()==false){
             $this->flash("message","Please login first.");
             $this->redirectAction('user','login');
@@ -130,9 +130,48 @@ class UserController extends RController
         }
         $user = new User();
 
-        $user->load(($userId==null)?Rays::app()->getLoginUser()->id:$userId);
+        //$user->load(($userId==null)?Rays::app()->getLoginUser()->id:$userId);
+        // for now , the user can only edit his own profile
+        $user->load(Rays::app()->getLoginUser()->id);
+        $data = array('user'=>$user);
+
         if($this->getHttpRequest()->isPostRequest()){
             $form = $_POST;
+            $config = array(
+                array('field'=>'username','label'=>'User name','rules'=>'trim|required|min_length[5]|max_length[20]'),
+            );
+            // if set password, then go changing password
+            if(isset($_POST['password'])&&($_POST['password']!=''))
+            {
+                array_push($config,array('field'=>'password','label'=>'New Password','rules'=>'trim|required|min_length[6]|max_length[20]'));
+                array_push($config,array('field'=>'password-confirm','label'=>'New Password Confirm','rules'=>'trim|required|min_length[6]|max_length[20]|equals[password]'));
+            }
+
+            $validation = new RFormValidationHelper($config);
+
+            if($validation->run())
+            {
+                $user->name = $_POST['username'];
+                foreach($user->columns as $objCol=>$dbCol)
+                {
+                    if(isset($_POST[$objCol]))
+                    {
+                        $user->$objCol = $_POST[$objCol];
+                    }
+                }
+                $user->update();
+                $this->flash("message","Update information successfully.");
+                $this->redirectAction('user','view',$user->id);
+                return;
+            }
+            else
+            {
+                $errors = $validation->getErrors();
+                $data['validation_errors'] = $errors;
+                $data['editForm'] = $form;
+
+            }
+            /*
             foreach($user->columns as $objCol=>$dbCol){
                 if(isset($form[$objCol])){
                     switch($objCol)
@@ -153,16 +192,13 @@ class UserController extends RController
                     }
                 }
             }
-            $user->update();
-
+            */
+            //$user->update();
+            //$this->flash("message","Update information successfully.");
+            //$this->redirectAction('user','view',$user->id);
+            //return;
         }
-
-        if($user==null){
-            // not found...
-            // need to be implemented
-            return;
-        }
-        $this->setHeaderTitle($user->name);
-        $this->render('useredit',array('user'=>$user),false);
+        $this->setHeaderTitle("Edit profile - ".$user->name);
+        $this->render('edit',$data,false);
     }
 }
