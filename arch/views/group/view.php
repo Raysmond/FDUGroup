@@ -5,8 +5,6 @@
  * Date: 13-10-14
  * Time: 下午1:53
  */
-    echo RFormHelper::openForm('group/view',
-        array('id'=>'viewFrom', 'class'=>'.form-signin registerForm'));
 
     echo RHtmlHelper::linkAction('group','Build my group','build',null,array('class'=>'btn btn-success'));
 
@@ -17,21 +15,37 @@
         return null;
     }
 
-    foreach($data as $group){
-        echo '<tr><div class="alert alert-success">';
-        echo "<td>";
-        echo '<p><b>'.$group->name.'</b></p>';
-        echo $group->memberCount." members";
-        if(strlen($group->intro)>100){
-            echo '<p>'.substr($group->intro,0,100).'...</p>';
-        }
-        else echo '<p>'.$group->intro.'</p>';
-        echo "</td><td>";
-        echo "&nbsp;&nbsp;";
-        echo RHtmlHelper::linkAction('group','Exit group','exit',$group->id);
-        echo "&nbsp;&nbsp;";
-        echo RHtmlHelper::linkAction('group','View details','detail',$group->id);
-        echo '</td></div></tr>';
+$count = 0;
+foreach($data as $group){
+    if($count==0){
+        echo '<div class="row">';
     }
 
-    echo RFormHelper::endForm();
+    echo '<div class="col-6 col-sm-6 col-lg-4" style="height: 190px;">';
+    echo "<div class='panel panel-default' style='height: 170px;'>";
+    echo "<div class='panel-heading'>";
+    echo RHtmlHelper::linkAction('group',$group->name,'detail',$group->id);
+    echo "</div>";
+    echo "<div class='panel-body'>";
+    echo $group->memberCount." members";
+    if(strlen($group->intro)>100){
+        echo '<p>'.substr($group->intro,0,100).'...</p>';
+    }
+    else echo '<p>'.$group->intro.'</p>';
+    echo RHtmlHelper::linkAction('group','Exit group','exit',$group->id,
+        array('class'=>'btn btn-xs btn-info','style'=>'position:absolute;top:135px;right:120px;'));
+
+    echo RHtmlHelper::linkAction('group','View details','detail',$group->id
+    ,array('class'=>'btn btn-xs btn-info','style'=>'position:absolute;top:135px;right:30px;'));
+
+    echo "</div></div></div>";
+
+    $count++;
+    if(($count==3)){
+        echo '</div>';
+        $count = 0;
+    }
+}
+if($count!=0)
+    echo "</div>";
+
