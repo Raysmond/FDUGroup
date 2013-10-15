@@ -144,8 +144,9 @@ class RFormValidationHelper
 
     public function equals($str, $field)
     {
-        if (isset($_POST[$field]))
-            return ($str == $field) ? true : false;
+        if (isset($_POST[$field])){
+            return ($str == $_POST[$field]) ? true : false;
+        }
         else
             return false;
     }

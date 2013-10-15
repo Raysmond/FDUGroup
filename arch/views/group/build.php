@@ -6,7 +6,8 @@ $form = array();
 if(isset($buildForm))
     $form = $buildForm;
 
-echo RFormHelper::openForm('group/build',array('id'=>'build-group-form','class'=>'form-signin build-group-form'));
+echo RFormHelper::openForm('group/build',array('id'=>'build-group-form',
+    'enctype'=>'multipart/form-data','class'=>'form-signin build-group-form'));
 
 echo RFormHelper::label('Group name','group-name',array());
 echo RFormHelper::input(
@@ -30,9 +31,12 @@ echo RFormHelper::label('Group Introduction','intro',array());
 echo '<br/>';
 echo RFormHelper::textarea(array('name'=>'intro','cols'=>'100','rows'=>'15'),$form);
 
+echo '<br/>';
+echo RFormHelper::label('Group picture','group_picture');
+echo RFormHelper::input(array('type'=>'file','name'=>'group_picture','accept'=>'image/gif, image/jpeg,image/png'));
+
 echo '<br/><br/>';
 echo RFormHelper::input(
     array('class'=>'btn btn-lg btn-primary btn-block','type'=>'submit','value'=>'Build now'));
-
 
 echo RFormHelper::endForm();

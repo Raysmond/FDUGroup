@@ -123,8 +123,6 @@ class UserController extends RController
         } else return "User name and password not match...";
     }
 
-
-
     public function actionUserEdit($userId=null){
         if(Rays::app()->isUserLogin()==false){
             $this->flash("message","Please login first.");

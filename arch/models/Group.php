@@ -8,7 +8,7 @@ class Group extends Data
 {
     public $groupCreator;
     public $category;
-    public $id, $creator, $categoryId, $name, $memberCount, $createdTime, $intro;
+    public $id, $creator, $categoryId, $name, $memberCount, $createdTime, $intro,$picture;
 
     public function __construct()
     {
@@ -22,8 +22,8 @@ class Group extends Data
                 "name" => "gro_name",
                 "memberCount" => "gro_member_count",
                 "createdTime" => "gro_created_time",
-                "intro" => "gro_intro"
-
+                "intro" => "gro_intro",
+                "picture"=>'gro_picture'
             )
         );
         parent::init($option);
@@ -52,12 +52,14 @@ class Group extends Data
         $this->createdTime = date('Y-m-d H:i:s');
     }
 
-    public function buildGroup($groupName,$categoryId,$introduction,$creatorId){
+    public function buildGroup($groupName,$categoryId,$introduction,$creatorId,$picture=''){
         $this->setDefaults();
         $this->name = $groupName;
         $this->categoryId = $categoryId;
         $this->intro = $introduction;
         $this->creator = $creatorId;
+        if($picture!='')
+            $this->picture = $picture;
         $this->insert();
         $group = $this->find()[0];
 
