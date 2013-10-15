@@ -138,6 +138,7 @@ class UserController extends RController
             $form = $_POST;
             foreach($user->columns as $objCol=>$dbCol){
                 if(isset($form[$objCol])){
+
                     $user->$objCol = $form[$objCol];
                 }
             }
