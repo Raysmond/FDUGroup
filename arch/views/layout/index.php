@@ -39,6 +39,9 @@
                         Rays::app()->isUserLogin()?Rays::app()->getLoginUser()->id:null); ?></li>
 
             </ul>
+
+
+
             <ul class="nav navbar-nav navbar-right">
                 <?php
                 if(!Rays::app()->isUserLogin()){
@@ -46,11 +49,17 @@
                     echo "<li>".RHtmlHelper::linkAction("user","Register","register",null)."</li>";
                 }
                 else{
-                    echo "<li>".RHtmlHelper::linkAction("user",
+                    echo '<li class="dropdown">';
+                    echo RHtmlHelper::linkAction("user",
                             Rays::app()->getLoginUser()->name,
                             "view",
-                            Rays::app()->getLoginUser()->id)."</li>";
+                            Rays::app()->getLoginUser()->id,
+                        array('id'=>'account-dropdown','class'=>'dropdown-toggle','data-toggle'=>'dropdown'));
+                    echo '<ul class="dropdown-menu">';
+                    echo "<li>".RHtmlHelper::linkAction("user","My profile","view",Rays::app()->getLoginUser()->id)."</li>";
                     echo "<li>".RHtmlHelper::linkAction("user","Logout","logout",null)."</li>";
+                    echo '</ul>';
+                    echo '</li>';
                 }
                 ?>
             </ul>
