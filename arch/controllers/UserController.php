@@ -91,12 +91,11 @@ class UserController extends RController
             $validation = new RFormValidationHelper($rules);
             if ($validation->run()) {
                 $user = new User();
-                $user->setDefaults();
-                $user->name = $form['username'];
-                $user->password = md5($form['password']);
-                $user->mail = $form['email'];
-                $user->insert();
-                $user = $user->find()[0];
+                $user->register($_POST['username'],md5($_POST['password']),$_POST['email']);
+                $message = new Message();
+                $message->sendMsg('system',0,$user->id,"Welcome, ".$user->name,
+                    RHtmlHelper::encode("Dear ".$user->name." : <br/>Welcome to join the FDUGroup bit family!<br/><br/>--- FDUGroup team<br/>"),null,1);
+
                 $this->flash("message","Hello,".$user->name.", please ".RHtmlHelper::linkAction('user','login','login')." !");
                 $this->redirectAction('user', 'view', $user->id);
                 return;

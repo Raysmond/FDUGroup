@@ -24,7 +24,7 @@
     echo '&nbsp;&nbsp;Delivery time: '.$message->sendTime;
     echo '&nbsp;&nbsp;Status: '.($message->status==0?"unread":"read");
     echo "<br/>";
-    echo '<p>'.$message->content.'</p>';
+    echo '<p>'.RHtmlHelper::decode($message->content).'</p>';
 
     if($message->status==1):
         echo RHtmlHelper::linkAction('message',"Mark read",'read',$message->id,array('class'=>'btn btn-sm btn-success'));

@@ -69,4 +69,20 @@ class User extends Data{
         $msg = new Message();
         return $msg->countUnreadMsgs($this->id);
     }
+
+    /**
+     * Register a new user and return the new user object
+     * @param $name
+     * @param $password
+     * @param $email
+     */
+    public function register($name,$password,$email)
+    {
+        $this->setDefaults();
+        $this->name = $name;
+        $this->password = $password;
+        $this->mail = $email;
+        $id = $this->insert();
+        $this->load($id);
+    }
 }
