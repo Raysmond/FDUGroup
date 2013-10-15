@@ -71,5 +71,6 @@ class Group extends Data
         $groupUser->status = 1;
         $groupUser->insert();
 
+        return $group;
     }
 }
