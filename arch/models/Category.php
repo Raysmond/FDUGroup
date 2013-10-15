@@ -13,7 +13,7 @@ class Category extends Tree
         $option = array(
             "key" => "id",
             "pkey" => "pid",
-            "table" => "catagory",
+            "table" => "category",
             "columns" => array(
                 "id" => "cat_id",
                 "name" => "cat_name",
@@ -23,5 +23,6 @@ class Category extends Tree
 
         parent::init($option);
     }
+
 
 }

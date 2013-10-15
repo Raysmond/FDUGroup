@@ -9,15 +9,15 @@
     <div class="panel-body">
         <?php
             foreach($categories as $category){
-                if($category->id==$category->pid){
+                    if($category->pid!=0)
+                        continue;
                     echo " • ".RHtmlHelper::linkAction('category',$category->name,'groups',$category->id)."<br/>";
-                    foreach($categories as $cat){
-                        if($cat->pid!=$cat->id&&$cat->pid==$category->id){
-                            echo RHtmlHelper::linkAction('category',$cat->name,'groups',$cat->id)."  ";
-                        }
+                    $subCategories = $category->children();
+                    foreach($subCategories as $cat){
+                        echo RHtmlHelper::linkAction('category',$cat->name,'groups',$cat->id)."  ";
                     }
                     echo '<br/>';
-                }
+
             }
         ?>
     </div>
