@@ -12,12 +12,28 @@ class GroupController extends RController {
     /*
      * actionFind: find groups/show all groups
      */
-    public function actionFind($userId = null)
+    public function actionFind($page = 1, $pagesize = 3)
     {
         $group = new Group();
         $groups = $group->find();
+        $group_number = count($groups);
+        $page_number = ceil($group_number/$pagesize);
+        if($page == 1){
+            $isFirstPage = true;
+        }else
+            $isFirstPage = false;
+        if($page == $page_number){
+            $isLastPage = true;
+        }else
+            $isLastPage = false;
+        $group = new Group();
+        if($page ==1)
+            $groups = $group->find($pagesize);
+        else
+            $groups = $group->find($pagesize*($page-1),$pagesize);
         $this->setHeaderTitle("Find Group");
-        $this->render("find",$groups,false);
+        $this->render("find",
+            array('group'=>$groups,'page'=>$page,'isFirstPage'=>$isFirstPage,'isLastPage'=>$isLastPage,'pagesize'=>$pagesize,'page_number'=>$page_number),false);
     }
 
     /*
@@ -97,9 +113,62 @@ class GroupController extends RController {
         $this->render('build',$data,false);
     }
 
-    public function actionEdit($groupId=null)
+    public function actionEdit($groupId)
     {
-        $this->render('edit',array('groupId'=>$groupId),false);
+        $oldGroup = new Group();
+        $oldGroup->load($groupId);
+        $this->setHeaderTitle("Edit my group");
+        $category = new Category();
+        $categories =  $category->find();
+        $data = array('categories'=>$categories,'groupId'=>$groupId);
+        if($this->getHttpRequest()->isPostRequest()){
+            $form = $_POST;
+            $rules = array(
+                array('field'=>'group-name','label'=>'Group name','rules'=>'trim|required|min_length[5]|max_length[30]'),
+                array('field'=>'category','label'=>'Category','rules'=>'required'),
+                array('field'=>'intro','label'=>'Group Introduction','rules'=>'trim|required|min_length[10]')
+            );
+
+            $validation = new RFormValidationHelper($rules);
+            if($validation->run()){
+                // success
+                $group = new Group();
+                $group->id = $groupId;
+                $group->load();
+                $group->name = $_POST['group-name'];
+                $group->categoryId = $_POST['category'];
+                $group->intro = $_POST['intro'];
+                $group->update();
+               // $group = $group->buildGroup($_POST['group-name'],$_POST['category'],$_POST['intro'],Rays::app()->getLoginUser()->id);
+              if(isset($_FILES['group_picture'])&&$_FILES['group_picture']['name']!=''){
+                    $upload = new RUploadHelper(array('file_name'=>'group_'.$group->id.RUploadHelper::get_extension($_FILES['group_picture']['name']),
+                        'upload_path'=>Rays::getFrameworkPath().'/../public/images/groups/'));
+                    $upload->upload('group_picture');
+                    if($upload->error!=''){
+                        echo '<pre>';
+                        print_r($upload);
+                        echo '</pre>';
+                        $this->flash("error",$upload->error);
+                    }
+                    else{
+                        $group->picture = "public/images/groups/".$upload->file_name;
+                        $group->update();
+                    }
+                }
+                $this->flash("message","Edit group successfully.");
+                $this->redirectAction('group','view',Rays::app()->getLoginUser()->id);
+                return;
+            }
+            else{
+                // validation failed
+                $data['editForm'] = $form;
+                $data['validation_errors'] = $validation->getErrors();
+            }
+        }
+        else{
+            $data['oldGroup'] = $oldGroup;
+        }
+        $this->render('edit',$data,false);
     }
 
     public function actionJoin($groupId=null)

@@ -9,20 +9,14 @@
     if(isset($registerForm)){
         $form = $registerForm;
     }
+echo '<div>';
+    echo '<div class="row">';
     echo RFormHelper::openForm('group/find',
         array('id'=>'findFrom', 'class'=>'.form-signin registerForm'));
     echo '<h2 class="form-signin-heading">Find Groups</h2>';
 
-    $flag = 0; $isFirstRow = 1;
-    foreach($data as $group){
-        if($flag == 0) {
-            if($isFirstRow){
-                $isFirstRow = 0;
-                echo '<div class="row">';
-            }
-            else
-                echo '</div><div class="row">';
-        }
+    $groups = $data['group'];
+    foreach($groups as $group){
         echo '<div class="col-6 col-sm-6 col-lg-4" style="height: 190px;">';
         echo "<div class='panel panel-default' style='height: 170px;'>";
         echo "<div class='panel-heading'>";
@@ -50,9 +44,36 @@
             echo RHtmlHelper::linkAction('group','+ Join the group','join',$group->id,
                 array('class'=>'btn btn-xs btn-info','style'=>'position:absolute;top:135px;'));
         }
-
         echo "</div></div></div>";
-        $flag = ($flag+1)%3;
     }
-    echo "</div>";
     echo RFormHelper::endForm();
+    echo '</div>';
+
+    echo '<ul class="pagination">';
+    echo '<li><a href="'.RHtmlHelper::siteUrl('group/find').'">&laquo;</a></li>';
+
+    $remain = $data['page_number'] - $data['page'];
+    if($data['page'] < 3 && $remain <2){
+        $start = 1; $end = $data['page_number']+1;
+    }else if($data['page'] < 3 && $remain > 1){
+        if($data['page_number'] > 5){
+            $start = 1; $end = 6;
+        }
+        else{
+            $start = 1; $end = $data['page_number']+1;
+        }
+    }else if($data['page'] >2 && $remain <2){
+        if($data['page_number'] > 5){
+            $start = $data['page_number']-4; $end = $data['page_number']+1;
+        }
+        else{
+            $start = 1; $end = $data['page_number']+1;
+        }
+    }else{
+        $start = $data['page']-2; $end = $data['page']+3;
+    }
+    for($index = $start; $index <  $end ; $index++)
+        echo '<li><a href="'.RHtmlHelper::siteUrl('group/find/'.$index).'">'.$index.'</a></li>';
+    echo '<li><a href="'.RHtmlHelper::siteUrl('group/find/'.$data['page_number'].'/'.$data['pagesize']).'">&raquo;</a></li>';
+    echo '</ul>';
+echo '</div>';
