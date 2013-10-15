@@ -8,13 +8,20 @@
     <div class="page-header">
         <h2>Hi!<?php echo " " . $user->name . " "; ?><span class="badge">FDUGroup</span></h2>
     </div>
-
+    <div class="navbar-right" style="margin-top:-40px;">
+        <?php
+        echo RHtmlHelper::linkAction('user', 'Edit', 'edit', $user->id, array('class' => 'btn btn-success'));
+        echo '<div class="clearfix"></div>';
+        ?>
+    </div>
     <p class="panel panel-info"></p>
 
     <div class="panel-body">
         <div class="navbar-right">
             <?php
-            echo RHtmlHelper::linkAction('user', 'Edit', 'edit', $user->id, array('class' => 'btn btn-success'));
+
+            if(isset($user->picture)&&$user->picture!='')
+                echo RHtmlHelper::showImage($user->picture,$user->name,array('class'=>'img-thumbnail','style'=>'width:200px;'));
             ?>
         </div>
         <?php
