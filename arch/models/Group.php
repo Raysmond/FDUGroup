@@ -39,10 +39,17 @@ class Group extends Data
         $this->category->id = $this->categoryId;
     }
 
-    public function groupUsers(){
+    public function groupUsers($limit=0, $orderby='', $order='ASC'){
         $groupusers = new GroupUser();
         $groupusers->groupId = $this->id;
-        return $groupusers->find();
+        $groupusers = $groupusers->find($limit,0,array('key'=>$orderby,'order'=>$order));
+        $result = array();
+        foreach($groupusers as $row){
+            $user = new User();
+            $user->load($row->userId);
+            array_push($result,$user);
+        }
+        return $result;
     }
 
     public function setDefaults(){

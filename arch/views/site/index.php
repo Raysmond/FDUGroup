@@ -7,10 +7,11 @@
     </p>
 </div>
 
-All users:
 <br/>
-<table>
+
 <?php
+/*
+ * echo '<table>';
     foreach($data[0]->columns as $col=>$dbcol){
         echo "<th>".$col."</th>";
     }
@@ -24,8 +25,9 @@ All users:
         }
         echo "</tr>";
     }
-
+echo '</table>';
+*/
 ?>
-</table>
+
 
 <br/>
