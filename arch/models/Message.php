@@ -117,6 +117,17 @@ class Message extends Data{
         return $msgs->find(0,0,array('key'=>'msg_status,msg_id','order'=>'desc'));
     }
 
+    public function getUserSentMsgs($userId)
+    {
+        if(!isset($userId)||$userId==''){
+            return null;
+        }
+        $msgs = new Message();
+
+        $msgs->senderId = $userId;
+        return $msgs->find(0,0,array('key'=>'msg_id','order'=>'desc'));
+    }
+
     public function countUnreadMsgs($receiverId)
     {
         return count($this->getUnReadMsgs($receiverId));

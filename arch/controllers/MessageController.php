@@ -22,6 +22,15 @@ class MessageController extends RController{
         }
         $message = new Message();
         $message->load($msgId);
+
+        $loginId = Rays::app()->getLoginUser()->id;
+        if($message->receiverId!=$loginId&&$message->senderId!=$loginId)
+        {
+            $this->flash("error","Sorry. You don't have the right to read the message.");
+            $this->redirectAction('message','view','all');
+            return;
+        }
+
         $message->type->load();
 
         $this->render('detail',array('message'=>$message),false);
@@ -107,6 +116,7 @@ class MessageController extends RController{
     }
 
 
+    // to be implemented
     public function actionRead($msgId)
     {
         if(!Rays::app()->isUserLogin()){
@@ -115,6 +125,13 @@ class MessageController extends RController{
             return;
         }
         $message = new Message();
+        $message->load($msgId);
+        if(Rays::app()->getLoginUser()->id!=$message->receiverId)
+        {
+            $this->flash("error","Sorry. You don't have the right to mark the message read.");
+            $this->redirectAction('message','view','all');
+            return;
+        }
         $message->markRead($msgId);
         $this->redirectAction('message','view', 'read');
     }
@@ -134,6 +151,9 @@ class MessageController extends RController{
             }
             else if($msgType=='unread'){
                 $messages = $messages->getUnReadMsgs($userId);
+            }
+            else if($msgType=='send'){
+                $messages = $messages->getUserSentMsgs($userId);
             }
             else{
                 Rays::app()->page404();
