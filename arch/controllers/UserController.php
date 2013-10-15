@@ -136,8 +136,22 @@ class UserController extends RController
             $form = $_POST;
             foreach($user->columns as $objCol=>$dbCol){
                 if(isset($form[$objCol])){
-
-                    $user->$objCol = $form[$objCol];
+                    switch($objCol)
+                    {
+                        case "name":;
+                        case "password":
+                            if(preg_match("/^[a-zA-Z0-9_]+$/",$form[$objCol]) && strlen($form[$objCol]) > 4 && strlen($form[$objCol]) < 20)
+                                $user->$objCol = $form[$objCol];break;
+                        case "mail":;
+                        case "weibo":
+                            if(preg_match('/^[_.0-9a-z-a-z-]+@([0-9a-z][0-9a-z-]+.)+[a-z]{2,4}$/',$form[$objCol]))
+                                $user->$objCol = $form[$objCol];break;
+                        case "qq":;
+                        case "mobile":
+                            if(preg_match('/^[0-9]+$/',$form[$objCol]))
+                                $user->$objCol = $form[$objCol];break;
+                        default:     $user->$objCol = $form[$objCol];break;
+                    }
                 }
             }
             $user->update();

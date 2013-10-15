@@ -5,18 +5,27 @@
  */
 ?>
 <div class="jumbotron">
-    <div class="panel-heading">
-        Hi !<?php echo " ".$user->name; ?>
+    <div class="page-header">
+        <h1>Hi!<?php echo " ".$user->name." "; ?><span class="badge">FDUGroup</span></h1>
+        <h1><small>This is your information</small></h1>
     </div>
 
-    <p>
+    <p class="panel panel-info"></p>
         <?php
-        foreach($user->columns as $objCol=>$dbCol){
-          ?><font color = "#2f4f4f" size = 5 face = "黑体" align = "left"> <b><?php echo $objCol; ?> </b></font>
-        <font align = "left"><PRE><?php  echo $user->$objCol."<br/>";?></PRE>
-         <?php   } ?>
+                foreach($user->columns as $objCol=>$dbCol){
+                    switch($objCol)
+                    {
+                        case "id":;
+                        case "status":;
+                        case "picture":;
+                        case "privacy":;
+                        case "credits":break;
+                        case "intro":
+                            echo  "Introduction: ".$user->$objCol."<br/>";break;
+                       default:     echo  $objCol.": ".$user->$objCol."<br/>";break;
+                    }
 
-        </font>
+                }
+        ?>
 
-    </p>
 </div>
