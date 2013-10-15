@@ -24,8 +24,12 @@ foreach($data as $group){
     echo '<div class="col-6 col-sm-6 col-lg-4" style="height: 190px;">';
     echo "<div class='panel panel-default' style='height: 170px;'>";
     echo "<div class='panel-heading'>";
+    if(isset($group->picture)&&$group->picture!=''){
+        //echo RHtmlHelper::showImage($group->picture,$group->name,array('style'=>'height:32px;'));
+    }
     echo RHtmlHelper::linkAction('group',$group->name,'detail',$group->id);
     echo "</div>";
+
     echo "<div class='panel-body'>";
     echo $group->memberCount." members";
     if(strlen($group->intro)>100){
@@ -38,7 +42,8 @@ foreach($data as $group){
     echo RHtmlHelper::linkAction('group','View details','detail',$group->id
     ,array('class'=>'btn btn-xs btn-info','style'=>'position:absolute;top:135px;right:30px;'));
 
-    echo "</div></div></div>";
+    echo "</div></div>";
+    echo "</div>";
 
     $count++;
     if(($count==3)){
