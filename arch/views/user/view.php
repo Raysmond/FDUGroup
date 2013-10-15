@@ -5,11 +5,10 @@
  */
 ?>
 <div class="jumbotron">
-    <h1><font align = "left" >Hi!<?php echo " ".$user->name; ?>
-    <marquee directio=left>Welcome to FDUGroup ! This is your user view page,
-            you can find your information in there.</marquee>
-    </h1>
-    </br>
+    <div class="panel-heading">
+        Hi !<?php echo " ".$user->name; ?>
+    </div>
+
     <p>
         <?php
         foreach($user->columns as $objCol=>$dbCol){
