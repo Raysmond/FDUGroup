@@ -97,11 +97,13 @@ class PostController extends RController {
         if ($this->getHttpRequest()->isPostRequest()) {
             $form = $_POST;
 
-            $topic = new Topic();
-            $topic->id = $topicId;
-            $topics = $topic->find();
-            $topics[0]->commentCount++;
-            $topics[0]->update();
+            $_topic = new Topic();
+            $_topic->id = $topicId;
+            $topic = $_topic->find()[0];
+
+            $topic->commentCount++;
+            $topic->lastCommentTime = date('Y-m-d H:i:s');
+            $topic->update();
 
             $comment = new Comment();
             $comment->topicId = $topicId;
