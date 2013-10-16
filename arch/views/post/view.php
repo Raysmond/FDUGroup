@@ -2,6 +2,7 @@
 <div>
 <?=RHtmlHelper::encode($topic->content)?>
 </div>
+<div>Actions: <?=RHtmlHelper::linkAction('post', 'Edit', 'edit', $topic->id)?></div>
 <hr/>
 <?php
 foreach ($comments as $comment) {

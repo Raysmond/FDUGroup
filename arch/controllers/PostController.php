@@ -7,11 +7,11 @@ class PostController extends RController {
         $topic->groupId = $groupId;
         $topics = $topic->find();
 
-    	$data = array("topics" => $topics, "groupId" => $groupId);
+        $data = array("topics" => $topics, "groupId" => $groupId);
 
         $this->setHeaderTitle("Hello");
         $this->render("list", $data, false);
-	}
+    }
 
     /* Add new topic */
     public function actionNew($groupId = null) {
@@ -35,13 +35,43 @@ class PostController extends RController {
                 $tid = $topic->insert();
                 $this->redirectAction('post', 'view', $tid);
             }
-		}
+        }
 
-		$data = array("groupId" => $groupId);
+        $data = array("type" => "new", "groupId" => $groupId);
 
-		$this->setHeaderTitle("New topic");
-		$this->render("edit", $data, false);
-	}
+        $this->setHeaderTitle("New topic");
+        $this->render("edit", $data, false);
+    }
+
+    /* Edit topic */
+    public function actionEdit($topicId = null) {
+        if ($this->getHttpRequest()->isPostRequest()) {
+            $form = $_POST;
+
+            $validation = new RFormValidationHelper(array(
+                array("field" => "title", "label" => "Title", "rules" => "trim|required"),
+                array("field" => "content", "label" => "Content", "rules" => "trim|required"),
+            ));
+
+            if ($validation->run()) {
+                $_topic = new Topic();
+                $_topic->id = $topicId;
+                $topic = $_topic->find()[0];
+                $topic->title = $form["title"];
+                $topic->content = $form["content"];
+                $topic->update();
+                $this->redirectAction('post', 'view', $topic->id);
+            }
+        }
+
+        $topic = new Topic();
+        $topic->id = $topicId;
+        $topics = $topic->find();
+
+        $data = array("type" => "edit", "topic" => $topics[0]);
+
+        $this->render('edit', $data, false);
+    }
 
     /* View topic */
     public function actionView($topicId = null) {

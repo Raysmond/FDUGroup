@@ -1,10 +1,8 @@
+<?=RHtmlHelper::linkAction('post', 'Post new', 'new', $groupId, array('class' => 'btn btn-success'))?>
+<br/><br/>
 <?php
-echo RHtmlHelper::linkAction('post', 'Post new', 'new', $groupId, array('class' => 'btn btn-success'));
-
-echo "<br/><br/>";
-
 if ($topics == null) {
-    echo "<p>No topics.</p>";
+    ?><p>No topics.</p><?php
     return null;
 }
 
