@@ -99,6 +99,7 @@ class Data
      * @param int $limit_start
      * @param int $limit_end
      * @param array $order should be like array('key'=>'key_col','order'=>'asc or desc')
+     * @param array $like
      * @return array
      */
     public function find($limit_start=0,$limit_end=0,$order=array(),$like=array())
