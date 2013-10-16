@@ -1,6 +1,10 @@
 <?php
 
 class PostController extends RController {
+    public $access = array(
+        Role::AUTHENTICATED=>array('list','edit')
+    );
+
     /* List all topics belonging to a given group */
     public function actionList($groupId = null) {
     	$_group = new Group();
@@ -19,6 +23,13 @@ class PostController extends RController {
 
     /* Add new topic */
     public function actionNew($groupId = null) {
+        $data = array("type" => "new", "groupId" => $groupId);
+        if($groupId!=null){
+            $group = new Group();
+            $group->load($groupId);
+            $data['group'] = $group;
+        }
+
         if ($this->getHttpRequest()->isPostRequest()) {
             $form = $_POST;
 
@@ -33,22 +44,28 @@ class PostController extends RController {
                 $topic->userId = Rays::app()->getLoginUser()->id;
                 $topic->title = $form["title"];
                 $topic->content = $form["content"];
+                date_default_timezone_set(Rays::app()->getTimeZone());
                 $topic->createdTime = date('Y-m-d H:i:s');
                 $topic->lastCommentTime = date('Y-m-d H:i:s');
                 $topic->commentCount = 0;
                 $tid = $topic->insert();
                 $this->redirectAction('post', 'view', $tid);
             }
+            else{
+                $data['newPostForm'] = $_POST;
+                $data['validation_errors'] = $validation->getErrors();
+            }
         }
-
-        $data = array("type" => "new", "groupId" => $groupId);
 
         $this->setHeaderTitle("New topic");
         $this->render("edit", $data, false);
     }
 
     /* Edit topic */
-    public function actionEdit($topicId = null) {
+    public function actionEdit($topicId) {
+        $topic = new Topic();
+        $topic->load($topicId);
+
         if ($this->getHttpRequest()->isPostRequest()) {
             $form = $_POST;
 
@@ -58,21 +75,15 @@ class PostController extends RController {
             ));
 
             if ($validation->run()) {
-                $_topic = new Topic();
-                $_topic->id = $topicId;
-                $topic = $_topic->find()[0];
                 $topic->title = $form["title"];
                 $topic->content = $form["content"];
                 $topic->update();
                 $this->redirectAction('post', 'view', $topic->id);
             }
         }
-
-        $topic = new Topic();
-        $topic->id = $topicId;
-        $topics = $topic->find();
-
-        $data = array("type" => "edit", "topic" => $topics[0]);
+        $group = new Group();
+        $group->load($topic->groupId);
+        $data = array("type" => "edit", "topic" => $topic,'group'=>$group);
 
         $this->render('edit', $data, false);
     }
@@ -80,14 +91,15 @@ class PostController extends RController {
     /* View topic */
     public function actionView($topicId = null) {
         $topic = new Topic();
-        $topic->id = $topicId;
-        $topics = $topic->find();
-
-        $comment = new Comment();
-        $comment->topicId = $topics[0]->id;
-        $comments = $comment->find();
-
-        $data = array("topic" => $topics[0], "comments" => $comments);
+        $topic->load($topicId);
+        $topic->user->load();
+        $topic->group->load();
+        $comments = $topic->getComments();
+        foreach($comments as $comment){
+            $comment->user = new User();
+            $comment->user->load($comment->userId);
+        }
+        $data = array("topic" => $topic, "comments" => $comments);
 
         $this->render("view", $data, false);
     }

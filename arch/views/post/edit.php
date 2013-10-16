@@ -1,9 +1,16 @@
 <h1>New topic</h1>
 <?php
+if(isset($validation_errors)){
+    RHtmlHelper::showValidationErrors($validation_errors);
+}
+$newForm = array();
+if(isset($newPostForm))
+    $newForm = $newPostForm;
+
 if ($type == "new") {
     $url = "post/new/$groupId";
-    $title = '';
-    $content = '';
+    $title = RFormHelper::setValue($newForm,'title');
+    $content = RFormHelper::setValue($newForm,'content');
     $submitText = "Post";
 }
 else {
@@ -14,6 +21,9 @@ else {
 }
 ?>
 <?=RFormHelper::openForm($url, array('id' => 'viewFrom', 'class' => '.form-signin registerForm'))?>
+<?php if(isset($group)){
+    echo 'In group: '.RHtmlHelper::linkAction('post',$group->name,'list',$group->id)."<br/><br/>";
+} ?>
 <?=RFormHelper::input(array(
     'id' => 'title',
     'name' => 'title',
@@ -25,7 +35,7 @@ else {
     'id' => 'content',
     'name' => 'content',
     'class' => 'form-control',
-    'rows' => 15,
+    'rows' => 14,
     'placeholder' => 'Content'
 ), $content)?>
 <br/><br/>

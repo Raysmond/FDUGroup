@@ -92,7 +92,7 @@ class RFormHelper
         return $html;
     }
 
-    private static function setValue($value = '', $key = '')
+    public static function setValue($value = '', $key = '')
     {
         if (is_array($value) && isset($value[$key]))
             return $value[$key];
