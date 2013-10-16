@@ -27,7 +27,7 @@ foreach($data as $group){
     if(isset($group->picture)&&$group->picture!=''){
         //echo RHtmlHelper::showImage($group->picture,$group->name,array('style'=>'height:32px;'));
     }
-    echo RHtmlHelper::linkAction('group',$group->name,'detail',$group->id);
+    echo RHtmlHelper::linkAction('post', $group->name, 'list', $group->id);
     echo "</div>";
 
     echo "<div class='panel-body'>";
