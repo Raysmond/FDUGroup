@@ -1,5 +1,9 @@
 <?php
 class FriendController extends RController {
+    public $access = array(
+        Role::AUTHENTICATED => array('add', 'confirm', 'decline')
+    );
+
     /* Add friend request */
     public function actionAdd($userId = null) {
         /* TODO */
