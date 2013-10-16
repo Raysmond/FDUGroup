@@ -43,7 +43,7 @@ class PostController extends RController {
                 $topic->groupId = $groupId;
                 $topic->userId = Rays::app()->getLoginUser()->id;
                 $topic->title = $form["title"];
-                $topic->content = $form["content"];
+                $topic->content = $form['content'];
                 date_default_timezone_set(Rays::app()->getTimeZone());
                 $topic->createdTime = date('Y-m-d H:i:s');
                 $topic->lastCommentTime = date('Y-m-d H:i:s');
