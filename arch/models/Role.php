@@ -13,8 +13,8 @@ class Role extends Data{
     const AUTHENTICATED = 'authenticated';
 
     const ADMINISTRATOR_ID = 1;
-    const ANONYMOUS_ID = 3;
     const AUTHENTICATED_ID = 2;
+    const ANONYMOUS_ID = 3;
 
     //const VIP_USER = 4;
 
@@ -32,4 +32,6 @@ class Role extends Data{
         );
         parent::init($option);
     }
+
+
 }

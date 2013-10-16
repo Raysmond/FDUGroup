@@ -16,7 +16,6 @@ class User extends Data{
         'status'=>1,
         'credits'=>1,
         'roleId'=>2
-
     );
 
     public function __construct(){
