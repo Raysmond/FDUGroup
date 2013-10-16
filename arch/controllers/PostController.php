@@ -2,7 +2,7 @@
 
 class PostController extends RController {
     public $access = array(
-        Role::AUTHENTICATED=>array('list','edit')
+        Role::AUTHENTICATED=>array('list','edit','delete')
     );
 
     /* List all topics belonging to a given group */
@@ -84,7 +84,7 @@ class PostController extends RController {
         $group = new Group();
         $group->load($topic->groupId);
         $data = array("type" => "edit", "topic" => $topic,'group'=>$group);
-
+        $this->setHeaderTitle("Edit post: ".$topic->title);
         $this->render('edit', $data, false);
     }
 
@@ -94,26 +94,33 @@ class PostController extends RController {
         $topic->load($topicId);
         $topic->user->load();
         $topic->group->load();
+
         $comments = $topic->getComments();
         foreach($comments as $comment){
             $comment->user = new User();
             $comment->user->load($comment->userId);
         }
+        $this->setHeaderTitle($topic->title);
         $data = array("topic" => $topic, "comments" => $comments);
-
         $this->render("view", $data, false);
     }
 
     /* Add comment */
-    public function actionComment($topicId = null) {
+    public function actionComment($topicId) {
         if ($this->getHttpRequest()->isPostRequest()) {
+            $validation = new RFormValidationHelper(array(
+                array('field'=>'content','label'=>'Content','rules'=>'trim|required')));
+            if(!$validation->run())
+            {
+                $this->flash("error","Comment content cannot be empty!");
+                $this->redirectAction('post', 'view', $topicId);
+            }
             $form = $_POST;
-
-            $_topic = new Topic();
-            $_topic->id = $topicId;
-            $topic = $_topic->find()[0];
+            $topic = new Topic();
+            $topic->load($topicId);
 
             $topic->commentCount++;
+            date_default_timezone_set(Rays::app()->getTimeZone());
             $topic->lastCommentTime = date('Y-m-d H:i:s');
             $topic->update();
 
@@ -125,6 +132,29 @@ class PostController extends RController {
             $comment->insert();
         }
         $this->redirectAction('post', 'view', $topicId);
+    }
+
+
+    // access: author and administrator
+    public function actionDelete($topicId)
+    {
+        if(!isset($topicId)||$topicId==''||!is_numeric($topicId)){
+            Rays::app()->page404();
+            return;
+        }
+        $topic = new Topic();
+        $topic->load($topicId);
+        if(isset($topic->id)&&$topic->id!=''){
+            $comments = $topic->getComments();
+            foreach($comments as $comment)
+                $comment->delete();
+            $topic->delete();
+            $this->flash("message","Post ".$topic->title." was deleted.");
+        }
+        else{
+            $this->flash("error","No such post.");
+        }
+        $this->redirectAction('group','view',Rays::app()->getLoginUser()->id);
     }
 }
 
