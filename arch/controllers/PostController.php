@@ -3,11 +3,15 @@
 class PostController extends RController {
     /* List all topics belonging to a given group */
     public function actionList($groupId = null) {
+    	$_group = new Group();
+    	$_group->id = $groupId;
+    	$group = $_group->find()[0];
+
         $topic = new Topic();
         $topic->groupId = $groupId;
         $topics = $topic->find();
 
-        $data = array("topics" => $topics, "groupId" => $groupId);
+        $data = array("topics" => $topics, "group" => $group);
 
         $this->setHeaderTitle("Hello");
         $this->render("list", $data, false);

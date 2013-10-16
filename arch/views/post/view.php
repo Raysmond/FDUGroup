@@ -2,17 +2,26 @@
 <div>
 <?=RHtmlHelper::encode($topic->content)?>
 </div>
+<br/><br/>
 <div>Actions: <?=RHtmlHelper::linkAction('post', 'Edit', 'edit', $topic->id)?></div>
 <hr/>
 <?php
 foreach ($comments as $comment) {
-?><?=$comment->content?><br/><br/><?php
+?><div><?=$comment->createdTime?></div>
+<div><?=$comment->content?></div>
+<br/><br/>
+<?php
 }
 ?>
 <hr/>
-<h4>Add comment</h4>
-<?=RFormHelper::openForm("post/comment/$topic->id", array('id'=>'viewFrom', 'class'=>'.form-signin registerForm'))?>
-<?=RFormHelper::textarea('content', '')?>
+<?=RFormHelper::openForm("post/comment/$topic->id", array('id' => 'viewFrom', 'class' => '.form-signin registerForm'))?>
+<?=RFormHelper::textarea(array(
+	'id' => 'content',
+	'name' => 'content',
+	'class' => 'form-control',
+	'rows' => '5',
+	'placeholder' => 'Comment',
+))?>
 <br/>
 <br/>
 <?=RFormHelper::input(array('class' => 'btn btn-lg btn-primary btn-block', 'type' => 'submit', 'value' => 'Comment'))?>

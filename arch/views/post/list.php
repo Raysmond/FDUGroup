@@ -1,4 +1,4 @@
-<?=RHtmlHelper::linkAction('post', 'Post new', 'new', $groupId, array('class' => 'btn btn-success'))?>
+<?=RHtmlHelper::linkAction('post', '+ New post', 'new', $group->id, array('class' => 'btn btn-success'))?>
 <br/><br/>
 <?php
 if ($topics == null) {
@@ -7,7 +7,8 @@ if ($topics == null) {
 }
 
 ?>
-<table class="table">
+<h1><?=$group->name?></h1>
+<table class="table table-hover table-condensed">
 <thead><tr><th>Title</th><th>Time</th><th>Last comment</th></tr></thead>
 <tbody><?php
 
