@@ -73,6 +73,8 @@ class RFormValidationHelper
             return $label . " must be unique. Please try another!";
         } elseif ($field == 'equals') {
             return $label . " must be equal to " . $this->_labels[$param] . "!";
+        }elseif($field=='is_number'||$field=='number'){
+            return $label . " must be a number.";
         }
     }
 
@@ -104,9 +106,13 @@ class RFormValidationHelper
                     } else {
                         // The method is not a object method,it's a common php method like 'trim'
                         if (!method_exists($this, $r) && function_exists($r))
-                            $r = $_POST[$field] = $r($_POST[$field]);
+                            $r = $_POST[$field] = $r(@$_POST[$field]);
 
-                        else if (method_exists($this, $r) && ($this->$r($_POST[$field]) == false)) {
+                        else if (method_exists($this, $r)) {
+                            if($this->$r($_POST[$field]) == true){
+                                continue;
+                            }
+                            //echo '<-yes';
                             $error = array();
                             if (!isset($rule['errors'][$r]))
                                 $error[$r] = $this->getError($r, $rule['label'], '');
@@ -185,11 +191,15 @@ class RFormValidationHelper
         return true;
     }
 
+
+    public function number($val)
+    {
+        return $this->is_number($val);
+    }
+
     public function is_number($val)
     {
-        if (is_numeric($val))
-            return true;
-        else return preg_match("/[^0-9]/", $val) ? true : false;
+        return preg_match("/[^0-9]/", $val) ? false : true;
     }
 
     public function getErrors()

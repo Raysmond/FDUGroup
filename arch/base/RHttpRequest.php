@@ -124,9 +124,63 @@ class RHttpRequest
         if (($pos = strpos($uri, "?q=")) > 0)
             return substr($uri, $pos + 3);
         else {
-            $uri =  substr($uri, strlen(Rays::app()->getBaseUrl()) - strlen("http://" . $this->getServerName()) + 1);
-            return str_replace("index.php","",$uri);
+            $uri = substr($uri, strlen(Rays::app()->getBaseUrl()) - strlen("http://" . $this->getServerName()) + 1);
+            return str_replace("index.php", "", $uri);
         }
+    }
+
+    /**
+     * Whether the current url matches the rules
+     * @param array $urlRules like array('site/about','user/*')
+     * @param string $url default the front page
+     * @return bool
+     */
+
+
+    public function urlMatch($urlRules = array(), $url = '')
+    {
+        if (!is_array($urlRules)) {
+            $urlRules = array($urlRules);
+        }
+        // like : user/view/1
+        $currentUrl = $url != '' ? $url : $this->getRequestUriInfo();
+        if ($currentUrl == '') // front page
+        $currentUrl = '<front>';
+        //print_r($urlRules);
+        foreach ($urlRules as $url)
+        {
+            if ($url == $currentUrl)
+                return true;
+            else
+            {
+                if (($pos = strpos($url, '*')) > 0)
+                {
+                    $arr = explode('*', $url);
+                    $match = true;
+                    foreach ($arr as $part)
+                    {
+                        if ($part == '') continue;
+                        if (($apartPos = strpos($currentUrl, $part)) == false)
+                        {
+                            $sub = substr($currentUrl, 0, strlen($part));
+                            if ($sub != $part) { // current pattern not matched
+                                $match = false;
+                                break;
+                            } else {
+                                $currentUrl = substr($currentUrl, strlen($part));
+                            }
+                        } else {
+                            $currentUrl = substr($currentUrl, $apartPos + strlen($part));
+                        }
+                    }
+                    // one pattern matched
+                    if ($match) return true;
+                } else {
+                    //
+                }
+            }
+        }
+        return false;
     }
 
 }

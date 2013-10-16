@@ -79,7 +79,7 @@ class Data
         }
         $sql .= $where;
 
-        echo $sql;
+        //echo $sql;
 
         DataConnector::getConnection();
         mysql_query($sql) or die(mysql_error());
@@ -101,7 +101,7 @@ class Data
      * @param array $order should be like array('key'=>'key_col','order'=>'asc or desc')
      * @return array
      */
-    public function find($limit_start=0,$limit_end=0,$order=array())
+    public function find($limit_start=0,$limit_end=0,$order=array(),$like=array())
     {
         $result = array();
         $where = " where 1 = 1 ";
@@ -109,6 +109,22 @@ class Data
             if ($this->$objCol) {
                 $where .= " and $dbCol = '{$this->$objCol}'";
             }
+        }
+
+        if(!empty($like))
+        {
+            $where.=" and (";
+            $first = true;
+            foreach($like as $val)
+            {
+                if(isset($val['key'])&&isset($val['value']))
+                {
+                    if(!$first) $where.=" or ";
+                    $where.= "  ".$val['key']." like '".$val['value']."' ";
+                    $first = false;
+                }
+            }
+            $where.=" ) ";
         }
 
         $sql = "select * from {$this->table} $where";
@@ -122,6 +138,9 @@ class Data
             if($limit_end!=0)
                 $sql.=",".$limit_end;
         }
+
+        //print_r($sql);
+
         DataConnector::getConnection();
         $rs = mysql_query($sql) or die(mysql_error());
         $row = mysql_fetch_assoc($rs);

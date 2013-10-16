@@ -19,6 +19,8 @@ class RController
     private $_action;
     private $_params;
 
+    public $access = array();
+
     // the unique ID of the controller
     private $_id = '';
 
@@ -144,6 +146,37 @@ class RController
         return true;
     }
 
+    protected function userCanAccessAction()
+    {
+        $roleId = Role::ANONYMOUS_ID;
+        if(Rays::app()->isUserLogin())
+            $roleId = Rays::app()->getLoginUser()->roleId;
+
+        $definedRoleId = Role::ANONYMOUS_ID;
+
+        if(isset($this->access[Role::ADMINISTRATOR]))
+        {
+            if(in_array($this->_action,$this->access[Role::ADMINISTRATOR]))
+                $definedRoleId = Role::ADMINISTRATOR_ID;
+        }
+        if(isset($this->access[Role::AUTHENTICATED]))
+        {
+            if(in_array($this->_action,$this->access[Role::AUTHENTICATED]))
+                $definedRoleId = Role::AUTHENTICATED_ID;
+        }
+
+        if(isset($this->access[Role::ANONYMOUS]))
+        {
+            if(in_array($this->_action,$this->access[Role::ANONYMOUS]))
+                $definedRoleId = Role::ANONYMOUS_ID;
+        }
+
+        if($roleId<=$definedRoleId)
+            return true;
+        else
+            return false;
+    }
+
     /**
      * Run an antion
      * @param $action string action ID
@@ -153,6 +186,12 @@ class RController
     {
         $this->setCurrentAction($action);
         $this->setActionParams($params);
+
+        if(!$this->userCanAccessAction()){
+            $this->flash("error","Sorry, you're not authorized to view the requested page.");
+            Rays::app()->page404();
+            return;
+        }
 
         if ($this->beforeAction($action) == false) {
             return;
@@ -369,4 +408,5 @@ class RController
             $module->run();
         }
     }
+
 }

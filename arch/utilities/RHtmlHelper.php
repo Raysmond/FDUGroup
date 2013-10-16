@@ -139,7 +139,7 @@ class RHtmlHelper
     }
 
     public static function showValidationErrors($validation_errors){
-        if(isset($validation_errors)){
+        if(isset($validation_errors)&&$validation_errors!=''&&!empty($validation_errors)){
             echo '<div class="alert alert-danger">';
             foreach($validation_errors as $error){
                 foreach($error as $e)

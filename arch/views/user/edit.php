@@ -8,11 +8,17 @@
  */
 ?>
 <?php
+$form = array();
+if(isset($editForm))
+    $form = $editForm;
 
-echo RFormHelper::openForm('user/useredit',
-    array('id'=>'usereditForm', 'class'=>'.form-signin registerForm'));
+if(isset($validation_errors)){
+    echo RHtmlHelper::showValidationErrors($validation_errors);
+}
+
+echo RFormHelper::openForm('user/edit/',
+    array('id'=>'user-edit-form', 'enctype'=>'multipart/form-data','class'=>'.form-signin'));
 echo '<h2 class="form-signin-heading">User Information Edit: </h2>';
-
 
 echo RFormHelper::label("User name",'username');
 echo RFormHelper::input(
@@ -20,25 +26,35 @@ echo RFormHelper::input(
         'name'=>'username',
         'class'=>'form-control',
         'value'=>$user->name,
-        'placeholder'=>$user->name,
+        'placeholder'=>"Your username",
     ));
 
+// email cannot be changed.
 echo RFormHelper::label("Email",'mail');
 echo RFormHelper::input(
     array('id'=>'mail',
-        'name'=>'mail',
+        //'name'=>'mail',
         'class'=>'form-control',
         'value'=>$user->mail,
-        'placeholder'=>$user->mail));
+        'placeholder'=>"username@example.com",
+        'readonly'=>'true'));
 
-echo RFormHelper::label("Password",'password');
+
+echo RFormHelper::label("New Password",'password');
 echo RFormHelper::input(
     array('id'=>'password',
         'name'=>'password',
         'type'=>'password',
-        'value'=>$user->password,
         'class'=>'form-control',
-        'placeholder'=>$user->password));
+        'placeholder'=>"New Password. Leave empty if you don't wanna change password."));
+
+echo RFormHelper::label("Password confirm",'password-confirm');
+echo RFormHelper::input(
+    array('id'=>'password-confirm',
+        'name'=>'password-confrim',
+        'type'=>'password',
+        'class'=>'form-control',
+        'placeholder'=>"Password confirm"));
 
 echo RFormHelper::label("Region",'region');
 echo RFormHelper::input(
@@ -46,7 +62,7 @@ echo RFormHelper::input(
         'name'=>'region',
         'class'=>'form-control',
         'value'=>$user->region,
-        'placeholder'=>$user->region));
+        'placeholder'=>"region"));
 
 echo RFormHelper::label("Mobile",'mobile');
 echo RFormHelper::input(
@@ -54,7 +70,7 @@ echo RFormHelper::input(
         'name'=>'mobile',
         'class'=>'form-control',
         'value'=>$user->mobile,
-        'placeholder'=>$user->mobile));
+        'placeholder'=>"Mobile"));
 
 echo RFormHelper::label("QQ",'qq');
 echo RFormHelper::input(
@@ -62,7 +78,7 @@ echo RFormHelper::input(
         'name'=>'qq',
         'class'=>'form-control',
         'value'=>$user->qq,
-        'placeholder'=>$user->qq));
+        'placeholder'=>"QQ"));
 
 echo RFormHelper::label("Weibo",'weibo');
 echo RFormHelper::input(
@@ -70,7 +86,15 @@ echo RFormHelper::input(
         'name'=>'weibo',
         'class'=>'form-control',
         'value'=>$user->weibo,
-        'placeholder'=>$user->weibo));
+        'placeholder'=>"Weibo"));
+
+echo RFormHelper::label("Homepage",'homepage');
+echo RFormHelper::input(
+    array('id'=>'homepage',
+        'name'=>'homepage',
+        'class'=>'form-control',
+        'value'=>$user->homepage,
+        'placeholder'=>"Homepage"));
 
 echo RFormHelper::label("Introduction",'intro');
 echo RFormHelper::input(
@@ -78,8 +102,10 @@ echo RFormHelper::input(
         'name'=>'intro',
         'class'=>'form-control',
         'value'=>$user->intro,
-        'placeholder'=>$user->intro));
+        'placeholder'=>"your introduction"));
 
+echo RFormHelper::label("Picture");
+echo RFormHelper::input(array('type'=>'file','name'=>'user_picture','accept'=>'image/gif, image/jpeg,image/png'));
 echo "<br/>";
 
 echo RFormHelper::input(array('type'=>'submit','value'=>'Complete edit','class'=>"btn btn-lg btn-primary btn-block"));

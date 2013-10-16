@@ -172,7 +172,7 @@ CREATE TABLE IF NOT EXISTS `fdugroup`.`messages` (
   `msg_sender_id` INT NOT NULL COMMENT 'According to message_type\ntype=\'system\', sender_id=0\ntype=\'group\', sender_id=group_id\ntype=\'user\', sender_id = user_id',
   `msg_title` VARCHAR(45) NULL,
   `msg_content` TEXT NOT NULL,
-  `msg_status` INT NOT NULL DEFAULT 0 COMMENT '0: not read\n1: read\nothers..',
+  `msg_status` INT NOT NULL DEFAULT 0 COMMENT '1: not read\n2: read\nothers..',
   `msg_send_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`msg_id`, `msg_type_id`, `msg_receiver_id`))
 ENGINE = InnoDB;
@@ -222,8 +222,8 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `fdugroup`;
-INSERT INTO `fdugroup`.`users` (`u_id`, `u_role_id`, `u_name`, `u_mail`, `u_password`, `u_region`, `u_mobile`, `u_qq`, `u_weibo`, `u_register_time`, `u_status`, `u_picture`, `u_intro`, `u_homepage`, `u_credits`, `u_permission`, `u_privacy`) VALUES (1, 1, 'admin', 'admin@fudan.edu.cn', '96e79218965eb72c92a549dd5a330112', 'shanghai', NULL, NULL, NULL, '', 1, NULL, NULL, NULL, 0, NULL, NULL);
-INSERT INTO `fdugroup`.`users` (`u_id`, `u_role_id`, `u_name`, `u_mail`, `u_password`, `u_region`, `u_mobile`, `u_qq`, `u_weibo`, `u_register_time`, `u_status`, `u_picture`, `u_intro`, `u_homepage`, `u_credits`, `u_permission`, `u_privacy`) VALUES (2, 2, 'Raysmond', 'jiankunlei@126.com', '96e79218965eb72c92a549dd5a330112', 'shanghai', '18801734441', '913282582', 'http://weibo.com/leijiankun', NULL, 1, NULL, NULL, 'http://raysmond.com', 0, NULL, NULL);
+INSERT INTO `fdugroup`.`users` (`u_id`, `u_role_id`, `u_name`, `u_mail`, `u_password`, `u_region`, `u_mobile`, `u_qq`, `u_weibo`, `u_register_time`, `u_status`, `u_picture`, `u_intro`, `u_homepage`, `u_credits`, `u_permission`, `u_privacy`) VALUES (1, 1, 'admin', 'admin@fudan.edu.cn', '96e79218965eb72c92a549dd5a330112', 'shanghai', NULL, NULL, NULL, '', 1, 'public/images/users/pic_u_1.jpg', NULL, NULL, 0, NULL, NULL);
+INSERT INTO `fdugroup`.`users` (`u_id`, `u_role_id`, `u_name`, `u_mail`, `u_password`, `u_region`, `u_mobile`, `u_qq`, `u_weibo`, `u_register_time`, `u_status`, `u_picture`, `u_intro`, `u_homepage`, `u_credits`, `u_permission`, `u_privacy`) VALUES (2, 2, 'Raysmond', 'jiankunlei@126.com', '96e79218965eb72c92a549dd5a330112', 'shanghai', '18801734441', '913282582', 'http://weibo.com/leijiankun', NULL, 1, '', NULL, 'http://raysmond.com', 0, NULL, NULL);
 
 COMMIT;
 
@@ -268,6 +268,18 @@ INSERT INTO `fdugroup`.`message_type` (`msg_type_id`, `msg_type_name`) VALUES (1
 INSERT INTO `fdugroup`.`message_type` (`msg_type_id`, `msg_type_name`) VALUES (2, 'private');
 INSERT INTO `fdugroup`.`message_type` (`msg_type_id`, `msg_type_name`) VALUES (3, 'group');
 INSERT INTO `fdugroup`.`message_type` (`msg_type_id`, `msg_type_name`) VALUES (4, 'user');
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `fdugroup`.`messages`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `fdugroup`;
+INSERT INTO `fdugroup`.`messages` (`msg_id`, `msg_type_id`, `msg_receiver_id`, `msg_sender_id`, `msg_title`, `msg_content`, `msg_status`, `msg_send_time`) VALUES (1, 4, 1, 2, 'hello', 'a message from user', 1, NULL);
+INSERT INTO `fdugroup`.`messages` (`msg_id`, `msg_type_id`, `msg_receiver_id`, `msg_sender_id`, `msg_title`, `msg_content`, `msg_status`, `msg_send_time`) VALUES (2, 1, 1, 0, 'system notification', 'a system notification', 1, NULL);
+INSERT INTO `fdugroup`.`messages` (`msg_id`, `msg_type_id`, `msg_receiver_id`, `msg_sender_id`, `msg_title`, `msg_content`, `msg_status`, `msg_send_time`) VALUES (3, 1, 1, 0, 'welcome', 'a welcome message', 2, NULL);
 
 COMMIT;
 

@@ -5,6 +5,8 @@
  */
 
 class User extends Data{
+    public static $roles = array('administrator','authenticated user','anonymous user');
+
     public $id,$roleId,$name,$mail,$password,$region,$mobile,$qq,$weibo;
     public $registerTime,$status,$picture,$intro,$homepage,$credits,$permission,$privacy;
 
@@ -13,6 +15,7 @@ class User extends Data{
     public $defaults = array(
         'status'=>1,
         'credits'=>1,
+        'roleId'=>2
 
     );
 
@@ -60,5 +63,29 @@ class User extends Data{
             date_default_timezone_set(Rays::app()->getTimeZone());
             $this->registerTime = date('Y-m-d H-i-s');
         }
+    }
+
+    public function countUnreadMsgs()
+    {
+        if(!isset($this->id))
+            return 0;
+        $msg = new Message();
+        return $msg->countUnreadMsgs($this->id);
+    }
+
+    /**
+     * Register a new user and return the new user object
+     * @param $name
+     * @param $password
+     * @param $email
+     */
+    public function register($name,$password,$email)
+    {
+        $this->setDefaults();
+        $this->name = $name;
+        $this->password = $password;
+        $this->mail = $email;
+        $id = $this->insert();
+        $this->load($id);
     }
 }

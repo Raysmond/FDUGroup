@@ -5,7 +5,7 @@
  */
 
 class group_categories_module extends RModule{
-    public $access = array('group/find');
+    public $access = array('category/groups/*','group/find','group/find/*','category/new');
 
     public function module_content()
     {
