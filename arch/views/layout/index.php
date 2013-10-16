@@ -51,6 +51,10 @@
                 }
                 else{
                     $user = Rays::app()->getLoginUser();
+                    if($user->roleId==Role::ADMINISTRATOR_ID)
+                    {
+                        echo '<li>'.RHtmlHelper::linkAction('admin','Administration')."</li>";
+                    }
                     echo '<li class="dropdown">';
 
                    // echo RHtmlHelper::linkAction("user",Rays::app()->getLoginUser()->name,"view",Rays::app()->getLoginUser()->id,

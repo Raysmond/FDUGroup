@@ -48,6 +48,7 @@ class CategoryController extends RController{
      */
     public function actionNew($editId = '')
     {
+        $this->layout = 'admin';
         $data = array();
         if($this->getHttpRequest()->isPostRequest())
         {
@@ -119,6 +120,7 @@ class CategoryController extends RController{
      */
     public function actionEdit($editId)
     {
+        $this->layout = 'admin';
         $this->actionNew($editId);
     }
 
