@@ -8,6 +8,7 @@ class UserController extends RController
 {
     public $layout = "index";
     public $defaultAction = "index";
+    public $access = array(Role::AUTHENTICATED=>array('edit','logout'));
 
     public function actionLogin()
     {
@@ -123,11 +124,7 @@ class UserController extends RController
     }
 
     public function actionEdit($userId=null){
-        if(Rays::app()->isUserLogin()==false){
-            $this->flash("message","Please login first.");
-            $this->redirectAction('user','login');
-            return;
-        }
+
         $user = new User();
 
         //$user->load(($userId==null)?Rays::app()->getLoginUser()->id:$userId);
