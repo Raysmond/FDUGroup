@@ -20,7 +20,7 @@
     foreach($data as $group){
         echo '<tr><div class="alert alert-success">';
         echo "<td>";
-        echo '<p><b>'.$group->name.'</b></p>';
+        echo '<p><b>'.RHtmlHelper::linkAction('post', $group->name, 'list', $group->id).'</b></p>';
         echo $group->memberCount." members";
         if(strlen($group->intro)>100){
             echo '<p>'.substr($group->intro,0,100).'...</p>';
