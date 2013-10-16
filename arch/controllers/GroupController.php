@@ -9,6 +9,7 @@ class GroupController extends RController
 {
     public $layout = "index";
     public $defaultAction = "index";
+    public $access = array(Role::AUTHENTICATED => array('view', 'build', 'edit', 'join', 'exit'));
 
     /*
      * actionFind: find groups/show all groups
@@ -67,11 +68,6 @@ class GroupController extends RController
      */
     public function actionView($userId = null)
     {
-        if (!Rays::app()->isUserLogin()) {
-            $this->flash("message", "Please login first!");
-            $this->redirectAction('user', 'login');
-            return;
-        }
         $userGroup = new GroupUser();
         $userGroup = $userGroup->userGroups($userId);
         $this->setHeaderTitle("My Groups");
@@ -193,49 +189,41 @@ class GroupController extends RController
 
     public function actionJoin($groupId = null)
     {
-        if (Rays::app()->isUserLogin() == false) {
-            $this->flash("message", "Please login first.");
-            $this->redirectAction('user', 'login');
-            return;
-        } else {
-            $groupUser = new GroupUser();
-            $groupUser->groupId = $groupId;
-            $groupUser->userId = Rays::app()->getLoginUser()->id;
-            date_default_timezone_set(Rays::app()->getTimeZone());
-            $groupUser->joinTime = date('Y-m-d H:i:s');
-            $groupUser->status = 1;
-            $groupUser->insert();
 
-            $group = new Group();
-            $group->load($groupId);
-            $group->memberCount++;
-            $group->update();
+        $groupUser = new GroupUser();
+        $groupUser->groupId = $groupId;
+        $groupUser->userId = Rays::app()->getLoginUser()->id;
+        date_default_timezone_set(Rays::app()->getTimeZone());
+        $groupUser->joinTime = date('Y-m-d H:i:s');
+        $groupUser->status = 1;
+        $groupUser->insert();
 
-            $this->flash("message", "Congratulations. You have joined the group successfully.");
-            $this->redirectAction('group', 'view', Rays::app()->getLoginUser()->id);
-        }
+        $group = new Group();
+        $group->load($groupId);
+        $group->memberCount++;
+        $group->update();
+
+        $this->flash("message", "Congratulations. You have joined the group successfully.");
+        $this->redirectAction('group', 'view', Rays::app()->getLoginUser()->id);
+
     }
 
     public function actionExit($groupId = null)
     {
-        if (Rays::app()->isUserLogin() == false) {
-            $this->flash("message", "Please login first.");
-            $this->redirectAction('user', 'login');
-            return;
-        } else {
-            $groupUser = new GroupUser();
-            $groupUser->groupId = $groupId;
-            $groupUser->userId = Rays::app()->getLoginUser()->id;
 
-            $group = new Group();
-            $group->load($groupId);
-            $group->memberCount--;
-            $group->update();
+        $groupUser = new GroupUser();
+        $groupUser->groupId = $groupId;
+        $groupUser->userId = Rays::app()->getLoginUser()->id;
 
-            $groupUser->delete();
+        $group = new Group();
+        $group->load($groupId);
+        $group->memberCount--;
+        $group->update();
 
-            $this->flash("message", "You have exited the group successfully.");
-            $this->redirectAction('group', 'view', Rays::app()->getLoginUser()->id);
-        }
+        $groupUser->delete();
+
+        $this->flash("message", "You have exited the group successfully.");
+        $this->redirectAction('group', 'view', Rays::app()->getLoginUser()->id);
+
     }
 }

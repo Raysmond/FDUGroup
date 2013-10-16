@@ -8,6 +8,16 @@
  */
 
 class Role extends Data{
+    const ADMINISTRATOR = 'administrator';
+    const ANONYMOUS = 'anonymous';
+    const AUTHENTICATED = 'authenticated';
+
+    const ADMINISTRATOR_ID = 1;
+    const ANONYMOUS_ID = 3;
+    const AUTHENTICATED_ID = 2;
+
+    //const VIP_USER = 4;
+
     public $roleId,$roleName;
 
     public function __construct()
