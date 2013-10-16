@@ -67,8 +67,19 @@ class UserController extends RController
             // need to be implemented
             return;
         }
+        $canEdit = false;
+        $canAdd = false;
+        $currentUser = Rays::app()->getLoginUser();
+        if ($currentUser != null) {
+            $friend = new Friend();
+            $friend->uid = $currentUser->id;
+            $friend->fid = $user->id;
+            $canAdd = ($friend->load() == null);
+            $canEdit = ($currentUser->id == $user->id);
+        }
+
         $this->setHeaderTitle($user->name);
-        $this->render('view', array('user' => $user), false);
+        $this->render('view', array('user' => $user, 'canEdit' => $canEdit, 'canAdd' => $canAdd), false);
     }
 
     public function actionRegister()

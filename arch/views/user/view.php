@@ -10,7 +10,12 @@
     </div>
     <div class="navbar-right" style="margin-top:-40px;">
         <?php
-        echo RHtmlHelper::linkAction('user', 'Edit', 'edit', $user->id, array('class' => 'btn btn-success'));
+        if ($canEdit) {
+            echo RHtmlHelper::linkAction('user', 'Edit', 'edit', $user->id, array('class' => 'btn btn-success'));
+        }
+        if ($canAdd) {
+            echo RHtmlHelper::linkAction('friend', '+ Add friend', 'add', $user->id, array('class' => 'btn btn-success'));
+        }
         echo '<div class="clearfix"></div>';
         ?>
     </div>
