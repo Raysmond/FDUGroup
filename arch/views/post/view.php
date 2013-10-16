@@ -1,5 +1,11 @@
 <h2><?=$topic->title?></h2>
 <div>
+    Post by: <?=RHtmlHelper::linkAction('user',$topic->user->name,'view',$topic->user->id) ?>
+    &nbsp;&nbsp;Post in group: <?=RHtmlHelper::linkAction('group',$topic->group->name,'detail',$topic->group->id) ?>
+    &nbsp;&nbsp;&nbsp;&nbsp;<?=$topic->createdTime?>
+</div>
+
+<div>
 <?=RHtmlHelper::encode($topic->content)?>
 </div>
 <br/><br/>
@@ -7,7 +13,8 @@
 <hr/>
 <?php
 foreach ($comments as $comment) {
-?><div><?=$comment->createdTime?></div>
+?><div><?=RHtmlHelper::linkAction('user',$comment->user->name,'view',$comment->user->id)?>
+    &nbsp;&nbsp;<?=$comment->createdTime?></div>
 <div><?=$comment->content?></div>
 <br/><br/>
 <?php

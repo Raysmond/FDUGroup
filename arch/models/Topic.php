@@ -7,6 +7,8 @@ class Topic extends Data
 {
     public $group;
     public $user;
+    public $comments = array();
+
     public $id, $groupId, $userId, $title, $createdTime, $content, $lastCommentTime, $memberCount, $commentCount;
 
     public function __construct()
@@ -38,4 +40,11 @@ class Topic extends Data
         $this->group->id = $this->groupId;
     }
 
+    public function getComments()
+    {
+        $comment = new Comment();
+        $comment->topicId = $this->id;
+        $this->comments = $comment->find();
+        return $this->comments;
+    }
 }
