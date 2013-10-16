@@ -149,7 +149,7 @@ $baseurl = Rays::app()->getBaseUrl();
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Messages <b class="caret"></b></a>
                     <ul class="dropdown-menu">
-                        <li><a href="#">Send a message</a></li>
+                        <li><?php echo RHtmlHelper::linkAction('message','Send a message','sendAdmin'); ?></li>
                         <li><a href="#">All messages</a></li>
                         <li><a href="#">new messages</a></li>
                     </ul>
