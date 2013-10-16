@@ -7,9 +7,9 @@ class PostController extends RController {
 
     /* List all topics belonging to a given group */
     public function actionList($groupId = null) {
-    	$_group = new Group();
-    	$_group->id = $groupId;
-    	$group = $_group->find()[0];
+        $group = new Group();
+        $group->id = $groupId;
+        $group->load();
 
         $topic = new Topic();
         $topic->groupId = $groupId;
@@ -75,10 +75,9 @@ class PostController extends RController {
             ));
 
             if ($validation->run()) {
-                $topic->title = $form["title"];
-                $topic->content = $form["content"];
-                $topic->update();
-                $this->redirectAction('post', 'view', $topic->id);
+                $topic = new Topic();
+                $topic->id = $topicId;
+                $topic->load();
             }
         }
         $group = new Group();
@@ -116,6 +115,7 @@ class PostController extends RController {
                 $this->redirectAction('post', 'view', $topicId);
             }
             $form = $_POST;
+
             $topic = new Topic();
             $topic->load($topicId);
 

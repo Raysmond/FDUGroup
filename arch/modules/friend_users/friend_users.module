@@ -1,0 +1,13 @@
+<?php
+class friend_users_module extends RModule {
+    public $access = array('<front>', 'user/*');
+
+    public function module_content() {
+    	$user = Rays::app()->getLoginUser();
+    	if ($user == null)
+    		return null;
+        $friends = new Friend();
+        $friends = $friends->getFriends($user->id);
+        return $this->render('friend_users', array('friends' => $friends));
+    }
+}
