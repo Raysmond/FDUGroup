@@ -8,7 +8,10 @@ class MessageController extends RController
 {
     public $layout = 'index';
     public $defaultAction = 'index';
-    public $access = array(Role::AUTHENTICATED => array('detail', 'send', 'read', 'view'));
+    public $access = array(
+        Role::AUTHENTICATED => array('detail', 'send', 'read', 'view'),
+        Role::ADMINISTRATOR => array('sendAdmin'),
+    );
 
     // to be implemented
     public function actionDetail($msgId = '')
@@ -142,4 +145,9 @@ class MessageController extends RController
         $this->render('view', array('msgs' => $messages, 'type' => $msgType), false);
     }
 
+    public function actionSendAdmin()
+    {
+        $this->layout = 'admin';
+        $this->actionSend('system');
+    }
 }
