@@ -9,7 +9,10 @@ class GroupController extends RController
 {
     public $layout = "index";
     public $defaultAction = "index";
-    public $access = array(Role::AUTHENTICATED => array('view', 'build', 'edit', 'join', 'exit'));
+    public $access = array(
+        Role::AUTHENTICATED => array('view', 'build', 'edit', 'join', 'exit'),
+        Role::ADMINISTRATOR => array('findAdmin','buildAdmin'),
+    );
 
     /*
      * actionFind: find groups/show all groups
@@ -225,5 +228,17 @@ class GroupController extends RController
         $this->flash("message", "You have exited the group successfully.");
         $this->redirectAction('group', 'view', Rays::app()->getLoginUser()->id);
 
+    }
+
+    public function actionFindAdmin($page = 1, $search = '', $pagesize = 3)
+    {
+        $this->layout = 'admin';
+        $this->actionFind($page,$search,$pagesize);
+    }
+
+    public function actionBuildAdmin()
+    {
+        $this->layout = 'admin';
+        $this->actionBuild();
     }
 }
