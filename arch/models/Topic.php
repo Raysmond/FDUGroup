@@ -7,7 +7,7 @@ class Topic extends Data
 {
     public $group;
     public $user;
-    public $id, $groupId, $userId, $title, $createdTime, $content, $lastCommentTime, $memberCount;
+    public $id, $groupId, $userId, $title, $createdTime, $content, $lastCommentTime, $memberCount, $commentCount;
 
     public function __construct()
     {
