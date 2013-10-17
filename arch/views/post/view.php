@@ -6,7 +6,7 @@
 </div>
 
 <div>
-<?=RHtmlHelper::encode($topic->content)?>
+<?=RHtmlHelper::decode($topic->content)?>
 </div>
 <br/><br/>
 <div>Actions: <?=RHtmlHelper::linkAction('post', 'Edit', 'edit', $topic->id)?></div>
@@ -15,7 +15,7 @@
 foreach ($comments as $comment) {
 ?><div><?=RHtmlHelper::linkAction('user',$comment->user->name,'view',$comment->user->id)?>
     &nbsp;&nbsp;<?=$comment->createdTime?></div>
-<div><?=$comment->content?></div>
+<div><?=RHtmlHelper::decode($comment->content)?></div>
 <br/><br/>
 <?php
 }

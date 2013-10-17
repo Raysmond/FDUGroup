@@ -9,7 +9,9 @@ class RHtmlHelper
 
     public static function encode($content)
     {
-        return htmlspecialchars($content, ENT_QUOTES, Rays::app()->charset);
+        if ( get_magic_quotes_gpc() )
+            return htmlspecialchars(stripslashes($content), ENT_QUOTES, (Rays::app()->charset));
+        else return htmlspecialchars(($content), ENT_QUOTES, (Rays::app()->charset));
     }
 
     public static function decode($content)

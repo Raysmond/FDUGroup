@@ -27,35 +27,27 @@ foreach($data as $group){
     if(isset($group->picture)&&$group->picture!=''){
         //echo RHtmlHelper::showImage($group->picture,$group->name,array('style'=>'height:32px;'));
     }
-    echo RHtmlHelper::linkAction('post', $group->name, 'list', $group->id);
+    echo RHtmlHelper::linkAction('group', $group->name, 'detail', $group->id);
     echo "</div>";
 
     echo "<div class='panel-body'>";
     echo $group->memberCount." members";
-    if(strlen($group->intro)>100){
-        echo '<p>'.substr($group->intro,0,100).'...</p>';
+    $content = strip_tags(RHtmlHelper::decode($group->intro));
+    if(strlen($content)>100){
+        echo '<p>'.substr($content,0,100).'...</p>';
     }
-    else echo '<p>'.$group->intro.'</p>';
+    else echo '<p>'.($content).'</p>';
     echo RHtmlHelper::link(
         'Exit group','Exit group','#',
         array(
             'class'=>'btn btn-xs btn-danger',
-            'style'=>'position:absolute;top:135px;right:120px;',
+            'style'=>'position:absolute;top:140px;right:120px;',
             'onclick'=>'javascript:confirmExit('.$group->id.')',
         )
     );
-    /*
-    echo RHtmlHelper::linkAction(
-        'group','Exit group','exit',$group->id,
-        array(
-            'class'=>'btn btn-xs btn-danger',
-            'style'=>'position:absolute;top:135px;right:120px;',
-            'onclick'=>'javascript:confirmExit('.$group->id.')',
-        )
-    );*/
 
     echo RHtmlHelper::linkAction('group','View details','detail',$group->id
-    ,array('class'=>'btn btn-xs btn-info','style'=>'position:absolute;top:135px;right:30px;'));
+    ,array('class'=>'btn btn-xs btn-info','style'=>'position:absolute;top:140px;right:30px;'));
 
     echo "</div></div>";
     echo "</div>";
