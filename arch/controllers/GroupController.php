@@ -17,15 +17,17 @@ class GroupController extends RController
     /*
      * actionFind: find groups/show all groups
      */
-    public function actionFind($page = 1, $search = '', $pagesize = 3)
+    public function actionFind()
     {
-        if ($page <= 0) $page = 1;
+        $page = $this->getHttpRequest()->getQuery('page',1);
+        if($page<=0) $page = 1;
+
+        $pagesize = 3;
+        if(isset($_GET['pagesize'])) $pagesize = $_GET['pagesize'];
 
         $searchstr = '';
-        if ($this->getHttpRequest()->isPostRequest())
-            $searchstr = $_POST['searchstr'];
-        else
-            $searchstr = urldecode($search);
+        if ($this->getHttpRequest()->isPostRequest()) $searchstr = ($_POST['searchstr']);
+        else if(isset($_GET['search'])) $searchstr = $_GET['search'];
 
         $group = new Group();
         $group->name = trim($searchstr);
@@ -39,30 +41,28 @@ class GroupController extends RController
         }
 
         $groups = $group->find(0, 0, array(), $like);
-
-        $group_number = count($groups);
-        $page_number = ceil($group_number / $pagesize);
-        if ($page == 1) {
-            $isFirstPage = true;
-        } else
-            $isFirstPage = false;
-        if ($page == $page_number) {
-            $isLastPage = true;
-        } else
-            $isLastPage = false;
-        //$group = new Group();
-        //print_r($group);
+        $groupSum = count($groups);
 
         if ($page == 1)
             $groups = $group->find($pagesize, 0, array(), $like);
         else
             $groups = $group->find($pagesize * ($page - 1), $pagesize, array(), $like);
 
+
         $this->setHeaderTitle("Find Group");
-        $data = array('group' => $groups, 'page' => $page, 'isFirstPage' => $isFirstPage,
-            'isLastPage' => $isLastPage, 'pagesize' => $pagesize, 'page_number' => $page_number);
-        if ($searchstr != '')
-            $data['searchstr'] = $searchstr;
+        $data = array('group' => $groups);
+        if ($searchstr != '') $data['searchstr'] = $searchstr;
+
+        $url = '';
+        if($searchstr!='')
+            $url = RHtmlHelper::siteUrl('group/find?search='.urlencode($searchstr));
+        else
+            $url = RHtmlHelper::siteUrl('group/find');
+
+        $pager = new RPagerHelper('page',$groupSum,$pagesize, $url);
+        $pager = $pager->showPager();
+        $data['pager'] = $pager;
+
         $this->render("find", $data, false);
     }
 
@@ -79,13 +79,41 @@ class GroupController extends RController
 
     public function actionDetail($groupId)
     {
-        $this->setHeaderTitle("Group details");
+        $userId = Rays::app()->getLoginUser()->id;
+        $data = array();
+
         $group = new Group();
         $group->load($groupId);
         $group->category->load();
         $group->groupCreator->load();
-        $this->render('detail', array('group' => $group), false);
+        $data['group'] = $group;
 
+        $posts = new Topic();
+        $posts->groupId = $groupId;
+        // get latest 20 posts in the group
+        $posts = $posts->find(20,0,array('key'=>'top_created_time','value'=>'desc'));
+        $data['latestPosts'] = $posts;
+        // not good enough
+        foreach($posts as $post){
+            $post->user = new User();
+            $post->user->load($post->userId);
+        }
+
+        // whether the user has joined the group
+        $data['hasJoined'] = false;
+        $g_u = new GroupUser();
+        $g_u->userId = $userId;
+        $g_u->groupId = $group->id;
+        if(count($g_u->find())>0)
+            $data['hasJoined'] = true;
+
+        // whether the login user is the manager of the group
+        $data['isManager'] = false;
+        if($group->creator==$userId)
+            $data['isManager'] = true;
+
+        $this->setHeaderTitle("Group details");
+        $this->render('detail', $data, false);
     }
 
     public function actionBuild()
@@ -106,15 +134,12 @@ class GroupController extends RController
             if ($validation->run()) {
                 // success
                 $group = new Group();
-                $group = $group->buildGroup($_POST['group-name'], $_POST['category'], $_POST['intro'], Rays::app()->getLoginUser()->id);
+                $group = $group->buildGroup($_POST['group-name'], $_POST['category'], ($_POST['intro']), Rays::app()->getLoginUser()->id);
                 if (isset($_FILES['group_picture']) && ($_FILES['group_picture']['name'] != '')) {
                     $upload = new RUploadHelper(array('file_name' => 'group_' . $group->id . RUploadHelper::get_extension($_FILES['group_picture']['name']),
                         'upload_path' => Rays::getFrameworkPath() . '/../public/images/groups/'));
                     $upload->upload('group_picture');
                     if ($upload->error != '') {
-                        echo '<pre>';
-                        print_r($upload);
-                        echo '</pre>';
                         $this->flash("error", $upload->error);
                     } else {
                         $group->picture = "public/images/groups/" . $upload->file_name;
@@ -159,7 +184,7 @@ class GroupController extends RController
                 $group->load();
                 $group->name = $_POST['group-name'];
                 $group->categoryId = $_POST['category'];
-                $group->intro = $_POST['intro'];
+                $group->intro = RHtmlHelper::encode($_POST['intro']);
                 $group->update();
                 // $group = $group->buildGroup($_POST['group-name'],$_POST['category'],$_POST['intro'],Rays::app()->getLoginUser()->id);
                 if (isset($_FILES['group_picture']) && $_FILES['group_picture']['name'] != '') {
@@ -167,9 +192,6 @@ class GroupController extends RController
                         'upload_path' => Rays::getFrameworkPath() . '/../public/images/groups/'));
                     $upload->upload('group_picture');
                     if ($upload->error != '') {
-                        echo '<pre>';
-                        print_r($upload);
-                        echo '</pre>';
                         $this->flash("error", $upload->error);
                     } else {
                         $group->picture = "public/images/groups/" . $upload->file_name;

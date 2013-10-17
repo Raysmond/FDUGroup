@@ -5,27 +5,16 @@
  */
 ?>
 <h2>
+    <?= $group->name ?>&nbsp;&nbsp;
     <?php
-    echo $group->name . '&nbsp&nbsp&nbsp';
-    if (Rays::app()->isUserLogin()) {
-        $g_u = new GroupUser();
-        $g_u->userId = Rays::app()->getLoginUser()->id;
-        $g_u->groupId = $group->id;
-        $g_u = $g_u->find();
-        if (count($g_u) == 0) {
-            echo RHtmlHelper::linkAction('group', '+ Join the group', 'join', $group->id, array('class' => 'btn btn-xs btn-info'));
-        } else {
-            if ($group->creator == Rays::app()->getLoginUser()->id) {
-                echo RHtmlHelper::linkAction('group', 'Manager: Edit group', 'edit', $group->id, array('class' => 'btn btn-xs btn-info'));
-            } else
-                echo RHtmlHelper::linkAction('group', '- Exit group', 'exit', $group->id, array('class' => 'btn btn-xs btn-info'));
-        }
-    } else {
+    if (!$hasJoined)
         echo RHtmlHelper::linkAction('group', '+ Join the group', 'join', $group->id, array('class' => 'btn btn-xs btn-info'));
-    }
-    //echo RHtmlHelper::linkAction('group','Join group','detail',null,array('class'=>'btn btn-success'));
+    else if ($isManager)
+        echo RHtmlHelper::linkAction('group', 'Manager: Edit group', 'edit', $group->id, array('class' => 'btn btn-xs btn-info'));
+    else echo RHtmlHelper::linkAction('group', '- Exit group', 'exit', $group->id, array('class' => 'btn btn-xs btn-info'));
     ?>
 </h2>
+
 <div class="panel panel-default">
     <div class="panel-body">
         <div class="row">
@@ -54,4 +43,40 @@
             </div>
         </div>
     </div>
+</div>
+
+<!-- Latest posts -->
+<div>
+    <h3>Latest Posts</h3>
+    <?php if (count($latestPosts) > 0): ?>
+        <table class="table table-hover table-condensed">
+            <thead>
+            <tr>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Replies</th>
+                <th>Time</th>
+                <th>Last comment</th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php
+            foreach ($latestPosts as $topic) {
+                ?>
+                <tr>
+                <td><b><?= RHtmlHelper::linkAction('post', $topic->title, 'view', $topic->id) ?></b></td>
+                <td><?= RHtmlHelper::linkAction('user', $topic->user->name, 'view', $topic->user->id) ?></td>
+                <td><?= $topic->commentCount ?></td>
+                <td><?= $topic->createdTime ?></td>
+                <td><?= $topic->lastCommentTime ?></td></tr><?php
+            }
+            ?>
+            </tbody>
+        </table>
+        <ul class="pager">
+            <li class="next"><a href="<?= RHtmlHelper::siteUrl('post/list/' . $group->id) ?>">More topics &rarr;</a>
+            </li>
+        </ul>
+    <?php endif; ?>
+    <?=(count($latestPosts)==0)?"No posts.":""?>
 </div>

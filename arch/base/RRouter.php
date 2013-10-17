@@ -65,8 +65,10 @@ class RRouter
         // uri info form:
         // user/view/1
         $query = Rays::app()->getHttpRequest()->getRequestUriInfo();
+        if(($pos = strpos($query,"?")))
+            $query = substr($query,0,$pos);
 
-        $queryArr = explode('/', $query);
+        $queryArr = explode("/", $query);
         $route = array();
 
         $len = count($queryArr);
