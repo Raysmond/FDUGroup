@@ -44,7 +44,7 @@ class RHttpRequest
         return isset($_GET[$name]) ? $_GET[$name] : (isset($_POST[$name]) ? $_POST[$name] : $defaultValue);
     }
 
-    public function getQuery($name, $defaultValue = null)
+        public function getQuery($name, $defaultValue = null)
     {
         return isset($_GET[$name]) ? $_GET[$name] : $defaultValue;
     }
