@@ -19,6 +19,8 @@ return array(
         'charset' => 'utf8',
     ),
 
+    'baseUrl' => "http://localhost/FDUGroup",
+
 
     // lab server db configuration
     /*
@@ -31,9 +33,6 @@ return array(
         'charset' => 'utf8',
     ),
     */
-
-
-    'baseUrl' => "http://localhost/FDUGroup",
 
     'isCleanUri' => true,
 
