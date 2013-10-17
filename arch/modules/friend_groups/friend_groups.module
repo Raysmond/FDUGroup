@@ -11,6 +11,8 @@ class friend_groups_module extends RModule {
         $currentGroupId = Rays::app()->controller->getActionParams()[0];
         $friends = new FriendsGroup();
         $friends = $friends->getFriends($currentGroupId);
+        if(count($friends)==0)
+            return '';
         return $this->render('friend_groups',array('friends'=>$friends));
     }
 }

@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Oct 17, 2013 at 08:41 AM
+-- Generation Time: Oct 17, 2013 at 02:56 PM
 -- Server version: 5.5.31
 -- PHP Version: 5.4.16
 
@@ -102,14 +102,14 @@ CREATE TABLE IF NOT EXISTS `comment` (
   `com_created_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `com_content` text NOT NULL,
   PRIMARY KEY (`com_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=9 ;
 
 --
 -- Dumping data for table `comment`
 --
 
 INSERT INTO `comment` (`com_id`, `com_pid`, `top_id`, `u_id`, `com_created_time`, `com_content`) VALUES
-(1, 0, 2, 1, '2013-10-17 06:40:56', 'hello');
+(5, 0, 2, 1, '2013-10-17 10:10:15', 'asdfad');
 
 -- --------------------------------------------------------
 
@@ -145,7 +145,7 @@ CREATE TABLE IF NOT EXISTS `friends` (
   PRIMARY KEY (`f_id`),
   KEY `f_uid` (`f_uid`),
   KEY `f_fid` (`f_fid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
 
 --
 -- Dumping data for table `friends`
@@ -153,7 +153,9 @@ CREATE TABLE IF NOT EXISTS `friends` (
 
 INSERT INTO `friends` (`f_id`, `f_uid`, `f_fid`) VALUES
 (1, 3, 1),
-(2, 1, 3);
+(2, 1, 3),
+(3, 1, 2),
+(4, 2, 1);
 
 -- --------------------------------------------------------
 
@@ -171,7 +173,7 @@ CREATE TABLE IF NOT EXISTS `groups` (
   `gro_intro` longtext,
   `gro_picture` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`gro_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=10 ;
 
 --
 -- Dumping data for table `groups`
@@ -181,7 +183,8 @@ INSERT INTO `groups` (`gro_id`, `gro_creator`, `cat_id`, `gro_name`, `gro_member
 (1, 1, 1, 'FDUGroup Developers', 1, '2013-10-16 16:29:20', 'We develop wonderful web applications.', 'public/images/groups/group_1.jpg'),
 (2, 1, 11, '美剧fans', 1, '2013-10-16 17:32:39', '美剧迷们请在此聚集！ Game of Thrones, The Big Bang Theory, Breaking bad, How I met your mother, 2 Broke Girls, Frie...', 'public/images/groups/group_2.jpg'),
 (3, 1, 6, '张江campus', 1, '2013-10-16 17:34:35', '我们在张江职业技术学校！', 'public/images/groups/group_3.jpg'),
-(4, 1, 11, 'The Vampire Diaries', 1, '2013-10-16 17:35:40', 'The Vampire Diaries is a supernatural drama television series developed by Kevin Williamson and Julie Plec, based on the book series of the same name written by L. J. Smith. The series premiered on The CW on September 10, 2009. The series takes place in Mystic Falls, Virginia, a fictional small town haunted by supernatural beings. The series narrative follows the protagonist Elena Gilbert (Nina Dobrev) as she falls in love with vampire Stefan Salvatore (Paul Wesley) and is drawn into the supernatural world as a result. As the series progresses, Elena finds herself drawn to Stefan&#039;s brother Damon Salvatore (Ian Somerhalder) resulting in a love triangle. As the narrative develops in the course of the series, the focal point shifts on the mysterious past of the town involving Elena&#039;s malevolent doppelgänger Katerina Petrova and the family of Original Vampires, all of which have an evil agenda of their own.', 'public/images/groups/group_4.jpg');
+(4, 1, 11, 'The Vampire Diaries', 1, '2013-10-16 17:35:40', 'The Vampire Diaries is a supernatural drama television series developed by Kevin Williamson and Julie Plec, based on the book series of the same name written by L. J. Smith. The series premiered on The CW on September 10, 2009. The series takes place in Mystic Falls, Virginia, a fictional small town haunted by supernatural beings. The series narrative follows the protagonist Elena Gilbert (Nina Dobrev) as she falls in love with vampire Stefan Salvatore (Paul Wesley) and is drawn into the supernatural world as a result. As the series progresses, Elena finds herself drawn to Stefan&#039;s brother Damon Salvatore (Ian Somerhalder) resulting in a love triangle. As the narrative develops in the course of the series, the focal point shifts on the mysterious past of the town involving Elena&#039;s malevolent doppelgänger Katerina Petrova and the family of Original Vampires, all of which have an evil agenda of their own.', 'public/images/groups/group_4.jpg'),
+(5, 1, 1, 'test group', 1, '2013-10-17 08:42:33', '&lt;p&gt;test&lt;/p&gt;&lt;p&gt;this is a test intro&lt;/p&gt;', '');
 
 -- --------------------------------------------------------
 
@@ -217,8 +220,9 @@ CREATE TABLE IF NOT EXISTS `group_has_users` (
 INSERT INTO `group_has_users` (`gro_id`, `u_id`, `join_time`, `status`, `comment`) VALUES
 (1, 1, '2013-10-16 16:29:20', 1, NULL),
 (2, 1, '2013-10-16 17:32:39', 1, ''),
-(3, 1, '2013-10-16 17:34:36', 1, ''),
-(4, 1, '2013-10-16 17:35:40', 1, '');
+(3, 1, '2013-10-17 09:39:16', 1, ''),
+(4, 1, '2013-10-16 17:35:40', 1, ''),
+(5, 1, '2013-10-17 08:42:33', 1, '');
 
 -- --------------------------------------------------------
 
@@ -237,7 +241,7 @@ CREATE TABLE IF NOT EXISTS `messages` (
   `msg_send_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`msg_id`,`msg_type_id`,`msg_receiver_id`),
   UNIQUE KEY `msg_id_UNIQUE` (`msg_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=7 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=9 ;
 
 --
 -- Dumping data for table `messages`
@@ -249,7 +253,9 @@ INSERT INTO `messages` (`msg_id`, `msg_type_id`, `msg_receiver_id`, `msg_sender_
 (3, 1, 1, 0, 'welcome', 'a welcome message', 2, '2013-10-16 16:29:20'),
 (4, 1, 3, 0, 'Welcome, Klaus', 'Dear Klaus : &lt;br/&gt;Welcome to join the FDUGroup bit family!&lt;br/&gt;&lt;br/&gt;--- FDUGroup team&lt;br/&gt;', 2, '2013-10-16 17:57:37'),
 (5, 1, 3, 1, 'Friend request', 'admin wants to be friends with you.<br/><a  title="Confirm" href="http://localhost/FDUGroup/friend/confirm/1" >Confirm</a><br/><a  title="Decline" href="http://localhost/FDUGroup/friend/decline/1" >Decline</a>', 2, '2013-10-16 18:47:38'),
-(6, 1, 1, 3, 'Friend confirmed', 'Klaus has accepted your friend request.', 1, '2013-10-16 18:49:31');
+(6, 1, 1, 3, 'Friend confirmed', 'Klaus has accepted your friend request.', 1, '2013-10-16 18:49:31'),
+(7, 1, 1, 2, 'Friend request', 'Raysmond wants to be friends with you.<br/><a  title="Confirm" href="http://localhost/FDUGroup/friend/confirm/2" >Confirm</a><br/><a  title="Decline" href="http://localhost/FDUGroup/friend/decline/2" >Decline</a>', 2, '2013-10-17 10:40:59'),
+(8, 1, 2, 1, 'Friend confirmed', 'admin has accepted your friend request.', 1, '2013-10-17 10:41:13');
 
 -- --------------------------------------------------------
 
@@ -304,15 +310,15 @@ CREATE TABLE IF NOT EXISTS `topic` (
   `top_last_comment_time` timestamp NULL DEFAULT NULL,
   `top_comment_count` int(11) NOT NULL,
   PRIMARY KEY (`top_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=7 ;
 
 --
 -- Dumping data for table `topic`
 --
 
 INSERT INTO `topic` (`top_id`, `gro_id`, `u_id`, `top_title`, `top_created_time`, `top_content`, `top_last_comment_time`, `top_comment_count`) VALUES
-(1, 1, 1, 'Test topic', '2013-10-16 18:32:10', 'test', '2013-10-16 18:32:10', 0),
-(2, 1, 1, 'Test topic 1', '2013-10-16 18:32:10', 'test', '2013-10-17 06:40:56', 1);
+(1, 1, 1, 'Test topic', '2013-10-16 18:32:10', '&lt;p&gt;This is a test topic.&lt;/p&gt;&lt;p&gt;&lt;strong&gt;Hello,World!&lt;/strong&gt;&lt;/p&gt;', '2013-10-16 18:32:10', 0),
+(2, 1, 1, 'Test topic 1', '2013-10-16 18:32:10', 'test', '2013-10-17 10:10:15', 2);
 
 -- --------------------------------------------------------
 
