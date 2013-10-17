@@ -57,14 +57,14 @@ foreach ($groups as $group) {
         $g_u->groupId = $group->id;
         if (count($g_u->find()) == 0) {
             echo RHtmlHelper::linkAction('group', '+ Join the group', 'join', $group->id,
-                array('class' => 'btn btn-xs btn-info', 'style' => 'position:absolute;top:135px;'));
+                array('class' => 'btn btn-xs btn-info', 'style' => 'position:absolute;top:140px;'));
         } else {
             echo RHtmlHelper::linkAction('group', '- Exit group', 'exit', $group->id,
-                array('class' => 'btn btn-xs btn-info', 'style' => 'position:absolute;top:135px;'));
+                array('class' => 'btn btn-xs btn-info', 'style' => 'position:absolute;top:140px;'));
         }
     } else {
         echo RHtmlHelper::linkAction('group', '+ Join the group', 'join', $group->id,
-            array('class' => 'btn btn-xs btn-info', 'style' => 'position:absolute;top:135px;'));
+            array('class' => 'btn btn-xs btn-info', 'style' => 'position:absolute;top:140px;'));
     }
     echo "</div></div></div>";
 }

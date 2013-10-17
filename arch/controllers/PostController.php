@@ -43,7 +43,7 @@ class PostController extends RController {
                 $topic->groupId = $groupId;
                 $topic->userId = Rays::app()->getLoginUser()->id;
                 $topic->title = $form["title"];
-                $topic->content = $form['content'];
+                $topic->content = RHtmlHelper::encode($form['content']);
                 date_default_timezone_set(Rays::app()->getTimeZone());
                 $topic->createdTime = date('Y-m-d H:i:s');
                 $topic->lastCommentTime = date('Y-m-d H:i:s');
@@ -58,6 +58,7 @@ class PostController extends RController {
         }
 
         $this->setHeaderTitle("New topic");
+        $this->addJs('/public/ckeditor/ckeditor.js');
         $this->render("edit", $data, false);
     }
 
@@ -67,23 +68,30 @@ class PostController extends RController {
         $topic->load($topicId);
 
         if ($this->getHttpRequest()->isPostRequest()) {
-            $form = $_POST;
+
 
             $validation = new RFormValidationHelper(array(
                 array("field" => "title", "label" => "Title", "rules" => "trim|required"),
                 array("field" => "content", "label" => "Content", "rules" => "trim|required"),
             ));
+            $form = $_POST;
+            $topic->title = $form['title'];
+            $topic->content = RHtmlHelper::encode($form['content']);
 
             if ($validation->run()) {
-                $topic = new Topic();
-                $topic->id = $topicId;
-                $topic->load();
+                $topic->update();
+                $this->flash("message","Post ".$topic->title." was updated successfully.");
+                $this->redirectAction('post','view',$topic->id);
+            }
+            else{
+                $data['validation_errors'] = $validation->getErrors();
             }
         }
         $group = new Group();
         $group->load($topic->groupId);
         $data = array("type" => "edit", "topic" => $topic,'group'=>$group);
         $this->setHeaderTitle("Edit post: ".$topic->title);
+        $this->addJs('/public/ckeditor/ckeditor.js');
         $this->render('edit', $data, false);
     }
 

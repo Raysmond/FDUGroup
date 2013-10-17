@@ -10,13 +10,13 @@ if(isset($newPostForm))
 if ($type == "new") {
     $url = "post/new/$groupId";
     $title = RFormHelper::setValue($newForm,'title');
-    $content = RFormHelper::setValue($newForm,'content');
+    $content = RHtmlHelper::decode(RFormHelper::setValue($newForm,'content'));
     $submitText = "Post";
 }
 else {
     $url = "post/edit/$topic->id";
     $title = $topic->title;
-    $content = $topic->content;
+    $content = RHtmlHelper::decode($topic->content);
     $submitText = "Edit";
 }
 ?>
@@ -34,7 +34,7 @@ else {
 <?=RFormHelper::textarea(array(
     'id' => 'content',
     'name' => 'content',
-    'class' => 'form-control',
+    'class' => 'ckeditor form-control',
     'rows' => 14,
     'placeholder' => 'Content'
 ), $content)?>

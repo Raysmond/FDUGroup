@@ -80,4 +80,34 @@ class Group extends Data
 
         return $group;
     }
+
+    public function deleteGroup()
+    {
+        if(isset($this->id)&&$this->id!=''){
+            $groupUsers = new GroupUser();
+            $groupUsers->groupId = $this->id;
+
+            $topics = new Topic();
+            $topics->groupId = $this->id;
+            $_topics = $topics->find();
+            $comment = new Comment();
+            foreach($_topics as $topic){
+                $sql = "delete from {$comment->table} where {$comment->columns['topicId']} = {$topic->id}";
+                Data::executeSQL($sql);
+            }
+            $sql = "delete from {$topics->table} where {$topics->columns['groupId']} = {$this->id}";
+            Data::executeSQL($sql);
+
+            $sql = "delete from {$groupUsers->table} where {$groupUsers->columns['groupId']} = {$this->id}";
+            Data::executeSQL($sql);
+            $friends = new FriendsGroup();
+            $sql = "delete from {$friends->table} where {$friends->columns['groupId1']} = {$this->id} or {$friends->columns['groupId2']} = {$this->id} ";
+            Data::executeSQL($sql);
+
+            $this->delete();
+            return true;
+        }
+        else
+            return false;
+    }
 }

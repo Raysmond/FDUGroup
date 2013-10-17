@@ -10,7 +10,7 @@ class GroupController extends RController
     public $layout = "index";
     public $defaultAction = "index";
     public $access = array(
-        Role::AUTHENTICATED => array('view', 'build', 'edit', 'join', 'exit'),
+        Role::AUTHENTICATED => array('view', 'build', 'edit', 'join', 'exit','delete'),
         Role::ADMINISTRATOR => array('findAdmin','buildAdmin'),
     );
 
@@ -134,7 +134,7 @@ class GroupController extends RController
             if ($validation->run()) {
                 // success
                 $group = new Group();
-                $group = $group->buildGroup($_POST['group-name'], $_POST['category'], ($_POST['intro']), Rays::app()->getLoginUser()->id);
+                $group = $group->buildGroup($_POST['group-name'], $_POST['category'], RHtmlHelper::encode($_POST['intro']), Rays::app()->getLoginUser()->id);
                 if (isset($_FILES['group_picture']) && ($_FILES['group_picture']['name'] != '')) {
                     $upload = new RUploadHelper(array('file_name' => 'group_' . $group->id . RUploadHelper::get_extension($_FILES['group_picture']['name']),
                         'upload_path' => Rays::getFrameworkPath() . '/../public/images/groups/'));
@@ -157,6 +157,7 @@ class GroupController extends RController
         } else {
             //
         }
+        $this->addJs("/public/ckeditor/ckeditor.js");
         $this->render('build', $data, false);
     }
 
@@ -186,7 +187,6 @@ class GroupController extends RController
                 $group->categoryId = $_POST['category'];
                 $group->intro = RHtmlHelper::encode($_POST['intro']);
                 $group->update();
-                // $group = $group->buildGroup($_POST['group-name'],$_POST['category'],$_POST['intro'],Rays::app()->getLoginUser()->id);
                 if (isset($_FILES['group_picture']) && $_FILES['group_picture']['name'] != '') {
                     $upload = new RUploadHelper(array('file_name' => 'group_' . $group->id . RUploadHelper::get_extension($_FILES['group_picture']['name']),
                         'upload_path' => Rays::getFrameworkPath() . '/../public/images/groups/'));
@@ -209,6 +209,7 @@ class GroupController extends RController
         } else {
             $data['oldGroup'] = $oldGroup;
         }
+        $this->addJs("/public/ckeditor/ckeditor.js");
         $this->render('edit', $data, false);
     }
 
@@ -262,5 +263,48 @@ class GroupController extends RController
     {
         $this->layout = 'admin';
         $this->actionBuild();
+    }
+
+    /**
+     * Delete group
+     * This action will delete all content related to the group, including topics, comments
+     * that belong the group
+     * @access group creator | administrator
+     * @param $groupId
+     */
+    public function actionDelete($groupId)
+    {
+        if (isset($groupId) && $groupId != '' && is_numeric($groupId)) {
+            $group = new Group();
+            $group->load($groupId);
+            if (isset($group->id) && $group->id != '') {
+                $userId = Rays::app()->getLoginUser()->id;
+                if ($group->creator == $userId) {
+
+                    // Execute delete group transaction
+                    $group->deleteGroup();
+
+                    // Delete group's picture from local file system
+                    if (isset($group->picture) && $group->picture != '') {
+                        $picture = Rays::getFrameworkPath() . "/../" . $group->picture;
+                        if (file_exists($picture))
+                            unlink($picture);
+                    }
+                    $this->flash("message", "Group " . $group->name . " was deleted.");
+                    $this->redirectAction("group", "view");
+                } else {
+                    $this->flash("error", "Sorry. You don't have the right to delete the group!");
+                    $this->redirectAction('group', 'detail', $group->id);
+                }
+            } else {
+                $this->flash("error", "No such group.");
+                Rays::app()->page404();
+                return;
+            }
+        } else {
+            $this->flash("error", "No such group.");
+            Rays::app()->page404();
+            return;
+        }
     }
 }

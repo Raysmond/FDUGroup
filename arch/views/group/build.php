@@ -29,7 +29,7 @@ echo "<br/>";
 
 echo RFormHelper::label('Group Introduction','intro',array());
 echo '<br/>';
-echo RFormHelper::textarea(array('name'=>'intro','cols'=>'100','rows'=>'15'),$form);
+echo RFormHelper::textarea(array('id'=>'group_intro','class'=>'ckeditor','name'=>'intro','cols'=>'100','rows'=>'15'),(isset($form['intro']))?RHtmlHelper::decode($form['intro']):"");
 
 echo '<br/>';
 echo RFormHelper::label('Group picture','group_picture');
@@ -40,3 +40,4 @@ echo RFormHelper::input(
     array('class'=>'btn btn-lg btn-primary btn-block','type'=>'submit','value'=>'Build now'));
 
 echo RFormHelper::endForm();
+?>

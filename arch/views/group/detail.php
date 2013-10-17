@@ -9,8 +9,10 @@
     <?php
     if (!$hasJoined)
         echo RHtmlHelper::linkAction('group', '+ Join the group', 'join', $group->id, array('class' => 'btn btn-xs btn-info'));
-    else if ($isManager)
+    else if ($isManager){
         echo RHtmlHelper::linkAction('group', 'Manager: Edit group', 'edit', $group->id, array('class' => 'btn btn-xs btn-info'));
+        echo '&nbsp;&nbsp;';echo RHtmlHelper::linkAction('group', 'Manager: Delete group', 'delete', $group->id, array('class' => 'btn btn-xs btn-danger'));
+    }
     else echo RHtmlHelper::linkAction('group', '- Exit group', 'exit', $group->id, array('class' => 'btn btn-xs btn-info'));
     ?>
 </h2>
@@ -39,7 +41,7 @@
                 <br/>
 
                 <br/>
-                Group introduction: <p><?php echo $group->intro; ?></p> <br/>
+                Group introduction: <p><?php echo RHtmlHelper::decode($group->intro); ?></p> <br/>
             </div>
         </div>
     </div>
@@ -47,7 +49,15 @@
 
 <!-- Latest posts -->
 <div>
-    <h3>Latest Posts</h3>
+    <div class="row">
+        <div class="col-sm-6">
+        <h3 style="margin: 10px 0;">Latest Posts</h3>
+            </div>
+        <div class="col-sm-3" style="float:right;text-align: right;">
+        <?php if($hasJoined) echo RHtmlHelper::linkAction('post',"Add new post",'new',$group->id,
+            array('class'=>'btn btn-xs btn-success','style'=>'margin: 10px 0;')) ?>
+        </div>
+    </div>
     <?php if (count($latestPosts) > 0): ?>
         <table class="table table-hover table-condensed">
             <thead>
