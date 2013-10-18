@@ -19,6 +19,8 @@ class RPagerHelper
 
     private $url;
 
+    private $curPage;
+
 
     public $pagerText = array(
         'first' => "First",
@@ -27,13 +29,14 @@ class RPagerHelper
         'next' => '&raquo;',
     );
 
-    public function __construct($pageId, $rowSum, $rowsInPage = 10, $url = '')
+    public function __construct($pageId, $rowSum, $rowsInPage = 10, $url = '',$curPage=1)
     {
         $this->pageId = trim($pageId);
         $this->rowSum = $rowSum;
         $this->rowsInPage = $rowsInPage;
         $this->url = $url;
         $this->pageSum = ceil($rowSum / $rowsInPage);
+        $this->curPage = $curPage;
     }
 
     public function showPager($showPrev = true, $showNext = true, $showFirst = true, $showLast = true, $pagesViewNum = 10)
@@ -79,7 +82,7 @@ class RPagerHelper
         for ($i = 0; $i < $count; $i++) {
             if (($num = $beginPage + $i - $leftMore) <= $this->pageSum) {
                 if($num<=0) continue;
-                $pager .= '<li class="pager-item"><a href="' . $this->url . $appendStr . $this->pageId . '=' . ($num) . '">' . ($num) . '</a></li>';
+                $pager .= '<li class="pager-item '.(($num==$this->curPage)?'active':'').'"><a href="' . $this->url . $appendStr . $this->pageId . '=' . ($num) . '">' . ($num) . '</a></li>';
             }
         }
 

@@ -16,6 +16,8 @@ class Role extends Data{
     const AUTHENTICATED_ID = 2;
     const ANONYMOUS_ID = 3;
 
+    public static $Roles = array('administrator','authenticated','anonymous');
+
     //const VIP_USER = 4;
 
     public $roleId,$roleName;

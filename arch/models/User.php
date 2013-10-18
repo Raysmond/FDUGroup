@@ -12,7 +12,27 @@ class User extends Data{
 
     public $role;
 
-    public $defaults = array(
+    public static $labels = array(
+                "id"=>"ID",
+                'roleId'=>'Role',
+                "name" => "Name",
+                "mail" => "Mail",
+                "password" => "Password",
+                "region" => "Region",
+                "mobile" => "Mobile",
+                "qq" => "QQ",
+                "weibo" => "Weibo",
+                "registerTime"=>"Register time",
+                "status" => "Status",
+                "picture" => "Picture",
+                "intro" => "Introduction",
+                "homepage" =>"Homepage",
+                "credits" => "Credits",
+                "permission" => "Permission",
+                "privacy" => "Privacy",
+            );
+
+    public static $defaults = array(
         'status'=>1,
         'credits'=>1,
         'roleId'=>2
@@ -40,7 +60,8 @@ class User extends Data{
                 "credits" => "u_credits",
                 "permission" => "u_permission",
                 "privacy" => "u_privacy",
-            )
+            ),
+
         );
         parent::init($option);
     }
@@ -54,7 +75,7 @@ class User extends Data{
 
     public function setDefaults()
     {
-        foreach($this->defaults as $key=>$val){
+        foreach(self::defaults as $key=>$val){
             if(!isset($this->$key))
                 $this->$key = $val;
         }
@@ -87,4 +108,24 @@ class User extends Data{
         $id = $this->insert();
         $this->load($id);
     }
+
+    /**
+     * Verify login information
+     * @param $username
+     * @param $password
+     * @return string
+     */
+    public function verifyLogin($username, $password)
+    {
+        $this->name = $username;
+        $user = $this->find();
+        if (count($user) == 0)
+            return "No such user name.";
+        $user = $user[0];
+        if ($user->password == md5($password)) {
+            return $user;
+        } else return "User name and password not match...";
+    }
+
+
 }

@@ -8,40 +8,43 @@ class UserController extends RController
 {
     public $layout = "index";
     public $defaultAction = "index";
-    public $access = array(Role::AUTHENTICATED=>array('edit','logout'));
+    public $access = array(
+        Role::AUTHENTICATED => array('edit', 'logout'),
+        Role::ADMINISTRATOR=>array('admin'));
 
+    /**
+     * Login action
+     */
     public function actionLogin()
     {
-        $data = null;
+        $data = array();
         if (Rays::app()->isUserLogin()) {
             $this->flash("message", Rays::app()->getLoginUser()->name . ", you have already login...");
             $this->redirect(Rays::app()->getBaseUrl());
             return;
         }
+
         if ($this->getHttpRequest()->isPostRequest()) {
-            $form = $_POST;
+
             $validation = new RFormValidationHelper(array(
-                array('field'=>'username','label'=>'User name','rules'=>'trim|required'),
-                array('field'=>'password','label'=>'password','rules'=>'trim|required')
+                array('field' => 'username', 'label' => 'User name', 'rules' => 'trim|required'),
+                array('field' => 'password', 'label' => 'password', 'rules' => 'trim|required')
             ));
 
-            if($validation->run()){
-                $login = $this->verifyLogin($form['username'], $form['password']);
-                if ($login instanceof User)
-                {
+            if ($validation->run()) {
+                $login = (new User())->verifyLogin($_POST['username'], $_POST['password']);
+                if ($login instanceof User) {
                     $this->getSession()->set("user", $login->id);
                     $this->flash("message", "Login successfully.");
                     $this->redirect(Rays::app()->getBaseUrl());
                     return;
-                } else
-                {
+                } else {
                     $this->flash("error", $login);
-                    $data = array('loginForm'=>$form);
+                    $data['loginForm'] = $_POST;
                 }
-            }
-            else
-            {
-                $data = array('validation_errors' => $validation->getErrors(),'loginForm'=>$form);
+            } else {
+                $data['validation_errors'] = $validation->getErrors();
+                $data['loginForm'] = $_POST;
             }
         }
         $this->setHeaderTitle("Login");
@@ -49,22 +52,26 @@ class UserController extends RController
         $this->render('login', $data, false);
     }
 
+    /**
+     * Logout action
+     */
     public function actionLogout()
     {
-        if (Rays::app()->isUserLogin()) {
-            $this->getSession()->deleteSession("user");
-            $this->flash("message", "You have already logout.");
-        }
+        $this->getSession()->deleteSession("user");
+        $this->flash("message", "You have already logout.");
         $this->redirect(Rays::app()->getBaseUrl());
     }
 
+    /**
+     * View user profile
+     * @param $userId
+     */
     public function actionView($userId)
     {
         $user = new User();
         $user->load($userId);
-        if ($user == null) {
-            // not found...
-            // need to be implemented
+        if (!isset($user->id)) { // no such user
+            Rays::app()->page404();
             return;
         }
         $canEdit = false;
@@ -82,150 +89,128 @@ class UserController extends RController
         $this->render('view', array('user' => $user, 'canEdit' => $canEdit, 'canAdd' => $canAdd), false);
     }
 
+    /**
+     * Register action
+     */
     public function actionRegister()
     {
         $this->setHeaderTitle("Register");
         $form = '';
         if ($this->getHttpRequest()->isPostRequest()) {
-            $form = $_POST;
             // validate the form data
             $rules = array(
-                array('field' => 'username', 'label' => 'User name',
-                    'rules' => 'trim|required|min_length[5]|max_length[20]' ),
-                array('field' => 'password', 'label' => 'Password',
-                    'rules' => 'trim|required|min_length[6]|max_length[20]'),
-                array('field' => 'password-confirm', 'label' => 'Password Confirm',
-                    'rules' => 'trim|required|equals[password]'),
-                array('field' => 'email', 'label' => 'Email',
-                    'rules' => 'trim|required|is_email')
+                array('field' => 'username', 'label' => 'User name', 'rules' => 'trim|required|min_length[5]|max_length[20]'),
+                array('field' => 'password', 'label' => 'Password', 'rules' => 'trim|required|min_length[6]|max_length[20]'),
+                array('field' => 'password-confirm', 'label' => 'Password Confirm', 'rules' => 'trim|required|equals[password]'),
+                array('field' => 'email', 'label' => 'Email', 'rules' => 'trim|required|is_email')
             );
-
             $validation = new RFormValidationHelper($rules);
             if ($validation->run()) {
                 $user = new User();
-                $user->register($_POST['username'],md5($_POST['password']),$_POST['email']);
+                $user->register($_POST['username'], md5($_POST['password']), $_POST['email']);
                 $message = new Message();
-                $message->sendMsg('system',0,$user->id,"Welcome, ".$user->name,
-                    RHtmlHelper::encode("Dear ".$user->name." : <br/>Welcome to join the FDUGroup bit family!<br/><br/>--- FDUGroup team<br/>"),null,1);
+                $message->sendMsg('system', 0, $user->id, "Welcome, " . $user->name,
+                    RHtmlHelper::encode("Dear " . $user->name . " : <br/>Welcome to join the FDUGroup bit family!<br/><br/>--- FDUGroup team<br/>"), null, 1);
 
-                $this->flash("message","Hello,".$user->name.", please ".RHtmlHelper::linkAction('user','login','login')." !");
+                $this->flash("message", "Hello," . $user->name . ", please " . RHtmlHelper::linkAction('user', 'login', 'login') . " !");
                 $this->redirectAction('user', 'view', $user->id);
-                return;
-            }
-            else{
+            } else {
                 $this->render('register',
-                    array('validation_errors' => $validation->getErrors(),'registerForm'=>$form), false);
+                    array('validation_errors' => $validation->getErrors(), 'registerForm' => $_POST), false);
             }
-        }
-        else $this->render('register', null, false);
+        } else $this->render('register', null, false);
     }
 
-    private function verifyLogin($username, $password)
+
+    /**
+     * Change user info action
+     * @param null $userId
+     */
+    public function actionEdit($userId = null)
     {
-        $user = new User();
-        $user->name = $username;
-        $user = $user->find();
-        if (count($user) == 0)
-            return "No such user name.";
-        $user = $user[0];
-        $password = trim($password);
-        if ($user->password == md5($password)) {
-            return $user;
-        } else return "User name and password not match...";
-    }
-
-    public function actionEdit($userId=null){
-
+        if ((isset($userId)) && (!is_numeric($userId))){
+            Rays::app()->page404();
+            return;
+        }
+        if (isset($userId) && Rays::app()->getLoginUser()->roleId != Role::ADMINISTRATOR_ID) {
+            $this->flash("error", "You don't have the right to change the user information!");
+            $this->redirectAction('user', 'view', $userId);
+        }
         $user = new User();
 
         //$user->load(($userId==null)?Rays::app()->getLoginUser()->id:$userId);
         // for now , the user can only edit his own profile
         $user->load(Rays::app()->getLoginUser()->id);
-        $data = array('user'=>$user);
-
-        if($this->getHttpRequest()->isPostRequest()){
-            $form = $_POST;
+        $data = array('user' => $user);
+        if ($this->getHttpRequest()->isPostRequest()) {
             $config = array(
-                array('field'=>'username','label'=>'User name','rules'=>'trim|required|min_length[5]|max_length[20]'),
+                array('field' => 'username', 'label' => 'User name', 'rules' => 'trim|required|min_length[5]|max_length[20]'),
             );
             // if set password, then go changing password
-            if(isset($_POST['password'])&&($_POST['password']!=''))
-            {
-                array_push($config,array('field'=>'password','label'=>'New Password','rules'=>'trim|required|min_length[6]|max_length[20]'));
-                array_push($config,array('field'=>'password-confirm','label'=>'New Password Confirm','rules'=>'trim|required|min_length[6]|max_length[20]|equals[password]'));
+            if (isset($_POST['password']) && ($_POST['password'] != '')) {
+                array_push($config, array('field' => 'password', 'label' => 'New Password', 'rules' => 'trim|required|min_length[6]|max_length[20]'));
+                array_push($config, array('field' => 'password-confirm', 'label' => 'New Password Confirm', 'rules' => 'trim|required|min_length[6]|max_length[20]|equals[password]'));
             }
 
             $validation = new RFormValidationHelper($config);
 
-            if($validation->run())
-            {
+            if ($validation->run()) {
                 $user->name = $_POST['username'];
-                foreach($user->columns as $objCol=>$dbCol)
-                {
-                    if(isset($_POST[$objCol]))
-                    {
+                foreach ($user->columns as $objCol => $dbCol) {
+                    if (isset($_POST[$objCol])) {
                         $user->$objCol = $_POST[$objCol];
                     }
                 }
                 $user->update();
-                $this->flash("message","Update information successfully.");
+                $this->flash("message", "Update information successfully.");
 
                 // if picture selected
-                if(isset($_FILES['user_picture'])&&($_FILES['user_picture']['name']!=''))
-                {
+                if (isset($_FILES['user_picture']) && ($_FILES['user_picture']['name'] != '')) {
                     //print_r($_FILES['user_picture']);
                     $upload = new RUploadHelper(array(
-                        "file_name"=>"pic_u_".$user->id.RUploadHelper::get_extension($_FILES['user_picture']['name']),
-                        "upload_path"=>Rays::getFrameworkPath()."/../public/images/users/"));
+                        "file_name" => "pic_u_" . $user->id . RUploadHelper::get_extension($_FILES['user_picture']['name']),
+                        "upload_path" => Rays::getFrameworkPath() . "/../public/images/users/"));
                     $upload->upload('user_picture');
-                    if($upload->error!='')
-                    {
-                        $this->flash("error",$upload->error);
-                    }
-                    else
-                    {
-                        $user->picture = "public/images/users/".$upload->file_name;
+
+                    if ($upload->error != '') {
+                        $this->flash("error", $upload->error);
+                    } else {
+                        $user->picture = "public/images/users/" . $upload->file_name;
                         $user->update();
                     }
                 }
-                $this->redirectAction('user','view',$user->id);
+                $this->redirectAction('user', 'view', $user->id);
                 return;
-            }
-            else
-            {
+            } else {
                 $errors = $validation->getErrors();
                 $data['validation_errors'] = $errors;
-                $data['editForm'] = $form;
+                $data['editForm'] = $_POST;
 
             }
-            /*
-            foreach($user->columns as $objCol=>$dbCol){
-                if(isset($form[$objCol])){
-                    switch($objCol)
-                    {
-                        case "name":;
-                        case "password":
-                            if(preg_match("/^[a-zA-Z0-9_]+$/",$form[$objCol]) && strlen($form[$objCol]) > 4 && strlen($form[$objCol]) < 20)
-                                $user->$objCol = $form[$objCol];break;
-                        case "mail":;
-                        case "weibo":
-                            if(preg_match('/^[_.0-9a-z-a-z-]+@([0-9a-z][0-9a-z-]+.)+[a-z]{2,4}$/',$form[$objCol]))
-                                $user->$objCol = $form[$objCol];break;
-                        case "qq":;
-                        case "mobile":
-                            if(preg_match('/^[0-9]+$/',$form[$objCol]))
-                                $user->$objCol = $form[$objCol];break;
-                        default:     $user->$objCol = $form[$objCol];break;
-                    }
-                }
-            }
-            */
-            //$user->update();
-            //$this->flash("message","Update information successfully.");
-            //$this->redirectAction('user','view',$user->id);
-            //return;
         }
-        $this->setHeaderTitle("Edit profile - ".$user->name);
-        $this->render('edit',$data,false);
+        $this->setHeaderTitle("Edit profile - " . $user->name);
+        $this->render('edit', $data, false);
+    }
+
+    public function actionAdmin(){
+        $this->setHeaderTitle('User administration');
+        $this->layout = 'admin';
+        $data = array();
+
+        $user = new User();
+        $count = $user->count();
+        $data['count'] = $count;
+
+        $curPage = $this->getHttpRequest()->getQuery('page',1);
+        $pageSize = 10;
+        $users = new User();
+        $users = $users->find(($curPage-1)*$pageSize,$pageSize,array('key'=>$users->columns["id"],"order"=>'desc'));
+        $data['users'] = $users;
+
+        $pager = new RPagerHelper('page',$count,$pageSize,RHtmlHelper::siteUrl('user/admin'),$curPage);
+        $pager = $pager->showPager();
+        $data['pager'] = $pager;
+
+        $this->render('admin',$data,false);
     }
 }
