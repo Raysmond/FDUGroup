@@ -113,9 +113,8 @@ $baseurl = Rays::app()->getBaseUrl();
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">User <b class="caret"></b></a>
                     <ul class="dropdown-menu">
-                        <li><a href="#">All users</a></li>
+                        <li><?=RHtmlHelper::linkAction('user','All users','admin')?></li>
                         <li><a href="#">Create new user</a></li>
-                        <li><a href="#">Delete users</a></li>
                     </ul>
                 </li>
 
@@ -130,6 +129,7 @@ $baseurl = Rays::app()->getBaseUrl();
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Groups <b class="caret"></b></a>
                     <ul class="dropdown-menu">
+                        <li><?php echo RHtmlHelper::linkAction('group',"Admin groups",'admin'); ?></li>
                         <li><?php echo RHtmlHelper::linkAction('group',"Find groups",'findAdmin'); ?></li>
                         <li><?php echo RHtmlHelper::linkAction('group',"Create new group",'buildAdmin'); ?></li>
                     </ul>
@@ -172,7 +172,7 @@ $baseurl = Rays::app()->getBaseUrl();
      </div>
 
     <div class="row row-offcanvas row-offcanvas-right">
-        <div class="col-xs-12 col-sm-9">
+        <!--<div class="col-xs-12 col-sm-9"> -->
             <p class="pull-right visible-xs">
                 <button type="button" class="btn btn-primary btn-xs" data-toggle="offcanvas">Toggle nav</button>
             </p>
@@ -183,31 +183,17 @@ $baseurl = Rays::app()->getBaseUrl();
             <div id="content">
                 <?php if (isset($content)) echo $content; ?>
             </div>
-        </div>
 
-        <div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar" role="navigation">
+       <!-- </div> -->
+
+        <!--
+        <div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar" role="navigation"> -->
 
             <?php
-            $this->module("new_users",array('id'=>'new_users','name'=>"New Users"));
+               // $this->module("new_users",array('id'=>'new_users','name'=>"New Users"));
             ?>
 
-            <!--
-            <div class="well sidebar-nav">
-                <ul class="nav">
-                    <li>Sidebar</li>
-                    <li class="active"><a href="#">Link</a></li>
-                    <li><a href="#">Link</a></li>
-                    <li><a href="#">Link</a></li>
-                    <li>Sidebar</li>
-                    <li><a href="#">Link</a></li>
-                    <li><a href="#">Link</a></li>
-                    <li><a href="#">Link</a></li>
-                </ul>
-            </div>--><!--/.well -->
-
-
-
-        </div><!--/span-->
+       <!-- </div>--><!--/span-->
 
 
     </div>

@@ -10,6 +10,17 @@ class Group extends Data
     public $category;
     public $id, $creator, $categoryId, $name, $memberCount, $createdTime, $intro,$picture;
 
+    public static $labels = array(
+        "id" => "ID",
+        "creator" => "Creator",
+        "categoryId" => "Category",
+        "name" => "Name",
+        "memberCount" => "Member count",
+        "createdTime" => "Create time",
+        "intro" => "Introduction",
+        "picture"=>'Picture'
+    );
+
     public function __construct()
     {
         $option = array(

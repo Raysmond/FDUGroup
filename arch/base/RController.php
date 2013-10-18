@@ -188,6 +188,12 @@ class RController
         $this->setActionParams($params);
 
         if(!$this->userCanAccessAction()){
+
+            if(!Rays::app()->isUserLogin()){
+                $this->flash("message","Please login first.");
+                $this->redirectAction('user','login');
+                return;
+            }
             $this->flash("error","Sorry, you're not authorized to view the requested page.");
             Rays::app()->page404();
             return;

@@ -134,10 +134,8 @@ class Data
             $sql.=" order by {$order['key']} {$order['order']}";
         }
 
-        if($limit_start!=0){
-            $sql.=" LIMIT {$limit_start}";
-            if($limit_end!=0)
-                $sql.=",".$limit_end;
+        if($limit_start!=0||$limit_end!=0){
+            $sql.=" LIMIT {$limit_start} , ".$limit_end;
         }
 
         //print_r($sql);
@@ -154,6 +152,39 @@ class Data
             $row = mysql_fetch_assoc($rs);
         }
         return $result;
+    }
+
+    public function count($like = array())
+    {
+        $result = array();
+        $where = " where 1 = 1 ";
+        foreach ($this->columns as $objCol => $dbCol) {
+            if ($this->$objCol) {
+                $where .= " and $dbCol = '{$this->$objCol}'";
+            }
+        }
+
+        if(!empty($like))
+        {
+            $where.=" and (";
+            $first = true;
+            foreach($like as $val)
+            {
+                if(isset($val['key'])&&isset($val['value']))
+                {
+                    if(!$first) $where.=" or ";
+                    $where.= "  ".$val['key']." like '".$val['value']."' ";
+                    $first = false;
+                }
+            }
+            $where.=" ) ";
+        }
+
+        $sql = "select count({$this->columns[$this->key]}) as count_result from {$this->table} $where";
+        DataConnector::getConnection();
+        $rs = mysql_query($sql) or die(mysql_error());
+        $row = mysql_fetch_assoc($rs);
+        return $row['count_result'];
     }
 
     public static function executeSQL($sql)

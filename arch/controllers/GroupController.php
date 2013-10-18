@@ -11,7 +11,7 @@ class GroupController extends RController
     public $defaultAction = "index";
     public $access = array(
         Role::AUTHENTICATED => array('view', 'build', 'edit', 'join', 'exit','delete'),
-        Role::ADMINISTRATOR => array('findAdmin','buildAdmin'),
+        Role::ADMINISTRATOR => array('findAdmin','buildAdmin','admin'),
     );
 
     /*
@@ -43,10 +43,7 @@ class GroupController extends RController
         $groups = $group->find(0, 0, array(), $like);
         $groupSum = count($groups);
 
-        if ($page == 1)
-            $groups = $group->find($pagesize, 0, array(), $like);
-        else
-            $groups = $group->find($pagesize * ($page - 1), $pagesize, array(), $like);
+        $groups = $group->find($pagesize * ($page - 1), $pagesize, array(), $like);
 
 
         $this->setHeaderTitle("Find Group");
@@ -59,7 +56,7 @@ class GroupController extends RController
         else
             $url = RHtmlHelper::siteUrl('group/find');
 
-        $pager = new RPagerHelper('page',$groupSum,$pagesize, $url);
+        $pager = new RPagerHelper('page',$groupSum,$pagesize, $url,$page);
         $pager = $pager->showPager();
         $data['pager'] = $pager;
 
@@ -253,6 +250,10 @@ class GroupController extends RController
 
     }
 
+    /* ------------------------------------------------------------------------- */
+    /* Group administration */
+    /* ------------------------------------------------------------------------- */
+
     public function actionFindAdmin($page = 1, $search = '', $pagesize = 3)
     {
         $this->layout = 'admin';
@@ -306,5 +307,27 @@ class GroupController extends RController
             Rays::app()->page404();
             return;
         }
+    }
+
+    public function actionAdmin(){
+        $this->setHeaderTitle('Group administration');
+        $this->layout = 'admin';
+        $data = array();
+
+        $rows = new Group();
+        $count = $rows->count();
+        $data['count'] = $count;
+
+        $curPage = $this->getHttpRequest()->getQuery('page',1);
+        $pageSize = 10;
+        $groups = new Group();
+        $groups = $groups->find(($curPage-1)*$pageSize,$pageSize,array('key'=>$groups->columns["id"],"order"=>'desc'));
+        $data['groups'] = $groups;
+
+        $pager = new RPagerHelper('page',$count,$pageSize,RHtmlHelper::siteUrl('group/admin'),$curPage);
+        $pager = $pager->showPager();
+        $data['pager'] = $pager;
+
+        $this->render('admin',$data,false);
     }
 }
