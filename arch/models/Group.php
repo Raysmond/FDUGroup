@@ -53,7 +53,7 @@ class Group extends Data
     public function groupUsers($limit=0, $orderby='', $order='ASC'){
         $groupusers = new GroupUser();
         $groupusers->groupId = $this->id;
-        $groupusers = $groupusers->find($limit,0,array('key'=>$orderby,'order'=>$order));
+        $groupusers = $groupusers->find(0,$limit,array('key'=>$orderby,'order'=>$order));
         $result = array();
         foreach($groupusers as $row){
             $user = new User();
