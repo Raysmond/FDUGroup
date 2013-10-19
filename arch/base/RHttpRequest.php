@@ -44,7 +44,7 @@ class RHttpRequest
         return isset($_GET[$name]) ? $_GET[$name] : (isset($_POST[$name]) ? $_POST[$name] : $defaultValue);
     }
 
-        public function getQuery($name, $defaultValue = null)
+    public function getQuery($name, $defaultValue = null)
     {
         return isset($_GET[$name]) ? $_GET[$name] : $defaultValue;
     }
@@ -135,8 +135,6 @@ class RHttpRequest
      * @param string $url default the front page
      * @return bool
      */
-
-
     public function urlMatch($urlRules = array(), $url = '')
     {
         if (!is_array($urlRules)) {
@@ -144,9 +142,10 @@ class RHttpRequest
         }
         // like : user/view/1
         $currentUrl = $url != '' ? $url : $this->getRequestUriInfo();
-        if ($currentUrl == '') // front page
-        $currentUrl = '<front>';
-        //print_r($urlRules);
+
+        // The front page
+        if ($currentUrl == '')
+            $currentUrl = '<front>';
         foreach ($urlRules as $url)
         {
             if ($url == $currentUrl)
@@ -176,7 +175,7 @@ class RHttpRequest
                     // one pattern matched
                     if ($match) return true;
                 } else {
-                    //
+                    // do some thing
                 }
             }
         }

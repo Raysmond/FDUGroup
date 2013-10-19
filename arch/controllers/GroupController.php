@@ -76,7 +76,6 @@ class GroupController extends RController
 
     public function actionDetail($groupId)
     {
-        $userId = Rays::app()->getLoginUser()->id;
         $data = array();
 
         $group = new Group();
@@ -95,19 +94,21 @@ class GroupController extends RController
             $post->user = new User();
             $post->user->load($post->userId);
         }
-
-        // whether the user has joined the group
         $data['hasJoined'] = false;
-        $g_u = new GroupUser();
-        $g_u->userId = $userId;
-        $g_u->groupId = $group->id;
-        if(count($g_u->find())>0)
-            $data['hasJoined'] = true;
-
-        // whether the login user is the manager of the group
         $data['isManager'] = false;
-        if($group->creator==$userId)
-            $data['isManager'] = true;
+        if(Rays::app()->isUserLogin()){
+            $userId = Rays::app()->getLoginUser()->id;
+            // whether the user has joined the group
+            $g_u = new GroupUser();
+            $g_u->userId = $userId;
+            $g_u->groupId = $group->id;
+            if(count($g_u->find())>0)
+                $data['hasJoined'] = true;
+
+            // whether the login user is the manager of the group
+            if($group->creator==$userId)
+                $data['isManager'] = true;
+        }
 
         $this->setHeaderTitle("Group details");
         $this->render('detail', $data, false);

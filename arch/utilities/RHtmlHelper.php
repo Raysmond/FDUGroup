@@ -29,6 +29,8 @@ class RHtmlHelper
     /**
      * Return site url
      * @param $url like "site/about"
+     * @return string like: http://localhost/FDUGroup/site/about
+     * or http://localhost/FDUGroup/?q=site/about
      */
     public static function siteUrl($url)
     {

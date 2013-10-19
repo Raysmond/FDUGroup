@@ -20,17 +20,25 @@ class RController
     
     private $_params;
 
+    /**
+     * Define accessibility for actions, like restrict some actions only accessible
+     * by administrators
+     * @var array access definition array, for example:
+     * array(
+     *     "administrator"=>array("admin","edit"),
+     *     "authenticated"=>array("edit")
+     * )
+     */
     public $access = array();
 
     // the unique ID of the controller
     private $_id = '';
 
-    public function __construct($id = null)
+    public function __construct($id='')
     {
         if ($id != null)
             $this->_id = $id;
     }
-
 
     public function setId($id)
     {
@@ -40,18 +48,6 @@ class RController
     public function getId()
     {
         return $this->_id;
-    }
-
-    /**
-     * Get controller file
-     */
-    public function getControllerFile()
-    {
-        $controller = ucfirst(getId() . "Controller");
-        $controllerFile = Rays::app()->controllerPath . "/" . $controller . ".php";
-        if (file_exists($controllerFile)) {
-            return $controllerFile;
-        } else return false;
     }
 
     /**
@@ -69,6 +65,7 @@ class RController
     }
 
     /**
+     * Render content directly
      * @param string $content
      * @param bool $return
      * @return string
