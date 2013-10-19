@@ -72,26 +72,6 @@ class RModule
         return $this->_path;
     }
 
-    public function setId($id)
-    {
-        $this->_id = $id;
-    }
-
-    public function getId()
-    {
-        return $this->_id;
-    }
-
-    public function setName($name)
-    {
-        $this->name = $name;
-    }
-
-    public function getName()
-    {
-        return $this->name;
-    }
-
     /**
      * Render a module view and get render content
      * @param string $viewFileName
@@ -120,6 +100,26 @@ class RModule
     public function canAccess()
     {
         return Rays::app()->getHttpRequest()->urlMatch($this->access);
+    }
+
+    public function setId($id)
+    {
+        $this->_id = $id;
+    }
+
+    public function getId()
+    {
+        return $this->_id;
+    }
+
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+
+    public function getName()
+    {
+        return $this->name;
     }
 
 }
