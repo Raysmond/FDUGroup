@@ -17,6 +17,7 @@ class RController
     public $defaultAction = "index";
 
     private $_action;
+    
     private $_params;
 
     public $access = array();
@@ -232,8 +233,12 @@ class RController
                 $this->$methodName($p[0], $p[1], $p[2], $p[3], $p[4], $p[5], $p[6], $p[7], $p[8]);
             else if ($len == 10)
                 $this->$methodName($p[0], $p[1], $p[2], $p[3], $p[4], $p[5], $p[6], $p[7], $p[8], $p[9]);
-            else
-                die("Too many parameters...");
+            else{
+                // Pass the params array to the action
+                $this->$methodName($p);
+                //die("Too many parameters...");
+            }
+
         } else {
             Rays::app()->page404();
         }

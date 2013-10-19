@@ -42,7 +42,7 @@ class RBaseApplication
 
     public function run()
     {
-        //echo "application runs...";
+
     }
 
     public function getBasePath()

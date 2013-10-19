@@ -17,8 +17,10 @@ class RPagerHelper
     // Page sum
     private $pageSum;
 
+    // Page number will be added to the URL
     private $url;
 
+    // Current page
     private $curPage;
 
 
@@ -29,6 +31,14 @@ class RPagerHelper
         'next' => '&raquo;',
     );
 
+    /**
+     * Constructor
+     * @param $pageId pager ID to differentiate pagers in a page
+     * @param $rowSum total rows
+     * @param int $rowsInPage how many rows in a page
+     * @param string $url page URL
+     * @param int $curPage current page
+     */
     public function __construct($pageId, $rowSum, $rowsInPage = 10, $url = '',$curPage=1)
     {
         $this->pageId = trim($pageId);
@@ -39,6 +49,15 @@ class RPagerHelper
         $this->curPage = $curPage;
     }
 
+    /**
+     * Show pager
+     * @param bool $showPrev whether or not to show previous page link
+     * @param bool $showNext whether or not to show next page link
+     * @param bool $showFirst whether or not to show the first page link
+     * @param bool $showLast whether or not to show the last page link
+     * @param int $pagesViewNum how many pager link should be showed
+     * @return string pager link HTML
+     */
     public function showPager($showPrev = true, $showNext = true, $showFirst = true, $showLast = true, $pagesViewNum = 10)
     {
         $pager = '<ul id="pager-'.$this->pageId.'" class="pagination">';

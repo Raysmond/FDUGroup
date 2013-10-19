@@ -117,7 +117,6 @@
                     $this->module("new_users",array('id'=>'new_users','name'=>"New Users"));
                     ?>
 
-
             <div class="well sidebar-nav">
                 <ul class="nav">
                     <li>Sidebar</li>
