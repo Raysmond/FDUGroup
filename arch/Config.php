@@ -23,6 +23,7 @@ return array(
 
 
     // lab server db configuration
+
     /*
     'db' => array(
         'host' => '10.141.200.211',
@@ -33,6 +34,7 @@ return array(
         'charset' => 'utf8',
     ),
     */
+
 
     'isCleanUri' => true,
 

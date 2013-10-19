@@ -88,7 +88,7 @@ class GroupController extends RController
         $posts = new Topic();
         $posts->groupId = $groupId;
         // get latest 20 posts in the group
-        $posts = $posts->find(20,0,array('key'=>'top_created_time','value'=>'desc'));
+        $posts = $posts->find(0,20,array('key'=>'top_created_time','value'=>'desc'));
         $data['latestPosts'] = $posts;
         // not good enough
         foreach($posts as $post){
