@@ -46,7 +46,7 @@ class RRouter
         return $this->_routeUrl;
     }
 
-    public function setRouteUrl($route)
+    private function setRouteUrl($route)
     {
         $this->_routeUrl = $route;
     }

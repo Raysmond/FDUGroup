@@ -23,6 +23,15 @@ class RBaseApplication
 
     public function __construct($config = null)
     {
+        $this->init($config);
+    }
+
+    /**
+     * Initialize the application with configurations
+     * @param null $config
+     */
+    public function init($config = null)
+    {
         $this->setConfig($config);
         $config = $this->getConfig();
 
@@ -40,9 +49,38 @@ class RBaseApplication
             $this->timeZone = $config['timeZone'];
     }
 
+    /**
+     * Run the application
+     */
     public function run()
     {
 
+    }
+
+    /**
+     * End the application
+     * @param int $status
+     */
+    public function end($status = 0)
+    {
+        exit($status);
+    }
+
+    /**
+     * Get the base URL of the application site
+     * @return string
+     */
+    public function getBaseUrl()
+    {
+        if (!isset($this->_baseUrl)) {
+            $this->_baseUrl = 'http://' . $_SERVER['SERVER_NAME'];
+        }
+        return $this->_baseUrl;
+    }
+
+    public function setBaseUrl($value)
+    {
+        $this->_baseUrl = $value;
     }
 
     public function getBasePath()
@@ -67,19 +105,6 @@ class RBaseApplication
         $this->name = $_name;
     }
 
-    public function getBaseUrl()
-    {
-        if (!isset($this->_baseUrl)) {
-            $this->_baseUrl = 'http://' . $_SERVER['SERVER_NAME'];
-        }
-        return $this->_baseUrl;
-    }
-
-    public function setBaseUrl($value)
-    {
-        $this->_baseUrl = $value;
-    }
-
     public function getDbConfig()
     {
         return $this->_db;
@@ -88,11 +113,6 @@ class RBaseApplication
     public function setDbConfig($db)
     {
         $this->_db = $db;
-    }
-
-    public function end($status = 0)
-    {
-        exit($status);
     }
 
     public function getConfig()

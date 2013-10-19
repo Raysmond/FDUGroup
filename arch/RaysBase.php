@@ -4,19 +4,19 @@
  * @author: Raysmond
  */
 
-defined('SYSTEM_PATH') or define('SYSTEM_PATH', dirname(__FILE__));
+define('SYSTEM_PATH', dirname(__FILE__));
 
-defined('SYSTEM_CORE_PATH') or define('SYSTEM_CORE_PATH', SYSTEM_PATH . '/base');
+define('SYSTEM_CORE_PATH', SYSTEM_PATH . '/base');
 
-defined('CONTROLLER_PATH') or define('CONTROLLER_PATH', SYSTEM_PATH . '/controllers');
+define('CONTROLLER_PATH', SYSTEM_PATH . '/controllers');
 
-defined('MODEL_PATH') or define('MODEL_PATH', SYSTEM_PATH . '/models');
+define('MODEL_PATH', SYSTEM_PATH . '/models');
 
-defined('VIEW_PATH') or define('VIEW_PATH', SYSTEM_PATH . '/views');
+define('VIEW_PATH', SYSTEM_PATH . '/views');
 
-defined('UTILITIES_PATH') or define('UTILITIES_PATH',SYSTEM_PATH.'/utilities');
+define('UTILITIES_PATH',SYSTEM_PATH.'/utilities');
 
-defined('MODULES_PATH') or define('MODULES_PATH',SYSTEM_PATH.'/modules');
+define('MODULES_PATH',SYSTEM_PATH.'/modules');
 
 
 /**
@@ -43,17 +43,12 @@ class RaysBase
         MODULES_PATH,
     );
 
-    public static function getVersion()
-    {
-        return '1.0';
-    }
-
     public static function setApplication($app)
     {
-        if (self::$_app === null || $app === null)
+        if (self::$_app === null && $app != null)
             self::$_app = $app;
         else {
-
+            die("Application not found!");
         }
     }
 
@@ -61,7 +56,6 @@ class RaysBase
     {
         return self::$_app;
     }
-
 
     public static function createApplication($config){
         return new RWebApplication($config);
