@@ -80,7 +80,7 @@ class RBaseApplication
 
     public function setBaseUrl($value)
     {
-        $this->_baseUrl = $value;
+        $this->_baseUrl =  $value;
     }
 
     public function getBasePath()

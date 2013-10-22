@@ -140,6 +140,9 @@ class RHttpRequest
         if (!is_array($urlRules)) {
             $urlRules = array($urlRules);
         }
+        if(empty($urlRules)){
+            return true;
+        }
         // like : user/view/1
         $currentUrl = $url != '' ? $url : $this->getRequestUriInfo();
 
