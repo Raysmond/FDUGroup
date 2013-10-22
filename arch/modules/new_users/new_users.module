@@ -5,7 +5,7 @@
  */
 
 class new_users_module extends RModule{
-    public $access = array('<front>','site/*','admin');
+    //public $access = array('<front>','site/*','admin');
 
     // Both tow module_content() methods can return the content of this
     // this module. The first one returns the HTML directly and the Second
