@@ -78,8 +78,10 @@ class Group extends Data
         $this->creator = $creatorId;
         if($picture!='')
             $this->picture = $picture;
-        $this->insert();
-        $group = $this->find()[0];
+        $id = $this->insert();
+        $group = new Group();
+        $group->id = $id;
+        $group->load();
 
         $groupUser = new GroupUser();
         $groupUser->groupId = $group->id;

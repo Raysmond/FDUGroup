@@ -33,8 +33,8 @@ foreach($data as $group){
     echo "<div class='panel-body'>";
     echo $group->memberCount." members";
     $content = strip_tags(RHtmlHelper::decode($group->intro));
-    if(strlen($content)>100){
-        echo '<p>'.substr($content,0,100).'...</p>';
+    if(mb_strlen($content)>70){
+        echo '<p>'.mb_substr($content,0,70,"UTF-8").'...</p>';
     }
     else echo '<p>'.($content).'</p>';
     echo RHtmlHelper::link(
