@@ -40,10 +40,10 @@ class GroupController extends RController
             $group = new Group();
         }
 
-        $groups = $group->find(0, 0, array(), $like);
+        $groups = $group->find(0, 0, array('key'=>'gro_id',"order"=>"desc"), $like);
         $groupSum = count($groups);
 
-        $groups = $group->find($pagesize * ($page - 1), $pagesize, array(), $like);
+        $groups = $group->find($pagesize * ($page - 1), $pagesize, array('key'=>'gro_id',"order"=>"desc"), $like);
 
 
         $this->setHeaderTitle("Find Group");

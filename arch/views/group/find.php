@@ -47,8 +47,9 @@ foreach ($groups as $group) {
     echo "</div>";
     echo "<div class='panel-body'>";
     echo $group->memberCount . " members";
-    if (strlen($group->intro) > 100) {
-        echo '<p>' . substr($group->intro, 0, 100) . '...</p>';
+    $group->intro = strip_tags(RHtmlHelper::decode($group->intro));
+    if (mb_strlen($group->intro) > 70) {
+        echo '<p>' . mb_substr($group->intro, 0, 70,'UTF-8') . '...</p>';
     } else echo '<p>' . $group->intro . '</p>';
 
     if (Rays::app()->isUserLogin()) {

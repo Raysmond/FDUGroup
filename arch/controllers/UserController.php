@@ -128,11 +128,11 @@ class UserController extends RController
      */
     public function actionEdit($userId = null)
     {
-        if ((isset($userId)) && (!is_numeric($userId))){
+        if (!Rays::app()->isUserLogin()||(isset($userId)) && (!is_numeric($userId))){
             Rays::app()->page404();
             return;
         }
-        if (isset($userId) && Rays::app()->getLoginUser()->roleId != Role::ADMINISTRATOR_ID) {
+        if (isset($userId) && Rays::app()->getLoginUser()->roleId != Role::ADMINISTRATOR_ID&&Rays::app()->getLoginUser()->id!=$userId) {
             $this->flash("error", "You don't have the right to change the user information!");
             $this->redirectAction('user', 'view', $userId);
         }
