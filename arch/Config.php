@@ -15,7 +15,7 @@ return array(
         'user' => 'fdugroup',
         'password' => 'fdugroup',
         'db_name' => 'fdugroup',
-        'table_prefix' => '',
+        'table_prefix' => 'group_',
         'charset' => 'utf8',
     ),
 

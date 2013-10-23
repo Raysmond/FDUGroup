@@ -25,10 +25,10 @@ USE `fdugroup`;
 -- --------------------------------------------------------
 
 --
--- Table structure for table `category`
+-- Table structure for table `group_category`
 --
 
-CREATE TABLE IF NOT EXISTS `category` (
+CREATE TABLE IF NOT EXISTS `group_category` (
   `cat_id` int(11) NOT NULL AUTO_INCREMENT,
   `cat_name` varchar(45) NOT NULL,
   `cat_pid` int(11) NOT NULL,
@@ -36,10 +36,10 @@ CREATE TABLE IF NOT EXISTS `category` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=48 ;
 
 --
--- Dumping data for table `category`
+-- Dumping data for table `group_category`
 --
 
-INSERT INTO `category` (`cat_id`, `cat_name`, `cat_pid`) VALUES
+INSERT INTO `group_category` (`cat_id`, `cat_name`, `cat_pid`) VALUES
 (1, '兴趣', 0),
 (2, '生活', 0),
 (3, '购物', 0),
@@ -91,10 +91,10 @@ INSERT INTO `category` (`cat_id`, `cat_name`, `cat_pid`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `comment`
+-- Table structure for table `group_comment`
 --
 
-CREATE TABLE IF NOT EXISTS `comment` (
+CREATE TABLE IF NOT EXISTS `group_comment` (
   `com_id` int(11) NOT NULL AUTO_INCREMENT,
   `com_pid` int(11) NOT NULL,
   `top_id` int(11) NOT NULL,
@@ -105,10 +105,10 @@ CREATE TABLE IF NOT EXISTS `comment` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=9 ;
 
 --
--- Dumping data for table `comment`
+-- Dumping data for table `group_comment`
 --
 
-INSERT INTO `comment` (`com_id`, `com_pid`, `top_id`, `u_id`, `com_created_time`, `com_content`) VALUES
+INSERT INTO `group_comment` (`com_id`, `com_pid`, `top_id`, `u_id`, `com_created_time`, `com_content`) VALUES
 (5, 0, 2, 1, '2013-10-17 10:10:15', 'asdfad'),
 (6, 0, 3, 1, '2013-10-19 12:52:19', 'hello'),
 (7, 0, 1, 1, '2013-10-22 15:24:08', 'This is a comment!'),
@@ -117,10 +117,10 @@ INSERT INTO `comment` (`com_id`, `com_pid`, `top_id`, `u_id`, `com_created_time`
 -- --------------------------------------------------------
 
 --
--- Table structure for table `entity_type`
+-- Table structure for table `group_entity_type`
 --
 
-CREATE TABLE IF NOT EXISTS `entity_type` (
+CREATE TABLE IF NOT EXISTS `group_entity_type` (
   `typ_id` int(11) NOT NULL AUTO_INCREMENT,
   `typ_name` varchar(45) NOT NULL,
   PRIMARY KEY (`typ_id`),
@@ -128,20 +128,20 @@ CREATE TABLE IF NOT EXISTS `entity_type` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
 
 --
--- Dumping data for table `entity_type`
+-- Dumping data for table `group_entity_type`
 --
 
-INSERT INTO `entity_type` (`typ_id`, `typ_name`) VALUES
+INSERT INTO `group_entity_type` (`typ_id`, `typ_name`) VALUES
 (2, 'group'),
 (1, 'topic');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `friends`
+-- Table structure for table `group_friends`
 --
 
-CREATE TABLE IF NOT EXISTS `friends` (
+CREATE TABLE IF NOT EXISTS `group_friends` (
   `f_id` int(11) NOT NULL AUTO_INCREMENT,
   `f_uid` int(11) NOT NULL,
   `f_fid` int(11) NOT NULL,
@@ -151,10 +151,10 @@ CREATE TABLE IF NOT EXISTS `friends` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
 
 --
--- Dumping data for table `friends`
+-- Dumping data for table `group_friends`
 --
 
-INSERT INTO `friends` (`f_id`, `f_uid`, `f_fid`) VALUES
+INSERT INTO `group_friends` (`f_id`, `f_uid`, `f_fid`) VALUES
 (1, 3, 1),
 (2, 1, 3),
 (3, 1, 2),
@@ -163,10 +163,10 @@ INSERT INTO `friends` (`f_id`, `f_uid`, `f_fid`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `groups`
+-- Table structure for table `group_groups`
 --
 
-CREATE TABLE IF NOT EXISTS `groups` (
+CREATE TABLE IF NOT EXISTS `group_groups` (
   `gro_id` int(11) NOT NULL AUTO_INCREMENT,
   `gro_creator` int(11) NOT NULL,
   `cat_id` int(11) DEFAULT NULL,
@@ -179,10 +179,10 @@ CREATE TABLE IF NOT EXISTS `groups` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=12 ;
 
 --
--- Dumping data for table `groups`
+-- Dumping data for table `group_groups`
 --
 
-INSERT INTO `groups` (`gro_id`, `gro_creator`, `cat_id`, `gro_name`, `gro_member_count`, `gro_created_time`, `gro_intro`, `gro_picture`) VALUES
+INSERT INTO `group_groups` (`gro_id`, `gro_creator`, `cat_id`, `gro_name`, `gro_member_count`, `gro_created_time`, `gro_intro`, `gro_picture`) VALUES
 (1, 1, 1, 'FDUGroup Developers', 1, '2013-10-16 16:29:20', 'We develop wonderful web applications.', 'public/images/groups/group_1.jpg'),
 (2, 1, 11, '美剧fans', 1, '2013-10-16 17:32:39', '美剧迷们请在此聚集！ Game of Thrones, The Big Bang Theory, Breaking bad, How I met your mother, 2 Broke Girls, Frie...', 'public/images/groups/group_2.jpg'),
 (3, 1, 6, '张江campus', 1, '2013-10-16 17:34:35', '我们在张江职业技术学校！', 'public/images/groups/group_3.jpg'),
@@ -197,10 +197,10 @@ INSERT INTO `groups` (`gro_id`, `gro_creator`, `cat_id`, `gro_name`, `gro_member
 -- --------------------------------------------------------
 
 --
--- Table structure for table `group_has_group`
+-- Table structure for table `group_group_has_group`
 --
 
-CREATE TABLE IF NOT EXISTS `group_has_group` (
+CREATE TABLE IF NOT EXISTS `group_group_has_group` (
   `group_id1` int(11) NOT NULL,
   `group_id2` int(11) NOT NULL,
   PRIMARY KEY (`group_id1`,`group_id2`)
@@ -209,23 +209,23 @@ CREATE TABLE IF NOT EXISTS `group_has_group` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `group_has_users`
+-- Table structure for table `group_group_has_users`
 --
 
-CREATE TABLE IF NOT EXISTS `group_has_users` (
+CREATE TABLE IF NOT EXISTS `group_group_has_users` (
   `gro_id` int(11) NOT NULL,
   `u_id` int(11) NOT NULL,
   `join_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '加入时间',
   `status` int(11) NOT NULL,
-  `comment` text,
+  `join_comment` text,
   PRIMARY KEY (`gro_id`,`u_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `group_has_users`
+-- Dumping data for table `group_group_has_users`
 --
 
-INSERT INTO `group_has_users` (`gro_id`, `u_id`, `join_time`, `status`, `comment`) VALUES
+INSERT INTO `group_group_has_users` (`gro_id`, `u_id`, `join_time`, `status`, `join_comment`) VALUES
 (1, 1, '2013-10-16 16:29:20', 1, NULL),
 (2, 1, '2013-10-16 17:32:39', 1, ''),
 (3, 1, '2013-10-17 09:39:16', 1, ''),
@@ -241,10 +241,10 @@ INSERT INTO `group_has_users` (`gro_id`, `u_id`, `join_time`, `status`, `comment
 -- --------------------------------------------------------
 
 --
--- Table structure for table `messages`
+-- Table structure for table `group_messages`
 --
 
-CREATE TABLE IF NOT EXISTS `messages` (
+CREATE TABLE IF NOT EXISTS `group_messages` (
   `msg_id` int(11) NOT NULL AUTO_INCREMENT,
   `msg_type_id` int(11) NOT NULL,
   `msg_receiver_id` int(11) NOT NULL,
@@ -258,10 +258,10 @@ CREATE TABLE IF NOT EXISTS `messages` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=10 ;
 
 --
--- Dumping data for table `messages`
+-- Dumping data for table `group_messages`
 --
 
-INSERT INTO `messages` (`msg_id`, `msg_type_id`, `msg_receiver_id`, `msg_sender_id`, `msg_title`, `msg_content`, `msg_status`, `msg_send_time`) VALUES
+INSERT INTO `group_messages` (`msg_id`, `msg_type_id`, `msg_receiver_id`, `msg_sender_id`, `msg_title`, `msg_content`, `msg_status`, `msg_send_time`) VALUES
 (1, 4, 1, 2, 'hello', 'a message from user', 2, '2013-10-16 16:29:20'),
 (2, 1, 1, 0, 'system notification', 'a system notification', 1, '2013-10-16 16:29:20'),
 (3, 1, 1, 0, 'welcome', 'a welcome message', 2, '2013-10-16 16:29:20'),
@@ -275,10 +275,10 @@ INSERT INTO `messages` (`msg_id`, `msg_type_id`, `msg_receiver_id`, `msg_sender_
 -- --------------------------------------------------------
 
 --
--- Table structure for table `message_type`
+-- Table structure for table `group_message_type`
 --
 
-CREATE TABLE IF NOT EXISTS `message_type` (
+CREATE TABLE IF NOT EXISTS `group_message_type` (
   `msg_type_id` int(11) NOT NULL AUTO_INCREMENT,
   `msg_type_name` varchar(45) NOT NULL,
   PRIMARY KEY (`msg_type_id`),
@@ -286,10 +286,10 @@ CREATE TABLE IF NOT EXISTS `message_type` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
 
 --
--- Dumping data for table `message_type`
+-- Dumping data for table `group_message_type`
 --
 
-INSERT INTO `message_type` (`msg_type_id`, `msg_type_name`) VALUES
+INSERT INTO `group_message_type` (`msg_type_id`, `msg_type_name`) VALUES
 (3, 'group'),
 (2, 'private'),
 (1, 'system'),
@@ -298,13 +298,13 @@ INSERT INTO `message_type` (`msg_type_id`, `msg_type_name`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tag`
+-- Table structure for table `group_tag`
 --
 
-CREATE TABLE IF NOT EXISTS `tag` (
+CREATE TABLE IF NOT EXISTS `group_tag` (
   `tag_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `tag_name` varchar(45) NOT NULL,
-  `entity_type` int(11) NOT NULL,
+  `group_entity_type` int(11) NOT NULL,
   `entity_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`tag_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
@@ -312,10 +312,10 @@ CREATE TABLE IF NOT EXISTS `tag` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `topic`
+-- Table structure for table `group_topic`
 --
 
-CREATE TABLE IF NOT EXISTS `topic` (
+CREATE TABLE IF NOT EXISTS `group_topic` (
   `top_id` int(11) NOT NULL AUTO_INCREMENT,
   `gro_id` int(11) NOT NULL,
   `u_id` int(11) NOT NULL,
@@ -328,10 +328,10 @@ CREATE TABLE IF NOT EXISTS `topic` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=9 ;
 
 --
--- Dumping data for table `topic`
+-- Dumping data for table `group_topic`
 --
 
-INSERT INTO `topic` (`top_id`, `gro_id`, `u_id`, `top_title`, `top_created_time`, `top_content`, `top_last_comment_time`, `top_comment_count`) VALUES
+INSERT INTO `group_topic` (`top_id`, `gro_id`, `u_id`, `top_title`, `top_created_time`, `top_content`, `top_last_comment_time`, `top_comment_count`) VALUES
 (1, 1, 1, 'Test topic', '2013-10-16 18:32:10', '&lt;p&gt;This is a test topic.&lt;/p&gt;&lt;p&gt;&lt;strong&gt;Hello,World!&lt;/strong&gt;&lt;/p&gt;', '2013-10-22 15:24:22', 2),
 (2, 1, 1, 'Test topic 1', '2013-10-16 18:32:10', 'test', '2013-10-17 10:10:15', 2),
 (3, 4, 1, 'Test post', '2013-10-19 12:52:13', '&lt;p&gt;a test post.&lt;/p&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;', '2013-10-19 12:52:19', 1),
@@ -344,10 +344,10 @@ INSERT INTO `topic` (`top_id`, `gro_id`, `u_id`, `top_title`, `top_created_time`
 -- --------------------------------------------------------
 
 --
--- Table structure for table `users`
+-- Table structure for table `group_users`
 --
 
-CREATE TABLE IF NOT EXISTS `users` (
+CREATE TABLE IF NOT EXISTS `group_users` (
   `u_id` int(11) NOT NULL AUTO_INCREMENT,
   `u_role_id` int(11) NOT NULL,
   `u_name` varchar(45) NOT NULL,
@@ -371,10 +371,10 @@ CREATE TABLE IF NOT EXISTS `users` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
 
 --
--- Dumping data for table `users`
+-- Dumping data for table `group_users`
 --
 
-INSERT INTO `users` (`u_id`, `u_role_id`, `u_name`, `u_mail`, `u_password`, `u_region`, `u_mobile`, `u_qq`, `u_weibo`, `u_register_time`, `u_status`, `u_picture`, `u_intro`, `u_homepage`, `u_credits`, `u_permission`, `u_privacy`) VALUES
+INSERT INTO `group_users` (`u_id`, `u_role_id`, `u_name`, `u_mail`, `u_password`, `u_region`, `u_mobile`, `u_qq`, `u_weibo`, `u_register_time`, `u_status`, `u_picture`, `u_intro`, `u_homepage`, `u_credits`, `u_permission`, `u_privacy`) VALUES
 (1, 1, 'admin', 'admin@fudan.edu.cn', '96e79218965eb72c92a549dd5a330112', 'shanghai', NULL, NULL, NULL, '0000-00-00 00:00:00', 1, 'public/images/users/pic_u_1.jpg', NULL, NULL, 0, NULL, NULL),
 (2, 2, 'Raysmond', 'jiankunlei@126.com', '', 'shanghai', '18801734441', '913282582', 'http://weibo.com/leijiankun', '2013-10-16 16:29:20', 1, 'public/images/users/pic_u_2.jpg', 'hello', 'http://raysmond.com', 0, 0, 0),
 (3, 2, 'Klaus', 'klaus@fdugroup.com', '96e79218965eb72c92a549dd5a330112', '', '', '', '', '2013-10-16 17:57:37', 1, '', '', '', 1, 0, 0);
@@ -382,10 +382,10 @@ INSERT INTO `users` (`u_id`, `u_role_id`, `u_name`, `u_mail`, `u_password`, `u_r
 -- --------------------------------------------------------
 
 --
--- Table structure for table `user_role`
+-- Table structure for table `group_user_role`
 --
 
-CREATE TABLE IF NOT EXISTS `user_role` (
+CREATE TABLE IF NOT EXISTS `group_user_role` (
   `rol_id` int(11) NOT NULL AUTO_INCREMENT,
   `rol_name` varchar(45) NOT NULL,
   PRIMARY KEY (`rol_id`),
@@ -393,10 +393,10 @@ CREATE TABLE IF NOT EXISTS `user_role` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
 
 --
--- Dumping data for table `user_role`
+-- Dumping data for table `group_user_role`
 --
 
-INSERT INTO `user_role` (`rol_id`, `rol_name`) VALUES
+INSERT INTO `group_user_role` (`rol_id`, `rol_name`) VALUES
 (1, 'administrator'),
 (3, 'anonymous user'),
 (2, 'authenticated user'),
@@ -407,11 +407,11 @@ INSERT INTO `user_role` (`rol_id`, `rol_name`) VALUES
 --
 
 --
--- Constraints for table `friends`
+-- Constraints for table `group_friends`
 --
-ALTER TABLE `friends`
-  ADD CONSTRAINT `friends_ibfk_1` FOREIGN KEY (`f_uid`) REFERENCES `users` (`u_id`),
-  ADD CONSTRAINT `friends_ibfk_2` FOREIGN KEY (`f_fid`) REFERENCES `users` (`u_id`);
+ALTER TABLE `group_friends`
+  ADD CONSTRAINT `friends_ibfk_1` FOREIGN KEY (`f_uid`) REFERENCES `group_users` (`u_id`),
+  ADD CONSTRAINT `friends_ibfk_2` FOREIGN KEY (`f_fid`) REFERENCES `group_users` (`u_id`);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

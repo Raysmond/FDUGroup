@@ -7,7 +7,7 @@ class Data
     public function init($options)
     {
         $this->key = $options["key"];
-        $this->table = $options["table"];
+        $this->table = Rays::app()->getDBPrefix().$options["table"];
         $this->columns = $options["columns"];
     }
 
