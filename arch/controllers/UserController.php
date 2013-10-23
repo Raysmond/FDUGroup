@@ -32,7 +32,8 @@ class UserController extends RController
             ));
 
             if ($validation->run()) {
-                $login = (new User())->verifyLogin($_POST['username'], $_POST['password']);
+                $user = new User();
+                $login = $user->verifyLogin($_POST['username'], $_POST['password']);
                 if ($login instanceof User) {
                     $this->getSession()->set("user", $login->id);
                     $this->flash("message", "Login successfully.");

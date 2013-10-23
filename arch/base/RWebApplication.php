@@ -124,7 +124,8 @@ class RWebApplication extends RBaseApplication
      */
     public function page404()
     {
-        (new RController())->render('404');
+        $controller = new RController();
+        $controller->render("404");
     }
 
     /**

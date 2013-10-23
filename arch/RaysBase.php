@@ -102,4 +102,12 @@ class RaysBase
     }
 }
 
+//禁用错误报告
+//error_reporting(0);
+//报告运行时错误
+//error_reporting(E_ERROR | E_WARNING | E_PARSE);
+//error_reporting(E_ERROR);
+//报告所有错误
+//error_reporting(E_ALL);
+
 spl_autoload_register(array('RaysBase','autoload'));
