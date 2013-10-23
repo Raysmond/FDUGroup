@@ -16,10 +16,8 @@
     }
 
 $count = 0;
+echo '<div class="row">';
 foreach($data as $group){
-    if($count==0){
-        echo '<div class="row">';
-    }
 
     echo '<div class="col-6 col-sm-6 col-lg-4" style="height: 190px;">';
     echo "<div class='panel panel-default' style='height: 170px;'>";
@@ -37,8 +35,9 @@ foreach($data as $group){
         echo '<p>'.mb_substr($content,0,70,"UTF-8").'...</p>';
     }
     else echo '<p>'.($content).'</p>';
+    if(Rays::app()->getLoginUser()->id!=$group->creator)
     echo RHtmlHelper::link(
-        'Exit group','Exit group','#',
+        'Exit group','Exit group',RHtmlHelper::siteUrl("group/exit/".$group->id),
         array(
             'class'=>'btn btn-xs btn-danger',
             'style'=>'position:absolute;top:140px;right:120px;',
@@ -52,14 +51,8 @@ foreach($data as $group){
     echo "</div></div>";
     echo "</div>";
 
-    $count++;
-    if(($count==3)){
-        echo '</div>';
-        $count = 0;
-    }
 }
-if($count!=0)
-    echo "</div>";
+echo '</div>';
 
 ?>
 <div class="alert alert-block alert-danger fade ">
