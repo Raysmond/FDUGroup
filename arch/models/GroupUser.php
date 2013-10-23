@@ -19,7 +19,7 @@ class GroupUser extends Data
                 "userId" => "u_id",
                 "joinTime" => "join_time",
                 "status" => "status",
-                "comment" => "comment"
+                "comment" => "join_comment"
             )
         );
         parent::init($option);

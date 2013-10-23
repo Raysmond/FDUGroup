@@ -136,4 +136,9 @@ class RBaseApplication
     {
         return $this->timeZone;
     }
+
+    public function getDBPrefix()
+    {
+        return isset($this->_db['table_prefix'])?$this->_db['table_prefix']:"";
+    }
 }
