@@ -44,7 +44,11 @@ class Topic extends Data
     {
         $comment = new Comment();
         $comment->topicId = $this->id;
-        $this->comments = $comment->find();
-        return $this->comments;
+        $this->comments = $comment->find(0, 0, [], [], ['pid' => '0']);
+        $result = [];
+        foreach ($this->comments as $c) {
+            $result[] = ['root' => $c, 'reply' => $c->children()];
+        }
+        return $result;
     }
 }
