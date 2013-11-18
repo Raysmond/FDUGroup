@@ -10,6 +10,7 @@ return array(
 
     // database configuration
 
+    
     'db' => array(
         'host' => 'localhost',
         'user' => 'fdugroup',
@@ -25,16 +26,18 @@ return array(
 
     // lab server db configuration
 
+
     /*
     'db' => array(
         'host' => '10.141.200.211',
         'user' => 'fdugroup',
-        'password' => 'lab_fdugroup',
+        'password' => 'fdugroup',
         'db_name' => 'fdugroup',
-        'table_prefix' => '',
+        'table_prefix' => 'group_',
         'charset' => 'utf8',
     ),
     */
+
 
 
     'isCleanUri' => true,

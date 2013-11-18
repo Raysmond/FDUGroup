@@ -111,3 +111,5 @@ class RaysBase
 //error_reporting(E_ALL);
 
 spl_autoload_register(array('RaysBase','autoload'));
+
+header('Content-Type: text/html; charset=UTF-8');

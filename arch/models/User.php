@@ -75,7 +75,7 @@ class User extends Data{
 
     public function setDefaults()
     {
-        foreach(self::defaults as $key=>$val){
+        foreach(self::$defaults as $key=>$val){
             if(!isset($this->$key))
                 $this->$key = $val;
         }
