@@ -102,13 +102,20 @@ class Data
      * @param array $like
      * @return array
      */
-    public function find($limit_start=0,$limit_end=0,$order=array(),$like=array())
+    public function find($limit_start=0,$limit_end=0,$order=array(),$like=array(), $assignment = array())
     {
         $result = array();
         $where = " where 1 = 1 ";
         foreach ($this->columns as $objCol => $dbCol) {
             if ($this->$objCol) {
                 $where .= " and $dbCol = '{$this->$objCol}'";
+            }
+        }
+
+        if(!empty($assignment))
+        {
+            foreach ($assignment as $objCol => $value) {
+                $where .= " and " . $this->columns[$objCol] ." = $value";
             }
         }
 

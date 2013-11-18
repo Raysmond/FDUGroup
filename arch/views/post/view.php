@@ -11,15 +11,28 @@
 <br/><br/>
 <div>Actions: <?=RHtmlHelper::linkAction('post', 'Edit', 'edit', $topic->id)?></div>
 <hr/>
+
 <?php
-foreach ($comments as $comment) {
-?><div><?=RHtmlHelper::linkAction('user',$comment->user->name,'view',$comment->user->id)?>
-    &nbsp;&nbsp;<?=$comment->createdTime?></div>
-<div><?=RHtmlHelper::decode($comment->content)?></div>
-<br/><br/>
+foreach ($commentTree as $commentItem) {
+    ?><div><?=RHtmlHelper::linkAction('user',$commentItem['root']->user->name,'view',$commentItem['root']->user->id)?>
+    &nbsp;&nbsp;<?=$commentItem['root']->createdTime?></div>
+    <div><?=RHtmlHelper::decode($commentItem['root']->content)?></div>
+    <?=RHtmlHelper::linkAction('post','Reply','view', $commentItem['root']->topicId.'?reply='.$commentItem['root']->id)?>
+    <?php
+        foreach ($commentItem['reply'] as $reply) {
+            ?>
+            <div><?=RHtmlHelper::linkAction('user',$reply->user->name,'view',$reply->user->id)?>
+                &nbsp;&nbsp;<?=$reply->createdTime?></div>
+            <div><?=RHtmlHelper::decode($reply->content)?></div>
+            <?php
+        }
+    ?>
+    <br/><br/>
 <?php
 }
 ?>
+
+
 <hr/>
 <?=RFormHelper::openForm("post/comment/$topic->id", array('id' => 'viewFrom', 'class' => '.form-signin registerForm'))?>
 <?=RFormHelper::textarea(array(
@@ -28,7 +41,13 @@ foreach ($comments as $comment) {
 	'class' => 'form-control',
 	'rows' => '5',
 	'placeholder' => 'Comment',
-))?>
+),isset($parent)?'@'.$parent->user->name.' ':'')?>
+<?php
+if(isset($parent)){
+    echo RFormHelper::hidden('replyTo',((int)$parent->pid === 0 ? $parent->id : $parent->pid));
+    echo RFormHelper::hidden('exactReplyTo',$parent->id);
+}
+?>
 <br/>
 <br/>
 <?=RFormHelper::input(array('class' => 'btn btn-lg btn-primary btn-block', 'type' => 'submit', 'value' => 'Comment'))?>
