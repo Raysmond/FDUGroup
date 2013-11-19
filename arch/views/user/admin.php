@@ -38,7 +38,6 @@
             <?php
             foreach ($users as $user) {
                 echo '<tr>';
-               // echo '<td><input name="checked_users" type="checkbox" value="'.$user->id.'" /></td>';
                 ?><td><?=RFormHelper::input(array('name'=>'checked_users[]', 'type'=>'checkbox','value'=>$user->id))?></td><?php
                 foreach ($user->columns as $objCol => $dbcol) {
                     if (in_array($objCol, $skips)) continue;
@@ -75,53 +74,31 @@
     var flag = false;
 
     function reverse() {
-        if (!flag)
+        if (!flag) {
             checkAll('checked_users[]');
-        else
+        } else {
             clearAll('checked_users[]');
+        }
         flag = !flag;
     }
-    function checkAll(name)
-    {
+    function checkAll(name) {
         var el = document.getElementsByTagName('input');
         var len = el.length;
-        for(var i=0; i<len; i++)
-        {
-            if((el[i].type=="checkbox") && (el[i].name==name))
-            {
+        for(var i=0; i<len; i++) {
+            if((el[i].type=="checkbox") && (el[i].name==name)) {
                 el[i].checked = true;
             }
         }
     }
-    function clearAll(name)
-    {
+    function clearAll(name) {
         var el = document.getElementsByTagName('input');
         var len = el.length;
-        for(var i=0; i<len; i++)
-        {
-            if((el[i].type=="checkbox") && (el[i].name==name))
-            {
+        for(var i=0; i<len; i++) {
+            if((el[i].type=="checkbox") && (el[i].name==name)) {
                 el[i].checked = false;
             }
         }
     }
-/*
-    var flag = false;
-
-    function change_check(){
-        //$("input[@name='checked-users[]']").attr("checked",true);//attr("checked",$("#check-all").attr("checked"));
-        //$("input[name='checked-users[]']").each(function() {
-        //    $(this).attr("checked", true);
-        //});
-        //alert($('#sss6').attr("checked"));
-        if (!flag) {
-            $('#sss6').attr('checked',true);
-        } else {
-            $('#sss6').attr('checked',false);
-        }
-
-        flag = !flag;
-    }*/
 
     function block_submit() {
         $("#operation_type").val('block');
