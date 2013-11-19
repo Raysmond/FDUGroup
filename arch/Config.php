@@ -10,7 +10,7 @@ return array(
 
     // database configuration
 
-    
+
     'db' => array(
         'host' => 'localhost',
         'user' => 'fdugroup',

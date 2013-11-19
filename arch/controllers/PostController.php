@@ -2,7 +2,7 @@
 
 class PostController extends RController {
     public $access = array(
-        Role::AUTHENTICATED=>array('list','edit','delete')
+        Role::AUTHENTICATED=>array('new','list','edit','delete','comment')
     );
 
     /* List all topics belonging to a given group */
@@ -134,6 +134,10 @@ class PostController extends RController {
 
     /* Add comment */
     public function actionComment($topicId) {
+        if($topicId===null&&!is_numeric($topicId)){
+            Rays::app()->page404();
+            return;
+        }
         if ($this->getHttpRequest()->isPostRequest()) {
             $validation = new RFormValidationHelper(array(
                 array('field'=>'content','label'=>'Content','rules'=>'trim|required')));
