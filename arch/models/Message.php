@@ -49,7 +49,7 @@ class Message extends Data{
         }
     }
 
-    public function sendMsg($typeName,$senderId,$receiverId,$title,$content,$sendTime,$status=1)
+    public function sendMsg($typeName,$senderId,$receiverId,$title,$content,$sendTime=null,$status=1)
     {
         $this->typeId = new MessageType();
         $this->typeId->typeName = $typeName;

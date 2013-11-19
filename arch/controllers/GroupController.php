@@ -68,6 +68,7 @@ class GroupController extends RController
     public function actionView($userId = null)
     {
         $userGroup = new GroupUser();
+        if($userId == null) $userId = Rays::app()->getLoginUser()->id;
         $userGroup = $userGroup->userGroups($userId);
         $this->setHeaderTitle("My Groups");
         $this->render("view", $userGroup, false);
@@ -219,16 +220,21 @@ class GroupController extends RController
         date_default_timezone_set(Rays::app()->getTimeZone());
         $groupUser->joinTime = date('Y-m-d H:i:s');
         $groupUser->status = 1;
-        $groupUser->insert();
 
-        $group = new Group();
-        $group->load($groupId);
-        $group->memberCount++;
-        $group->update();
+        $gu = new GroupUser();
+        if(!$gu->isUserInGroup(Rays::app()->getLoginUser()->id,$groupId)){
+            $groupUser->insert();
+            $group = new Group();
+            $group->load($groupId);
+            $group->memberCount++;
+            $group->update();
 
-        $this->flash("message", "Congratulations. You have joined the group successfully.");
-        $this->redirectAction('group', 'view', Rays::app()->getLoginUser()->id);
-
+            $this->flash("message", "Congratulations. You have joined the group successfully.");
+            $this->redirectAction('group', 'view', Rays::app()->getLoginUser()->id);
+        }else{
+            $this->flash("message","You are already a member.");
+            $this->redirectAction('message','view');
+        }
     }
 
     public function actionExit($groupId = null)
@@ -329,5 +335,40 @@ class GroupController extends RController
         $data['pager'] = $pager;
 
         $this->render('admin',$data,false);
+    }
+
+    public function actionInvite($groupId){
+        $data = array();
+
+        $group = new Group();
+        $group->load($groupId);
+        $group->category->load();
+        $group->groupCreator->load();
+        $data['group'] = $group;
+
+        $user = Rays::app()->getLoginUser();
+        if ($user == null)
+            return null;
+        $friends = new Friend();
+        $friends = $friends->getFriends($user->id);
+        $data['friends'] = $friends;
+
+        if ($this->getHttpRequest()->isPostRequest()) {
+            $invitationMsg =$_POST['invitation'];
+            $select_friends = $_POST['select_friends'];
+            foreach($select_friends as $friendId){
+                $msg = new Message();
+                $content = RHtmlHelper::linkAction('user',Rays::app()->getLoginUser()->name,'view',Rays::app()->getLoginUser()->id).' invited you to join group '.RHtmlHelper::linkAction('group',$group->name,'detail',$groupId);
+                $content = $content.'&nbsp;&nbsp;'.RHtmlHelper::linkAction('group','Accept invitation', 'join', $groupId,array('class' => 'btn btn-xs btn-info'));
+                $content = $content.'</br>'.$invitationMsg;
+                $msg->sendMsg('group',Rays::app()->getLoginUser()->id,$friendId,'new group invitation',$content);
+            }
+            // show message
+            $this->flash('message','Send invitation successfully.');
+            $this->redirectAction('group','detail',$groupId);
+            return;
+        }
+
+        $this->render('invite',$data,false);
     }
 }

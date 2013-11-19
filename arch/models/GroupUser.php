@@ -49,5 +49,13 @@ class GroupUser extends Data
         }
         return $result;
     }
+
+    public function isUserInGroup($userId, $groupId){
+        $allUsers = $this->groupUsers($groupId);
+        foreach($allUsers as $user){
+            if($user->userId == $userId) return true;
+        }
+        return false;
+    }
 }
 
