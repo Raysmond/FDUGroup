@@ -66,6 +66,7 @@
                     echo '</a>';
 
                     echo '<ul class="dropdown-menu">';
+                    echo "<li>".RHtmlHelper::linkAction("user","My Home Page","home")."</li>";
                     echo "<li>".RHtmlHelper::linkAction("user","My profile","view",Rays::app()->getLoginUser()->id)."</li>";
 
                     echo '<li role="presentation" class="divider"></li>';

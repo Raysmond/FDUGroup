@@ -12,6 +12,7 @@ class User extends Data{
 
     public $role;
 
+
     public static $labels = array(
                 "id"=>"ID",
                 'roleId'=>'Role',
@@ -35,7 +36,8 @@ class User extends Data{
     public static $defaults = array(
         'status'=>1,
         'credits'=>1,
-        'roleId'=>2
+        'roleId'=>2,
+        'picture'=>'public/images/default_pic.png'
     );
 
     public function __construct(){
