@@ -16,7 +16,17 @@ class Role extends Data{
     const AUTHENTICATED_ID = 2;
     const ANONYMOUS_ID = 3;
 
-    public static $Roles = array('administrator','authenticated','anonymous');
+    public static $Roles = array('administrator','authenticated','anonymous', 'vip');
+
+    public static function getRoleNameById($roleId){
+        switch($roleId){
+            case 1 : return self::$Roles[0];
+            case 2: return self::$Roles[1];
+            case 3: return self::$Roles[2];
+            case 4: return self::$Roles[3];
+            default: return self::$Roles[2];
+        }
+    }
 
     //const VIP_USER = 4;
 
