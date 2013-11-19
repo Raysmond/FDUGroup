@@ -202,6 +202,22 @@ class UserController extends RController
         $this->layout = 'admin';
         $data = array();
 
+        if ($this->getHttpRequest()->isPostRequest()){
+            if (isset($_POST['checked_users'])) {
+                $selected = $_POST['checked_users'];
+                if (is_array($selected)) {
+                    $operation = ($_POST['operation_type'] === 'block' ? 0 : 1);
+                    foreach ($selected as $block_id) {
+                        $user = new User();
+                        $user->id = $block_id;
+                        $user->load();
+                        $user->status = $operation;
+                        $user->update();
+                    }
+                }
+            }
+        }
+
         $user = new User();
         $count = $user->count();
         $data['count'] = $count;

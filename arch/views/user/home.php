@@ -68,7 +68,7 @@
                     </div>
 
                     <div>
-                        <?=RHtmlHelper::linkAction('post','View','view',$topic['top_id'])?>&nbsp;|&nbsp;<?=RHtmlHelper::linkAction('post','Reply('.$topic['top_comment_count'].')','view',$topic['top_id'].'#reply')?>
+                        <?=RHtmlHelper::linkAction('post','Reply('.$topic['top_comment_count'].')','view',$topic['top_id'].'#reply')?>
                     </div>
 
                 </div>
@@ -114,8 +114,6 @@
                             html+='</div>'; //end of meta
                             html+='<div>'+item['topic_content']+'</div>';
                             html+='<div>';
-                            html+='<a title="View" href="'+item['topic_link']+'">View</a>';
-                            html+='&nbsp;|&nbsp;';
                             html+='<a href="'+item['topic_link']+'#reply" title="Reply post">Reply('+item['topic_reply_count']+')</a></div>';
                             html+='</div>'; //end of content
 

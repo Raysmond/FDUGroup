@@ -30,7 +30,7 @@ class FriendController extends RController {
         $friend->uid = $currentUserId;
         $friend->fid = $userId;
 
-        if ($friend->load() === null) {     //bug fixed by songrenchu: only new relationship need to be inserted
+        if (count($friend->find()) == 0) {     //bug fixed by songrenchu: only new relationship need to be inserted
             $friend->insert();
 
             $friend = new Friend();
@@ -42,7 +42,10 @@ class FriendController extends RController {
 
             $message = new Message();
             $message->sendMsg("system", $currentUserId, $userId, "Friend confirmed", $content, '');
-
+            $this->flash('message','Friends confirmed.');
+        }
+        else{
+            $this->flash('warning','You two are already friends.');
         }
         $this->redirectAction('message', 'view', null);
     }
