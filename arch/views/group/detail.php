@@ -12,6 +12,7 @@
     else if ($isManager){
         echo RHtmlHelper::linkAction('group', 'Manager: Edit group', 'edit', $group->id, array('class' => 'btn btn-xs btn-info'));
         echo '&nbsp;&nbsp;';echo RHtmlHelper::linkAction('group', 'Manager: Delete group', 'delete', $group->id, array('class' => 'btn btn-xs btn-danger'));
+        echo '&nbsp;&nbsp;';echo RHtmlHelper::linkAction('group','Invite friends', 'invite', $group->id,array('class' => 'btn btn-xs btn-info'));
     }
     else echo RHtmlHelper::linkAction('group', '- Exit group', 'exit', $group->id, array('class' => 'btn btn-xs btn-info'));
     ?>
