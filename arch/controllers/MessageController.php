@@ -117,7 +117,7 @@ class MessageController extends RController
             return;
         }
         $message->markRead($msgId);
-        $this->redirectAction('message', 'view', 'read');
+        $this->redirectAction('message', 'view', 'all');
     }
 
 

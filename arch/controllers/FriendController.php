@@ -9,14 +9,16 @@ class FriendController extends RController {
         /* TODO */
         $currentUserId = Rays::app()->getLoginUser()->id;
         $currentUserName = Rays::app()->getLoginUser()->name;
-        $content = "$currentUserName wants to be friends with you.<br/>" .
-            RHtmlHelper::link("Confirm", "Confirm", Rays::app()->getBaseUrl() . "/friend/confirm/$currentUserId") . "<br/>" .
-            RHtmlHelper::link("Decline", "Decline", Rays::app()->getBaseUrl() . "/friend/decline/$currentUserId");
+        if ($currentUserId !== $userId) {
+            $content = "$currentUserName wants to be friends with you.<br/>" .
+                RHtmlHelper::link("Confirm", "Confirm", Rays::app()->getBaseUrl() . "/friend/confirm/$currentUserId") . "<br/>" .
+                RHtmlHelper::link("Decline", "Decline", Rays::app()->getBaseUrl() . "/friend/decline/$currentUserId");
 
-        $message = new Message();
-        $message->sendMsg("system", $currentUserId, $userId, "Friend request", $content, '');
+            $message = new Message();
+            $message->sendMsg("system", $currentUserId, $userId, "Friend request", $content, '');
 
-        $this->redirectAction('user', 'view', $userId);
+            $this->redirectAction('user', 'view', $userId);
+        }
     }
 
     /* Confirm friend request */
@@ -51,5 +53,23 @@ class FriendController extends RController {
         $message->sendMsg("system", $currentUserId, $userId, "Friend request declined", $content, '');
 
         $this->redirectAction('message', 'view', null);
+    }
+
+    /* Cancel friend relationship */
+    public function actionCancel($userId = null) {
+        $currentUserId = Rays::app()->getLoginUser()->id;
+        $currentUserName = Rays::app()->getLoginUser()->name;
+
+        $friend = new Friend();
+        $friend->uid = $currentUserId;
+        $friend->fid = $userId;
+        $friend->delete();
+
+        $friend = new Friend();
+        $friend->uid = $userId;
+        $friend->fid = $currentUserId;
+        $friend->delete();
+
+        $this->redirectAction('user', 'view', $userId);
     }
 }

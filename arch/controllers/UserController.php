@@ -77,17 +77,19 @@ class UserController extends RController
         }
         $canEdit = false;
         $canAdd = false;
+        $canCancel = false;
         $currentUser = Rays::app()->getLoginUser();
         if ($currentUser != null) {
             $friend = new Friend();
             $friend->uid = $currentUser->id;
             $friend->fid = $user->id;
-            $canAdd = ($friend->load() == null);
+            $canAdd = ($friend->uid !== $friend->fid && count($friend->find()) == 0);    //who can add friend: bug fixed by songrenchu
+            $canCancel = ($friend->uid !== $friend->fid && !$canAdd);
             $canEdit = ($currentUser->id == $user->id);
         }
 
         $this->setHeaderTitle($user->name);
-        $this->render('view', array('user' => $user, 'canEdit' => $canEdit, 'canAdd' => $canAdd), false);
+        $this->render('view', array('user' => $user, 'canEdit' => $canEdit, 'canAdd' => $canAdd, 'canCancel' => $canCancel), false);
     }
 
     /**
@@ -151,6 +153,8 @@ class UserController extends RController
             if (isset($_POST['password']) && ($_POST['password'] != '')) {
                 array_push($config, array('field' => 'password', 'label' => 'New Password', 'rules' => 'trim|required|min_length[6]|max_length[20]'));
                 array_push($config, array('field' => 'password-confirm', 'label' => 'New Password Confirm', 'rules' => 'trim|required|min_length[6]|max_length[20]|equals[password]'));
+            } else {
+                $_POST['password'] = $user->password;
             }
 
             $validation = new RFormValidationHelper($config);
