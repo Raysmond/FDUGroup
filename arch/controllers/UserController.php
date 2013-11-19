@@ -235,6 +235,7 @@ class UserController extends RController
         foreach($friends as $friend){
             $ids[] = $friend->fid;
         }
+        $ids[] = $user->id;
 
 
         $topics = $topics->find(0,10,array('key'=>'top_id','order'=>'desc'),array(),array('userId'=>$ids));

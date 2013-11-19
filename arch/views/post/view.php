@@ -28,7 +28,7 @@ foreach ($commentTree as $commentItem) {
         <div><?= RHtmlHelper::decode($commentItem['root']->content) ?></div>
 
         <div style="float: right;">
-        <?= RHtmlHelper::linkAction('post', 'Reply', 'view', $commentItem['root']->topicId . '?reply=' . $commentItem['root']->id,array('class' => 'btn btn-xs btn-info')) ?>
+        <?= RHtmlHelper::linkAction('post', 'Reply', 'view', $commentItem['root']->topicId . '?reply=' . $commentItem['root']->id.'#reply',array('class' => 'btn btn-xs btn-info')) ?>
         </div>
 
         <?php

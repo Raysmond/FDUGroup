@@ -113,3 +113,6 @@ blockquote
 .topic-item .topic-content{
     width: 88.33333333333334%;
 }
+.topic-item .topic-meta{
+    color: gray;
+}

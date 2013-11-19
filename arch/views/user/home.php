@@ -5,7 +5,7 @@
 ?>
 <div class="row">
     <div class="col-lg-2">
-        <?=RHtmlHelper::showImage($user->picture,$user->name, array('width'=>'120px'))?>
+        <?=RHtmlHelper::showImage($user->picture,$user->name, array('class'=>'img-thumbnail','width'=>'120px'))?>
     </div>
     <div class="col-lg-10">
         <h2><?=$user->name?></h2>
@@ -33,7 +33,7 @@
     </div>
 
     <div class="col-lg-9">
-        <h2>Latest trends</h2>
+        <h2>Latest posts</h2>
         <?php
         foreach($topics as $topic){
             ?>
@@ -47,7 +47,8 @@
                 </div>
                 <div class="col-lg-10 topic-content">
                     <div><?=RHtmlHelper::linkAction('post',$topic->title,'view',$topic->id)?></div>
-                    <div><?=RHtmlHelper::linkAction('user',$topic->user->name,'view',$topic->user->id)?>
+                    <div class="topic-meta">
+                        <?=RHtmlHelper::linkAction('user',$topic->user->name,'view',$topic->user->id)?>
                         post in <?=RHtmlHelper::linkAction('group',$topic->group->name,'detail',$topic->groupId)?>
                         &nbsp;&nbsp;<?=$topic->createdTime?>
                     </div>
