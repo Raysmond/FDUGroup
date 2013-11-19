@@ -10,7 +10,12 @@
     <div class="col-lg-10">
         <h2><?=$user->name?></h2>
         <div><?=RHtmlHelper::decode($user->intro)?></div>
-        <div><?=$user->region?> | 微博: <?=RHtmlHelper::link($user->weibo,$user->weibo,$user->weibo)?></div>
+        <div><?=$user->region?>
+            <?php if ($user->weibo!='') { ?>
+                <?php if ($user->region!='') { ?>|<?php } ?>
+                微博: <?=RHtmlHelper::link($user->weibo,$user->weibo,$user->weibo)?>
+            <?php } ?>
+        </div>
     </div>
 </div>
 <hr>
@@ -63,7 +68,7 @@
                     </div>
 
                     <div>
-                        <?=RHtmlHelper::linkAction('post','Reply('.$topic['top_comment_count'].')','view',$topic['top_id'].'#reply')?>
+                        <?=RHtmlHelper::linkAction('post','View','view',$topic['top_id'])?>&nbsp;|&nbsp;<?=RHtmlHelper::linkAction('post','Reply('.$topic['top_comment_count'].')','view',$topic['top_id'].'#reply')?>
                     </div>
 
                 </div>
@@ -77,7 +82,7 @@
         <?php
         echo RFormHelper::openForm('user/home',array('id'=>'loadMorePostsForm'));
         echo RFormHelper::hidden(array('id'=>'last-loaded-time','name'=>'last-loaded-time','value'=>$topics[count($topics)-1]['top_created_time']));
-        echo RHtmlHelper::link('Load more posts','Load more posts',"javascript:loadMorePosts()",array('class'=>'btn btn-lg btn-primary btn-block'));
+        echo RHtmlHelper::link('Load more posts','Load more posts',"javascript:loadMorePosts()",array('class'=>'btn btn-lg btn-primary btn-block', 'id' => 'get_more_post_btn'));
         echo RFormHelper::endForm();
         ?>
         <script>
@@ -108,7 +113,10 @@
                             html+='&nbsp;&nbsp;'+item['topic_created_time'];
                             html+='</div>'; //end of meta
                             html+='<div>'+item['topic_content']+'</div>';
-                            html+='<div><a href="'+item['topic_link']+'#reply" title="Reply post">Reply('+item['topic_reply_count']+')</a></div>';
+                            html+='<div>';
+                            html+='<a title="View" href="'+item['topic_link']+'">View</a>';
+                            html+='&nbsp;|&nbsp;';
+                            html+='<a href="'+item['topic_link']+'#reply" title="Reply post">Reply('+item['topic_reply_count']+')</a></div>';
                             html+='</div>'; //end of content
 
                             html+='</div><hr>';
@@ -117,8 +125,9 @@
                             $('#latest-topics-list').append(html);
                             $('#last-loaded-time').val(json[json.length-1]['topic_created_time']);
                         }
-                        else{
-                            $('#latest-topics-list').append('<span style="color:red;">No more posts..</span>.<br/><br/>');
+                        else if (!$("#no_more_post").html()){
+                            $('#latest-topics-list').append('<span id="no_more_post" style="color:red;">No more posts..</span>.<br/><br/>');
+                            $('#get_more_post_btn').remove();
                         }
                     });
             }
