@@ -29,18 +29,21 @@ class FriendController extends RController {
         $friend = new Friend();
         $friend->uid = $currentUserId;
         $friend->fid = $userId;
-        $friend->insert();
 
-        $friend = new Friend();
-        $friend->uid = $userId;
-        $friend->fid = $currentUserId;
-        $friend->insert();
+        if ($friend->load() === null) {     //bug fixed by songrenchu: only new relationship need to be inserted
+            $friend->insert();
 
-        $content = "$currentUserName has accepted your friend request.";
+            $friend = new Friend();
+            $friend->uid = $userId;
+            $friend->fid = $currentUserId;
+            $friend->insert();
 
-        $message = new Message();
-        $message->sendMsg("system", $currentUserId, $userId, "Friend confirmed", $content, '');
+            $content = "$currentUserName has accepted your friend request.";
 
+            $message = new Message();
+            $message->sendMsg("system", $currentUserId, $userId, "Friend confirmed", $content, '');
+
+        }
         $this->redirectAction('message', 'view', null);
     }
 
