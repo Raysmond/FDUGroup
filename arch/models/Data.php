@@ -115,7 +115,19 @@ class Data
         if(!empty($assignment))
         {
             foreach ($assignment as $objCol => $value) {
-                $where .= " and " . $this->columns[$objCol] ." = $value";
+                if(is_array($value)){
+                    $where .= " and " . $this->columns[$objCol] . " in (";
+                    $count_value = count($value);
+                    $count_cur = 0;
+                    foreach($value as $val){
+                        $where .= $val;
+                        if($count_cur++<$count_value-1){
+                            $where .= ',';
+                        }
+                        else $where .= ')';
+                    }
+                }
+                else $where .= " and " . $this->columns[$objCol] ." = $value";
             }
         }
 
@@ -145,7 +157,7 @@ class Data
             $sql.=" LIMIT {$limit_start} , ".$limit_end;
         }
 
-        //print_r($sql);
+       // print_r($sql);
 
         DataConnector::getConnection();
         $rs = mysql_query($sql) or die(mysql_error());

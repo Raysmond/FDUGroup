@@ -9,7 +9,7 @@ class UserController extends RController
     public $layout = "index";
     public $defaultAction = "index";
     public $access = array(
-        Role::AUTHENTICATED => array('edit', 'logout'),
+        Role::AUTHENTICATED => array('edit', 'logout','home'),
         Role::ADMINISTRATOR=>array('admin'));
 
     /**
@@ -217,5 +217,29 @@ class UserController extends RController
         $data['pager'] = $pager;
 
         $this->render('admin',$data,false);
+    }
+
+    public function actionHome(){
+        $user = Rays::app()->getLoginUser();
+        $data = array('user'=>$user);
+
+        $friends = new Friend();
+        $friends->uid = $user->id;
+        $friends = $friends->find();
+
+        $topics = new Topic();
+        $ids = array();
+        foreach($friends as $friend){
+            $ids[] = $friend->fid;
+        }
+        $topics = $topics->find(0,10,array('key'=>'top_id','order'=>'desc'),array(),array('userId'=>$ids));
+        foreach($topics as $topic){
+            $topic->user = new User();
+            $topic->user->load($topic->userId);
+        }
+
+        $data['topics'] = $topics;
+
+        $this->render('home',$data,false);
     }
 }
