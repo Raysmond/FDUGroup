@@ -51,4 +51,20 @@ class Topic extends Data
         }
         return $result;
     }
+
+    public function getUserFriendsTopics($uid,$limit=0,$endTime=null){
+        $friends = new Friend();
+        $friends->uid = $uid;
+        $friends = $friends->find();
+
+        $topics = new Topic();
+        $ids = array();
+        foreach($friends as $friend){
+            $ids[] = $friend->fid;
+        }
+
+        if($limit!=0){
+
+        }
+    }
 }

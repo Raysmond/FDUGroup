@@ -203,23 +203,22 @@ class PostController extends RController {
     // access: author and administrator
     public function actionDelete($topicId)
     {
-        if(!isset($topicId)||$topicId==''||!is_numeric($topicId)){
+        if (!isset($topicId) || $topicId == '' || !is_numeric($topicId)) {
             Rays::app()->page404();
             return;
         }
         $topic = new Topic();
         $topic->load($topicId);
-        if(isset($topic->id)&&$topic->id!=''){
+        if (isset($topic->id) && $topic->id != '') {
             $comments = $topic->getComments();
-            foreach($comments as $comment)
+            foreach ($comments as $comment)
                 $comment->delete();
             $topic->delete();
-            $this->flash("message","Post ".$topic->title." was deleted.");
+            $this->flash("message", "Post " . $topic->title . " was deleted.");
+        } else {
+            $this->flash("error", "No such post.");
         }
-        else{
-            $this->flash("error","No such post.");
-        }
-        $this->redirectAction('group','view',Rays::app()->getLoginUser()->id);
+        $this->redirectAction('group', 'view', Rays::app()->getLoginUser()->id);
     }
 }
 

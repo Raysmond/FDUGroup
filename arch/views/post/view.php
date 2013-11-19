@@ -50,6 +50,7 @@ foreach ($commentTree as $commentItem) {
 
 
 <hr/>
+<div id="reply">
 <?= RFormHelper::openForm("post/comment/$topic->id", array('id' => 'viewFrom', 'class' => '.form-signin registerForm')) ?>
 <?=
 RFormHelper::textarea(array(
@@ -69,3 +70,4 @@ if (isset($parent)) {
 <br/>
 <?= RFormHelper::input(array('class' => 'btn btn-lg btn-primary btn-block', 'type' => 'submit', 'value' => 'Comment')) ?>
 <?= RFormHelper::endForm() ?>
+    </div>

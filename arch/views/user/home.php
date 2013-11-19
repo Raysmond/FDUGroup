@@ -9,6 +9,8 @@
     </div>
     <div class="col-lg-10">
         <h2><?=$user->name?></h2>
+        <div><?=RHtmlHelper::decode($user->intro)?></div>
+        <div><?=$user->region?> | 微博: <?=RHtmlHelper::link($user->weibo,$user->weibo,$user->weibo)?></div>
     </div>
 </div>
 <hr>
@@ -34,18 +36,21 @@
         <h2>Latest trends</h2>
         <?php
         foreach($topics as $topic){
-
             ?>
-            <div class="row">
-                <div class="col-lg-2">
+            <div class="row topic-item">
+                <div class="col-lg-2 topic-picture">
                     <?php if($topic->user->picture==''){
                         $topic->user->picture = User::$defaults['picture'];
                     }?>
                    <?=RHtmlHelper::showImage($topic->user->picture,$topic->user->name,array('width'=>'64px'))?>
 
                 </div>
-                <div class="col-lg-10">
-                    <div><?=RHtmlHelper::linkAction('user',$topic->user->name,'view',$topic->user->id)?> &nbsp;&nbsp;<?=$topic->createdTime?></div>
+                <div class="col-lg-10 topic-content">
+                    <div><?=RHtmlHelper::linkAction('post',$topic->title,'view',$topic->id)?></div>
+                    <div><?=RHtmlHelper::linkAction('user',$topic->user->name,'view',$topic->user->id)?>
+                        post in <?=RHtmlHelper::linkAction('group',$topic->group->name,'detail',$topic->groupId)?>
+                        &nbsp;&nbsp;<?=$topic->createdTime?>
+                    </div>
                     <div>
                         <?php
                         $topic->content = strip_tags(RHtmlHelper::decode($topic->content));
@@ -54,6 +59,11 @@
                         } else echo '<p>' . $topic->content . '</p>';
                         ?>
                     </div>
+
+                    <div>
+                        <?=RHtmlHelper::linkAction('post','Reply('.$topic->commentCount.')','view',$topic->id.'#reply')?>
+                    </div>
+
                 </div>
             </div>
             <hr>

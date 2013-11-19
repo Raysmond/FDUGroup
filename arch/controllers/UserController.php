@@ -219,6 +219,9 @@ class UserController extends RController
         $this->render('admin',$data,false);
     }
 
+    /**
+     * User home page
+     */
     public function actionHome(){
         $user = Rays::app()->getLoginUser();
         $data = array('user'=>$user);
@@ -232,10 +235,14 @@ class UserController extends RController
         foreach($friends as $friend){
             $ids[] = $friend->fid;
         }
+
+
         $topics = $topics->find(0,10,array('key'=>'top_id','order'=>'desc'),array(),array('userId'=>$ids));
         foreach($topics as $topic){
             $topic->user = new User();
             $topic->user->load($topic->userId);
+            $topic->group = new Group();
+            $topic->group->load($topic->groupId);
         }
 
         $data['topics'] = $topics;

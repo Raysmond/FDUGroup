@@ -105,3 +105,11 @@ blockquote
 .comment-item{
     padding: 10px 0 10px 0;
 }
+
+/* Home page */
+.topic-item .topic-picture{
+    width: 11.666666666666664%;
+}
+.topic-item .topic-content{
+    width: 88.33333333333334%;
+}
