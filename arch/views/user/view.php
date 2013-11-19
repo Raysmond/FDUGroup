@@ -16,6 +16,9 @@
         if ($canAdd) {
             echo RHtmlHelper::linkAction('friend', '+ Add friend', 'add', $user->id, array('class' => 'btn btn-success'));
         }
+        if ($canCancel) {
+            echo RHtmlHelper::linkAction('friend', '- Cancel friend', 'cancel', $user->id, array('class' => 'btn btn-success'));
+        }
         echo '<div class="clearfix"></div>';
         ?>
     </div>
