@@ -62,9 +62,45 @@ class Topic extends Data
         foreach($friends as $friend){
             $ids[] = $friend->fid;
         }
+        $ids[] = $uid;
+
+        $user = new User();
+        $group = new Group();
+
+        $sql = "SELECT * FROM {$topics->table} AS topic "
+            ."LEFT JOIN {$user->table} AS user on topic.{$topics->columns['userId']}=user.{$user->columns['id']} "
+            ."LEFT JOIN {$group->table} AS groups on groups.{$group->columns['id']}=topic.{$topics->columns['groupId']} ";
+
+        $where = " WHERE 1=1 ";
+        if(!empty($ids)){
+            $len = count($ids);
+            $count = 0;
+            $where .= "AND user.{$user->columns['id']} in (";
+            foreach($ids as $id){
+                $where.=$id;
+                if($count++<$len-1){
+                    $where.=",";
+                }
+                else{
+                    $where.=') ';
+                }
+            }
+        }
+
+
+        if($endTime!=null){
+            $where .="AND topic.{$topics->columns['createdTime']}<'{$endTime}' ";
+        }
+
+        $sql.=$where;
+
+        $sql.="ORDER BY topic.{$topics->columns['id']} DESC ";
 
         if($limit!=0){
-
+            $sql.="LIMIT ".$limit." ";
         }
+       // echo $sql;
+
+        return self::db_query($sql);
     }
 }

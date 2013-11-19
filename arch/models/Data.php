@@ -173,6 +173,16 @@ class Data
         return $result;
     }
 
+    public static function db_query($sql){
+        $result = array();
+        DataConnector::getConnection();
+        $rs = mysql_query($sql) or die(mysql_error());
+        while($row = mysql_fetch_assoc($rs)){
+            $result[] = $row;
+        }
+        return $result;
+    }
+
     public function count($like = array())
     {
         $result = array();
@@ -208,7 +218,6 @@ class Data
 
     public static function executeSQL($sql)
     {
-        //echo $sql.'<br/>';
         DataConnector::getConnection();
         mysql_query($sql) or die(mysql_error());
     }

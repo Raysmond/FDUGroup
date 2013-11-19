@@ -226,28 +226,43 @@ class UserController extends RController
         $user = Rays::app()->getLoginUser();
         $data = array('user'=>$user);
 
-        $friends = new Friend();
-        $friends->uid = $user->id;
-        $friends = $friends->find();
+
+        if($this->getHttpRequest()->getIsAjaxRequest()){
+            $topics = new Topic();
+            $lastLoadedTime = @$_POST['lastLoadedTime'];
+            $topics = $topics->getUserFriendsTopics($user->id,4,$lastLoadedTime!=''?$lastLoadedTime:null);
+            $result = array();
+            foreach($topics as $topic){
+                $json = array();
+                $json['user_name'] = $topic['u_name'];
+                $json['user_id'] = $topic['u_id'];
+                $json['topic_title'] = $topic['top_title'];
+                $json['user_picture'] = RHtmlHelper::siteUrl($topic['u_picture']);
+                $json['user_link'] = RHtmlHelper::siteUrl('user/view/'.$topic['u_id']);
+                $json['topic_link'] = RHtmlHelper::siteUrl('post/view/'.$topic['top_id']);
+                $json['group_name'] = $topic['gro_name'];
+                $json['group_id'] = $topic['gro_id'];
+                $json['group_link'] = RHtmlHelper::siteUrl('group/detail/'.$topic['gro_id']);
+                $json['topic_created_time'] = $topic['top_created_time'];
+                $json['topic_reply_count'] = $topic['top_comment_count'];
+                $topic['top_content'] = strip_tags(RHtmlHelper::decode($topic['top_content']));
+                if (mb_strlen($topic['top_content']) > 140) {
+                    $json['topic_content'] =  mb_substr($topic['top_content'], 0, 140,'UTF-8') . '...';
+                } else $json['topic_content'] = $topic['top_content'];
+                $result[] = $json;
+
+            }
+
+            echo json_encode($result);
+            exit;
+        }
 
         $topics = new Topic();
-        $ids = array();
-        foreach($friends as $friend){
-            $ids[] = $friend->fid;
-        }
-        $ids[] = $user->id;
-
-
-        $topics = $topics->find(0,10,array('key'=>'top_id','order'=>'desc'),array(),array('userId'=>$ids));
-        foreach($topics as $topic){
-            $topic->user = new User();
-            $topic->user->load($topic->userId);
-            $topic->group = new Group();
-            $topic->group->load($topic->groupId);
-        }
+        $topics = $topics->getUserFriendsTopics($user->id,4);
 
         $data['topics'] = $topics;
 
         $this->render('home',$data,false);
     }
+
 }

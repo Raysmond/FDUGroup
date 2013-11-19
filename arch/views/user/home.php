@@ -34,35 +34,36 @@
 
     <div class="col-lg-9">
         <h2>Latest posts</h2>
+        <div id="latest-topics-list">
         <?php
         foreach($topics as $topic){
             ?>
             <div class="row topic-item">
                 <div class="col-lg-2 topic-picture">
-                    <?php if($topic->user->picture==''){
-                        $topic->user->picture = User::$defaults['picture'];
+                    <?php if($topic['u_picture']==''){
+                        $topic['u_picture'] = User::$defaults['picture'];
                     }?>
-                   <?=RHtmlHelper::showImage($topic->user->picture,$topic->user->name,array('width'=>'64px'))?>
+                   <?=RHtmlHelper::showImage($topic['u_picture'],$topic['u_name'],array('width'=>'64px'))?>
 
                 </div>
                 <div class="col-lg-10 topic-content">
-                    <div><?=RHtmlHelper::linkAction('post',$topic->title,'view',$topic->id)?></div>
+                    <div><?=RHtmlHelper::linkAction('post',$topic['top_title'],'view',$topic['top_id'])?></div>
                     <div class="topic-meta">
-                        <?=RHtmlHelper::linkAction('user',$topic->user->name,'view',$topic->user->id)?>
-                        post in <?=RHtmlHelper::linkAction('group',$topic->group->name,'detail',$topic->groupId)?>
-                        &nbsp;&nbsp;<?=$topic->createdTime?>
+                        <?=RHtmlHelper::linkAction('user',$topic['u_name'],'view',$topic['u_id'])?>
+                        post in <?=RHtmlHelper::linkAction('group',$topic['gro_name'],'detail',$topic['gro_id'])?>
+                        &nbsp;&nbsp;<?=$topic['top_created_time']?>
                     </div>
                     <div>
                         <?php
-                        $topic->content = strip_tags(RHtmlHelper::decode($topic->content));
-                        if (mb_strlen($topic->content) > 140) {
-                            echo '<p>' . mb_substr($topic->content, 0, 140,'UTF-8') . '...</p>';
-                        } else echo '<p>' . $topic->content . '</p>';
+                        $topic['top_content'] = strip_tags(RHtmlHelper::decode($topic['top_content']));
+                        if (mb_strlen($topic['top_content']) > 140) {
+                            echo '<p>' . mb_substr($topic['top_content'], 0, 140,'UTF-8') . '...</p>';
+                        } else echo '<p>' . $topic['top_content'] . '</p>';
                         ?>
                     </div>
 
                     <div>
-                        <?=RHtmlHelper::linkAction('post','Reply('.$topic->commentCount.')','view',$topic->id.'#reply')?>
+                        <?=RHtmlHelper::linkAction('post','Reply('.$topic['top_comment_count'].')','view',$topic['top_id'].'#reply')?>
                     </div>
 
                 </div>
@@ -71,5 +72,53 @@
         <?php
         }
         ?>
+        </div><!--END last-topics-list-->
+
+        <?php
+        echo RFormHelper::openForm('user/home',array('id'=>'loadMorePostsForm'));
+        echo RFormHelper::hidden(array('id'=>'last-loaded-time','name'=>'last-loaded-time','value'=>$topics[count($topics)-1]['top_created_time']));
+        echo RHtmlHelper::link('Load more posts','Load more posts',"javascript:loadMorePosts()",array('class'=>'btn btn-lg btn-primary btn-block'));
+        echo RFormHelper::endForm();
+        ?>
+        <script>
+            function loadMorePosts(){
+                $.ajax({
+                    type: "POST",
+                    url: $('#loadMorePostsForm').attr('action'),
+                    data: { 'lastLoadedTime': $('#last-loaded-time').val() }
+                })
+                    .done(function( data ) {
+                        //alert(data);
+                        var json = eval('('+data+')');
+                        var html = '';
+                        for(var i=0;i<json.length;++i){
+                            var item = json[i];
+                            html+='<div class="row topic-item"><div class="col-lg-2 topic-picture">';
+                            html+='<img src="'+item['user_picture']+'" width="64px" title="'+item['user_name']+'" />';
+                            html+='</div>';
+
+                            html+='<div class="col-lg-10 topic-content">';
+
+                            html+='<div><a href="'+item['topic_link']+'" title="'+item['topic_title']+'">'
+                                +item['topic_title']+'</a></div>';
+
+                            html+='<div class="topic-meta">';
+                            html+='<a href="'+item['user_link']+'" title="'+item['user_name']+'">'+item['user_name']+'</a>';
+                            html+=' post in ' + '<a href="'+item['group_link']+'" title="'+item['group_name']+'">'+item['group_name']+'</a>';
+                            html+='&nbsp;&nbsp;'+item['topic_created_time'];
+                            html+='</div>'; //end of meta
+                            html+='<div>'+item['topic_content']+'</div>';
+                            html+='<div><a href="'+item['topic_link']+'#reply" title="Reply post">Reply('+item['topic_reply_count']+')</a></div>';
+                            html+='</div>'; //end of content
+
+                            html+='</div><hr>';
+                        }
+
+                        $('#latest-topics-list').append(html);
+                        $('#last-loaded-time').val(json[json.length-1]['topic_created_time']);
+                    });
+            }
+        </script>
     </div>
 </div>
+
