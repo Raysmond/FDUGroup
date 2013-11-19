@@ -226,7 +226,8 @@ class UserController extends RController
         $user = Rays::app()->getLoginUser();
         $data = array('user'=>$user);
 
-
+        // ajax request
+        // load more posts
         if($this->getHttpRequest()->getIsAjaxRequest()){
             $topics = new Topic();
             $lastLoadedTime = @$_POST['lastLoadedTime'];

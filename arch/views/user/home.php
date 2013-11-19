@@ -113,9 +113,13 @@
 
                             html+='</div><hr>';
                         }
-
-                        $('#latest-topics-list').append(html);
-                        $('#last-loaded-time').val(json[json.length-1]['topic_created_time']);
+                        if(html!=''){
+                            $('#latest-topics-list').append(html);
+                            $('#last-loaded-time').val(json[json.length-1]['topic_created_time']);
+                        }
+                        else{
+                            $('#latest-topics-list').append('<span style="color:red;">No more posts..</span>.<br/><br/>');
+                        }
                     });
             }
         </script>
