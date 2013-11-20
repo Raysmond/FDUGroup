@@ -20,7 +20,7 @@ class FriendController extends RController {
             //add friend sensor item
             $censor = new Censor();
             $censor->addFriendApplication($currentUserId, $userId);
-
+            $this->flash('message', 'Adding friend request has been sent.');
             $this->redirectAction('user', 'view', $userId);
         }
     }

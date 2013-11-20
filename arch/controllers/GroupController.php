@@ -10,7 +10,7 @@ class GroupController extends RController
     public $layout = "index";
     public $defaultAction = "index";
     public $access = array(
-        Role::AUTHENTICATED => array('view', 'build', 'edit', 'join', 'exit','delete'),
+        Role::AUTHENTICATED => array('view', 'build', 'edit', 'join', 'confirmJoin', 'exit','delete'),
         Role::ADMINISTRATOR => array('findAdmin','buildAdmin','admin'),
     );
 
@@ -211,7 +211,35 @@ class GroupController extends RController
         $this->render('edit', $data, false);
     }
 
-    public function actionJoin($groupId = null)
+    public function actionJoin($groupId) {  //by songrenchu: need censorship by group creator
+        $currentUserId = Rays::app()->getLoginUser()->id;
+        $currentUserName = Rays::app()->getLoginUser()->name;
+
+        $group = new Group();
+        $group->id = $groupId;
+        if ($group->load() !== null) {
+            //join group sensor item
+            $censor = new Censor();
+            $censor = $censor->joinGroupApplication($currentUserId, $group->id);
+
+            $content = "$currentUserName wants to join your group ".
+                RHtmlHelper::linkAction('group', $group->name, 'detail', $group->id)
+                ."<br/>" .
+                RHtmlHelper::link("Accept", "Accept", Rays::app()->getBaseUrl() . "/group/accept/{$censor->id}") . "<br/>" .
+                RHtmlHelper::link("Decline", "Decline", Rays::app()->getBaseUrl() . "/group/decline/{$censor->id}");
+
+            $message = new Message();
+            $message->sendMsg("group", $currentUserId, $group->creator, "Join group request", $content, '');
+
+            $this->flash('message', 'Joining group request has been sent.');
+        }
+        if(isset($_GET['returnurl']))
+            $this->redirect($_GET['returnurl']);
+        else
+            $this->redirectAction('group','find');
+    }
+
+    public function actionConfirmJoin($groupId = null)
     {
 
         $groupUser = new GroupUser();
