@@ -5,6 +5,7 @@
 ?>
 <div class="row">
     <div class="col-lg-2">
+        <?php if(!isset($user->picture)||$user->picture=='') $user->picture=User::$defaults['picture']; ?>
         <?=RHtmlHelper::showImage($user->picture,$user->name, array('class'=>'img-thumbnail','width'=>'120px'))?>
     </div>
     <div class="col-lg-10">

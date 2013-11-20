@@ -10,7 +10,7 @@ class GroupController extends RController
     public $layout = "index";
     public $defaultAction = "index";
     public $access = array(
-        Role::AUTHENTICATED => array('view', 'build', 'edit', 'join', 'exit','delete'),
+        Role::AUTHENTICATED => array('view', 'build', 'edit', 'join', 'exit','delete','invite'),
         Role::ADMINISTRATOR => array('findAdmin','buildAdmin','admin'),
     );
 
@@ -361,10 +361,10 @@ class GroupController extends RController
         $data['group'] = $group;
 
         $user = Rays::app()->getLoginUser();
-        if ($user == null)
-            return null;
+        $friendsInGroup = array();
         $friends = new Friend();
-        $friends = $friends->getFriends($user->id);
+        //$friends = $friends->getFriends($user->id,'',$friendsInGroup);
+        $friends = $friends->getFriendsToInvite($user->id,$groupId);
         $data['friends'] = $friends;
 
         if ($this->getHttpRequest()->isPostRequest()) {
