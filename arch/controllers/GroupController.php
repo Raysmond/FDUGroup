@@ -320,14 +320,28 @@ class GroupController extends RController
         $this->layout = 'admin';
         $data = array();
 
+        if($this->getHttpRequest()->isPostRequest()){
+            if(isset($_POST['checked_groups'])){
+                $checkedGroups = $_POST['checked_groups'];
+                //var_dump($checkedGroups);
+                foreach($checkedGroups as $group){
+                    if(!is_numeric($group)) break;
+                    $groupObj = new Group();
+                    $groupObj->id = $group;
+                    $groupObj->deleteGroup();
+                }
+            }
+        }
+
         $rows = new Group();
         $count = $rows->count();
         $data['count'] = $count;
 
         $curPage = $this->getHttpRequest()->getQuery('page',1);
-        $pageSize = 10;
+        $pageSize = 4;
         $groups = new Group();
-        $groups = $groups->find(($curPage-1)*$pageSize,$pageSize,array('key'=>$groups->columns["id"],"order"=>'desc'));
+        //$groups = $groups->find(($curPage-1)*$pageSize,$pageSize,array('key'=>$groups->columns["id"],"order"=>'desc'));
+        $groups = $groups->findAll(($curPage-1)*$pageSize,$pageSize,array('key'=>$groups->columns["id"],"order"=>'desc'));
         $data['groups'] = $groups;
 
         $pager = new RPagerHelper('page',$count,$pageSize,RHtmlHelper::siteUrl('group/admin'),$curPage);

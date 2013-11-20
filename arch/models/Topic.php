@@ -33,11 +33,13 @@ class Topic extends Data
 
     public function load($id = null)
     {
-        parent::load($id);
+        $result = parent::load($id);
+        if($result===null) return null;
         $this->user = new User();
         $this->user->id = $this->userId;
         $this->group = new Group();
         $this->group->id = $this->groupId;
+        return $this;
     }
 
     public function getComments()

@@ -123,4 +123,38 @@ class Group extends Data
         else
             return false;
     }
+
+    public function findAll($start,$pageSize,$order=array()){
+        $creator = new User();
+        $category = new Category();
+        $sql = "SELECT ".
+            "groups.{$this->columns['id']} AS group_id ".
+            ",groups.{$this->columns['name']} AS group_name ".
+            ",groups.{$this->columns['creator']} AS group_creator_id ".
+            ",groups.{$this->columns['memberCount']} AS group_member_count ".
+            ",groups.{$this->columns['picture']} AS group_picture ".
+            ",groups.{$this->columns['createdTime']} AS group_created_time ".
+            ",groups.{$this->columns['categoryId']} AS group_category_id ".
+            ",group_creator.{$creator->columns['name']} AS creator_name ".
+            ",group_category.{$category->columns['name']} AS category_name ".
+            "FROM {$this->table} AS groups ";
+        $sql.="LEFT JOIN {$creator->table} AS group_creator ON group_creator.{$creator->columns['id']}=groups.{$this->columns['creator']} ";
+        $sql.="LEFT JOIN {$category->table} AS group_category ON group_category.{$category->columns['id']}=groups.{$this->columns['categoryId']} ";
+        if(!empty($order)){
+            if(isset($order['key'])&&isset($this->columns[$order['key']])){
+                if(isset($order['order'])&&strcasecmp($order['order'],'desc')){
+                    $sql.=" ORDER BY {$this->columns[$order['key']]} DESC ";
+                }
+                else{
+                    $sql.=" ORDER BY {$this->columns[$order['key']]} ASC ";
+                }
+            }
+        }
+        $sql.="LIMIT {$start},{$pageSize}";
+        //$result = self::db_query($sql);
+        //echo $sql;
+        //return array();
+        $result = self::db_query($sql);
+        return $result;
+    }
 }

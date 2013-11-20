@@ -103,7 +103,11 @@ class PostController extends RController {
         }
 
         $topic = new Topic();
-        $topic->load($topicId);
+        $topic = $topic->load($topicId);
+        if($topic===null){
+            Rays::app()->page404();
+            return;
+        }
         $topic->user->load();
         $topic->group->load();
 

@@ -1,0 +1,35 @@
+<?php
+/**
+ * CommentController class file.
+ * @author: Raysmond
+ */
+
+class CommentController extends RController{
+    public $layout = "index";
+    public $defaultAction = "index";
+
+    public $access = array(
+        Role::ADMINISTRATOR=>array('admin'),
+    );
+
+    public function actionAdmin(){
+        $this->layout = 'admin';
+        $data = array();
+        $curPage = $this->getHttpRequest()->getQuery('page',1);
+        $pageSize = 5;
+
+        $rows = new Group();
+        $count = $rows->count();
+        $data['count'] = $count;
+
+        $comment = new Comment();
+        $comment = $comment->find(($curPage-1)*$pageSize,$pageSize,array('key'=>$comment->columns["id"],"order"=>'desc'));
+        $data['comments'] = $comment;
+
+        $pager = new RPagerHelper('page',$count,$pageSize,RHtmlHelper::siteUrl('comment/admin'),$curPage);
+        $pager = $pager->showPager();
+        $data['pager'] = $pager;
+
+        $this->render('admin',$data,false);
+    }
+} 

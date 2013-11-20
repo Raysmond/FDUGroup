@@ -15,7 +15,7 @@
             Users
             <div class="navbar-right">
                 <a class='btn btn-sm btn-danger' href="javascript:block_submit()">Block</a>
-                <a class='btn btn-sm btn-danger' href="javascript:active_submit()">Active</a>
+                <a class='btn btn-sm btn-success' href="javascript:active_submit()">Active</a>
                 <?=RFormHelper::hidden(array('id'=>'operation_type','name'=>'operation_type','value'=>'block'))?>
             </div>
         </div>
@@ -26,7 +26,7 @@
             <tr>
                 <?php
                 $skips = array('id', 'weibo', 'password', 'intro', 'credits', 'permission', 'privacy', 'picture');
-                echo '<th><input id="check-all" name="check-all" onclick="javascript:reverse();" type="checkbox" /></th>';
+                echo '<th><input id="check-all" name="check-all" onclick="javascript:checkReverse(\'checked_users[]\');" type="checkbox" /></th>';
                 foreach (User::$labels as $key => $label) {
                     if (in_array($key, $skips)) continue;
                     echo '<th>' . $label . '</th>';
@@ -71,35 +71,6 @@
 
 <?= (isset($pager) ? $pager : '') ?>
 <script>
-    var flag = false;
-
-    function reverse() {
-        if (!flag) {
-            checkAll('checked_users[]');
-        } else {
-            clearAll('checked_users[]');
-        }
-        flag = !flag;
-    }
-    function checkAll(name) {
-        var el = document.getElementsByTagName('input');
-        var len = el.length;
-        for(var i=0; i<len; i++) {
-            if((el[i].type=="checkbox") && (el[i].name==name)) {
-                el[i].checked = true;
-            }
-        }
-    }
-    function clearAll(name) {
-        var el = document.getElementsByTagName('input');
-        var len = el.length;
-        for(var i=0; i<len; i++) {
-            if((el[i].type=="checkbox") && (el[i].name==name)) {
-                el[i].checked = false;
-            }
-        }
-    }
-
     function block_submit() {
         $("#operation_type").val('block');
         $('#blockUserForm').submit();

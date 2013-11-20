@@ -144,7 +144,7 @@ $baseurl = Rays::app()->getBaseUrl();
                     </ul>
                 </li>
 
-                <li><a href="#">Comment</a></li>
+                <li><?=RHtmlHelper::linkAction('comment','Comment','admin')?></li>
 
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Messages <b class="caret"></b></a>

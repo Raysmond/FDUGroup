@@ -4,13 +4,13 @@
  * User: Raysmond
  */
 ?>
-
+<?=RFormHelper::openForm('group/admin',array('id'=>'groupAdminForm'))?>
 <div class="panel panel-default">
     <!-- Default panel contents -->
     <div class="panel-heading">
-        Users
+        Groups
         <div class="navbar-right">
-            <a class="btn btn-sm btn-danger" title="Delete" href="#">Delete</a>
+            <?=RFormHelper::input(array('type'=>'submit','value'=>'Delete','class'=>'btn btn-sm btn-danger'))?>
         </div>
     </div>
 
@@ -20,7 +20,7 @@
         <tr>
             <?php
             $skips = array("intro");
-            echo '<th><input id="check-all" name="check-all" onclick="#" type="checkbox" /></th>';
+            echo '<th><input id="check-all" name="check-all" onclick="javascript:checkReverse(\'checked_groups[]\')" type="checkbox" /></th>';
             foreach (Group::$labels as $key => $label) {
                 if (in_array($key, $skips)) continue;
                 echo '<th>' . $label . '</th>';
@@ -36,36 +36,21 @@
 
         foreach ($groups as $row) {
             echo '<tr>';
-            echo '<td><input name="checked_users" type="checkbox" /></td>';
-            foreach ($row->columns as $objCol => $dbcol) {
-                if (in_array($objCol, $skips)) continue;
-                echo '<td>';
-                switch ($objCol) {
-                    case "categoryId":
-                        $cat = new Category();$cat->load($row->$objCol);
-                        echo RHtmlHelper::linkAction('category',$cat->name,'groups',$cat->id);
-                        break;
-                    case "name":
-                        echo RHtmlHelper::linkAction('group', $row->$objCol, 'detail', $row->id);
-                        break;
-                    case "creator":
-                        $user = new User();$user->load($row->$objCol);
-                        echo RHtmlHelper::linkAction('user',$user->name,'view',$user->id);
-                        break;
-                    case "picture":
-                        if(isset($row->picture)&&$row->picture!='')
-                            echo RHtmlHelper::showImage($row->picture,$row->name,array("style"=>'width:64px;'));
-                        break;
-                    default:
-                        echo $row->$objCol;
-                }
-                echo '</td>';
-            }
+            echo '<td><input name="checked_groups[]" type="checkbox" value="'.$row['group_id'].'" /></td>';
+            echo '<td>'.$row['group_id'].'</td>';
+            echo '<td>'.RHtmlHelper::linkAction('user',$row['creator_name'],'view',$row['group_creator_id']).'</td>';
+            echo '<td>'.RHtmlHelper::linkAction('category',$row['category_name'],'groups',$row['group_category_id']).'</td>';
+            echo '<td>'.RHtmlHelper::linkAction('group', $row['group_name'], 'detail', $row['group_id']).'</td>';
+            echo '<td>'.$row['group_member_count'].'</td>';
+            echo '<td>'.$row['group_created_time'].'</td>';
+            if(isset($row['group_picture'])&&$row['group_picture']!='')
+                echo '<td>'.RHtmlHelper::showImage($row['group_picture'],$row['group_name'],array("style"=>'width:64px;')).'</td>';
             echo '</tr>';
         }
         ?>
         </tbody>
     </table>
 </div>
+<?=RFormHelper::endForm()?>
 
 <?= (isset($pager) ? $pager : '') ?>
