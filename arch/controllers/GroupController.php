@@ -274,12 +274,18 @@ class GroupController extends RController
 
         $group = new Group();
         $group->load($groupId);
-        $group->memberCount--;
-        $group->update();
 
-        $groupUser->delete();
+        // group creator cannot exit the group
+        if($group->creator==$groupUser->userId){
+            $this->flash("error", "You cannot exit group ".RHtmlHelper::linkAction('group',$group->name,'detail',$group->id)." , because you're the group creator!");
+        }
+        else{
+            $group->memberCount--;
+            $group->update();
+            $groupUser->delete();
+            $this->flash("message", "You have exited the group successfully.");
+        }
 
-        $this->flash("message", "You have exited the group successfully.");
         $this->redirectAction('group', 'view', Rays::app()->getLoginUser()->id);
 
     }
