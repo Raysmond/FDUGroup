@@ -85,10 +85,20 @@ class Data
         mysql_query($sql) or die(mysql_error());
     }
 
-    public function delete()
+    public function delete($assignment = array())
     {
         $key = $this->key;
-        $sql = "delete from {$this->table} where {$this->columns[$this->key]} = {$this->$key}";
+        if (!count($assignment)) {  // no columns, then delete by key
+            $sql = "delete from {$this->table} where {$this->columns[$this->key]} = {$this->$key}";
+        } else {                    //delete by column numbers
+            $sql = "delete from {$this->table} ";
+            $where = " where 1=1 ";
+            foreach ($assignment as $objCol => $value) {
+                $where .= " and " . $this->columns[$objCol] ." = $value";
+            }
+            $sql .= $where;
+        }
+
         DataConnector::getConnection();
         mysql_query($sql) or die(mysql_error());
     }

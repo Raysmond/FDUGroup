@@ -92,14 +92,10 @@ class FriendController extends RController {
         $currentUserName = Rays::app()->getLoginUser()->name;
 
         $friend = new Friend();
-        $friend->uid = $currentUserId;
-        $friend->fid = $userId;
-        $friend->delete();
+        $friend->delete(['uid' => $currentUserId, 'fid' => $userId]);
 
         $friend = new Friend();
-        $friend->uid = $userId;
-        $friend->fid = $currentUserId;
-        $friend->delete();
+        $friend->delete(['uid' => $userId, 'fid' => $currentUserId]);
 
         $this->redirectAction('user', 'view', $userId);
     }
