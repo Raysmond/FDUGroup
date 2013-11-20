@@ -53,9 +53,7 @@ class Censor extends Data{
                     $this->related = $this->secondId;
                     break;
                 case 'post_ads':
-                    /**
-                     * TO DO
-                     */
+                    /* TODO */
                     break;
             }
             return $this;
@@ -114,6 +112,20 @@ class Censor extends Data{
         $this->getTypeIdbyTypeName('add_friend');
         $this->firstId = $userFrom;
         $this->secondId = $userTo;
+        $this->status = self::UNPROCESS;
+        $result = $this->find();
+        return count($result) == 0 ? null : $result[0]->id;
+    }
+
+    public function joinGroupApplication($userId, $groupId) {       //join group application
+        $this->postApplication('join_group', $userId, $groupId);
+        return $this;
+    }
+
+    public function joinGroupExist($userId, $groupId) {    //join group request id if exist, or null is not exist
+        $this->getTypeIdbyTypeName('join_group');
+        $this->firstId = $userId;
+        $this->secondId = $groupId;
         $this->status = self::UNPROCESS;
         $result = $this->find();
         return count($result) == 0 ? null : $result[0]->id;

@@ -42,12 +42,18 @@ class Group extends Data
 
     public function load($id = null)
     {
-        parent::load($id);
-        $this->groupCreator = new User();
-        $this->groupCreator->id = $this->creator;
-        $this->groupUsers = array();
-        $this->category = new Category();
-        $this->category->id = $this->categoryId;
+        $result = parent::load($id);
+        if ($result !== null) {
+            $this->groupCreator = new User();
+            $this->groupCreator->id = $this->creator;
+            $this->groupUsers = array();
+            $this->category = new Category();
+            $this->category->id = $this->categoryId;
+            return $this;
+        } else {
+            return null;
+        }
+
     }
 
     public function groupUsers($limit=0, $orderby='', $order='ASC'){
