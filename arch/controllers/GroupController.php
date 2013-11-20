@@ -375,6 +375,7 @@ class GroupController extends RController
                 $content = RHtmlHelper::linkAction('user',Rays::app()->getLoginUser()->name,'view',Rays::app()->getLoginUser()->id).' invited you to join group '.RHtmlHelper::linkAction('group',$group->name,'detail',$groupId);
                 $content = $content.'&nbsp;&nbsp;'.RHtmlHelper::linkAction('group','Accept invitation', 'join', $groupId,array('class' => 'btn btn-xs btn-info'));
                 $content = $content.'</br>'.$invitationMsg;
+                $content = RHtmlHelper::encode($content);
                 $msg->sendMsg('group',Rays::app()->getLoginUser()->id,$friendId,'new group invitation',$content);
             }
             // show message
