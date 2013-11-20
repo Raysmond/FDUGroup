@@ -36,7 +36,7 @@ class CommentController extends RController
         $curPage = $this->getHttpRequest()->getQuery('page', 1);
         $pageSize = 5;
 
-        $rows = new Group();
+        $rows = new Comment();
         $count = $rows->count();
         $data['count'] = $count;
 

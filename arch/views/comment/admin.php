@@ -15,6 +15,7 @@
             <th>Create Time</th>
             <th>Topic</th>
             <th>Content</th>
+            <th>View</th>
         </tr>
         </thead>
         <tbody>
@@ -28,7 +29,8 @@
                 $comment['comment_content'] = mb_substr($comment['comment_content'], 0, 140, 'UTF-8') . '...';
             }
             echo '<td>' . RHtmlHelper::linkAction('post', $comment['topic_title'], 'view', $comment['comment_topic_id']) . '</td>';
-            echo '<td>', $comment['comment_content'] . '</td>';
+            echo '<td>'. $comment['comment_content'] . '</td>';
+            echo '<td>'. RHtmlHelper::linkAction('post','View','view',$comment['comment_topic_id'].'#comment-item-'.$comment['comment_id']). '</td>';
             echo '</tr>';
         }
         ?>

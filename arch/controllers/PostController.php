@@ -2,7 +2,8 @@
 
 class PostController extends RController {
     public $access = array(
-        Role::AUTHENTICATED=>array('new','list','edit','delete','comment')
+        Role::AUTHENTICATED=>array('new','list','edit','delete','comment'),
+        Role::ADMINISTRATOR=>array('admin')
     );
 
     /* List all topics belonging to a given group */
@@ -214,15 +215,51 @@ class PostController extends RController {
         $topic = new Topic();
         $topic->load($topicId);
         if (isset($topic->id) && $topic->id != '') {
-            $comments = $topic->getComments();
-            foreach ($comments as $comment)
-                $comment->delete();
-            $topic->delete();
+            $topic->deleteWithComment();
             $this->flash("message", "Post " . $topic->title . " was deleted.");
         } else {
             $this->flash("error", "No such post.");
         }
         $this->redirectAction('group', 'view', Rays::app()->getLoginUser()->id);
+    }
+
+    /**
+     * Topics administration
+     */
+    public function actionAdmin(){
+        $this->layout = 'admin';
+        $data = array();
+
+        // delete request
+        if($this->getHttpRequest()->isPostRequest()){
+            if(isset($_POST['checked_topics'])){
+                $checkedTopics = $_POST['checked_topics'];
+                foreach($checkedTopics as $item){
+                    if(!is_numeric($item)) return;
+                    else{
+                        $topic = new Topic();
+                        $topic->deleteWithComment($item);
+                    }
+                }
+            }
+        }
+
+        $curPage = $this->getHttpRequest()->getQuery('page', 1);
+        $pageSize = 5;
+
+        $rows = new Topic();
+        $count = $rows->count();
+        $data['count'] = $count;
+
+        $topics = new Topic();
+        $topics = $topics->adminFindAll(($curPage - 1) * $pageSize, $pageSize, array('key' => $topics->columns["id"], "order" => 'desc'));
+        $data['topics'] = $topics;
+
+        $pager = new RPagerHelper('page', $count, $pageSize, RHtmlHelper::siteUrl('post/admin'), $curPage);
+        $pager = $pager->showPager();
+        $data['pager'] = $pager;
+
+        $this->render('admin',$data,false);
     }
 }
 

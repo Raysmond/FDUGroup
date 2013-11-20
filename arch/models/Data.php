@@ -219,7 +219,6 @@ class Data
 
     public static function executeSQL($sql)
     {
-        echo $sql."<br/>";
         DataConnector::getConnection();
         mysql_query($sql) or die(mysql_error());
     }
