@@ -1,41 +1,40 @@
+<?=RFormHelper::openForm('comment/admin',array('id'=>'commentAdminForm'))?>
 <div class="panel panel-default">
     <!-- Default panel contents -->
     <div class="panel-heading">
         Comments
         <div class="navbar-right">
+            <?=RFormHelper::input(array('type'=>'submit','value'=>'Delete','class'=>'btn btn-sm btn-danger'))?>
         </div>
     </div>
     <table id="admin-comments" class="table">
         <thead>
         <tr>
-            <?php
-            $skips = array("intro");
-            echo '<th><input id="check-all" name="check-all" onclick="javascript:checkReverse(\'checked_comments[]\')" type="checkbox" /></th>';
-            foreach (Group::$labels as $key => $label) {
-                if (in_array($key, $skips)) continue;
-                echo '<th>' . $label . '</th>';
-            }
-            ?>
+            <?php echo '<th><input type="checkbox" id="check-all" onclick="javascript:checkReverse(\'checked_comments[]\')" /></th>'; ?>
+            <th>Author</th>
+            <th>Create Time</th>
+            <th>Topic</th>
+            <th>Content</th>
         </tr>
         </thead>
         <tbody>
         <?php
-
-        // That's bad to load user names and category names for each group
-        // Need to be fixed. It's better to add "join" support in the database models
-
-        foreach ($comments as $row) {
+        foreach($comments as $comment){
             echo '<tr>';
-            foreach($row as $objCol=>$dbCol){
-                echo '<td>';
-                echo $row->$objCol;
-                echo '</td>';
+            echo '<td>'.RFormHelper::input(array('name'=>'checked_comments[]','type'=>'checkbox','value'=>$comment['comment_id'])).'</td>';
+            echo '<td>'.RHtmlHelper::linkAction('user',$comment['user_name'],'view',$comment['comment_user_id']).'</td>';
+            echo '<td>'.$comment['comment_created_time'].'</td>';
+            if (mb_strlen($comment['comment_content']) > 140) {
+                $comment['comment_content'] =  mb_substr($comment['comment_content'], 0, 140,'UTF-8') . '...';
             }
+            echo '<td>'.RHtmlHelper::linkAction('post',$comment['topic_title'],'view',$comment['comment_topic_id']).'</td>';
+            echo '<td>',$comment['comment_content'].'</td>';
             echo '</tr>';
         }
         ?>
         </tbody>
     </table>
 </div>
+<?=RFormHelper::endForm()?>
 
-<?= (isset($pager) ? $pager : '') ?>
+<?= $pager ?>
