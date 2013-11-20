@@ -4,7 +4,7 @@
         <div class="panel-heading">
             Topics
             <div class="navbar-right">
-                <?= RFormHelper::input(array('type' => 'submit', 'value' => 'Delete', 'class' => 'btn btn-sm btn-danger')) ?>
+                <?= RFormHelper::input(array('type' => 'submit', 'value' => 'Delete', 'class' => 'btn btn-xs btn-danger')) ?>
             </div>
         </div>
         <table id="admin-topics" class="table">
