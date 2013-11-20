@@ -2,17 +2,12 @@
 /** invite friends to join the group 'i' created... */
 ?>
 <h2>
-    <?= $group->name ?>&nbsp;&nbsp;
-    <?php
-        echo RHtmlHelper::linkAction('group', 'Manager: Edit group', 'edit', $group->id, array('class' => 'btn btn-xs btn-info'));
-        echo '&nbsp;&nbsp;';echo RHtmlHelper::linkAction('group', 'Manager: Delete group', 'delete', $group->id, array('class' => 'btn btn-xs btn-danger'));
-        echo '&nbsp;&nbsp;';echo RHtmlHelper::linkAction('group','Invite friends', 'invite', $group->id,array('class' => 'btn btn-xs btn-info'));
-    ?>
+    <?= $group->name ?>
+    <?=RHtmlHelper::linkAction('group',"Return",'detail',$group->id,array('class'=>'btn btn-xs btn-info'))?>
 </h2>
 
 <?php
-    echo RFormHelper::openForm('group/invite/'.$group->id,array('id'=>'build-group-form',
-        'enctype'=>'multipart/form-data','class'=>'form-signin build-group-form'));
+    echo RFormHelper::openForm('group/invite/'.$group->id,array('id'=>'invite-group-form','class'=>'form-signin build-group-form'));
 ?>
     <div class="row"><br/>&nbsp;&nbsp;&nbsp;&nbsp;Select friends to invite:</div>
     <div class="panel panel-default">
@@ -20,7 +15,7 @@
             <div class="checkbox">
               <?php
               foreach($friends as $friend){
-                  echo '<div class="col-6 col-sm-6 col-lg-4">';
+                  echo '<div class="col-lg-4">';
                   echo '<label>'.RFormHelper::Input(array('type'=>'checkbox','name'=>'select_friends[]','value'=>$friend->id,'class'=>'btn btn-default')).$friend->name.'</label><br/>';
                   echo '</div>';
               }

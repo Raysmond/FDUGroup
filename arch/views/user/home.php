@@ -80,10 +80,15 @@
         </div><!--END last-topics-list-->
 
         <?php
-        echo RFormHelper::openForm('user/home',array('id'=>'loadMorePostsForm'));
-        echo RFormHelper::hidden(array('id'=>'last-loaded-time','name'=>'last-loaded-time','value'=>$topics[count($topics)-1]['top_created_time']));
-        echo RHtmlHelper::link('Load more posts','Load more posts',"javascript:loadMorePosts()",array('class'=>'btn btn-lg btn-primary btn-block', 'id' => 'get_more_post_btn'));
-        echo RFormHelper::endForm();
+        if(count($topics)>0){
+            echo RFormHelper::openForm('user/home',array('id'=>'loadMorePostsForm'));
+            echo RFormHelper::hidden(array('id'=>'last-loaded-time','name'=>'last-loaded-time','value'=>$topics[count($topics)-1]['top_created_time']));
+            echo RHtmlHelper::link('Load more posts','Load more posts',"javascript:loadMorePosts()",array('class'=>'btn btn-lg btn-primary btn-block', 'id' => 'get_more_post_btn'));
+            echo RFormHelper::endForm();
+        }
+        else{
+            echo 'No posts yet. ';
+        }
         ?>
         <script>
             function loadMorePosts(){
