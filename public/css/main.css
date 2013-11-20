@@ -107,7 +107,7 @@ blockquote
 }
 
 /* Home page */
-#latest-topics-list.topic-item .topic-picture{
+#latest-topics-list .topic-item .topic-picture{
     width: 11.666666666666664%;
 }
 #latest-topics-list .topic-item .topic-content{
@@ -116,7 +116,7 @@ blockquote
 .topic-item .topic-meta{
     color: gray;
 }
-#active-topics-list.topic-item .topic-picture{
+#active-topics-list .topic-item .topic-picture{
     width: 10.666666666666664%;
 }
 #active-topics-list .topic-item .topic-content{
