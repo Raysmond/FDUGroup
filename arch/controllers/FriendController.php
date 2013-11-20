@@ -10,10 +10,9 @@ class FriendController extends RController {
         $currentUserId = Rays::app()->getLoginUser()->id;
         $currentUserName = Rays::app()->getLoginUser()->name;
         if ($currentUserId !== $userId) {
-            $content = "$currentUserName wants to be friends with you.<br/>" .
-                RHtmlHelper::link("Confirm", "Confirm", Rays::app()->getBaseUrl() . "/friend/confirm/$currentUserId") . "<br/>" .
-                RHtmlHelper::link("Decline", "Decline", Rays::app()->getBaseUrl() . "/friend/decline/$currentUserId");
-
+            $content = RHtmlHelper::linkAction('user',$currentUserName,'view',$currentUserId)." wants to be friends with you.<br/>" .
+                RHtmlHelper::linkAction('friend','Confirm','confirm',$currentUserId,array('class'=>'btn btn-xs btn-success')).'&nbsp;&nbsp;'.
+                RHtmlHelper::linkAction('friend','Decline','decline',$currentUserId,array('class'=>'btn btn-xs btn-danger'));
             $message = new Message();
             $message->sendMsg("system", $currentUserId, $userId, "Friend request", $content, '');
 
@@ -50,7 +49,7 @@ class FriendController extends RController {
                 $friend->fid = $currentUserId;
                 $friend->insert();
 
-                $content = "$currentUserName has accepted your friend request.";
+                $content = RHtmlHelper::linkAction('user',$currentUserName,'view',$currentUserId)." has accepted your friend request.";
 
                 $message = new Message();
                 $message->sendMsg("system", $currentUserId, $userId, "Friend confirmed", $content, '');
@@ -78,7 +77,7 @@ class FriendController extends RController {
         } else {
             $censor->failCensor($cid);
 
-            $content = "$currentUserName has declined your friend request.";
+            $content = RHtmlHelper::linkAction('user',$currentUserName,'view',$currentUserId)." has declined your friend request.";
             $message = new Message();
             $message->sendMsg("system", $currentUserId, $userId, "Friend request declined", $content, '');
             $this->flash('message','Friend request declined.');
