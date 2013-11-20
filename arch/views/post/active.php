@@ -1,9 +1,9 @@
 <h1>Active topics</h1>
 <div>
-    <?= RHtmlHelper::linkAction('post', 'All', 'public', null, array('class' => 'btn btn-sm btn-success')) ?>
-    <?= RHtmlHelper::linkAction('post', 'Today', 'public', 'day', array('class' => 'btn btn-sm btn-success')) ?>
-    <?= RHtmlHelper::linkAction('post', 'This week', 'public', 'week', array('class' => 'btn btn-sm btn-success')) ?>
-    <?= RHtmlHelper::linkAction('post', 'This month', 'public', 'month', array('class' => 'btn btn-sm btn-success')) ?>
+    <?= RHtmlHelper::linkAction('post', 'All', 'active', null, array('class' => 'btn btn-sm btn-success')) ?>
+    <?= RHtmlHelper::linkAction('post', 'Today', 'active', 'day', array('class' => 'btn btn-sm btn-success')) ?>
+    <?= RHtmlHelper::linkAction('post', 'This week', 'active', 'week', array('class' => 'btn btn-sm btn-success')) ?>
+    <?= RHtmlHelper::linkAction('post', 'This month', 'active', 'month', array('class' => 'btn btn-sm btn-success')) ?>
     <br/><br/>
 </div>
 <div id="active-topics-list">

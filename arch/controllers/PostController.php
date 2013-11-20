@@ -3,7 +3,7 @@
 class PostController extends RController {
     public $access = array(
         Role::AUTHENTICATED=>array('new','list','edit','delete','comment'),
-        Role::ADMINISTRATOR=>array('admin')
+        Role::ADMINISTRATOR=>array('admin','active')
     );
 
     /* List all topics belonging to a given group */
@@ -204,8 +204,9 @@ class PostController extends RController {
         $this->redirectAction('post', 'view', $topicId);
     }
 
-    public function actionPublic($time = null)
+    public function actionActive($time = null)
     {
+        $this->layout = 'admin';
         $data = array();
         $topic = new Topic();
         $beginTime = null;
@@ -224,7 +225,7 @@ class PostController extends RController {
         }
         $topics = $topic->getActiveTopics($beginTime, 10);
         $data['topics'] = $topics;
-        $this->render('public', $data, false);
+        $this->render('active', $data, false);
     }
 
 

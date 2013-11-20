@@ -36,7 +36,6 @@ $baseurl = Rays::app()->getBaseUrl();
                 </li>
                 <li <?php echo($curUrl == 'site/about' ? 'class="active"' : ''); ?>><?php echo RHtmlHelper::linkAction("site", "About", "about", null); ?></li>
                 <li <?php echo($curUrl == 'site/contact' ? 'class="active"' : ''); ?>><?php echo RHtmlHelper::linkAction("site", "Contact", "contact", null); ?></li>
-                <li <?php echo ($curUrl=='post/public'?'class="active"':''); ?>><?php echo RHtmlHelper::linkAction("post","Topics","public", null); ?></li>
                 <li <?php echo($curUrl == 'group/find' ? 'class="active"' : ''); ?>><?php echo RHtmlHelper::linkAction("group", "Find Group", "find", null); ?></li>
                 <li <?php echo($this->getHttpRequest()->urlMatch('group/view/*') ? 'class="active"' : ''); ?>>
                     <?php echo RHtmlHelper::linkAction("group", "My Group", "view", Rays::app()->isUserLogin() ? Rays::app()->getLoginUser()->id : null); ?></li>
@@ -137,7 +136,15 @@ $baseurl = Rays::app()->getBaseUrl();
                     </ul>
                 </li>
 
-                <li><?=RHtmlHelper::linkAction('post','Topics','admin')?></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Topics <b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li><?=RHtmlHelper::linkAction('post','Topics','admin')?></li>
+                        <li><?=RHtmlHelper::linkAction('post','Active topics','active')?></li>
+                    </ul>
+                </li>
+
+
 
                 <li><?=RHtmlHelper::linkAction('comment','Comment','admin')?></li>
 
