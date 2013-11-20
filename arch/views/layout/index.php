@@ -35,9 +35,11 @@
                 <li <?php echo ($curUrl==''?'class="active"':''); ?>><a href="<?php echo $baseurl;?>">Home</a></li>
                 <li <?php echo ($curUrl=='site/about'?'class="active"':''); ?>><?php echo RHtmlHelper::linkAction("site","About","about", null); ?></li>
                 <li <?php echo ($curUrl=='site/contact'?'class="active"':''); ?>><?php echo RHtmlHelper::linkAction("site","Contact","contact", null); ?></li>
+                <li <?php echo ($curUrl=='post/public'?'class="active"':''); ?>><?php echo RHtmlHelper::linkAction("post","Topics","public", null); ?></li>
                 <li <?php echo ($curUrl=='group/find'?'class="active"':''); ?>><?php echo RHtmlHelper::linkAction("group","Find Group","find", null); ?></li>
                 <li <?php echo ($this->getHttpRequest()->urlMatch('group/view/*')?'class="active"':''); ?>>
                     <?php echo RHtmlHelper::linkAction("group","My Group","view", Rays::app()->isUserLogin()?Rays::app()->getLoginUser()->id:null); ?></li>
+
             </ul>
 
 

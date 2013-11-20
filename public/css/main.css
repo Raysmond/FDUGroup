@@ -107,12 +107,18 @@ blockquote
 }
 
 /* Home page */
-.topic-item .topic-picture{
+#latest-topics-list.topic-item .topic-picture{
     width: 11.666666666666664%;
 }
-.topic-item .topic-content{
+#latest-topics-list .topic-item .topic-content{
     width: 88.33333333333334%;
 }
 .topic-item .topic-meta{
     color: gray;
+}
+#active-topics-list.topic-item .topic-picture{
+    width: 10.666666666666664%;
+}
+#active-topics-list .topic-item .topic-content{
+    width: 89.33333333333334%;
 }

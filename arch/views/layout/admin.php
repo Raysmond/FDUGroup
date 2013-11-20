@@ -36,6 +36,7 @@ $baseurl = Rays::app()->getBaseUrl();
                 </li>
                 <li <?php echo($curUrl == 'site/about' ? 'class="active"' : ''); ?>><?php echo RHtmlHelper::linkAction("site", "About", "about", null); ?></li>
                 <li <?php echo($curUrl == 'site/contact' ? 'class="active"' : ''); ?>><?php echo RHtmlHelper::linkAction("site", "Contact", "contact", null); ?></li>
+                <li <?php echo ($curUrl=='post/public'?'class="active"':''); ?>><?php echo RHtmlHelper::linkAction("post","Topics","public", null); ?></li>
                 <li <?php echo($curUrl == 'group/find' ? 'class="active"' : ''); ?>><?php echo RHtmlHelper::linkAction("group", "Find Group", "find", null); ?></li>
                 <li <?php echo($this->getHttpRequest()->urlMatch('group/view/*') ? 'class="active"' : ''); ?>>
                     <?php echo RHtmlHelper::linkAction("group", "My Group", "view", Rays::app()->isUserLogin() ? Rays::app()->getLoginUser()->id : null); ?></li>
@@ -65,6 +66,7 @@ $baseurl = Rays::app()->getBaseUrl();
                     echo '</a>';
 
                     echo '<ul class="dropdown-menu">';
+                    echo "<li>".RHtmlHelper::linkAction("user","My Home Page","home")."</li>";
                     echo "<li>" . RHtmlHelper::linkAction("user", "My profile", "view", Rays::app()->getLoginUser()->id) . "</li>";
 
                     echo '<li role="presentation" class="divider"></li>';

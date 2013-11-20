@@ -204,6 +204,29 @@ class PostController extends RController {
         $this->redirectAction('post', 'view', $topicId);
     }
 
+    public function actionPublic($time = null)
+    {
+        $data = array();
+        $topic = new Topic();
+        $beginTime = null;
+        $date = date('Y-m-d');
+        switch ($time) {
+            case "day":
+                $beginTime = date('Y-m-d: 00:00:00');
+                break;
+            case "week":
+                $lastDay = date("Y-m-d", strtotime("$date Sunday"));
+                $beginTime = date("Y-m-d 00:00:00", strtotime("$lastDay -6 days"));
+                break;
+            case "month":
+                $beginTime = date("Y-m-01 00:00:00", strtotime($date));
+            default:
+        }
+        $topics = $topic->getActiveTopics($beginTime, 10);
+        $data['topics'] = $topics;
+        $this->render('public', $data, false);
+    }
+
 
     // access: author and administrator
     public function actionDelete($topicId)
