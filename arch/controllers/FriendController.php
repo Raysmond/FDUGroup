@@ -17,6 +17,10 @@ class FriendController extends RController {
             $message = new Message();
             $message->sendMsg("system", $currentUserId, $userId, "Friend request", $content, '');
 
+            //add friend sensor item
+            $censor = new Censor();
+            $censor->addFriendApplication($currentUserId, $userId);
+
             $this->redirectAction('user', 'view', $userId);
         }
     }
@@ -30,23 +34,33 @@ class FriendController extends RController {
         $friend->uid = $currentUserId;
         $friend->fid = $userId;
 
-        if (count($friend->find()) == 0) {     //bug fixed by songrenchu: only new relationship need to be inserted
-            $friend->insert();
+        //only request exist can friendship be built
+        $censor = new Censor();
+        $cid = $censor->addFriendExist($userId, $currentUserId);
 
-            $friend = new Friend();
-            $friend->uid = $userId;
-            $friend->fid = $currentUserId;
-            $friend->insert();
+        if ($cid === null) {
+            $this->flash('warning','Request already processed');
+        } else {
+            $censor->passCensor($cid);
+            if (count($friend->find()) == 0) {     //bug fixed by songrenchu: only new relationship need to be inserted
+                $friend->insert();
 
-            $content = "$currentUserName has accepted your friend request.";
+                $friend = new Friend();
+                $friend->uid = $userId;
+                $friend->fid = $currentUserId;
+                $friend->insert();
 
-            $message = new Message();
-            $message->sendMsg("system", $currentUserId, $userId, "Friend confirmed", $content, '');
-            $this->flash('message','Friends confirmed.');
+                $content = "$currentUserName has accepted your friend request.";
+
+                $message = new Message();
+                $message->sendMsg("system", $currentUserId, $userId, "Friend confirmed", $content, '');
+                $this->flash('message','Friends confirmed.');
+            }
+            else{
+                $this->flash('warning','You two are already friends.');
+            }
         }
-        else{
-            $this->flash('warning','You two are already friends.');
-        }
+
         $this->redirectAction('message', 'view', null);
     }
 
@@ -54,10 +68,21 @@ class FriendController extends RController {
     public function actionDecline($userId = null) {
         $currentUserId = Rays::app()->getLoginUser()->id;
         $currentUserName = Rays::app()->getLoginUser()->name;
-        $content = "$currentUserName has declined your friend request.";
-        $message = new Message();
-        $message->sendMsg("system", $currentUserId, $userId, "Friend request declined", $content, '');
 
+        //only request exist can friendship be declined
+        $censor = new Censor();
+        $cid = $censor->addFriendExist($userId, $currentUserId);
+
+        if ($cid === null) {
+            $this->flash('warning','Request already processed');
+        } else {
+            $censor->failCensor($cid);
+
+            $content = "$currentUserName has declined your friend request.";
+            $message = new Message();
+            $message->sendMsg("system", $currentUserId, $userId, "Friend request declined", $content, '');
+            $this->flash('message','Friend request declined.');
+        }
         $this->redirectAction('message', 'view', null);
     }
 
