@@ -10,7 +10,7 @@ class GroupController extends RController
     public $layout = "index";
     public $defaultAction = "index";
     public $access = array(
-        Role::AUTHENTICATED => array('view', 'build', 'edit', 'join', 'confirmJoin', 'exit','delete','invite'),
+        Role::AUTHENTICATED => array('view', 'build', 'edit', 'join', 'accept', 'decline', 'exit','delete','invite'),
         Role::ADMINISTRATOR => array('findAdmin','buildAdmin','admin'),
     );
 
@@ -222,14 +222,14 @@ class GroupController extends RController
             $censor = new Censor();
             $censor = $censor->joinGroupApplication($currentUserId, $group->id);
 
-            $content = "$currentUserName wants to join your group ".
+            $content = RHtmlHelper::linkAction('user',$currentUserName,'view',$currentUserId)." wants to join your group ".
                 RHtmlHelper::linkAction('group', $group->name, 'detail', $group->id)
                 ."<br/>" .
                 RHtmlHelper::link("Accept", "Accept", Rays::app()->getBaseUrl() . "/group/accept/{$censor->id}") . "<br/>" .
                 RHtmlHelper::link("Decline", "Decline", Rays::app()->getBaseUrl() . "/group/decline/{$censor->id}");
 
             $message = new Message();
-            $message->sendMsg("group", $currentUserId, $group->creator, "Join group request", $content, '');
+            $message->sendMsg("group", $groupId, $group->creator, "Join group request", $content, '');
 
             $this->flash('message', 'Joining group request has been sent.');
         }
@@ -239,28 +239,68 @@ class GroupController extends RController
             $this->redirectAction('group','find');
     }
 
-    public function actionConfirmJoin($groupId = null)
+    public function actionAccept($censorId = null)
     {
+        $censor = new Censor();
+        $censor->id = $censorId;
+        if ($censor->load() !==null) {
+            $groupUser = new GroupUser();
+            $groupUser->groupId = $censor->secondId;
+            $groupUser->userId = $censor->firstId;
+            date_default_timezone_set(Rays::app()->getTimeZone());
+            $groupUser->joinTime = date('Y-m-d H:i:s');
+            $groupUser->status = 1;
 
-        $groupUser = new GroupUser();
-        $groupUser->groupId = $groupId;
-        $groupUser->userId = Rays::app()->getLoginUser()->id;
-        date_default_timezone_set(Rays::app()->getTimeZone());
-        $groupUser->joinTime = date('Y-m-d H:i:s');
-        $groupUser->status = 1;
+            $gu = new GroupUser();
+            if(!$gu->isUserInGroup($groupUser->userId,$groupUser->groupId)){
+                $groupUser->insert();
+                $group = new Group();
+                $group->load($groupUser->groupId);
+                $group->memberCount++;
+                $group->update();
 
-        $gu = new GroupUser();
-        if(!$gu->isUserInGroup(Rays::app()->getLoginUser()->id,$groupId)){
-            $groupUser->insert();
-            $group = new Group();
-            $group->load($groupId);
-            $group->memberCount++;
-            $group->update();
+                $this->flash("message", "The request is processed.");
 
-            $this->flash("message", "Congratulations. You have joined the group successfully.");
-            $this->redirectAction('group', 'view', Rays::app()->getLoginUser()->id);
-        }else{
-            $this->flash("message","You are already a member.");
+                $content = 'Group creator has accepted your request of joining in group ' . RHtmlHelper::linkAction('group', $group->name, 'detail', $group->id);
+                $message = new Message();
+                $message->sendMsg("group", $group->id, $groupUser->userId, "Join group request accepted", $content, '');
+
+            }else{
+                $this->flash("message","TA is already a member of this group.");
+            }
+
+
+            $censor->passCensor($censorId);
+            $this->redirectAction('message','view');
+        }
+    }
+
+    public function actionDecline($censorId = null) {
+        $censor = new Censor();
+        $censor->id = $censorId;
+        if ($censor->load() !==null) {
+            $groupUser = new GroupUser();
+            $groupUser->groupId = $censor->secondId;
+            $groupUser->userId = $censor->firstId;
+            date_default_timezone_set(Rays::app()->getTimeZone());
+            $groupUser->joinTime = date('Y-m-d H:i:s');
+            $groupUser->status = 1;
+
+            $gu = new GroupUser();
+            if(!$gu->isUserInGroup($groupUser->userId,$groupUser->groupId)){
+                $this->flash("message", "The request is processed.");
+                $group = new Group();
+                $group->load($groupUser->groupId);
+
+                $content = 'Group creator have declined your request of joining in group ' . RHtmlHelper::linkAction('group', $group->name, 'detail', $group->id);
+                $message = new Message();
+                $message->sendMsg("group", $group->id, $groupUser->userId, "Join group request accepted", $content, '');
+            }else{
+                $this->flash("message","TA is already a member of this group.");
+            }
+
+
+            $censor->failCensor($censorId);
             $this->redirectAction('message','view');
         }
     }
