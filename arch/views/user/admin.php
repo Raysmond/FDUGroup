@@ -14,15 +14,16 @@
         <div class="panel-heading">
             Users
             <div class="navbar-right">
-                <div class="input-group" style="width: 300px;margin-top: -6px;">
-                    <?=RFormHelper::input(array('name'=>'search','class'=>'form-control','placeholder'=>'filter users','value'=>(isset($filterStr)?$filterStr:"")))?>
-                    <span class="input-group-btn">
+                <div class="input-group" style="margin-top: -6px;">
+                    <?=RFormHelper::input(array('name'=>'search','class'=>'form-control','style'=>'width:200px;','placeholder'=>'filter users','value'=>(isset($filterStr)?$filterStr:"")))?>
+                    <div style="float:right; position: relative;">
                         <button class="btn btn-default" type="submit">Go!</button>
                         &nbsp;&nbsp;
                         <a class='btn btn-xs btn-danger' href="javascript:block_submit()">Block</a>
+                        &nbsp;&nbsp;
                         <a class='btn btn-xs btn-success' href="javascript:active_submit()">Active</a>
                         <?=RFormHelper::hidden(array('id'=>'operation_type','name'=>'operation_type','value'=>'block'))?>
-                   </span>
+                   </div>
                 </div>
             </div>
         </div>

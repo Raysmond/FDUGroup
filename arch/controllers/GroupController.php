@@ -225,8 +225,8 @@ class GroupController extends RController
             $content = RHtmlHelper::linkAction('user',$currentUserName,'view',$currentUserId)." wants to join your group ".
                 RHtmlHelper::linkAction('group', $group->name, 'detail', $group->id)
                 ."<br/>" .
-                RHtmlHelper::link("Accept", "Accept", Rays::app()->getBaseUrl() . "/group/accept/{$censor->id}") . "<br/>" .
-                RHtmlHelper::link("Decline", "Decline", Rays::app()->getBaseUrl() . "/group/decline/{$censor->id}");
+                RHtmlHelper::link("Accept", "Accept", Rays::app()->getBaseUrl() . "/group/accept/{$censor->id}",array('class'=>'btn btn-xs btn-success'))."&nbsp;&nbsp;".
+                RHtmlHelper::link("Decline", "Decline", Rays::app()->getBaseUrl() . "/group/decline/{$censor->id}",array('class'=>'btn btn-xs btn-danger'));
 
             $message = new Message();
             $message->sendMsg("group", $groupId, $group->creator, "Join group request", $content, '');
@@ -266,7 +266,7 @@ class GroupController extends RController
                 $message->sendMsg("group", $group->id, $groupUser->userId, "Join group request accepted", $content, '');
 
             }else{
-                $this->flash("message","TA is already a member of this group.");
+                $this->flash("warning","TA is already a member of this group.");
             }
 
 
@@ -296,7 +296,7 @@ class GroupController extends RController
                 $message = new Message();
                 $message->sendMsg("group", $group->id, $groupUser->userId, "Join group request accepted", $content, '');
             }else{
-                $this->flash("message","TA is already a member of this group.");
+                $this->flash("warning","TA is already a member of this group.");
             }
 
 

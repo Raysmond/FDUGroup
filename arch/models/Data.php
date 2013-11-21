@@ -139,10 +139,10 @@ class Data
             $first = true;
             foreach($like as $val)
             {
-                if(isset($val['key'])&&isset($val['value']))
+                if(isset($val['key'])&&isset($val['value'])&&isset($this->columns[$val['key']]))
                 {
                     if(!$first) $where.=" or ";
-                    $where.= "  ".$val['key']." like '".$val['value']."' ";
+                    $where.= "  ".$this->columns[$val['key']]." like '%".$val['value']."%' ";
                     $first = false;
                 }
             }
