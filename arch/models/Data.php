@@ -104,14 +104,6 @@ class Data
     }
 
 
-    /**
-     * Find records that meet requirements
-     * @param int $limit_start
-     * @param int $limit_end
-     * @param array $order should be like array('key'=>'key_col','order'=>'asc or desc')
-     * @param array $like
-     * @return array
-     */
     public function find($limit_start=0,$limit_end=0,$order=array(),$like=array(), $assignment = array())
     {
         $result = array();
@@ -200,10 +192,10 @@ class Data
             $first = true;
             foreach($like as $val)
             {
-                if(isset($val['key'])&&isset($val['value']))
+                if(isset($val['key'])&&isset($val['value'])&&isset($this->columns[$val['key']]))
                 {
                     if(!$first) $where.=" or ";
-                    $where.= "  ".$val['key']." like '".$val['value']."' ";
+                    $where.= "  ".$this->columns[$val['key']]." like '%".$val['value']."%' ";
                     $first = false;
                 }
             }

@@ -10,7 +10,14 @@
     <div class="panel-heading">
         Groups
         <div class="navbar-right">
-            <input type="submit" onclick="return confirm('Are you sure to delete selected groups?')" value="Delete" class="btn btn-xs btn-danger" />
+            <div class="input-group" style="width: 300px;margin-top: -6px;">
+                <?=RFormHelper::input(array('name'=>'search','class'=>'form-control','placeholder'=>'filter groups','value'=>(isset($filterStr)?$filterStr:"")))?>
+              <span class="input-group-btn">
+                  <button class="btn btn-default" type="submit">Go!</button>
+                  &nbsp;&nbsp;
+                  <input type="submit" onclick="return confirm('Are you sure to delete selected groups?')" value="Delete" class="btn btn-xs btn-danger" />
+              </span>
+            </div>
         </div>
     </div>
 

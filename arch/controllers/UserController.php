@@ -231,17 +231,32 @@ class UserController extends RController
             }
         }
 
+        $filterStr = $this->getHttpRequest()->getParam('search',null);
+
+        $like = array();
+        if($filterStr!=null){
+            $data['filterStr'] = $filterStr;
+            if (($str = trim($filterStr))!='') {
+                $names = explode(' ', $str);
+                foreach ($names as $val) {
+                    array_push($like, array('key' => 'name', 'value' => $val));
+                }
+            }
+        }
+
         $user = new User();
-        $count = $user->count();
+        $count = $user->count($like);
         $data['count'] = $count;
 
         $curPage = $this->getHttpRequest()->getQuery('page',1);
-        $pageSize = 10;
+        $pageSize = (isset($_GET['pagesize'])&&is_numeric($_GET['pagesize']))?$_GET['pagesize'] : 10;
         $users = new User();
-        $users = $users->find(($curPage-1)*$pageSize,$pageSize,array('key'=>$users->columns["id"],"order"=>'desc'));
+        $users = $users->find(($curPage-1)*$pageSize,$pageSize,array('key'=>$users->columns["id"],"order"=>'desc'),$like);
         $data['users'] = $users;
 
-        $pager = new RPagerHelper('page',$count,$pageSize,RHtmlHelper::siteUrl('user/admin'),$curPage);
+        $url = RHtmlHelper::siteUrl('group/admin');
+        if($filterStr!=null) $url .= '?search='.urlencode(trim($filterStr));
+        $pager = new RPagerHelper('page',$count,$pageSize,$url,$curPage);
         $pager = $pager->showPager();
         $data['pager'] = $pager;
 

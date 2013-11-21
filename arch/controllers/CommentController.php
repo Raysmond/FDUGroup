@@ -34,19 +34,19 @@ class CommentController extends RController
         }
 
         $curPage = $this->getHttpRequest()->getQuery('page', 1);
-        $pageSize = 5;
+        $pageSize = (isset($_GET['pagesize'])&&is_numeric($_GET['pagesize']))?$_GET['pagesize']:5;
 
         $rows = new Comment();
         $count = $rows->count();
         $data['count'] = $count;
 
         $comment = new Comment();
-        $comment = $comment->findAll(($curPage - 1) * $pageSize, $pageSize, array('key' => $comment->columns["id"], "order" => 'desc'));
+        $comment = $comment->findAll(($curPage - 1) * $pageSize, $pageSize,
+            array('key' => $comment->columns["id"], "order" => 'desc'));
         $data['comments'] = $comment;
 
         $pager = new RPagerHelper('page', $count, $pageSize, RHtmlHelper::siteUrl('comment/admin'), $curPage);
-        $pager = $pager->showPager();
-        $data['pager'] = $pager;
+        $data['pager'] = $pager->showPager();
 
         $this->render('admin', $data, false);
     }

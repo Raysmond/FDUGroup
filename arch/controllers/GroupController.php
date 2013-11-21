@@ -34,7 +34,7 @@ class GroupController extends RController
         if (isset($group->name) && $group->name != '') {
             $names = explode(' ', $group->name);
             foreach ($names as $val) {
-                array_push($like, array('key' => 'gro_name', 'value' => '%' . $val . '%'));
+                array_push($like, array('key' => 'name', 'value' => $val));
             }
             $group = new Group();
         }
@@ -396,9 +396,8 @@ class GroupController extends RController
 
         if($this->getHttpRequest()->isPostRequest()){
             if(isset($_POST['checked_groups'])){
-                $checkedGroups = $_POST['checked_groups'];
-                //var_dump($checkedGroups);
-                foreach($checkedGroups as $group){
+                $groups = $_POST['checked_groups'];
+                foreach($groups as $group){
                     if(!is_numeric($group)) break;
                     $groupObj = new Group();
                     $groupObj->id = $group;
@@ -407,20 +406,34 @@ class GroupController extends RController
             }
         }
 
+        $filterStr = $this->getHttpRequest()->getParam('search',null);
+
+        $like = array();
+        if($filterStr!=null){
+            $data['filterStr'] = $filterStr;
+            if (($str = trim($filterStr))!='') {
+                $names = explode(' ', $str);
+                foreach ($names as $val) {
+                    array_push($like, array('key' => 'name', 'value' => $val));
+                }
+            }
+        }
+
         $rows = new Group();
-        $count = $rows->count();
+        $count = $rows->count($like);
         $data['count'] = $count;
 
         $curPage = $this->getHttpRequest()->getQuery('page',1);
-        $pageSize = 4;
+        $pageSize = (isset($_GET['pagesize'])&&is_numeric($_GET['pagesize']))?$_GET['pagesize'] : 4;
         $groups = new Group();
-        //$groups = $groups->find(($curPage-1)*$pageSize,$pageSize,array('key'=>$groups->columns["id"],"order"=>'desc'));
-        $groups = $groups->findAll(($curPage-1)*$pageSize,$pageSize,array('key'=>$groups->columns["id"],"order"=>'desc'));
-        $data['groups'] = $groups;
+        $data['groups'] = $groups->findAll(($curPage-1)*$pageSize,$pageSize,array('key'=>'id',"order"=>'desc'),array(),$like);;
 
-        $pager = new RPagerHelper('page',$count,$pageSize,RHtmlHelper::siteUrl('group/admin'),$curPage);
-        $pager = $pager->showPager();
-        $data['pager'] = $pager;
+        $url = RHtmlHelper::siteUrl('group/admin');
+        if($filterStr!=null) $url .= '?search='.urlencode(trim($filterStr));
+
+        // pager
+        $pager = new RPagerHelper('page',$count,$pageSize,$url,$curPage);
+        $data['pager'] = $pager->showPager();
 
         $this->render('admin',$data,false);
     }
