@@ -11,7 +11,7 @@
         <div class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
                 <li <?php echo ($curUrl==''?'class="active"':''); ?>>
-                    <a href="<?php echo $baseurl;?>">Home</a>
+                    <a href="<?php echo $baseUrl;?>">Home</a>
                 </li>
 
                 <li <?php echo ($curUrl=='site/about'?'class="active"':''); ?>>

@@ -19,6 +19,10 @@ class RHtmlHelper
         return htmlspecialchars_decode($content, ENT_QUOTES);
     }
 
+    public static function getPlainText($html){
+        return strip_tags($html);
+    }
+
     public static function tryCleanLink($link)
     {
         if (Rays::app()->isCleanUri())

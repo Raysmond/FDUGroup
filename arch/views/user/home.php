@@ -36,7 +36,11 @@
                         </div>
 
                         <div>
-                            <?= RHtmlHelper::linkAction('post', 'Reply(' . $topic['top_comment_count'] . ')', 'view', $topic['top_id'] . '#reply',array('class'=>'btn btn-xs btn-info')) ?>
+                            <?= RHtmlHelper::linkAction(
+                                'post',
+                                'Reply(' . $topic['top_comment_count'] . ')',
+                                'view', $topic['top_id'] . '#reply',
+                                array('class'=>'btn btn-xs btn-info')) ?>
                         </div>
 
                     </div>
@@ -51,8 +55,16 @@
         <?php
         if (count($topics) > 0) {
             echo RFormHelper::openForm('user/home', array('id' => 'loadMorePostsForm'));
-            echo RFormHelper::hidden(array('id' => 'last-loaded-time', 'name' => 'last-loaded-time', 'value' => $topics[count($topics) - 1]['top_created_time']));
-            echo RHtmlHelper::link('Load more posts', 'Load more posts', "javascript:loadMorePosts()", array('class' => 'btn btn-lg btn-primary btn-block', 'id' => 'get_more_post_btn'));
+            echo RFormHelper::hidden(array(
+                'id' => 'last-loaded-time',
+                'name' => 'last-loaded-time',
+                'value' => $topics[count($topics) - 1]['top_created_time'])
+            );
+            echo RHtmlHelper::link(
+                'Load more posts',
+                'Load more posts',
+                "javascript:loadMorePosts()",
+                array('class' => 'btn btn-lg btn-primary btn-block', 'id' => 'get_more_post_btn'));
             echo RFormHelper::endForm();
         } else {
             echo 'No posts yet. ';
@@ -89,7 +101,7 @@
                     html += '</div>'; //end of meta
                     html += '<div>' + item['topic_content'] + '</div>';
                     html += '<div>';
-                    html += '<a href="' + item['topic_link'] + '#reply" title="Reply post">Reply(' + item['topic_reply_count'] + ')</a></div>';
+                    html += '<a class="btn btn-xs btn-info" href="' + item['topic_link'] + '#reply" title="Reply post">Reply(' + item['topic_reply_count'] + ')</a></div>';
                     html += '</div>'; //end of content
 
                     html += '</div><hr>';
