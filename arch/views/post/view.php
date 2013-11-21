@@ -2,7 +2,8 @@
 <div>
     Post by: <?= RHtmlHelper::linkAction('user', $topic->user->name, 'view', $topic->user->id) ?>
     &nbsp;&nbsp;Post in group: <?= RHtmlHelper::linkAction('group', $topic->group->name, 'detail', $topic->group->id) ?>
-    &nbsp;&nbsp;&nbsp;&nbsp;<?= $topic->createdTime ?>
+    &nbsp;&nbsp;<?=$counter->totalCount?> reads
+    &nbsp;&nbsp;<?= $topic->createdTime ?>
 </div>
 
 <div>

@@ -11,6 +11,8 @@ class Topic extends Data
 
     public $id, $groupId, $userId, $title, $createdTime, $content, $lastCommentTime, $commentCount;
 
+    public static $entityType = 1;
+
     public function __construct()
     {
         $option = array(
@@ -40,6 +42,14 @@ class Topic extends Data
         $this->group = new Group();
         $this->group->id = $this->groupId;
         return $this;
+    }
+
+    public function increaseCounter(){
+        if(isset($this->id)&&$this->id!=''){
+            $counter = new Counter();
+            $counter->increaseCounter($this->id,self::$entityType);
+            return $counter;
+        }
     }
 
     public function getComments()

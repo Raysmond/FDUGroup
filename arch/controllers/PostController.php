@@ -104,11 +104,13 @@ class PostController extends RController {
         }
 
         $topic = new Topic();
-        $topic = $topic->load($topicId);
-        if($topic===null){
+        $result = $topic->load($topicId);
+        if($result===null){
             Rays::app()->page404();
             return;
         }
+
+        $counter = $topic->increaseCounter();
         $topic->user->load();
         $topic->group->load();
 
@@ -123,7 +125,7 @@ class PostController extends RController {
             }
         }
         $this->setHeaderTitle($topic->title);
-        $data = array("topic" => $topic, "commentTree" => $commentTree);
+        $data = array("topic" => $topic, "commentTree" => $commentTree,'counter'=>$counter);
 
         $replyTo = $this->getHttpRequest()->getParam('reply',null);
         if($replyTo&&is_numeric($replyTo)){
@@ -132,7 +134,6 @@ class PostController extends RController {
             $comment->user->load();
             $data['parent'] = $comment;
         }
-
         $this->render("view", $data, false);
 
     }

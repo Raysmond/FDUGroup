@@ -29,7 +29,8 @@ class Counter extends Data{
         $result = parent::load($id);
         if($result===null) return null;
         $this->entityType = new EntityType();
-        $this->entityType->load($this->entityTypeId);
+        $this->entityType->typeId = $this->entityTypeId;
+        if($this->checkCounter()) $this->update();
         return $this;
     }
 
@@ -43,7 +44,8 @@ class Counter extends Data{
             }
             else{
                 $result[0]->entityType = new EntityType();
-                $result[0]->entityType->load($this->entityTypeId);
+                $result[0]->entityType->typeId = $this->entityTypeId;
+                if($this->checkCounter()) $this->update();
                 return $result[0];
             }
         }
@@ -55,34 +57,42 @@ class Counter extends Data{
             $this->entityTypeId = $entityTypeId;
             $result = $this->find();
             if($result===null||count($result)==0){
-                return false;
+                $this->timestamp = date('Y-m-d H:i:s');
+                $this->totalCount = 1;
+                $this->dayCount = 1;
+                $this->weekCount = 1;
+                $this->insert();
             }
             else{
                 $result = $result[0];
-                foreach($this->columns as $col){
+                foreach($this->columns as $col=>$dbCol){
                     $this->$col = $result->$col;
                 }
                 $this->checkCounter();
                 $this->totalCount++;
                 $this->dayCount++;
                 $this->weekCount++;
+                $this->timestamp = date('Y-m-d H:i:s');
                 $this->update();
-                return true;
             }
         }
     }
 
     public function checkCounter(){
+        $needToUpdate = false;
         if(isset($this->timestamp)){
             $today = date('Y-m-d 00:00:00');
             if($this->timestamp<$today){
                 $this->dayCount = 0;
+                $needToUpdate = true;
             }
             $lastDay = date("Y-m-d",strtotime("$today Sunday"));
             $firstDay = date("Y-m-d 00:00:00",strtotime("$lastDay -6 days"));
             if($this->timestamp<$firstDay){
                 $this->weekCount = 0;
+                $needToUpdate = true;
             }
         }
+        return $needToUpdate;
     }
 } 

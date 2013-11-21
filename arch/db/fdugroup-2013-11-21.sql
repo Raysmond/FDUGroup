@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2013 年 11 月 21 日 09:17
+-- 生成日期: 2013 年 11 月 21 日 10:58
 -- 服务器版本: 5.5.31
 -- PHP 版本: 5.4.16
 
@@ -162,6 +162,32 @@ INSERT INTO `group_comment` (`com_id`, `com_pid`, `top_id`, `u_id`, `com_created
 (11, 0, 5, 2, '2013-11-19 01:51:54', 'hello2'),
 (12, 9, 5, 2, '2013-11-19 06:04:19', '@admin 1781年，美国独立战争期间。乔治·华盛顿麾下的伊卡博德·克兰上尉......'),
 (13, 0, 10, 1, '2013-11-20 13:56:19', 'Good!');
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `group_counter`
+--
+
+CREATE TABLE IF NOT EXISTS `group_counter` (
+  `cid` int(11) NOT NULL AUTO_INCREMENT,
+  `entity_id` int(11) NOT NULL,
+  `entity_type_id` int(11) NOT NULL,
+  `totalcount` bigint(20) NOT NULL DEFAULT '0',
+  `daycount` int(11) NOT NULL DEFAULT '0',
+  `weekcount` int(11) NOT NULL DEFAULT '0',
+  `timestamp` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP COMMENT 'last view time',
+  PRIMARY KEY (`cid`),
+  KEY `fk_group_counter_group_entity_type1_idx` (`entity_type_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
+
+--
+-- 转存表中的数据 `group_counter`
+--
+
+INSERT INTO `group_counter` (`cid`, `entity_id`, `entity_type_id`, `totalcount`, `daycount`, `weekcount`, `timestamp`) VALUES
+(1, 7, 1, 6, 6, 6, '2013-11-21 02:52:47'),
+(2, 8, 1, 1, 1, 1, '2013-11-21 02:52:52');
 
 -- --------------------------------------------------------
 
