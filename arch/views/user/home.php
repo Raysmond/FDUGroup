@@ -23,19 +23,7 @@
 
 <div class="row">
     <div class="col-lg-3">
-        <ul class="nav nav-pills nav-stacked">
-            <li class="active"><?=RHtmlHelper::linkAction('user','Home page','home')?></li>
-            <li><?=RHtmlHelper::linkAction('user','Profile','view',$user->id)?></li>
-            <?php
-            if(($count = $user->countUnreadMsgs())==0)
-                echo "<li>".RHtmlHelper::linkAction("message","Messages","view",null)."</li>";
-            else
-            {
-                echo '<li><a href="'.RHtmlHelper::siteUrl('message/view').'">';
-                echo 'Messages&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="badge">'.$count.'</span></a></li>';
-            }
-            ?>
-        </ul>
+        <?php $this->module("user_home_nav", array('id'=>'user_home_nav','name'=>'User home navigation')); ?>
     </div>
 
     <div class="col-lg-9">

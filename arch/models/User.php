@@ -11,6 +11,8 @@ class User extends Data{
     public $registerTime,$status,$picture,$intro,$homepage,$credits,$permission,$privacy;
 
     public $role;
+    const STATUS_BLOCKED = 0;
+    const STATUS_ACTIVE = 1;
 
 
     public static $labels = array(
@@ -124,9 +126,12 @@ class User extends Data{
         if (count($user) == 0)
             return "No such user name.";
         $user = $user[0];
+        if($user->status==self::STATUS_BLOCKED){
+            return "User with name ".$user->name." has been blocked!";
+        }
         if ($user->password == md5($password)) {
             return $user;
-        } else return "User name and password not match...";
+        } else return "User name and password not match!";
     }
 
 
