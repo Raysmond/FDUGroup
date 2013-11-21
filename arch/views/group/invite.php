@@ -27,7 +27,7 @@
             </div>
         </div>
     </div>
-<div><b>Write something as a invitation (optional)</b></div>
+<div><b>Write something as an invitation (optional)</b></div>
 
 <?php
     echo RFormHelper::textarea(array('class'=>'form-control','rows'=>'3','name'=>'invitation','placeholder'=>'Say something!'));

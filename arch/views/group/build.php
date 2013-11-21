@@ -7,7 +7,7 @@ if(isset($buildForm))
     $form = $buildForm;
 
 echo RFormHelper::openForm('group/build',array('id'=>'build-group-form',
-    'enctype'=>'multipart/form-data','class'=>'form-signin build-group-form'));
+    'enctype'=>'multipart/form-data','class'=>'build-group-form'));
 
 echo RFormHelper::label('Group name','group-name',array());
 echo RFormHelper::input(
@@ -18,14 +18,22 @@ echo RFormHelper::input(
     ),$form);
 
 echo "<br/>";
-echo RFormHelper::label("Category:",'category')."&nbsp;&nbsp;";
+//echo RFormHelper::label("Category:",'category')."&nbsp;&nbsp;";
 
 $cats = array();
 foreach($categories as $cat){
     array_push($cats,array('value'=>$cat->id,'text'=>$cat->name));
 }
-echo RFormHelper::select('category',$cats,array($cats[0]['value']));
-echo "<br/>";
+?>
+<div class="form-group">
+    <label class="col-sm-2 control-label" style="padding-left: 0;">Category</label>
+    <div class="col-sm-10">
+        <?=RFormHelper::select('category',$cats,array($cats[0]['value']),array('class'=>'form-control'))?>
+    </div>
+</div>
+<?php
+//echo RFormHelper::select('category',$cats,array($cats[0]['value']),array('class'=>'form-control'));
+//echo "<br/>";
 
 echo RFormHelper::label('Group Introduction','intro',array());
 echo '<br/>';
