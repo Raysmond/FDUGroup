@@ -6,7 +6,7 @@
 
 class MessageController extends RController
 {
-    public $layout = 'index';
+    public $layout = 'user';
     public $defaultAction = 'index';
     public $access = array(
         Role::AUTHENTICATED => array('detail', 'send', 'read', 'view'),

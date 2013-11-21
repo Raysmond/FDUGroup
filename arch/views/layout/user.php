@@ -33,9 +33,40 @@ $baseUrl = Rays::app()->getBaseUrl();
                 echo RHtmlHelper::showFlashMessages();
                 ?>
             </div>
-            <div id="content">
-                <?php if(isset($content)) echo $content; ?>
+            <div>
+                <?php $user = Rays::app()->getLoginUser(); if($user!=null): ?>
+                    <div class="row">
+                        <div class="col-lg-2">
+                            <?php if(!isset($user->picture)||$user->picture=='') $user->picture=User::$defaults['picture']; ?>
+                            <?=RHtmlHelper::showImage($user->picture,$user->name, array('class'=>'img-thumbnail','width'=>'120px'))?>
+                        </div>
+                        <div class="col-lg-10">
+                            <h2><?=$user->name?></h2>
+                            <div><?=RHtmlHelper::decode($user->intro)?></div>
+                            <div><?=$user->region?>
+                                <?php if ($user->weibo!='') { ?>
+                                    <?php if ($user->region!='') { ?>|<?php } ?>
+                                    微博: <?=RHtmlHelper::link($user->weibo,$user->weibo,$user->weibo)?>
+                                <?php } ?>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                <?php endif; ?>
             </div>
+
+            <div class="row">
+                <div class="col-lg-3">
+                    <?php $this->module("user_home_nav", array('id'=>'user_home_nav','name'=>'User home navigation')); ?>
+                </div>
+
+                <div class="col-lg-9">
+                    <div id="content">
+                        <?php if(isset($content)) echo $content; ?>
+                    </div>
+                </div>
+            </div>
+
 
         </div><!--/span-->
 
