@@ -104,11 +104,13 @@ class PostController extends RController {
         }
 
         $topic = new Topic();
-        $topic = $topic->load($topicId);
-        if($topic===null){
+        $result = $topic->load($topicId);
+        if($result===null){
             Rays::app()->page404();
             return;
         }
+
+        $counter = $topic->increaseCounter();
         $topic->user->load();
         $topic->group->load();
 
@@ -123,7 +125,7 @@ class PostController extends RController {
             }
         }
         $this->setHeaderTitle($topic->title);
-        $data = array("topic" => $topic, "commentTree" => $commentTree);
+        $data = array("topic" => $topic, "commentTree" => $commentTree,'counter'=>$counter);
 
         $replyTo = $this->getHttpRequest()->getParam('reply',null);
         if($replyTo&&is_numeric($replyTo)){
@@ -132,7 +134,6 @@ class PostController extends RController {
             $comment->user->load();
             $data['parent'] = $comment;
         }
-
         $this->render("view", $data, false);
 
     }
@@ -239,7 +240,7 @@ class PostController extends RController {
         $topic = new Topic();
         $topic->load($topicId);
         if (isset($topic->id) && $topic->id != '') {
-            $topic->deleteWithComment();
+            $topic->delete();
             $this->flash("message", "Post " . $topic->title . " was deleted.");
         } else {
             $this->flash("error", "No such post.");
@@ -262,7 +263,8 @@ class PostController extends RController {
                     if(!is_numeric($item)) return;
                     else{
                         $topic = new Topic();
-                        $topic->deleteWithComment($item);
+                        $topic->id = $item;
+                        $topic->delete();
                     }
                 }
             }
@@ -276,7 +278,7 @@ class PostController extends RController {
         $data['count'] = $count;
 
         $topics = new Topic();
-        $topics = $topics->adminFindAll(($curPage - 1) * $pageSize, $pageSize, array('key' => $topics->columns["id"], "order" => 'desc'));
+        $topics = $topics->adminFindAll(($curPage - 1) * $pageSize, $pageSize, array('key' => 'id', "order" => 'desc'));
         $data['topics'] = $topics;
 
         $pager = new RPagerHelper('page', $count, $pageSize, RHtmlHelper::siteUrl('post/admin'), $curPage);

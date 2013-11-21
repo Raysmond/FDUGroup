@@ -122,3 +122,9 @@ blockquote
 #active-topics-list .topic-item .topic-content{
     width: 89.33333333333334%;
 }
+
+/* Message */
+.message-meta{
+    color: gray;
+    margin-bottom: 5px;
+}

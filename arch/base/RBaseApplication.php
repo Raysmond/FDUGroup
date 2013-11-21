@@ -54,7 +54,7 @@ class RBaseApplication
      */
     public function run()
     {
-
+        date_default_timezone_set($this->timeZone);
     }
 
     /**

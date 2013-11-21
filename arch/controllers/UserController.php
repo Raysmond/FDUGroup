@@ -9,7 +9,7 @@ class UserController extends RController
     public $layout = "index";
     public $defaultAction = "index";
     public $access = array(
-        Role::AUTHENTICATED => array('edit', 'logout','home'),
+        Role::AUTHENTICATED => array('edit', 'logout','home','profile'),
         Role::ADMINISTRATOR=>array('admin'));
 
     /**
@@ -91,6 +91,19 @@ class UserController extends RController
         $this->setHeaderTitle($user->name);
         $this->render('view', array('user' => $user, 'canEdit' => $canEdit, 'canAdd' => $canAdd, 'canCancel' => $canCancel), false);
     }
+
+    public function actionProfile($action=null){
+        $this->layout = 'user';
+        $user = Rays::app()->getLoginUser();
+        if($action=='edit'){
+            $this->actionEdit();
+            return;
+        }
+        $this->setHeaderTitle($user->name);
+        $data = array('user'=>$user);
+        $this->render('profile',$data,false);
+    }
+
 
     /**
      * Register action
@@ -239,6 +252,7 @@ class UserController extends RController
      * User home page
      */
     public function actionHome(){
+        $this->layout = 'user';
         $user = Rays::app()->getLoginUser();
         $data = array('user'=>$user);
 

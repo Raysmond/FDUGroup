@@ -1,10 +1,6 @@
 <?php
 /**
- * Created by JetBrains PhpStorm.
  * User: Raysmond
- * Date: 13-10-15
- * Time: PM3:32
- * To change this template use File | Settings | File Templates.
  */
 ?>
 
@@ -40,6 +36,7 @@
         echo '</h3>';
         echo '</div><div class="panel-body">';
         $msg->load();
+        echo '<div class="message-meta">';
         if($msg->sender=='system'){
             echo "From: 系统消息";
         }
@@ -47,15 +44,15 @@
             //print_r($msg);
             $msg->sender->load();
             if($msg->sender instanceof User){
-                echo "from: ".RHtmlHelper::linkAction('user',$msg->sender->name,'view',$msg->sender->id);
+                echo "From: ".RHtmlHelper::linkAction('user',$msg->sender->name,'view',$msg->sender->id);
             }
             else if($msg->sender instanceof Group){
-                echo "from: ".RHtmlHelper::linkAction('group',$msg->sender->name,'detail',$msg->sender->id);
+                echo "From: ".RHtmlHelper::linkAction('group',$msg->sender->name,'detail',$msg->sender->id);
             }
         }
         echo '&nbsp;&nbsp;Delivery time: '.$msg->sendTime;
         echo '&nbsp;&nbsp;Status: '.($msg->status==1?"unread":"read");
-        echo "<br/>";
+        echo '</div>';
         echo '<p>'.RHtmlHelper::decode($msg->content).'</p>';
 
         if($msg->status==1&&$msg->receiverId==Rays::app()->getLoginUser()->id):

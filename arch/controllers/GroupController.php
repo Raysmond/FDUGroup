@@ -22,14 +22,14 @@ class GroupController extends RController
         $page = $this->getHttpRequest()->getQuery('page',1);
         if($page<=0) $page = 1;
 
-        $pagesize = $this->getHttpRequest()->getQuery('pagesize',6);
+        $pageSize = $this->getHttpRequest()->getQuery('pagesize',6);
 
-        $searchstr = '';
-        if ($this->getHttpRequest()->isPostRequest()) $searchstr = ($_POST['searchstr']);
-        else if(isset($_GET['search'])) $searchstr = $_GET['search'];
+        $searchStr = '';
+        if ($this->getHttpRequest()->isPostRequest()) $searchStr = ($_POST['searchstr']);
+        else if(isset($_GET['search'])) $searchStr = $_GET['search'];
 
         $group = new Group();
-        $group->name = trim($searchstr);
+        $group->name = trim($searchStr);
         $like = array();
         if (isset($group->name) && $group->name != '') {
             $names = explode(' ', $group->name);
@@ -42,20 +42,20 @@ class GroupController extends RController
         $groups = $group->find(0, 0, array('key'=>'gro_id',"order"=>"desc"), $like);
         $groupSum = count($groups);
 
-        $groups = $group->find($pagesize * ($page - 1), $pagesize, array('key'=>'gro_id',"order"=>"desc"), $like);
+        $groups = $group->find($pageSize * ($page - 1), $pageSize, array('key'=>'gro_id',"order"=>"desc"), $like);
 
 
         $this->setHeaderTitle("Find Group");
         $data = array('group' => $groups);
-        if ($searchstr != '') $data['searchstr'] = $searchstr;
+        if ($searchStr != '') $data['searchstr'] = $searchStr;
 
         $url = '';
-        if($searchstr!='')
-            $url = RHtmlHelper::siteUrl('group/find?search='.urlencode($searchstr));
+        if($searchStr!='')
+            $url = RHtmlHelper::siteUrl('group/find?search='.urlencode($searchStr));
         else
             $url = RHtmlHelper::siteUrl('group/find');
 
-        $pager = new RPagerHelper('page',$groupSum,$pagesize, $url,$page);
+        $pager = new RPagerHelper('page',$groupSum,$pageSize, $url,$page);
         $pager = $pager->showPager();
         $data['pager'] = $pager;
 
@@ -284,12 +284,18 @@ class GroupController extends RController
 
         $group = new Group();
         $group->load($groupId);
-        $group->memberCount--;
-        $group->update();
 
-        $groupUser->delete();
+        // group creator cannot exit the group
+        if($group->creator==$groupUser->userId){
+            $this->flash("error", "You cannot exit group ".RHtmlHelper::linkAction('group',$group->name,'detail',$group->id)." , because you're the group creator!");
+        }
+        else{
+            $group->memberCount--;
+            $group->update();
+            $groupUser->delete();
+            $this->flash("message", "You have exited the group successfully.");
+        }
 
-        $this->flash("message", "You have exited the group successfully.");
         $this->redirectAction('group', 'view', Rays::app()->getLoginUser()->id);
 
     }

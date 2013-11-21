@@ -11,6 +11,8 @@ class Topic extends Data
 
     public $id, $groupId, $userId, $title, $createdTime, $content, $lastCommentTime, $commentCount;
 
+    public static $entityType = 1;
+
     public function __construct()
     {
         $option = array(
@@ -40,6 +42,14 @@ class Topic extends Data
         $this->group = new Group();
         $this->group->id = $this->groupId;
         return $this;
+    }
+
+    public function increaseCounter(){
+        if(isset($this->id)&&$this->id!=''){
+            $counter = new Counter();
+            $counter->increaseCounter($this->id,self::$entityType);
+            return $counter;
+        }
     }
 
     public function getComments()
@@ -125,7 +135,7 @@ class Topic extends Data
 
         if(!empty($order)){
             if(isset($order['key'])&&isset($this->columns[$order['key']])){
-                if(isset($order['order'])&&strcasecmp($order['order'],'desc')){
+                if(isset($order['order'])&&strcasecmp($order['order'],'desc')==0){
                     $sql.=" ORDER BY {$this->columns[$order['key']]} DESC ";
                 }
                 else{
@@ -134,9 +144,16 @@ class Topic extends Data
             }
         }
         $sql.="LIMIT {$start},{$pageSize}";
-
         $result = self::db_query($sql);
         return $result;
+    }
+
+    public function delete($assignment = array()){
+        $counter = new Counter();
+        $counter = $counter->loadCounter($this->id,self::$entityType);
+        if($counter!=null)
+            $counter->delete();
+        $this->deleteWithComment();
     }
 
     public function deleteWithComment($topicId=''){
@@ -148,7 +165,7 @@ class Topic extends Data
             foreach ($comments as $comment){
                 $comment['root']->delete();
             }
-            $this->delete();
+            parent::delete();
         }
     }
 

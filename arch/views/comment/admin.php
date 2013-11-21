@@ -4,7 +4,7 @@
     <div class="panel-heading">
         Comments
         <div class="navbar-right">
-            <?= RFormHelper::input(array('type' => 'submit', 'value' => 'Delete', 'class' => 'btn btn-sm btn-danger')) ?>
+            <input type="submit" onclick="return confirm('Are you sure to delete selected comments?')" value="Delete" class="btn btn-xs btn-danger" />
         </div>
     </div>
     <table id="admin-comments" class="table">

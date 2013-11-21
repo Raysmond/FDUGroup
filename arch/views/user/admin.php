@@ -14,8 +14,8 @@
         <div class="panel-heading">
             Users
             <div class="navbar-right">
-                <a class='btn btn-sm btn-danger' href="javascript:block_submit()">Block</a>
-                <a class='btn btn-sm btn-success' href="javascript:active_submit()">Active</a>
+                <a class='btn btn-xs btn-danger' href="javascript:block_submit()">Block</a>
+                <a class='btn btn-xs btn-success' href="javascript:active_submit()">Active</a>
                 <?=RFormHelper::hidden(array('id'=>'operation_type','name'=>'operation_type','value'=>'block'))?>
             </div>
         </div>

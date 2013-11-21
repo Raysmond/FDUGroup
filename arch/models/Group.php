@@ -148,7 +148,7 @@ class Group extends Data
         $sql.="LEFT JOIN {$category->table} AS group_category ON group_category.{$category->columns['id']}=groups.{$this->columns['categoryId']} ";
         if(!empty($order)){
             if(isset($order['key'])&&isset($this->columns[$order['key']])){
-                if(isset($order['order'])&&strcasecmp($order['order'],'desc')){
+                if(isset($order['order'])&&strcasecmp($order['order'],'desc')==0){
                     $sql.=" ORDER BY {$this->columns[$order['key']]} DESC ";
                 }
                 else{
@@ -157,9 +157,6 @@ class Group extends Data
             }
         }
         $sql.="LIMIT {$start},{$pageSize}";
-        //$result = self::db_query($sql);
-        //echo $sql;
-        //return array();
         $result = self::db_query($sql);
         return $result;
     }
