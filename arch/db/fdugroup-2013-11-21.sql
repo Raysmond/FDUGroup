@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2013 年 11 月 20 日 18:13
+-- 生成日期: 2013 年 11 月 21 日 09:17
 -- 服务器版本: 5.5.31
 -- PHP 版本: 5.4.16
 
@@ -131,7 +131,7 @@ CREATE TABLE IF NOT EXISTS `group_censor_type` (
   `csr_type_id` int(11) NOT NULL AUTO_INCREMENT,
   `csr_type_name` varchar(45) NOT NULL,
   PRIMARY KEY (`csr_type_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -194,9 +194,7 @@ CREATE TABLE IF NOT EXISTS `group_friends` (
   `f_id` int(11) NOT NULL AUTO_INCREMENT,
   `f_uid` int(11) NOT NULL,
   `f_fid` int(11) NOT NULL,
-  PRIMARY KEY (`f_id`),
-  KEY `f_uid` (`f_uid`),
-  KEY `f_fid` (`f_fid`)
+  PRIMARY KEY (`f_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=22 ;
 
 --
@@ -323,7 +321,7 @@ CREATE TABLE IF NOT EXISTS `group_messages` (
   `msg_send_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`msg_id`,`msg_type_id`,`msg_receiver_id`),
   UNIQUE KEY `msg_id_UNIQUE` (`msg_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=42 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=43 ;
 
 --
 -- 转存表中的数据 `group_messages`
@@ -350,27 +348,28 @@ INSERT INTO `group_messages` (`msg_id`, `msg_type_id`, `msg_receiver_id`, `msg_s
 (18, 1, 4, 2, 'Friend request', 'Raysmond wants to be friends with you.<br/><a  title="Confirm" href="http://localhost/FDUGroup/friend/confirm/2" >Confirm</a><br/><a  title="Decline" href="http://localhost/FDUGroup/friend/decline/2" >Decline</a>', 1, '2013-11-19 08:56:57'),
 (19, 1, 4, 2, 'Friend request', 'Raysmond wants to be friends with you.<br/><a  title="Confirm" href="http://localhost/FDUGroup/friend/confirm/2" >Confirm</a><br/><a  title="Decline" href="http://localhost/FDUGroup/friend/decline/2" >Decline</a>', 1, '2013-11-19 08:57:00'),
 (20, 3, 3, 2, 'new group invitation', '<a  title="Raysmond" href="http://localhost/FDUGroup/user/view/2" >Raysmond</a> invited you to join group <a  title="吃喝玩乐在上海" href="http://localhost/FDUGroup/group/detail/10" >吃喝玩乐在上海</a>&nbsp;&nbsp;<a class="btn btn-xs btn-info"  title="Accept invitation" href="http://localhost/FDUGroup/group/join/10" >Accept invitation</a></br>hello', 1, '2013-11-19 15:34:18'),
-(21, 4, 1, 1, 'New reply', 'admin has replied to your comment <a  title="topic 1" href="http://localhost/FDUGroup/post/view/10?reply=15" >topic 1</a>', 1, '2013-11-20 02:29:08'),
-(22, 4, 1, 1, 'New reply', 'admin has replied to your comment <a  title="hello122" href="http://localhost/FDUGroup/post/view/11?reply=17" >hello122</a>', 1, '2013-11-20 02:29:20'),
+(21, 4, 1, 1, 'New reply', 'admin has replied to your comment <a  title="topic 1" href="http://localhost/FDUGroup/post/view/10?reply=15" >topic 1</a>', 2, '2013-11-20 02:29:08'),
+(22, 4, 1, 1, 'New reply', 'admin has replied to your comment <a  title="hello122" href="http://localhost/FDUGroup/post/view/11?reply=17" >hello122</a>', 2, '2013-11-20 02:29:20'),
 (23, 1, 5, 0, 'Welcome, Damon', 'Dear Damon : &lt;br/&gt;Welcome to join the FDUGroup bit family!&lt;br/&gt;&lt;br/&gt;--- FDUGroup team&lt;br/&gt;', 1, '2013-11-20 14:46:08'),
 (24, 1, 6, 0, 'Welcome, Stefan', 'Dear Stefan : &lt;br/&gt;Welcome to join the FDUGroup bit family!&lt;br/&gt;&lt;br/&gt;--- FDUGroup team&lt;br/&gt;', 1, '2013-11-20 14:46:23'),
 (25, 1, 7, 0, 'Welcome, God Thor', 'Dear God Thor : &lt;br/&gt;Welcome to join the FDUGroup bit family!&lt;br/&gt;&lt;br/&gt;--- FDUGroup team&lt;br/&gt;', 1, '2013-11-20 14:46:59'),
 (26, 1, 2, 6, 'Friend request', 'Stefan wants to be friends with you.<br/><a  title="Confirm" href="http://localhost/FDUGroup/friend/confirm/6" >Confirm</a><br/><a  title="Decline" href="http://localhost/FDUGroup/friend/decline/6" >Decline</a>', 2, '2013-11-20 14:56:10'),
-(27, 1, 1, 6, 'Friend request', 'Stefan wants to be friends with you.<br/><a  title="Confirm" href="http://localhost/FDUGroup/friend/confirm/6" >Confirm</a><br/><a  title="Decline" href="http://localhost/FDUGroup/friend/decline/6" >Decline</a>', 1, '2013-11-20 14:56:13'),
+(27, 1, 1, 6, 'Friend request', 'Stefan wants to be friends with you.<br/><a  title="Confirm" href="http://localhost/FDUGroup/friend/confirm/6" >Confirm</a><br/><a  title="Decline" href="http://localhost/FDUGroup/friend/decline/6" >Decline</a>', 2, '2013-11-20 14:56:13'),
 (28, 1, 6, 1, 'Friend confirmed', 'admin has accepted your friend request.', 1, '2013-11-20 14:56:50'),
 (29, 1, 7, 1, 'Friend request', 'admin wants to be friends with you.<br/><a  title="Confirm" href="http://localhost/FDUGroup/friend/confirm/1" >Confirm</a><br/><a  title="Decline" href="http://localhost/FDUGroup/friend/decline/1" >Decline</a>', 1, '2013-11-20 15:07:02'),
 (30, 1, 5, 1, 'Friend request', 'admin wants to be friends with you.<br/><a  title="Confirm" href="http://localhost/FDUGroup/friend/confirm/1" >Confirm</a><br/><a  title="Decline" href="http://localhost/FDUGroup/friend/decline/1" >Decline</a>', 2, '2013-11-20 15:07:11'),
 (31, 1, 4, 1, 'Friend request', 'admin wants to be friends with you.<br/><a  title="Confirm" href="http://localhost/FDUGroup/friend/confirm/1" >Confirm</a><br/><a  title="Decline" href="http://localhost/FDUGroup/friend/decline/1" >Decline</a>', 1, '2013-11-20 15:07:16'),
-(32, 1, 1, 5, 'Friend confirmed', 'Damon has accepted your friend request.', 1, '2013-11-20 15:07:54'),
-(33, 1, 1, 7, 'Friend confirmed', 'God Thor has accepted your friend request.', 1, '2013-11-20 15:08:16'),
-(34, 1, 1, 4, 'Friend confirmed', 'raysmond1 has accepted your friend request.', 1, '2013-11-20 15:08:40'),
+(32, 1, 1, 5, 'Friend confirmed', 'Damon has accepted your friend request.', 2, '2013-11-20 15:07:54'),
+(33, 1, 1, 7, 'Friend confirmed', 'God Thor has accepted your friend request.', 2, '2013-11-20 15:08:16'),
+(34, 1, 1, 4, 'Friend confirmed', 'raysmond1 has accepted your friend request.', 2, '2013-11-20 15:08:40'),
 (35, 3, 5, 1, 'new group invitation', '&lt;a  title=&quot;admin&quot; href=&quot;http://localhost/FDUGroup/user/view/1&quot; &gt;admin&lt;/a&gt; invited you to join group &lt;a  title=&quot;美剧fans&quot; href=&quot;http://localhost/FDUGroup/group/detail/2&quot; &gt;美剧fans&lt;/a&gt;&amp;nbsp;&amp;nbsp;&lt;a class=&quot;btn btn-xs btn-info&quot;  title=&quot;Accept invitation&quot; href=&quot;http://localhost/FDUGroup/group/join/2&quot; &gt;Accept invitation&lt;/a&gt;&lt;/br&gt;', 1, '2013-11-20 15:56:31'),
 (36, 1, 7, 4, 'Friend request', 'raysmond1 wants to be friends with you.<br/><a  title="Confirm" href="http://localhost/FDUGroup/friend/confirm/4" >Confirm</a><br/><a  title="Decline" href="http://localhost/FDUGroup/friend/decline/4" >Decline</a>', 1, '2013-11-20 16:57:17'),
 (37, 1, 2, 4, 'Friend request', 'raysmond1 wants to be friends with you.<br/><a  title="Confirm" href="http://localhost/FDUGroup/friend/confirm/4" >Confirm</a><br/><a  title="Decline" href="http://localhost/FDUGroup/friend/decline/4" >Decline</a>', 2, '2013-11-20 16:57:24'),
 (38, 1, 6, 2, 'Friend confirmed', '<a  title="Raysmond" href="http://localhost/FDUGroup/user/view/2" >Raysmond</a> has accepted your friend request.', 1, '2013-11-20 16:57:54'),
 (39, 1, 5, 6, 'Friend request', '<a  title="Stefan" href="http://localhost/FDUGroup/user/view/6" >Stefan</a> wants to be friends with you.<br/><a class="btn btn-xs btn-success"  title="Confirm" href="http://localhost/FDUGroup/friend/confirm/6" >Confirm</a><a class="btn btn-xs btn-danger"  title="Decline" href="http://localhost/FDUGroup/friend/decline/6" >Decline</a>', 1, '2013-11-20 17:01:22'),
 (40, 1, 2, 5, 'Friend request', '<a  title="Damon" href="http://localhost/FDUGroup/user/view/5" >Damon</a> wants to be friends with you.<br/><a class="btn btn-xs btn-success"  title="Confirm" href="http://localhost/FDUGroup/friend/confirm/5" >Confirm</a>&nbsp;&nbsp;<a class="btn btn-xs btn-danger"  title="Decline" href="http://localhost/FDUGroup/friend/decline/5" >Decline</a>', 2, '2013-11-20 17:02:22'),
-(41, 1, 5, 2, 'Friend confirmed', '<a  title="Raysmond" href="http://localhost/FDUGroup/user/view/2" >Raysmond</a> has accepted your friend request.', 1, '2013-11-20 17:03:03');
+(41, 1, 5, 2, 'Friend confirmed', '<a  title="Raysmond" href="http://localhost/FDUGroup/user/view/2" >Raysmond</a> has accepted your friend request.', 1, '2013-11-20 17:03:03'),
+(42, 4, 1, 1, 'Hello,admin', 'Hello, Admin!', 1, '2013-11-21 06:46:21');
 
 -- --------------------------------------------------------
 
@@ -483,7 +482,7 @@ INSERT INTO `group_users` (`u_id`, `u_role_id`, `u_name`, `u_mail`, `u_password`
 (4, 2, 'raysmond1', 'raysmond1@126.com', '96e79218965eb72c92a549dd5a330112', '', '', '', '', '2013-11-17 03:13:56', 1, '', '', '', 1, 0, 0),
 (5, 2, 'Damon', 'damon@gmail.com', '96e79218965eb72c92a549dd5a330112', '', '', '', '', '2013-11-20 14:46:08', 1, 'public/images/users/pic_u_5.jpg', '', '', 1, 0, 0),
 (6, 2, 'Stefan', 'stefan@gmail.com', '96e79218965eb72c92a549dd5a330112', '', '', '', '', '2013-11-20 14:46:23', 1, 'public/images/users/pic_u_6.jpg', '', '', 1, 0, 0),
-(7, 2, 'God Thor', 'thor@gmail.com', '96e79218965eb72c92a549dd5a330112', '', '', '', '', '2013-11-20 14:46:59', 1, 'public/images/users/pic_u_7.jpg', '', '', 1, 0, 0);
+(7, 2, 'God Thor', 'thor@gmail.com', '96e79218965eb72c92a549dd5a330112', '', '', '', '', '2013-11-20 14:46:59', 0, 'public/images/users/pic_u_7.jpg', '', '', 1, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -507,17 +506,6 @@ INSERT INTO `group_user_role` (`rol_id`, `rol_name`) VALUES
 (3, 'anonymous user'),
 (2, 'authenticated user'),
 (4, 'vip user');
-
---
--- 限制导出的表
---
-
---
--- 限制表 `group_friends`
---
-ALTER TABLE `group_friends`
-  ADD CONSTRAINT `friends_ibfk_1` FOREIGN KEY (`f_uid`) REFERENCES `group_users` (`u_id`),
-  ADD CONSTRAINT `friends_ibfk_2` FOREIGN KEY (`f_fid`) REFERENCES `group_users` (`u_id`);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

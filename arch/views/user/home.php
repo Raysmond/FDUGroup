@@ -36,7 +36,7 @@
                         </div>
 
                         <div>
-                            <?= RHtmlHelper::linkAction('post', 'Reply(' . $topic['top_comment_count'] . ')', 'view', $topic['top_id'] . '#reply') ?>
+                            <?= RHtmlHelper::linkAction('post', 'Reply(' . $topic['top_comment_count'] . ')', 'view', $topic['top_id'] . '#reply',array('class'=>'btn btn-xs btn-info')) ?>
                         </div>
 
                     </div>
