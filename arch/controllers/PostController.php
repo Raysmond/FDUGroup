@@ -240,7 +240,7 @@ class PostController extends RController {
         $topic = new Topic();
         $topic->load($topicId);
         if (isset($topic->id) && $topic->id != '') {
-            $topic->deleteWithComment();
+            $topic->delete();
             $this->flash("message", "Post " . $topic->title . " was deleted.");
         } else {
             $this->flash("error", "No such post.");
@@ -263,7 +263,8 @@ class PostController extends RController {
                     if(!is_numeric($item)) return;
                     else{
                         $topic = new Topic();
-                        $topic->deleteWithComment($item);
+                        $topic->id = $item;
+                        $topic->delete();
                     }
                 }
             }

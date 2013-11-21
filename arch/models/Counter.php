@@ -45,9 +45,12 @@ class Counter extends Data{
             else{
                 $result[0]->entityType = new EntityType();
                 $result[0]->entityType->typeId = $this->entityTypeId;
-                if($this->checkCounter()) $this->update();
+                if($result[0]->checkCounter()) $result[0]->update();
                 return $result[0];
             }
+        }
+        else{
+            return "ddd";
         }
     }
 

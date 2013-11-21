@@ -148,6 +148,14 @@ class Topic extends Data
         return $result;
     }
 
+    public function delete($assignment = array()){
+        $counter = new Counter();
+        $counter = $counter->loadCounter($this->id,self::$entityType);
+        if($counter!=null)
+            $counter->delete();
+        $this->deleteWithComment();
+    }
+
     public function deleteWithComment($topicId=''){
         if($topicId!==''&&is_numeric($topicId)){
             $this->id = $topicId;
@@ -157,7 +165,7 @@ class Topic extends Data
             foreach ($comments as $comment){
                 $comment['root']->delete();
             }
-            $this->delete();
+            parent::delete();
         }
     }
 
