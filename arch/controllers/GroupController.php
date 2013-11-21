@@ -10,7 +10,7 @@ class GroupController extends RController
     public $layout = "index";
     public $defaultAction = "index";
     public $access = array(
-        Role::AUTHENTICATED => array('view', 'build', 'edit', 'join', 'accept', 'exit','delete','invite'),
+        Role::AUTHENTICATED => array('view', 'build', 'edit', 'join', 'accept', 'decline', 'exit','delete','invite'),
         Role::ADMINISTRATOR => array('findAdmin','buildAdmin','admin'),
     );
 
@@ -222,14 +222,14 @@ class GroupController extends RController
             $censor = new Censor();
             $censor = $censor->joinGroupApplication($currentUserId, $group->id);
 
-            $content = "$currentUserName wants to join your group ".
+            $content = RHtmlHelper::linkAction('user',$currentUserName,'view',$currentUserId)." wants to join your group ".
                 RHtmlHelper::linkAction('group', $group->name, 'detail', $group->id)
                 ."<br/>" .
                 RHtmlHelper::link("Accept", "Accept", Rays::app()->getBaseUrl() . "/group/accept/{$censor->id}") . "<br/>" .
                 RHtmlHelper::link("Decline", "Decline", Rays::app()->getBaseUrl() . "/group/decline/{$censor->id}");
 
             $message = new Message();
-            $message->sendMsg("group", $currentUserId, $group->creator, "Join group request", $content, '');
+            $message->sendMsg("group", $groupId, $group->creator, "Join group request", $content, '');
 
             $this->flash('message', 'Joining group request has been sent.');
         }
@@ -261,9 +261,9 @@ class GroupController extends RController
 
                 $this->flash("message", "The request is processed.");
 
-                $content = 'I have accepted your request of joining in group ' . RHtmlHelper::linkAction('group', $group->name, 'detail', $group->id);
+                $content = 'Group creator has accepted your request of joining in group ' . RHtmlHelper::linkAction('group', $group->name, 'detail', $group->id);
                 $message = new Message();
-                $message->sendMsg("group", Rays::app()->getLoginUser()->id, $groupUser->userId, "Join group request accepted", $content, '');
+                $message->sendMsg("group", $group->id, $groupUser->userId, "Join group request accepted", $content, '');
 
             }else{
                 $this->flash("message","TA is already a member of this group.");
@@ -271,6 +271,36 @@ class GroupController extends RController
 
 
             $censor->passCensor($censorId);
+            $this->redirectAction('message','view');
+        }
+    }
+
+    public function actionDecline($censorId = null) {
+        $censor = new Censor();
+        $censor->id = $censorId;
+        if ($censor->load() !==null) {
+            $groupUser = new GroupUser();
+            $groupUser->groupId = $censor->secondId;
+            $groupUser->userId = $censor->firstId;
+            date_default_timezone_set(Rays::app()->getTimeZone());
+            $groupUser->joinTime = date('Y-m-d H:i:s');
+            $groupUser->status = 1;
+
+            $gu = new GroupUser();
+            if(!$gu->isUserInGroup($groupUser->userId,$groupUser->groupId)){
+                $this->flash("message", "The request is processed.");
+                $group = new Group();
+                $group->load($groupUser->groupId);
+
+                $content = 'Group creator have declined your request of joining in group ' . RHtmlHelper::linkAction('group', $group->name, 'detail', $group->id);
+                $message = new Message();
+                $message->sendMsg("group", $group->id, $groupUser->userId, "Join group request accepted", $content, '');
+            }else{
+                $this->flash("message","TA is already a member of this group.");
+            }
+
+
+            $censor->failCensor($censorId);
             $this->redirectAction('message','view');
         }
     }
