@@ -277,7 +277,7 @@ class PostController extends RController {
         $data['count'] = $count;
 
         $topics = new Topic();
-        $topics = $topics->adminFindAll(($curPage - 1) * $pageSize, $pageSize, array('key' => $topics->columns["id"], "order" => 'desc'));
+        $topics = $topics->adminFindAll(($curPage - 1) * $pageSize, $pageSize, array('key' => 'id', "order" => 'desc'));
         $data['topics'] = $topics;
 
         $pager = new RPagerHelper('page', $count, $pageSize, RHtmlHelper::siteUrl('post/admin'), $curPage);

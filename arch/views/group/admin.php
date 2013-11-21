@@ -10,7 +10,7 @@
     <div class="panel-heading">
         Groups
         <div class="navbar-right">
-            <?=RFormHelper::input(array('type'=>'submit','value'=>'Delete','class'=>'btn btn-xs btn-danger'))?>
+            <input type="submit" onclick="return confirm('Are you sure to delete selected groups?')" value="Delete" class="btn btn-xs btn-danger" />
         </div>
     </div>
 

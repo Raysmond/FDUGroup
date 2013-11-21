@@ -57,7 +57,7 @@ class Comment extends Tree
 
         if(!empty($order)){
             if(isset($order['key'])&&isset($this->columns[$order['key']])){
-                if(isset($order['order'])&&strcasecmp($order['order'],'desc')){
+                if(isset($order['order'])&&strcasecmp($order['order'],'desc')==0){
                     $sql.=" ORDER BY {$this->columns[$order['key']]} DESC ";
                 }
                 else{
