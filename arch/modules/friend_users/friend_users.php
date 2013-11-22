@@ -2,11 +2,13 @@
     <div class="panel-heading"><h3 class="panel-title">Friends</h3></div>
     <div class="panel-body">
         <?php
-        echo '<div class="row">';
+        echo '<div class="row user-list">';
         foreach($friends as $friend){
-            echo '<div class="col-6 col-sm-6 col-lg-4">';
+            echo '<div class="user-item col-lg-4">';
             echo '<a href="'.RHtmlHelper::siteUrl('user/view/'.$friend->id).'">'.RHtmlHelper::showImage(isset($friend->picture)&&$friend->picture!=''?$friend->picture:User::$defaults['picture'],$friend->name,array('width'=>'64px','height'=>'64px')).'</a>';
-            echo RHtmlHelper::linkAction('user', $friend->name, 'view', $friend->id)."  ";
+            $name = $friend->name;
+            if(mb_strlen($name)>7) $name = mb_substr($name,0,8)."..";
+            echo RHtmlHelper::linkAction('user', $name, 'view', $friend->id,array('title'=>$friend->name))."  ";
             echo '</div>';
         }
         echo '</div>';

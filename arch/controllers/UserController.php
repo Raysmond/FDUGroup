@@ -36,8 +36,9 @@ class UserController extends RController
                 $login = $user->verifyLogin($_POST['username'], $_POST['password']);
                 if ($login instanceof User) {
                     $this->getSession()->set("user", $login->id);
-                    $this->flash("message", "Login successfully.");
-                    $this->redirect(Rays::app()->getBaseUrl());
+                    //$this->flash("message", "Login successfully.");
+                    //$this->redirect(Rays::app()->getBaseUrl());
+                    $this->redirectAction('user','home');
                     return;
                 } else {
                     $this->flash("error", $login);

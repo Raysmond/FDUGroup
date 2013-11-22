@@ -20,7 +20,7 @@ class Friend extends Data {
     {
         if ($uid != '')
             $this->uid = $uid;
-        $friends = $this->find();
+        $friends = $this->find(0,0,array('key'=>$this->columns['id'],'value'=>'desc'));
         $result = array();
         foreach ($friends as $friend) {
             if(!in_array($friend->fid,$exceptFriendIds)){
