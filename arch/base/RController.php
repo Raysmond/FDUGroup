@@ -169,10 +169,19 @@ class RController
                 $definedRoleId = Role::ANONYMOUS_ID;
         }
 
-        if($roleId<=$definedRoleId)
+        //authority access allowance table (need authority , own authority)
+        $authorityAllowTable = [
+            [Role::ADMINISTRATOR_ID, Role::ADMINISTRATOR_ID],
+            [Role::VIP_ID, Role::ADMINISTRATOR_ID], [Role::VIP_ID, Role::VIP_ID],
+            [Role::AUTHENTICATED_ID, Role::ADMINISTRATOR_ID], [Role::AUTHENTICATED_ID, Role::VIP_ID], [Role::AUTHENTICATED_ID, Role::AUTHENTICATED_ID],
+            [Role::ANONYMOUS_ID, Role::ADMINISTRATOR_ID], [Role::ANONYMOUS_ID, Role::VIP_ID], [Role::ANONYMOUS_ID, Role::AUTHENTICATED_ID], [Role::ANONYMOUS_ID, Role::ANONYMOUS_ID],
+        ];
+
+        return in_array([$definedRoleId, $roleId], $authorityAllowTable);
+        /*if($roleId<=$definedRoleId)
             return true;
         else
-            return false;
+            return false;*/
     }
 
     /**
