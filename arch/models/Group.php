@@ -225,4 +225,27 @@ class Group extends Data
         return $result;
     }
 
+    public static function recommendGroups($groups,$users){
+        foreach ($users as $userId) {
+            $html = '<div class="row recommend-groups">';
+            foreach ($groups as $groupId) {
+                $group = new Group();
+                $group = $group->load($groupId);
+                if (null != $group) {
+                    $censor = new Censor();
+                    $censor = $censor->joinGroupApplication($userId, $group->id);
+                    $html .= '<div class="col-lg-3 recommend-group-item" style="padding: 5px;">';
+                    if (!isset($group->picture) || $group->picture == '') $group->picture = Group::$defaults['picture'];
+                    $html .= RHtmlHelper::showImage($group->picture, $group->name);
+                    $html .= '<br/>' . RHtmlHelper::linkAction('group', $group->name, 'detail', $group->id);
+                    $html .= '<br/>' . RHtmlHelper::linkAction('group', 'Accept', 'accept', $censor->id, array('class' => 'btn btn-xs btn-success'));
+                    $html .= '</div>';
+                }
+            }
+            $html .= '</div>';
+            $msg = new Message();
+            $msg->sendMsg('system', 0, $userId, 'Groups recommendation', $html, date('Y-m-d H:i:s'));
+        }
+    }
+
 }
