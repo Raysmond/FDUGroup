@@ -36,10 +36,9 @@ class UserController extends RController
                 $login = $user->verifyLogin($_POST['username'], $_POST['password']);
                 if ($login instanceof User) {
                     $this->getSession()->set("user", $login->id);
-                    //$this->flash("message", "Login successfully.");
+                    $this->flash("message", "Login successfully.");
                     //$this->redirect(Rays::app()->getBaseUrl());
                     $this->redirectAction('user','home');
-                    return;
                 } else {
                     $this->flash("error", $login);
                     $data['loginForm'] = $_POST;
@@ -271,6 +270,7 @@ class UserController extends RController
         $this->layout = 'user';
         $user = Rays::app()->getLoginUser();
         $data = array('user'=>$user);
+        $this->setHeaderTitle($user->name);
 
         // ajax request
         // load more posts

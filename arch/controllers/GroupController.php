@@ -11,7 +11,7 @@ class GroupController extends RController
     public $defaultAction = "index";
     public $access = array(
         Role::AUTHENTICATED => array('view', 'build', 'edit', 'join', 'accept', 'decline', 'exit','delete','invite'),
-        Role::ADMINISTRATOR => array('findAdmin','buildAdmin','admin'),
+        Role::ADMINISTRATOR => array('findAdmin','buildAdmin','admin','recommend'),
     );
 
     /*
@@ -439,38 +439,119 @@ class GroupController extends RController
     }
 
     public function actionInvite($groupId){
-        $data = array();
-
-        $group = new Group();
-        $group->load($groupId);
-        $group->category->load();
-        $group->groupCreator->load();
-        $data['group'] = $group;
-
-        $user = Rays::app()->getLoginUser();
-        $friendsInGroup = array();
-        $friends = new Friend();
-        //$friends = $friends->getFriends($user->id,'',$friendsInGroup);
-        $friends = $friends->getFriendsToInvite($user->id,$groupId);
-        $data['friends'] = $friends;
-
-        if ($this->getHttpRequest()->isPostRequest()) {
-            $invitationMsg =$_POST['invitation'];
-            $select_friends = $_POST['select_friends'];
-            foreach($select_friends as $friendId){
-                $msg = new Message();
-                $content = RHtmlHelper::linkAction('user',Rays::app()->getLoginUser()->name,'view',Rays::app()->getLoginUser()->id).' invited you to join group '.RHtmlHelper::linkAction('group',$group->name,'detail',$groupId);
-                $content = $content.'&nbsp;&nbsp;'.RHtmlHelper::linkAction('group','Accept invitation', 'join', $groupId,array('class' => 'btn btn-xs btn-info'));
-                $content = $content.'</br>'.$invitationMsg;
-                $content = RHtmlHelper::encode($content);
-                $msg->sendMsg('group',Rays::app()->getLoginUser()->id,$friendId,'new group invitation',$content);
-            }
-            // show message
-            $this->flash('message','Send invitation successfully.');
-            $this->redirectAction('group','detail',$groupId);
+        if(!isset($groupId)||!is_numeric($groupId)){
+            Rays::app()->page404();
             return;
         }
 
-        $this->render('invite',$data,false);
+        $group = new Group();
+        $result = $group->load($groupId);
+        if($result==null){
+            Rays::app()->page404();
+            return;
+        }
+
+        $data = array();
+        $data['group'] = $group;
+
+        $user = Rays::app()->getLoginUser();
+        $friends = new Friend();
+        $friends = $friends->getFriendsToInvite($user->id, $groupId);
+        $data['friends'] = $friends;
+
+        if ($this->getHttpRequest()->isPostRequest()) {
+            if (isset($_POST['select_friends'])) {
+                Group::inviteFriends($groupId,$user,$_POST['select_friends'],$_POST['invitation']);
+                $this->flash('message', 'Send invitation successfully.');
+            } else {
+                $this->flash('warning', 'No invitation was send!');
+            }
+        }
+
+        $this->render('invite', $data, false);
+    }
+
+    /**
+     * Recommend groups to users
+     * @access: administrator
+     */
+    public function actionRecommend()
+    {
+        if ($this->getHttpRequest()->getIsAjaxRequest()) {
+            $action = $this->getHttpRequest()->getParam('action', null);
+            if ($action) {
+                $name = $this->getHttpRequest()->getParam('name', null);
+                $like = array();
+                if (isset($name) && $name != '') {
+                    $names = explode(' ', $name);
+                    foreach ($names as $val) {
+                        array_push($like, array('key' => 'name', 'value' => $val));
+                    }
+                }
+                switch ($action) {
+                    case "search_groups":
+                        $group = new Group();
+                        $groups = $group->find(0, 0, array(), $like);
+                        $results = array();
+                        foreach($groups as $item){
+                            $result['id'] = $item->id;
+                            $result['name'] = $item->name;
+                            $result['link'] = RHtmlHelper::siteUrl('group/detail/'.$item->id);
+                            $result['picture'] = $item->picture;
+                            $results[] = $result;
+                        }
+                        echo json_encode($results);
+                        exit;
+                        break;
+                    case "search_users":
+                        $user = new User();
+                        $users = $user->find(0, 0, array(), $like);
+                        $results = array();
+                        foreach($users as $item){
+                            $result['id'] = $item->id;
+                            $result['name'] = $item->name;
+                            $result['link'] = RHtmlHelper::siteUrl('user/view/'.$item->id);
+                            $result['picture'] = $item->picture;
+                            $results[] = $result;
+                        }
+                        echo json_encode($results);
+                        exit;
+                        break;
+                    default:
+                }
+            }
+        }
+
+        if ($this->getHttpRequest()->isPostRequest()) {
+            if (isset($_POST['selected_recommend_groups']) && isset($_POST['selected_recommend_users'])) {
+                $groups = $_POST['selected_recommend_groups'];
+                $users = $_POST['selected_recommend_users'];
+                foreach ($users as $userId) {
+                    $html = '<div class="row recommend-groups">';
+                    foreach ($groups as $groupId) {
+                        $group = new Group();
+                        $group = $group->load($groupId);
+                        if (null != $group) {
+                            $censor = new Censor();
+                            $censor = $censor->joinGroupApplication($userId, $group->id);
+                            $html .= '<div class="col-lg-3 recommend-group-item" style="padding: 5px;">';
+                            if (!isset($group->picture) || $group->picture == '') $group->picture = Group::$defaults['picture'];
+                            $html .= RHtmlHelper::showImage($group->picture, $group->name);
+                            $html .= '<br/>' . RHtmlHelper::linkAction('group', $group->name, 'detail', $group->id);
+                            $html .= '<br/>' . RHtmlHelper::linkAction('group', 'Accept', 'accept', $censor->id, array('class' => 'btn btn-xs btn-success'));
+                            $html .= '</div>';
+                        }
+                    }
+                    $html .= '</div>';
+                    $msg = new Message();
+                    $msg->sendMsg('group', 0, $userId, 'Groups recommendation', $html, date('Y-m-d H:i:s'));
+                }
+            }
+        }
+
+        $this->layout = 'admin';
+        $data = array();
+        $this->setHeaderTitle("Groups recommendation");
+        $this->render('recommend',$data,false);
     }
 }

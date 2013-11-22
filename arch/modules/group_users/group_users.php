@@ -17,6 +17,7 @@
                 echo '<div class="row">';
                 foreach($users as $user){
                     echo '<div class="col-6 col-sm-6 col-lg-4">';
+                    $user->picture = $user->picture!=''?$user->picture:User::$defaults['picture'];
                     echo RHtmlHelper::showImage($user->picture,$user->name,array("width"=>"64px","height"=>"64px"))."<br/>";
                     echo RHtmlHelper::linkAction('user',$user->name,'view',$user->id)."  ";
                     echo '</div>';

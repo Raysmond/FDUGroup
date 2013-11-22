@@ -338,12 +338,14 @@ class RController
     public function redirect($url)
     {
         header('location: ' . $url);
+        exit;
     }
 
     public function redirectAction($controller = '', $action = '', $params)
     {
         if ($controller == '') $controller = $this->getId();
         header('location: ' . RHtmlHelper::siteUrl($this->generateActionLink($controller, $action, $params)));
+        exit;
     }
 
 
