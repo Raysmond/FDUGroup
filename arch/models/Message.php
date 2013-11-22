@@ -9,6 +9,10 @@ class Message extends Data{
     public $sender;
     public $id,$typeId,$senderId,$receiverId,$title,$content,$sendTime,$status;
 
+    public static $STATUS_UNREAD = 1;
+    public static $STATUS_READ = 2;
+    public static $STATUS_TRASH = 3;
+
     public function __construct()
     {
         $options = array(
@@ -30,7 +34,8 @@ class Message extends Data{
 
     public function load($id=null)
     {
-        parent::load($id);
+        $result = parent::load($id);
+        if($result==null) return null;
         $this->type = new MessageType();
         $this->type->typeId = $this->typeId;
         $this->type->load();
@@ -47,6 +52,7 @@ class Message extends Data{
         else{
             $this->sender = 'system';
         }
+        return $this;
     }
 
     public function sendMsg($typeName,$senderId,$receiverId,$title,$content,$sendTime=null,$status=1)
@@ -69,20 +75,28 @@ class Message extends Data{
     }
 
     public function markRead($msgId=''){
-        if($msgId!='')
-            $this->id = $msgId;
-        $this->load();
-        $this->status = 2;
-        $this->update();
+        $this->markStatus($msgId,self::$STATUS_READ);
 
     }
 
     public function markUnRead($msgId=''){
-        if($msgId!='')
+        $this->markStatus($msgId,self::$STATUS_UNREAD);
+    }
+
+    public function markTrash($msgId=''){
+        $this->markStatus($msgId,self::$STATUS_TRASH);
+    }
+
+    public function markStatus($msgId, $status)
+    {
+        if (isset($msgId) && is_numeric($msgId)) {
             $this->id = $msgId;
-        $this->load();
-        $this->status = 1;
-        $this->update();
+            $result = $this->load();
+            if ($result != null) {
+                $this->status = $status;
+                $this->update();
+            }
+        }
     }
 
     public function getUnReadMsgs($receiverId)
@@ -91,7 +105,7 @@ class Message extends Data{
             return null;
         }
         $msgs = new Message();
-        $msgs->status = 1;
+        $msgs->status = self::$STATUS_UNREAD;
         $msgs->receiverId = $receiverId;
         return $msgs->find(0,0,array('key'=>'msg_id','order'=>'desc'));
     }
@@ -102,7 +116,7 @@ class Message extends Data{
             return null;
         }
         $msgs = new Message();
-        $msgs->status = 2;
+        $msgs->status = self::$STATUS_READ;
         $msgs->receiverId = $receiverId;
         return $msgs->find(0,0,array('key'=>'msg_id','order'=>'desc'));
     }
@@ -114,7 +128,8 @@ class Message extends Data{
         }
         $msgs = new Message();
         $msgs->receiverId = $receiverId;
-        return $msgs->find(0,0,array('key'=>'msg_status,msg_id','order'=>'desc'));
+        return $msgs->find(0,0,array('key'=>'msg_status,msg_id','order'=>'desc'),array(),
+            array('status'=>array(self::$STATUS_READ,self::$STATUS_UNREAD)));
     }
 
     public function getUserSentMsgs($userId)
@@ -126,6 +141,16 @@ class Message extends Data{
 
         $msgs->senderId = $userId;
         return $msgs->find(0,0,array('key'=>'msg_id','order'=>'desc'));
+    }
+
+    public function getTrashMsgs($userId){
+        if(!isset($userId)||$userId==''){
+            return null;
+        }
+        $msg = new Message();
+        $msg->receiverId = $userId;
+        $msg->status = self::$STATUS_TRASH;
+        return $msg->find(0,0,array('key'=>'msg_id','order'=>'desc'));
     }
 
     public function countUnreadMsgs($receiverId)

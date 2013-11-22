@@ -22,15 +22,29 @@
 
 <?php echo RHtmlHelper::linkAction('message',"Read messages",'view','read',array('class'=>'btn btn-sm btn-default'));?>
 
-<?php echo RHtmlHelper::linkAction('message',"My sent messages",'view','send',array('class'=>'btn btn-sm btn-default'));?>
+<?php echo RHtmlHelper::linkAction('message',"Outbox",'view','send',array('class'=>'btn btn-sm btn-default'));?>
+
+<?php echo RHtmlHelper::linkAction('message',"Trash",'view','trash',array('class'=>'btn btn-sm btn-danger'));?>
 
 </div>
 <div class="clearfix" style="margin-bottom: 10px;"></div>
 <?php
     foreach($msgs as $msg)
     {
-        echo '<div class="panel panel-info"><div class="panel-heading">';
-        echo '<h3 class="panel-title">';
+        ?>
+        <div class="panel panel-info"><div class="panel-heading">
+        <div style="float:right;margin-top: -2px;">
+        <?php
+        if($msg->receiverId==Rays::app()->getLoginUser()->id){
+            if($msg->status==Message::$STATUS_UNREAD) echo RHtmlHelper::linkAction('message',"Mark read",'read',$msg->id,array('class'=>'btn btn-xs btn-success'));
+            echo '&nbsp;&nbsp;';
+            if($msg->status!=Message::$STATUS_TRASH) echo RHtmlHelper::linkAction('message',"Mark trash",'trash',$msg->id,array('class'=>'btn btn-xs btn-danger'));
+            if($type=='trash') echo RHtmlHelper::linkAction('message',"Delete",'delete',$msg->id,array('class'=>'btn btn-xs btn-danger'));
+        }
+        ?>
+        </div>
+        <h3 class="panel-title">
+        <?php
         $title =  (isset($msg->title)&&$msg->title!='')?$msg->title:"Untitled";
         echo RHtmlHelper::linkAction('message',$title,'detail',$msg->id);
         echo '</h3>';
@@ -54,10 +68,6 @@
         echo '&nbsp;&nbsp;Status: '.($msg->status==1?"unread":"read");
         echo '</div>';
         echo '<p>'.RHtmlHelper::decode($msg->content).'</p>';
-
-        if($msg->status==1&&$msg->receiverId==Rays::app()->getLoginUser()->id):
-            echo RHtmlHelper::linkAction('message',"Mark read",'read',$msg->id,array('class'=>'btn btn-sm btn-success'));
-        endif;
 
         echo '</div></div>';
     }

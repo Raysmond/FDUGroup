@@ -159,8 +159,6 @@ class Data
             $sql.=" LIMIT {$limit_start} , ".$limit_end;
         }
 
-       // print_r($sql);
-
         DataConnector::getConnection();
         $rs = mysql_query($sql) or die(mysql_error());
         $row = mysql_fetch_assoc($rs);

@@ -7,7 +7,7 @@
 class UserController extends RController
 {
     public $layout = "index";
-    public $defaultAction = "index";
+    public $defaultAction = "home";
     public $access = array(
         Role::AUTHENTICATED => array('edit', 'logout','home','profile'),
         Role::ADMINISTRATOR=>array('admin'));

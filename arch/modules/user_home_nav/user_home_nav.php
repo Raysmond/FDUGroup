@@ -2,7 +2,7 @@
     <div class="panel-heading"><b>Navigation</b></div>
     <div class="panel-body">
     <ul class="nav nav-pills nav-stacked">
-        <li <?= ($currentUrl == 'user/home') ? 'class="active"' : "" ?>>
+        <li <?= (Rays::app()->getHttpRequest()->urlMatch(array('user/home','user','user/'), $currentUrl)) ? 'class="active"' : "" ?>>
             <?= RHtmlHelper::linkAction('user', 'Home page', 'home') ?>
         </li>
         <li <?= ($currentUrl == 'user/profile') ? 'class="active"' : "" ?>>

@@ -9,7 +9,7 @@ class MessageController extends RController
     public $layout = 'user';
     public $defaultAction = 'index';
     public $access = array(
-        Role::AUTHENTICATED => array('detail', 'send', 'read', 'view'),
+        Role::AUTHENTICATED => array('detail', 'send', 'read', 'view','delete','trash'),
         Role::ADMINISTRATOR => array('sendAdmin'),
     );
 
@@ -106,15 +106,13 @@ class MessageController extends RController
     }
 
 
-    // to be implemented
     public function actionRead($msgId)
     {
         $message = new Message();
-        $message->load($msgId);
+        $message = $message->load($msgId);
         if (Rays::app()->getLoginUser()->id != $message->receiverId) {
             $this->flash("error", "Sorry. You don't have the right to mark the message read.");
             $this->redirectAction('message', 'view', 'all');
-            return;
         }
         $message->markRead($msgId);
         $this->redirectAction('message', 'view', 'all');
@@ -138,11 +136,39 @@ class MessageController extends RController
             $messages = $messages->getUnReadMsgs($userId);
         } else if ($msgType == 'send') {
             $messages = $messages->getUserSentMsgs($userId);
+        } else if($msgType == 'trash'){
+            $messages = $messages->getTrashMsgs($userId);
         } else {
             Rays::app()->page404();
             return;
         }
+        if($messages==null) $messages = array();
         $this->render('view', array('msgs' => $messages, 'type' => $msgType), false);
+    }
+
+    public function actionTrash($msgId)
+    {
+        if (isset($msgId) && is_numeric($msgId)) {
+            $msg = new Message();
+            $msg = $msg->load($msgId);
+            if ($msg != null && $msg->receiverId == Rays::app()->getLoginUser()->id) {
+                $msg->markTrash($msgId);
+            }
+        }
+        $this->redirectAction('message', 'view', 'trash');
+    }
+
+    public function actionDelete($msgId)
+    {
+        if (isset($msgId) && is_numeric($msgId)) {
+            $msg = new Message();
+            $msg = $msg->load($msgId);
+            $user = Rays::app()->getLoginUser();
+            if ($msg != null && ($msg->receiverId == $user->id || $user->isAdmin())) {
+                $msg->delete();
+            }
+        }
+        $this->redirectAction('message', 'view', 'all');
     }
 
     public function actionSendAdmin()

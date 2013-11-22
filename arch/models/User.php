@@ -134,5 +134,11 @@ class User extends Data{
         } else return "User name and password not match!";
     }
 
+    public function isAdmin(){
+        if(isset($this->roleId)){
+            return $this->roleId==Role::ADMINISTRATOR_ID;
+        }
+    }
+
 
 }
