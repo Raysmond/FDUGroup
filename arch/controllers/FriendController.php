@@ -16,7 +16,7 @@ class FriendController extends RController {
             $message = new Message();
             $message->sendMsg("system", $currentUserId, $userId, "Friend request", $content, '');
 
-            //add friend sensor item
+            //add friend censor item
             $censor = new Censor();
             $censor->addFriendApplication($currentUserId, $userId);
             $this->flash('message', 'Adding friend request has been sent.');

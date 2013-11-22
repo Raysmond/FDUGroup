@@ -41,7 +41,21 @@ $baseUrl = Rays::app()->getBaseUrl();
                             <?=RHtmlHelper::showImage($user->picture,$user->name, array('class'=>'img-thumbnail','width'=>'120px'))?>
                         </div>
                         <div class="col-lg-10">
-                            <h2><?=$user->name?></h2>
+                            <h2>
+                                <?=$user->name?>&nbsp;
+                                <?php
+                                    if ($user->roleId == Role::VIP_ID) {
+                                ?>
+                                        <span class="badge badge-vip">VIP Grouper</span>
+                                <?php
+                                    } else {
+                                ?>
+                                        <span class="badge">FDUGrouper</span>
+                                <?php
+                                    }
+                                ?>
+
+                            </h2>
                             <div><?=RHtmlHelper::decode($user->intro)?></div>
                             <div><?=$user->region?>
                                 <?php if ($user->weibo!='') { ?>
