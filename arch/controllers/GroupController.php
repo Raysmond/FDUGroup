@@ -76,13 +76,24 @@ class GroupController extends RController
 
     public function actionDetail($groupId)
     {
-        $data = array();
+        if(!is_numeric($groupId)){
+            Rays::app()->page404();
+            return;
+        }
 
         $group = new Group();
-        $group->load($groupId);
+        $result = $group->load($groupId);
+        if($result==null){
+            Rays::app()->page404();
+            return;
+        }
+        $counter = $group->increaseCounter();
         $group->category->load();
         $group->groupCreator->load();
+
+        $data = array();
         $data['group'] = $group;
+        $data['counter'] = $counter->totalCount;
 
         $posts = new Topic();
         $posts->groupId = $groupId;

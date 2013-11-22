@@ -10,6 +10,8 @@ class Group extends Data
     public $category;
     public $id, $creator, $categoryId, $name, $memberCount, $createdTime, $intro,$picture;
 
+    const ENTITY_TYPE = 2;
+
     public static $labels = array(
         "id" => "ID",
         "creator" => "Creator",
@@ -102,6 +104,15 @@ class Group extends Data
         return $group;
     }
 
+    public function increaseCounter(){
+        if(isset($this->id)){
+            $counter = new Counter();
+            $counter->increaseCounter($this->id,self::ENTITY_TYPE);
+            return $counter;
+        }
+        return null;
+    }
+
     public function deleteGroup()
     {
         if(isset($this->id)&&$this->id!=''){
@@ -126,6 +137,12 @@ class Group extends Data
             Data::executeSQL($sql);
 
             $this->delete();
+
+            $counter = new Counter();
+            $counter = $counter->loadCounter($this->id,self::ENTITY_TYPE);
+            if($counter!=null)
+                $counter->delete();
+
             return true;
         }
         else
@@ -247,5 +264,4 @@ class Group extends Data
             $msg->sendMsg('system', 0, $userId, 'Groups recommendation', $html, date('Y-m-d H:i:s'));
         }
     }
-
 }
