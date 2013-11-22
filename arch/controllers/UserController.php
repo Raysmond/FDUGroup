@@ -312,4 +312,41 @@ class UserController extends RController
         $this->render('home',$data,false);
     }
 
+    /**
+     * Apply for VIP
+     * by songrenchu
+     */
+    public function actionApplyVIP() {
+        $this->layout = 'user';
+        $user = Rays::app()->getLoginUser();
+        $data = array('user'=>$user);
+
+        if ($this->getHttpRequest()->isPostRequest()) {
+            $config = [
+                ['field' => 'content', 'label' => 'Statement', 'rules' => 'trim|required|min_length[10]|max_length[1000]'],
+            ];
+            $validation = new RFormValidationHelper($config);
+
+            if ($validation->run()) {
+                $censor = new Censor();
+                $censor->applyVIPApplication($user->id, $_POST['content']);
+                $this->flash('message', 'VIP application sent.');
+                $this->redirectAction('user', 'profile');
+            } else {
+                $errors = $validation->getErrors();
+                $data['validation_errors'] = $errors;
+                $data['editForm'] = $_POST;
+                $this->render('apply_vip',$data,false);
+            }
+            return;
+        }
+
+        $censor = new Censor();
+        if ($censor->applyVIPExist($user->id)) {
+            $this->flash('error', 'Your previous VIP application is under review!');
+            $this->redirectAction('user', 'profile');
+            return;
+        }
+        $this->render('apply_vip',$data,false);
+    }
 }

@@ -131,5 +131,16 @@ class Censor extends Data{
         return count($result) == 0 ? null : $result[0]->id;
     }
 
+    public function applyVIPApplication($userId, $content) {      //apply for VIP
+        $this->postApplication('apply_vip',$userId, null, $content);
+        return $this;
+    }
 
+    public function applyVIPExist($userId) {
+        $this->getTypeIdbyTypeName('apply_vip');
+        $this->firstId = $userId;
+        $this->status = self::UNPROCESS;
+        $result = $this->find();
+        return count($result) == 0 ? null : $result[0]->id;
+    }
 }

@@ -16,7 +16,11 @@
                         echo "QQ: " . $user->qq . "<br/>";
                         break;
                     case "roleId":
-                        echo "Role: " . User::$roles[$user->roleId - 1] . "<br/>";
+                        echo "Role: " . User::$roles[$user->roleId - 1] ."&nbsp;";
+                        if ($user->roleId == Role::AUTHENTICATED_ID) {
+                            echo RHtmlHelper::linkAction('user','Apply for VIP','applyVIP', null, ['class' => 'btn btn-xs btn-info']);
+                        }
+                        echo "<br/>";
                         break;
                     case "intro":
                         echo "Introduction: " . $user->$objCol . "<br/>";
