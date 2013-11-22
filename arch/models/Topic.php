@@ -64,6 +64,31 @@ class Topic extends Data
         return $result;
     }
 
+    public function getUserFriendsTopicsJsonArray($uid,$limit=0,$endTime=null){
+        $topics = $this->getUserFriendsTopics($uid,$limit,$endTime);
+        $result = array();
+        foreach($topics as $topic){
+            $json = array();
+            $json['user_name'] = $topic['u_name'];
+            $json['user_id'] = $topic['u_id'];
+            $json['topic_title'] = $topic['top_title'];
+            $json['user_picture'] = RHtmlHelper::siteUrl($topic['u_picture']);
+            $json['user_link'] = RHtmlHelper::siteUrl('user/view/'.$topic['u_id']);
+            $json['topic_link'] = RHtmlHelper::siteUrl('post/view/'.$topic['top_id']);
+            $json['group_name'] = $topic['gro_name'];
+            $json['group_id'] = $topic['gro_id'];
+            $json['group_link'] = RHtmlHelper::siteUrl('group/detail/'.$topic['gro_id']);
+            $json['topic_created_time'] = $topic['top_created_time'];
+            $json['topic_reply_count'] = $topic['top_comment_count'];
+            $topic['top_content'] = strip_tags(RHtmlHelper::decode($topic['top_content']));
+            if (mb_strlen($topic['top_content']) > 140) {
+                $json['topic_content'] =  mb_substr($topic['top_content'], 0, 140,'UTF-8') . '...';
+            } else $json['topic_content'] = $topic['top_content'];
+            $result[] = $json;
+        }
+        return $result;
+    }
+
     public function getUserFriendsTopics($uid,$limit=0,$endTime=null){
         $friends = new Friend();
         $friends->uid = $uid;
@@ -111,7 +136,6 @@ class Topic extends Data
         if($limit!=0){
             $sql.="LIMIT ".$limit." ";
         }
-       // echo $sql;
 
         return self::db_query($sql);
     }

@@ -15,7 +15,7 @@ $form = array();
 if(isset($sendForm))
     $form = $sendForm;
 
-echo RFormHelper::openForm('user/applyVIP/',array('id'=>'vipApplyForm','class'=>'form-signin'));
+echo RFormHelper::openForm('user/applyVIP/',array('id'=>'vipApplyForm'));
 
 echo RFormHelper::label('Statement of Purpose: ','content',array());
 echo "<br/>";
@@ -25,6 +25,7 @@ echo RFormHelper::textarea(
         'name'=>'content',
         'cols'=>100,
         'rows'=>6,
+        'class'=>'form-control',
         'placeholder'=>'Explain your purpose and qualification of applying for VIP',
     ),$form);
 

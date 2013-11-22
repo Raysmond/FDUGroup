@@ -3,6 +3,9 @@
     <div class="panel-body">
         <?php
         echo '<div class="row user-list">';
+        if(empty($friend)){
+            echo '<div>&nbsp;&nbsp;You don\'t have any friends yet!</div>';
+        }
         foreach($friends as $friend){
             echo '<div class="user-item col-lg-4">';
             echo '<a href="'.RHtmlHelper::siteUrl('user/view/'.$friend->id).'">'.RHtmlHelper::showImage(isset($friend->picture)&&$friend->picture!=''?$friend->picture:User::$defaults['picture'],$friend->name,array('width'=>'64px','height'=>'64px')).'</a>';

@@ -19,9 +19,7 @@ class UserController extends RController
     {
         $data = array();
         if (Rays::app()->isUserLogin()) {
-            $this->flash("message", Rays::app()->getLoginUser()->name . ", you have already login...");
-            $this->redirect(Rays::app()->getBaseUrl());
-            return;
+            $this->redirectAction('user','home');
         }
 
         if ($this->getHttpRequest()->isPostRequest()) {
@@ -83,7 +81,7 @@ class UserController extends RController
             $friend = new Friend();
             $friend->uid = $currentUser->id;
             $friend->fid = $user->id;
-            $canAdd = ($friend->uid !== $friend->fid && count($friend->find()) == 0);    //who can add friend: bug fixed by songrenchu
+            $canAdd = ($friend->uid !== $friend->fid && count($friend->find()) == 0);
             $canCancel = ($friend->uid !== $friend->fid && !$canAdd);
             $canEdit = ($currentUser->id == $user->id);
         }
@@ -124,10 +122,7 @@ class UserController extends RController
             if ($validation->run()) {
                 $user = new User();
                 $user->register($_POST['username'], md5($_POST['password']), $_POST['email']);
-                $message = new Message();
-                $message->sendMsg('system', 0, $user->id, "Welcome, " . $user->name,
-                    RHtmlHelper::encode("Dear " . $user->name . " : <br/>Welcome to join the FDUGroup bit family!<br/><br/>--- FDUGroup team<br/>"), null, 1);
-
+                $user->sendWelcomeMessage();
                 $this->flash("message", "Hello," . $user->name . ", please " . RHtmlHelper::linkAction('user', 'login', 'login') . " !");
                 $this->redirectAction('user', 'view', $user->id);
             } else {
@@ -210,33 +205,38 @@ class UserController extends RController
         $this->render('edit', $data, false);
     }
 
-    public function actionAdmin(){
+    public function actionAdmin()
+    {
         $this->setHeaderTitle('User administration');
         $this->layout = 'admin';
         $data = array();
 
-        if ($this->getHttpRequest()->isPostRequest()){
+        if ($this->getHttpRequest()->isPostRequest()) {
             if (isset($_POST['checked_users'])) {
                 $selected = $_POST['checked_users'];
                 if (is_array($selected)) {
-                    $operation = ($_POST['operation_type'] === 'block' ? 0 : 1);
-                    foreach ($selected as $block_id) {
+                    $operation = $_POST['operation_type'];
+                    foreach ($selected as $id) {
                         $user = new User();
-                        $user->id = $block_id;
-                        $user->load();
-                        $user->status = $operation;
-                        $user->update();
+                        switch ($operation) {
+                            case "block":
+                                $user->blockUser($id);
+                                break;
+                            case "active":
+                                $user->activeUser($id);
+                                break;
+                        }
                     }
                 }
             }
         }
 
-        $filterStr = $this->getHttpRequest()->getParam('search',null);
+        $filterStr = $this->getHttpRequest()->getParam('search', null);
 
         $like = array();
-        if($filterStr!=null){
+        if ($filterStr != null) {
             $data['filterStr'] = $filterStr;
-            if (($str = trim($filterStr))!='') {
+            if (($str = trim($filterStr)) != '') {
                 $names = explode(' ', $str);
                 foreach ($names as $val) {
                     array_push($like, array('key' => 'name', 'value' => $val));
@@ -248,68 +248,47 @@ class UserController extends RController
         $count = $user->count($like);
         $data['count'] = $count;
 
-        $curPage = $this->getHttpRequest()->getQuery('page',1);
-        $pageSize = (isset($_GET['pagesize'])&&is_numeric($_GET['pagesize']))?$_GET['pagesize'] : 10;
+        $curPage = $this->getHttpRequest()->getQuery('page', 1);
+        $pageSize = (isset($_GET['pagesize']) && is_numeric($_GET['pagesize'])) ? $_GET['pagesize'] : 10;
         $users = new User();
-        $users = $users->find(($curPage-1)*$pageSize,$pageSize,array('key'=>$users->columns["id"],"order"=>'desc'),$like);
+        $users = $users->find(($curPage - 1) * $pageSize, $pageSize, array('key' => $users->columns["id"], "order" => 'desc'), $like);
         $data['users'] = $users;
 
         $url = RHtmlHelper::siteUrl('group/admin');
-        if($filterStr!=null) $url .= '?search='.urlencode(trim($filterStr));
-        $pager = new RPagerHelper('page',$count,$pageSize,$url,$curPage);
-        $pager = $pager->showPager();
-        $data['pager'] = $pager;
+        if ($filterStr != null) $url .= '?search=' . urlencode(trim($filterStr));
 
-        $this->render('admin',$data,false);
+        $pager = new RPagerHelper('page', $count, $pageSize, $url, $curPage);
+        $data['pager'] = $pager->showPager();
+
+        $this->render('admin', $data, false);
     }
 
     /**
      * User home page
      */
-    public function actionHome(){
+    public function actionHome()
+    {
         $this->layout = 'user';
         $user = Rays::app()->getLoginUser();
-        $data = array('user'=>$user);
-        $this->setHeaderTitle($user->name);
+        $data = array('user' => $user);
 
         // ajax request
         // load more posts
-        if($this->getHttpRequest()->getIsAjaxRequest()){
+        if ($this->getHttpRequest()->getIsAjaxRequest()) {
             $topics = new Topic();
             $lastLoadedTime = @$_POST['lastLoadedTime'];
-            $topics = $topics->getUserFriendsTopics($user->id,4,$lastLoadedTime!=''?$lastLoadedTime:null);
-            $result = array();
-            foreach($topics as $topic){
-                $json = array();
-                $json['user_name'] = $topic['u_name'];
-                $json['user_id'] = $topic['u_id'];
-                $json['topic_title'] = $topic['top_title'];
-                $json['user_picture'] = RHtmlHelper::siteUrl($topic['u_picture']);
-                $json['user_link'] = RHtmlHelper::siteUrl('user/view/'.$topic['u_id']);
-                $json['topic_link'] = RHtmlHelper::siteUrl('post/view/'.$topic['top_id']);
-                $json['group_name'] = $topic['gro_name'];
-                $json['group_id'] = $topic['gro_id'];
-                $json['group_link'] = RHtmlHelper::siteUrl('group/detail/'.$topic['gro_id']);
-                $json['topic_created_time'] = $topic['top_created_time'];
-                $json['topic_reply_count'] = $topic['top_comment_count'];
-                $topic['top_content'] = strip_tags(RHtmlHelper::decode($topic['top_content']));
-                if (mb_strlen($topic['top_content']) > 140) {
-                    $json['topic_content'] =  mb_substr($topic['top_content'], 0, 140,'UTF-8') . '...';
-                } else $json['topic_content'] = $topic['top_content'];
-                $result[] = $json;
-
-            }
-
-            echo json_encode($result);
+            $lastLoadedTime = $lastLoadedTime != '' ? $lastLoadedTime : null;
+            $topics = $topics->getUserFriendsTopicsJsonArray($user->id, 4, $lastLoadedTime);
+            echo json_encode($topics);
             exit;
         }
 
+        $defaultSize = 5;
         $topics = new Topic();
-        $topics = $topics->getUserFriendsTopics($user->id,4);
+        $data['topics'] = $topics->getUserFriendsTopics($user->id, $defaultSize);
 
-        $data['topics'] = $topics;
-
-        $this->render('home',$data,false);
+        $this->setHeaderTitle($user->name);
+        $this->render('home', $data, false);
     }
 
     /**

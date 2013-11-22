@@ -140,5 +140,32 @@ class User extends Data{
         }
     }
 
+    public function blockUser($userId=''){
+        $this->setStatus($userId,self::STATUS_BLOCKED);
+    }
+
+    public function activeUser($userId=''){
+        $this->setStatus($userId,self::STATUS_ACTIVE);
+    }
+
+    private function setStatus($userId='',$status){
+        if($userId!='') $this->id = $userId;
+        if(isset($this->id)){
+            $this->status = $status;
+            $this->update();
+        }
+    }
+
+    public function sendWelcomeMessage(){
+        $message = new Message();
+        $title = "Welcome " . $this->name;
+        $content = 'Dear '.$this->name." : <br/>"
+            ."Welcome to join the FDUGroup big family!"
+            .'<br/><br/>'
+            ."--- <b>FDUGroup team</b>"
+            .'<br/>'
+            .date('Y-m-d H:i:s');
+        $message->sendMsg('system', 0, $this->id, $title, RHtmlHelper::encode($content), null, 1);
+    }
 
 }
