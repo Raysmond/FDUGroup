@@ -28,11 +28,7 @@
             <p class="pull-right visible-xs">
                 <button type="button" class="btn btn-primary btn-xs" data-toggle="offcanvas">Toggle nav</button>
             </p>
-            <div id="messages">
-                <?php
-                echo RHtmlHelper::showFlashMessages();
-                ?>
-            </div>
+            <div id="messages"><?=RHtmlHelper::showFlashMessages()?></div>
             <div id="content">
                 <?php if(isset($content)) echo $content; ?>
             </div>

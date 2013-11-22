@@ -157,4 +157,5 @@ class Message extends Data{
     {
         return count($this->getUnReadMsgs($receiverId));
     }
+
 }

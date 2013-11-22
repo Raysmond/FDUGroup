@@ -135,3 +135,16 @@ blockquote
     padding: 5px;
     text-align: center;
 }
+
+/* Groups */
+.recommend-groups{
+
+}
+
+.recommend-groups .recommend-group-item{
+   text-align: center;
+}
+.recommend-groups .recommend-group-item img{
+    width: 140px;
+    height: 140px;
+}

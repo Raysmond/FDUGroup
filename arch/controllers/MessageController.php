@@ -126,6 +126,7 @@ class MessageController extends RController
      */
     public function actionView($msgType = 'all')
     {
+        $this->setHeaderTitle("Messages");
         $messages = new Message();
         $userId = Rays::app()->getLoginUser()->id;
         if ($msgType == 'all') {

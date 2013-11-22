@@ -61,6 +61,7 @@ $baseurl = Rays::app()->getBaseUrl();
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Groups <b class="caret"></b></a>
                     <ul class="dropdown-menu">
                         <li><?php echo RHtmlHelper::linkAction('group',"Admin groups",'admin'); ?></li>
+                        <li><?php echo RHtmlHelper::linkAction('group',"Groups recommendation",'recommend'); ?></li>
                         <li><?php echo RHtmlHelper::linkAction('group',"Find groups",'findAdmin'); ?></li>
                         <li><?php echo RHtmlHelper::linkAction('group',"Create new group",'buildAdmin'); ?></li>
                     </ul>

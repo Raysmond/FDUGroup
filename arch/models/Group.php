@@ -21,6 +21,8 @@ class Group extends Data
         "picture"=>'Picture'
     );
 
+    public static $defaults = array('picture'=>'public/images/default_pic.png');
+
     public function __construct()
     {
         $option = array(
@@ -128,6 +130,23 @@ class Group extends Data
         }
         else
             return false;
+    }
+
+    public static function inviteFriends($groupId,$user,$invitees=array(),$invitationMsg){
+        $group = new Group();
+        $group->load($groupId);
+        foreach ($invitees as $friendId) {
+            $msg = new Message();
+            $content = RHtmlHelper::linkAction('user', $user->name, 'view', $user->id)
+                . ' invited you to join group '
+                . RHtmlHelper::linkAction('group', $group->name, 'detail', $group->id)
+                . '&nbsp;&nbsp;'
+                . RHtmlHelper::linkAction('group', 'Accept invitation', 'join', $group->id, array('class' => 'btn btn-xs btn-info'))
+                . '</br>'
+                . $invitationMsg;
+            $content = RHtmlHelper::encode($content);
+            $msg->sendMsg('group', $user->id, $friendId, 'new group invitation', $content);
+        }
     }
 
     public function findAll($start,$pageSize,$order=array(),$assignment=array(),$like=array()){
