@@ -62,7 +62,7 @@ class Censor extends Data{
         }
     }
 
-    private function getTypeIdbyTypeName($typeName) {
+    public function getTypeIdbyTypeName($typeName) {
         $this->typeId = new CensorType();
         $this->typeId->typeName = $typeName;
         $this->typeId = $this->typeId->find()[0]->typeId;
@@ -89,18 +89,20 @@ class Censor extends Data{
         if ($censorId !== null) {
             $this->id = $censorId;
             $this->load();
-            $this->status = self::PASS;
-            $this->update();
         }
+        $this->status = self::PASS;
+        $this->update();
+        return $this;
     }
 
     public function failCensor($censorId = null) {
         if ($censorId !== null) {
             $this->id = $censorId;
             $this->load();
-            $this->status = self::DENY;
-            $this->update();
         }
+        $this->status = self::DENY;
+        $this->update();
+        return $this;
     }
 
     public function addFriendApplication($userFrom, $userTo) {      //add friend application

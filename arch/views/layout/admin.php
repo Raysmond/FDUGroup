@@ -46,6 +46,7 @@ $baseurl = Rays::app()->getBaseUrl();
                     <ul class="dropdown-menu">
                         <li><?=RHtmlHelper::linkAction('user','All users','admin')?></li>
                         <li><a href="#">Create new user</a></li>
+                        <li><?=RHtmlHelper::linkAction('user','VIP applications','processVIP')?></li>
                     </ul>
                 </li>
 

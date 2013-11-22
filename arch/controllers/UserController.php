@@ -9,8 +9,8 @@ class UserController extends RController
     public $layout = "index";
     public $defaultAction = "home";
     public $access = array(
-        Role::AUTHENTICATED => array('edit', 'logout','home','profile'),
-        Role::ADMINISTRATOR=>array('admin'));
+        Role::AUTHENTICATED => array('edit', 'logout','home','profile', 'applyVIP'),
+        Role::ADMINISTRATOR=>array('admin','processVIP'));
 
     /**
      * Login action
@@ -348,5 +348,73 @@ class UserController extends RController
             return;
         }
         $this->render('apply_vip',$data,false);
+    }
+
+    /**
+     * Process VIP
+     * by songrenchu
+     */
+    public function actionProcessVIP() {
+        //$this->setHeaderTitle('User administration');
+        $this->layout = 'admin';
+        $data = array();
+
+        if (isset($_GET['censorId']) && isset($_GET['op'])) {
+            $censor = new Censor();
+            if ((int)$_GET['op'] === 0) {
+                $censor->passCensor( (int)$_GET['censorId']);
+
+                $user = new User();
+                $user->id = $censor->firstId;
+                $user->load();
+                $user->roleId = Role::VIP_ID;
+                $user->update();
+
+                $content = "Congratulations, " . RHtmlHelper::linkAction('user',$user->name,'view',$user->id). "!<br/> Your VIP application is accepted by Administrator.";
+                $message = new Message();
+                $message->sendMsg("system", 0, $user->id, "VIP application accepted", $content, '');
+            } else {
+                $censor->failCensor( (int)$_GET['censorId']);
+
+                $user = new User();
+                $user->id = $censor->firstId;
+                $user->load();
+                $content = "Sorry, " . RHtmlHelper::linkAction('user',$user->name,'view',$user->id). "!<br/> Your VIP application is declined by Administrator.";
+                $message = new Message();
+                $message->sendMsg("system", 0, $user->id, "VIP application declined", $content, '');
+            }
+            $this->redirectAction('user','processVIP');
+        }
+
+        $curPage = $this->getHttpRequest()->getQuery('page',1);
+        $pageSize = (isset($_GET['pagesize'])&&is_numeric($_GET['pagesize']))?$_GET['pagesize'] : 5;
+
+        $applications = new Censor();
+        $applications->status = Censor::UNPROCESS;
+        $applications->getTypeIdbyTypeName('apply_vip');
+        $count = $applications->count([]);
+        $data['count'] = $count;
+
+        $applications = $applications->find(($curPage-1)*$pageSize,$pageSize,array('key'=>$applications->columns["id"],"order"=>'desc'));
+
+        $data['applications'] = $applications;
+
+        $users = [];
+        foreach ($applications as $apply) {
+            $user = new User();
+            $user->id = $apply->firstId;
+            $user->load();
+            $users[] = $user;
+        }
+
+        $data['users'] = $users;
+
+        $url = RHtmlHelper::siteUrl('user/processVIP');
+
+        $pager = new RPagerHelper('page',$count,$pageSize,$url,$curPage);
+        $pager = $pager->showPager();
+        $data['pager'] = $pager;
+
+        $this->render('process_vip',$data,false);
     }
 }
