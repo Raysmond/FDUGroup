@@ -112,9 +112,16 @@
         $('input[name="selected_groups[]"]:checked').each(function(){
             var groupIndex = $(this).val();
             var group = recommendGroups[groupIndex];
-            toRecommendGroups.push(group);
-            showToRecommendGroups();
+            var newGroup = true;
+            for(var i=0;i<toRecommendGroups.length;i++){
+                if(toRecommendGroups[i].id==group.id){
+                    newGroup = false;
+                    break;
+                }
+            }
+            if(newGroup) toRecommendGroups.push(group);
         });
+        showToRecommendGroups();
     }
 
     function removeGroup(index){
@@ -164,9 +171,16 @@
         $('input[name="selected_users[]"]:checked').each(function(){
             var index = $(this).val();
             var user = recommendUsers[index];
-            toRecommendUsers.push(user);
-            showToRecommendUsers();
+            var newUser = true;
+            for(var i=0;i<toRecommendUsers.length;i++){
+                if(toRecommendUsers[i].id==user.id){
+                    newUser = false;
+                    break;
+                }
+            }
+            if(newUser) toRecommendUsers.push(user);
         });
+        showToRecommendUsers();
     }
 
     function removeUser(index){

@@ -6,24 +6,16 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#"><?= $appName ?></a>
+            <?= RHtmlHelper::linkAction("user",$appName,"home",null,array('class'=>'navbar-brand')); ?>
         </div>
         <div class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
-                <li <?php echo ($curUrl==''?'class="active"':''); ?>>
-                    <a href="<?php echo $baseUrl;?>">Home</a>
+                <li <?= (Rays::app()->getHttpRequest()->urlMatch(array('user/home','user','user/'), $curUrl)) ? 'class="active"' : "" ?>>
+                    <?= RHtmlHelper::linkAction("user","Home","home"); ?>
                 </li>
 
-                <li <?php echo ($curUrl=='site/about'?'class="active"':''); ?>>
-                    <?php echo RHtmlHelper::linkAction("site","About","about", null); ?>
-                </li>
-
-                <li <?php echo ($curUrl=='site/contact'?'class="active"':''); ?>>
-                    <?php echo RHtmlHelper::linkAction("site","Contact","contact", null); ?>
-                </li>
-
-                <li <?php echo ($curUrl=='group/find'?'class="active"':''); ?>>
-                    <?php echo RHtmlHelper::linkAction("group","Find Group","find", null); ?>
+                <li <?= ($curUrl=='group/find'?'class="active"':''); ?>>
+                    <?= RHtmlHelper::linkAction("group","Find Group","find"); ?>
                 </li>
 
                 <li <?php echo (Rays::app()->getHttpRequest()->urlMatch('group/view/*')?'class="active"':''); ?>>

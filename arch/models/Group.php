@@ -10,6 +10,8 @@ class Group extends Data
     public $category;
     public $id, $creator, $categoryId, $name, $memberCount, $createdTime, $intro,$picture;
 
+    const ENTITY_TYPE = 2;
+
     public static $labels = array(
         "id" => "ID",
         "creator" => "Creator",
@@ -102,6 +104,15 @@ class Group extends Data
         return $group;
     }
 
+    public function increaseCounter(){
+        if(isset($this->id)){
+            $counter = new Counter();
+            $counter->increaseCounter($this->id,self::ENTITY_TYPE);
+            return $counter;
+        }
+        return null;
+    }
+
     public function deleteGroup()
     {
         if(isset($this->id)&&$this->id!=''){
@@ -126,6 +137,12 @@ class Group extends Data
             Data::executeSQL($sql);
 
             $this->delete();
+
+            $counter = new Counter();
+            $counter = $counter->loadCounter($this->id,self::ENTITY_TYPE);
+            if($counter!=null)
+                $counter->delete();
+
             return true;
         }
         else
@@ -225,4 +242,26 @@ class Group extends Data
         return $result;
     }
 
+    public static function recommendGroups($groups,$users){
+        foreach ($users as $userId) {
+            $html = '<div class="row recommend-groups">';
+            foreach ($groups as $groupId) {
+                $group = new Group();
+                $group = $group->load($groupId);
+                if (null != $group) {
+                    $censor = new Censor();
+                    $censor = $censor->joinGroupApplication($userId, $group->id);
+                    $html .= '<div class="col-lg-3 recommend-group-item" style="padding: 5px;">';
+                    if (!isset($group->picture) || $group->picture == '') $group->picture = Group::$defaults['picture'];
+                    $html .= RHtmlHelper::showImage($group->picture, $group->name);
+                    $html .= '<br/>' . RHtmlHelper::linkAction('group', $group->name, 'detail', $group->id);
+                    $html .= '<br/>' . RHtmlHelper::linkAction('group', 'Accept', 'accept', $censor->id, array('class' => 'btn btn-xs btn-success'));
+                    $html .= '</div>';
+                }
+            }
+            $html .= '</div>';
+            $msg = new Message();
+            $msg->sendMsg('system', 0, $userId, 'Groups recommendation', $html, date('Y-m-d H:i:s'));
+        }
+    }
 }

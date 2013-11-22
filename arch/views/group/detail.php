@@ -31,18 +31,20 @@
             }
             ?>
 
-            <div class="col-xs-9">
-                Group members: <?php echo $group->memberCount; ?> <br/>
-                Create time: <?php echo $group->createdTime; ?> <br/>
-                Created by: <?php echo RHtmlHelper::linkAction('user',
-                    $group->groupCreator->name, 'view', $group->creator) ?>
-                <br/>
-                Group category: <?php echo RHtmlHelper::linkAction('category',
-                    $group->category->name, 'groups', $group->category->id); ?>
-                <br/>
+            <div class="group-content col-xs-9">
+                <div class="group-meta">
+                    <?=RHtmlHelper::linkAction('user', $group->groupCreator->name, 'view', $group->creator)?>
+                    created at
+                    <?=$group->createdTime?>
+                    &nbsp;|&nbsp;
+                    Members: <?=$group->memberCount?>
+                    &nbsp;|&nbsp;
+                    Views: <?=$counter?>
+                    &nbsp;|&nbsp;
+                    Category: <?=RHtmlHelper::linkAction('category',$group->category->name, 'groups', $group->category->id);?>
+                </div>
 
-                <br/>
-                Group introduction: <p><?php echo RHtmlHelper::decode($group->intro); ?></p> <br/>
+                <div class="group-intro"><?php echo RHtmlHelper::decode($group->intro); ?></div>
             </div>
         </div>
     </div>

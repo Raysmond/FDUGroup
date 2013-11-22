@@ -137,6 +137,15 @@ blockquote
 }
 
 /* Groups */
+.group-content{
+
+}
+.group-content .group-meta{
+    color: gray;
+}
+.group-content .group-intro{
+    margin: 10px 0;
+}
 .recommend-groups{
 
 }
