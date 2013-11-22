@@ -33,6 +33,11 @@ class CommentController extends RController
             }
         }
 
+        if($this->getHttpRequest()->getIsAjaxRequest()){
+            echo 'ajax delete, need to be implemented.';
+            exit;
+        }
+
         $curPage = $this->getHttpRequest()->getQuery('page', 1);
         $pageSize = (isset($_GET['pagesize'])&&is_numeric($_GET['pagesize']))?$_GET['pagesize']:5;
 
@@ -42,7 +47,7 @@ class CommentController extends RController
 
         $comment = new Comment();
         $comment = $comment->findAll(($curPage - 1) * $pageSize, $pageSize,
-            array('key' => $comment->columns["id"], "order" => 'desc'));
+            array('key' => 'id', "order" => 'desc'));
         $data['comments'] = $comment;
 
         $pager = new RPagerHelper('page', $count, $pageSize, RHtmlHelper::siteUrl('comment/admin'), $curPage);

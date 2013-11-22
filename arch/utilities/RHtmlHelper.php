@@ -126,7 +126,7 @@ class RHtmlHelper
         return $messages;
     }
 
-    private static function parseAttributes($attributes, $defaults = array())
+    public static function parseAttributes($attributes, $defaults = array())
     {
         if (is_array($attributes)) {
             foreach ($defaults as $key => $val) {

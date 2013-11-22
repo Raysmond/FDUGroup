@@ -74,6 +74,7 @@ class RFormHelper
         return $html;
     }
 
+
     private static function parseAttributes($attributes, $defaults = array())
     {
         if (is_array($attributes)) {

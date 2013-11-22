@@ -40,3 +40,7 @@
 <?= RFormHelper::endForm() ?>
 
 <?= $pager ?>
+<?php
+    //$ajax = new RAjaxHelper('ajax_delete_comment','Ajax delete',RHtmlHelper::siteUrl('comment/admin'),'POST',array('page'=>'1','pagesize'=>5),'before_delete','after_delete',array('class'=>'ajax_delete','title'=>'Ajax delete'));
+    //echo $ajax->html();
+?>

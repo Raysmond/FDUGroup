@@ -36,3 +36,27 @@ function checkClearAll(name) {
         }
     }
 }
+
+
+function rays_ajax_post(url, type, params, beforeSubmit, callback){
+    var before = true;
+    if(typeof beforeSubmit == 'function') before = beforeSubmit(params);
+    if(before!=false){
+        if(typeof before == 'object' && before.hasOwnProperty('params')){
+            params = before.params;
+        }
+        $.ajax({type: type, url: url, data: params}).done(callback);
+    }
+}
+
+/*
+function before_delete(params){
+    // change param before ajax submit
+    var result = new Object();
+    result.params = 'hello';
+    return result
+}
+
+function after_delete(data){
+    alert(data);
+}*/
