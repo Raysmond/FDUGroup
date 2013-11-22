@@ -141,7 +141,6 @@ class GroupController extends RController
 
             $validation = new RFormValidationHelper($rules);
             if ($validation->run()) {
-                // success
                 $group = new Group();
                 $group = $group->buildGroup($_POST['group-name'], $_POST['category'], RHtmlHelper::encode($_POST['intro']), Rays::app()->getLoginUser()->id);
                 if (isset($_FILES['group_picture']) && ($_FILES['group_picture']['name'] != '')) {
