@@ -26,10 +26,12 @@ foreach($ads as $ad)
 <div class="panel panel-info">
     <div class="panel-heading">
         <div style="float:right;margin-top: -2px;">
-            <?=RHtmlHelper::linkAction('ads','remove','remove',$ad->id,['class' => 'btn btn-xs btn-danger'])?>
+            <?=$ad->pubTime?>
+            &nbsp;&nbsp;&nbsp;&nbsp;paid <?=$ad->paidPrice?> credits&nbsp;&nbsp;&nbsp;&nbsp;
+            <?=RHtmlHelper::linkAction('ads','remove','remove',[$ad->id, $data['type']],['class' => 'btn btn-xs btn-danger','onclick' => "return confirm('Are you sure to remove selected advertisement? (Removed advertisements cannot be recovered, and paid credits will not be returned.)')"])?>
         </div>
         <h3 class="panel-title">
-            <?=$ad->title?>&nbsp;&nbsp;&nbsp;&nbsp;at <?=$ad->pubTime?>
+            <?=$ad->title?>
         </h3>
     </div>
     <div class="panel-body">
@@ -44,7 +46,13 @@ foreach($ads as $ad)
 <div class="panel panel-info">
     <div class="panel-body">
         <div class="message-meta">
-            You have not published any advertisements yet.
+            <?php
+                if ($data['type'] == Ads::NORMAL) {
+                    echo 'You don\'t have any active advertisements.';
+                } else {
+                    echo 'You don\'t have any blocked advertisements.';
+                }
+            ?>
         </div>
     </div>
 </div>
