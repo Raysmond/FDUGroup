@@ -8,23 +8,62 @@ class AdsController extends RController {
     public $defaultAction = "view";
 
     public $access = [
-        Role::VIP => ['view', 'remove'],
-        Role::ADMINISTRATOR => ['admin'],
+        Role::VIP => ['view','apply','remove'],
+        Role::ADMINISTRATOR => ['approve','admin']
     ];
 
     public function actionView($type='active') {
         $this->setHeaderTitle('My Advertisements');
         $currentUserId = Rays::app()->getLoginUser()->id;
 
-        if ($type === 'active') {
-            $data['ads'] = (new Ads())->getUserAds($currentUserId, Ads::NORMAL);
-            $data['type'] = Ads::NORMAL;
-        } else {
-            $data['ads'] = (new Ads())->getUserAds($currentUserId, Ads::REMOVED);
-            $data['type'] = Ads::REMOVED;
+        $ads = new Ads();
+        if($type === 'blocked'){
+            $data['ads'] = $ads->getUserAds($currentUserId, Ads::BLOCKED);
+            $data['type'] = Ads::BLOCKED;
+        } else if($type === 'published'){
+            $data['ads'] = $ads->getUserAds($currentUserId, Ads::APPROVED);
+            $data['type'] = Ads::APPROVED;
+        } else{
+            $data['ads'] = $ads->getUserAds($currentUserId, Ads::APPLYING);
+            $data['type'] = Ads::APPLYING;
         }
 
         $this->render('view', $data, false);
+    }
+
+    public function actionApply(){
+        $data = array();
+        if($this->getHttpRequest()->isPostRequest()){
+            $rules = array(
+                array('field'=>'ads-title','label'=>'Ads title','rules'=>'trim|required|min_length[5]|max_length[255]'),
+                array('field'=>'ads-content','label'=>'Ads content','rules'=>'required'),
+                array('field'=>'paid-price','label'=>'Paid price','rules'=>'trim|required|number'),
+            );
+            $validation = new RFormValidationHelper($rules);
+            if($validation->run()){
+                $ads = new Ads();
+                $result = $ads->apply(
+                    Rays::app()->getLoginUser()->id,
+                    $_POST['ads-title'],
+                    RHtmlHelper::encode($_POST['ads-content']),
+                    $_POST['paid-price']
+                );
+                if($result==true){
+                    $this->flash('message','Your ads was applied successfully.');
+                }
+                else{
+                    $data['applyForm'] = $_POST;
+                    $this->flash('message','Apply failed.');
+                }
+            }
+            else{
+                $data['applyForm'] = $_POST;
+                $data['validation_errors'] = $validation->getErrors();
+            }
+        }
+
+        $this->setHeaderTitle("Ads application");
+        $this->render('apply',$data,false);
     }
 
     public function actionRemove($adId = null, $type) {
@@ -108,5 +147,25 @@ class AdsController extends RController {
         $data['pager'] = $pager->showPager();
 
         $this->render('admin', $data, false);
+    }
+
+    /**
+     * Approved ads can appear on some positions within appointed pages
+     * @access administrator
+     */
+    public function actionApprove($adId=''){
+        if(!isset($adId) || !is_numeric($adId)){
+            Rays::app()->page404();
+            return;
+        }
+        $ad = new Ads();
+        $ad->id = $adId;
+        $ad = $ad->load();
+        if ($ad !== null) {
+            $ad->approve();
+            $this->flash('message','Ads approved.');
+        } else {
+            Rays::app()->page404();
+        }
     }
 }

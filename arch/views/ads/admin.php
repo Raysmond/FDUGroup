@@ -51,8 +51,9 @@
                 <td><?=RHtmlHelper::decode($ad->content)?></td>
                 <td>
                     <?php
-                    if ($ad->status == 1) echo '<span style="color:green">active</span>';
-                    else echo '<span style="color:red">blocked</span>';
+                    if ($ad->status == Ads::APPROVED) echo '<span style="color:green">active</span>';
+                    else if ($ad->status == Ads::BLOCKED) echo '<span style="color:red">blocked</span>';
+                    else if ($ad->status == Ads::APPLYING) echo '<span>applying</span>';
                     ?>
                 </td>
 

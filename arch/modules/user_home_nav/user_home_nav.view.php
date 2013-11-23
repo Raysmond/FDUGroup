@@ -19,7 +19,7 @@
 
         if ($user->roleId == Role::VIP_ID) {
         ?>
-            <li <?= ($currentUrl == 'ads/view') ? 'class="active"' : "" ?>>
+            <li <?= (Rays::app()->getHttpRequest()->urlMatch(array('ads/view','ads/view/*'), $currentUrl)) ? 'class="active"' : "" ?>>
                 <a href="<?=RHtmlHelper::siteUrl('ads/view')?>">
                     Advertisement&nbsp;&nbsp;<span class="badge badge-vip">VIP</span>
                 </a>

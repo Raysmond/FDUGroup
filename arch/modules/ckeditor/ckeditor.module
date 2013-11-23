@@ -14,6 +14,8 @@ class ckeditor_module extends RModule{
     public $editorId = 'rays_editor_1';
     public $editorClass = 'ckeditor';
 
+    public $data = '';
+
     public $uploadUrl = 'file/uploadImage';
 
     private $_showEditor = true;
@@ -47,6 +49,10 @@ class ckeditor_module extends RModule{
             $this->uploadUrl = $params['uploadUrl'];
         }
 
+        if(isset($params['data'])){
+            $this->data = $params['data'];
+        }
+
         if(isset($params['attributes'])&&is_array($params['attributes'])){
             $this->_attributes = $params['attributes'];
             if(isset($this->_attributes['class'])){
@@ -73,6 +79,7 @@ class ckeditor_module extends RModule{
             'show'=>$this->_showEditor,
             'attributes'=>$this->_attributes,
             'uploadUrl'=>$this->getUploadUrl(),
+            'data'=>$this->data
         );
         return $this->render('ckeditor',$data);
     }

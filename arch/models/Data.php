@@ -43,7 +43,7 @@ class Data
     public function insert()
     {
         if ($this->key == null) {
-            return;
+            return null;
         }
         $sql = 'insert into ' . $this->table . '( ';
         $values = " values ( ";

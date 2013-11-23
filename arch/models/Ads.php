@@ -7,8 +7,11 @@ class Ads extends Data{
     public $publisher;
     public $id,$userId,$pubTime,$title,$content,$status,$paidPrice;
 
-    const NORMAL = 1;
-    const REMOVED = 2;
+    const APPLYING = 1;
+    const BLOCKED = 2;
+
+    // Approved ads can show on some pages of the site
+    const APPROVED = 3;
 
     public function __construct()
     {
@@ -39,23 +42,41 @@ class Ads extends Data{
         return $this;
     }
 
-    public function block($adId=''){
-        $this->markStatus($adId,self::REMOVED);
+    public function apply($userId,$title,$content,$paidPrice,$applyTime = null){
+        $this->userId = $userId;
+        $this->title = $title;
+        $this->content = $content;
+        $this->paidPrice = $paidPrice;
+        $this->pubTime = $applyTime!=null? $applyTime : date('Y-m-d H:i:s');
+        $this->status = self::APPLYING;
+        $id = $this->insert();
+        if(is_numeric($id)){
+            $this->load($id);
+            return true;
+        }
+        else{
+            return false;
+        }
     }
+
+    public function block($adId=''){
+        $this->markStatus($adId,self::BLOCKED);
+    }
+
 
     public function activate($adId=''){
-        $this->markStatus($adId,self::NORMAL);
+        $this->markStatus($adId,self::APPROVED);
     }
 
-    public function markStatus($adId, $status)
+    private function markStatus($adId, $status)
     {
         if (isset($adId) && is_numeric($adId)) {
             $this->id = $adId;
-            $result = $this->load();
-            if ($result != null) {
-                $this->status = $status;
-                $this->update();
-            }
+        }
+        if(isset($this->id) && is_numeric($this->id)){
+            $this->load();
+            $this->status = $status;
+            $this->update();
         }
     }
 

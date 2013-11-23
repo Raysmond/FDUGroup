@@ -4,18 +4,19 @@
  * User: songrenchu
  */
 ?>
-<h2><?php echo count($ads); ?> advertisements <?php echo ($type==Ads::REMOVED?"blocked":""); ?></h2>
+<h2>
+    <?php echo count($ads); ?> advertisements
+    <?php echo ($type==Ads::APPLYING?"applied":""); ?>
+    <?php echo ($type==Ads::BLOCKED?"blocked":""); ?>
+    <?php echo ($type==Ads::APPROVED?"published":""); ?>
+</h2>
 <div class="navbar-left">
-    <?php
-    echo RFormHelper::openForm('ads/publish');
-    //echo RFormHelper::input(array('type'=>'hidden','name'=>'new','value'=>'true'));
-    echo RFormHelper::input(array('type'=>'submit','value'=>'+ Publish','class'=>'btn btn-sm btn-info'));
-    echo RFormHelper::endForm();
-    ?>
+    <?=RHtmlHelper::linkAction('ads','+ Apply','apply',null,array('class'=>'btn btn-sm btn-info'))?>
 </div>
 
 <div class="navbar-right">
-    <?php echo RHtmlHelper::linkAction('ads',"Active",'view','active',array('class'=>'btn btn-sm btn-success'));?>
+    <?php echo RHtmlHelper::linkAction('ads',"Application",'view','applying',array('class'=>'btn btn-sm btn-default'));?>
+    <?php echo RHtmlHelper::linkAction('ads',"Published",'view','published',array('class'=>'btn btn-sm btn-info'));?>
     <?php echo RHtmlHelper::linkAction('ads',"Blocked",'view','blocked',array('class'=>'btn btn-sm btn-danger'));?>
 </div>
 <div class="clearfix" style="margin-bottom: 10px;"></div>
@@ -47,7 +48,7 @@ foreach($ads as $ad)
     <div class="panel-body">
         <div class="message-meta">
             <?php
-                if ($data['type'] == Ads::NORMAL) {
+                if ($data['type'] == Ads::APPROVED) {
                     echo 'You don\'t have any active advertisements.';
                 } else {
                     echo 'You don\'t have any blocked advertisements.';
