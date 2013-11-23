@@ -218,7 +218,6 @@ class GroupController extends RController
         } else {
             $data['oldGroup'] = $oldGroup;
         }
-        $this->addJs("/public/ckeditor/ckeditor.js");
         $this->render('edit', $data, false);
     }
 

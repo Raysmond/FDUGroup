@@ -40,8 +40,16 @@ echo "<br/>";
 
 echo RFormHelper::label('Group Introduction','intro',array());
 echo '<br/>';
-echo RFormHelper::textarea(array('class'=>'ckeditor','name'=>'intro','cols'=>'100','rows'=>'15'),
-    isset($oldGroup)?RHtmlHelper::decode($oldGroup->intro):RHtmlHelper::decode($form));
+
+//echo RFormHelper::textarea(array('class'=>'ckeditor','name'=>'intro','cols'=>'100','rows'=>'15'),
+//    isset($oldGroup)?RHtmlHelper::decode($oldGroup->intro):RHtmlHelper::decode($form));
+
+$formIntro = isset($form['intro'])?$form['intro']:'';
+$this->module('ckeditor',
+    array('editorId'=>'intro',
+        'name'=>'intro',
+        'data'=>(isset($oldGroup)?$oldGroup->intro:$formIntro)
+    ));
 
 echo '<br/>';
 echo RFormHelper::label('New group picture','group_picture');
