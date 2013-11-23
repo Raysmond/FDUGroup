@@ -42,12 +42,15 @@
         <br/>
 
         <?=RFormHelper::label('Paid price','paid-price')?>
-        <?=RFormHelper::input(
-            array(
-                'id'=>'paid-price',
-                'name'=>'paid-price',
-                'class'=>'form-control'
-            ), $form)?>
+        <div class="input-group">
+            <?=RFormHelper::input(
+                array(
+                    'id'=>'paid-price',
+                    'name'=>'paid-price',
+                    'class'=>'form-control'
+                ), $form)?>
+            <span class="input-group-addon">RMB</span>
+        </div>
 
         <br/>
 
