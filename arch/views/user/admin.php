@@ -21,7 +21,7 @@
                         &nbsp;&nbsp;
                         <a class='btn btn-xs btn-danger' href="javascript:block_submit()">Block</a>
                         &nbsp;&nbsp;
-                        <a class='btn btn-xs btn-success' href="javascript:active_submit()">Active</a>
+                        <a class='btn btn-xs btn-success' href="javascript:active_submit()">Activate</a>
                         <?=RFormHelper::hidden(array('id'=>'operation_type','name'=>'operation_type','value'=>'block'))?>
                    </div>
                 </div>

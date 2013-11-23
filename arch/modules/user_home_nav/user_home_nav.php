@@ -19,8 +19,8 @@
 
         if ($user->roleId == Role::VIP_ID) {
         ?>
-            <li <?= ($currentUrl == 'user/ads') ? 'class="active"' : "" ?>>
-                <a href="<?=RHtmlHelper::siteUrl('user/ads')?>">
+            <li <?= ($currentUrl == 'ads/view') ? 'class="active"' : "" ?>>
+                <a href="<?=RHtmlHelper::siteUrl('ads/view')?>">
                     Advertisement&nbsp;&nbsp;<span class="badge badge-vip">VIP</span>
                 </a>
             </li>
