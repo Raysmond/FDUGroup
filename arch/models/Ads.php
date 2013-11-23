@@ -7,8 +7,9 @@ class Ads extends Data{
     public $publisher;
     public $id,$userId,$pubTime,$title,$content,$status,$paidPrice;
 
-    const NORMAL = 1;
-    const REMOVED = 2;
+    const APPLYING = 1;
+    const NORMAL = 2;
+    const REMOVED = 3;
 
     public function __construct()
     {
@@ -37,6 +38,23 @@ class Ads extends Data{
         $this->publisher->load();
 
         return $this;
+    }
+
+    public function apply($userId,$title,$content,$paidPrice,$applyTime = null){
+        $this->userId = $userId;
+        $this->title = $title;
+        $this->content = $content;
+        $this->paidPrice = $paidPrice;
+        $this->pubTime = $applyTime!=null? $applyTime : date('Y-m-d H:i:s');
+        $this->status = self::APPLYING;
+        $id = $this->insert();
+        if(is_numeric($id)){
+            $this->load($id);
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 
     public function block($adId=''){

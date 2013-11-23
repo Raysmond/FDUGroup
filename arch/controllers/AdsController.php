@@ -8,7 +8,7 @@ class AdsController extends RController {
     public $defaultAction = "view";
 
     public $access = [
-        Role::VIP => ['view'],
+        Role::VIP => ['view','apply'],
     ];
 
     public function actionView($type='active') {
@@ -25,5 +25,40 @@ class AdsController extends RController {
         }
 
         $this->render('view', $data, false);
+    }
+
+    public function actionApply(){
+        $data = array();
+        if($this->getHttpRequest()->isPostRequest()){
+            $rules = array(
+                array('field'=>'ads-title','label'=>'Ads title','rules'=>'trim|required|min_length[5]|max_length[255]'),
+                array('field'=>'ads-content','label'=>'Ads content','rules'=>'required'),
+                array('field'=>'paid-price','label'=>'Paid price','rules'=>'trim|required|number'),
+            );
+            $validation = new RFormValidationHelper($rules);
+            if($validation->run()){
+                $ads = new Ads();
+                $result = $ads->apply(
+                    Rays::app()->getLoginUser()->id,
+                    $_POST['ads-title'],
+                    RHtmlHelper::encode($_POST['ads-content']),
+                    $_POST['paid-price']
+                );
+                if($result==true){
+                    $this->flash('message','Your ads was applied successfully.');
+                }
+                else{
+                    $data['applyForm'] = $_POST;
+                    $this->flash('message','Apply failed.');
+                }
+            }
+            else{
+                $data['applyForm'] = $_POST;
+                $data['validation_errors'] = $validation->getErrors();
+            }
+        }
+
+        $this->setHeaderTitle("Ads application");
+        $this->render('apply',$data,false);
     }
 }

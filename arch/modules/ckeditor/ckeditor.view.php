@@ -1,6 +1,6 @@
 <?php if($show): ?>
     <textarea id="<?=$id?>" name="<?=$id?>" <?=RHtmlHelper::parseAttributes($attributes)?> >
-
+    <?=RHtmlHelper::decode($data)?>
     </textarea>
 
     <script>

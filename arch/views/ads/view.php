@@ -6,12 +6,7 @@
 ?>
 <h2><?php echo count($ads); ?> advertisements <?php echo ($type==Ads::REMOVED?"blocked":""); ?></h2>
 <div class="navbar-left">
-    <?php
-    echo RFormHelper::openForm('ads/publish');
-    //echo RFormHelper::input(array('type'=>'hidden','name'=>'new','value'=>'true'));
-    echo RFormHelper::input(array('type'=>'submit','value'=>'+ Publish','class'=>'btn btn-sm btn-info'));
-    echo RFormHelper::endForm();
-    ?>
+    <?=RHtmlHelper::linkAction('ads','+ Apply','apply',null,array('class'=>'btn btn-sm btn-info'))?>
 </div>
 
 <div class="navbar-right">
