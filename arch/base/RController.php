@@ -157,6 +157,7 @@ class RController
             if(in_array($this->_action,$this->access[Role::ADMINISTRATOR]))
                 $definedRoleId = Role::ADMINISTRATOR_ID;
         }
+
         if(isset($this->access[Role::AUTHENTICATED]))
         {
             if(in_array($this->_action,$this->access[Role::AUTHENTICATED]))
@@ -169,6 +170,12 @@ class RController
                 $definedRoleId = Role::ANONYMOUS_ID;
         }
 
+        if(isset($this->access[Role::VIP]))
+        {
+            if(in_array($this->_action,$this->access[Role::VIP]))
+                $definedRoleId = Role::VIP_ID;
+        }
+
         //authority access allowance table (need authority , own authority)
         $authorityAllowTable = [
             [Role::ADMINISTRATOR_ID, Role::ADMINISTRATOR_ID],
@@ -178,10 +185,6 @@ class RController
         ];
 
         return in_array([$definedRoleId, $roleId], $authorityAllowTable);
-        /*if($roleId<=$definedRoleId)
-            return true;
-        else
-            return false;*/
     }
 
     /**
