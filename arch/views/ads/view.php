@@ -7,7 +7,7 @@
 <h2>
     <?php echo count($ads); ?> advertisements
     <?php echo ($type==Ads::APPLYING?"applied":""); ?>
-    <?php echo ($type==Ads::REMOVED?"blocked":""); ?>
+    <?php echo ($type==Ads::BLOCKED?"blocked":""); ?>
     <?php echo ($type==Ads::APPROVED?"published":""); ?>
 </h2>
 <div class="navbar-left">

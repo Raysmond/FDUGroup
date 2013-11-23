@@ -8,7 +8,7 @@ class Ads extends Data{
     public $id,$userId,$pubTime,$title,$content,$status,$paidPrice;
 
     const APPLYING = 1;
-    const REMOVED = 2;
+    const BLOCKED = 2;
 
     // Approved ads can show on some pages of the site
     const APPROVED = 3;
@@ -60,11 +60,12 @@ class Ads extends Data{
     }
 
     public function block($adId=''){
-        $this->markStatus($adId,self::REMOVED);
+        $this->markStatus($adId,self::BLOCKED);
     }
 
-    public function approve($adsId=''){
-        $this->markStatus($adsId,self::APPROVED);
+
+    public function activate($adId=''){
+        $this->markStatus($adId,self::APPROVED);
     }
 
     private function markStatus($adId, $status)
@@ -73,6 +74,7 @@ class Ads extends Data{
             $this->id = $adId;
         }
         if(isset($this->id) && is_numeric($this->id)){
+            $this->load();
             $this->status = $status;
             $this->update();
         }

@@ -76,8 +76,6 @@ $baseurl = Rays::app()->getBaseUrl();
                     </ul>
                 </li>
 
-
-
                 <li><?=RHtmlHelper::linkAction('comment','Comment','admin')?></li>
 
                 <li class="dropdown">
@@ -88,6 +86,8 @@ $baseurl = Rays::app()->getBaseUrl();
                         <li><a href="#">new messages</a></li>
                     </ul>
                 </li>
+
+                <li><?=RHtmlHelper::linkAction('ads','Advertisement','admin')?></li>
             </ul>
 
             <ul class="nav navbar-nav navbar-right">
