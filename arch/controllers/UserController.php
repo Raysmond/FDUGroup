@@ -34,8 +34,6 @@ class UserController extends RController
                 $login = $user->verifyLogin($_POST['username'], $_POST['password']);
                 if ($login instanceof User) {
                     $this->getSession()->set("user", $login->id);
-                    $this->flash("message", "Login successfully.");
-                    //$this->redirect(Rays::app()->getBaseUrl());
                     $this->redirectAction('user','home');
                 } else {
                     $this->flash("error", $login);
@@ -308,7 +306,7 @@ class UserController extends RController
 
             if ($validation->run()) {
                 $censor = new Censor();
-                $censor->applyVIPApplication($user->id, $_POST['content']);
+                $censor->applyVIPApplication($user->id, RHtmlHelper::encode($_POST['content']));
                 $this->flash('message', 'VIP application sent.');
                 $this->redirectAction('user', 'profile');
             } else {

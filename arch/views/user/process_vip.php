@@ -28,7 +28,7 @@
             echo '<tr>';
             ?><td><?=$apply->sendTime;?></td>
             <td><?=RHtmlHelper::linkAction('user', $users[$count]->name, 'view', $users[$count]->id);?></td>
-            <td><?=$apply->content;?></td>
+            <td><?=RHtmlHelper::decode($apply->content);?></td>
             <td>
                 <?=RHtmlHelper::linkAction('user', 'Accept', 'processVIP?censorId='.$apply->id.'&op=0', [], ['class' => 'btn btn-xs btn-success']);?>
                 <?=RHtmlHelper::linkAction('user', 'Decline', 'processVIP?censorId='.$apply->id.'&op=1', [], ['class' => 'btn btn-xs btn-danger']);?>

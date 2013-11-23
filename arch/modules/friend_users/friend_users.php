@@ -3,7 +3,7 @@
     <div class="panel-body">
         <?php
         echo '<div class="row user-list">';
-        if(empty($friend)){
+        if(empty($friends)){
             echo '<div>&nbsp;&nbsp;You don\'t have any friends yet!</div>';
         }
         foreach($friends as $friend){

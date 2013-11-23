@@ -11,6 +11,7 @@ class Group extends Data
     public $id, $creator, $categoryId, $name, $memberCount, $createdTime, $intro,$picture;
 
     const ENTITY_TYPE = 2;
+    const PICTURE_PATH = '/public/images/groups/';
 
     public static $labels = array(
         "id" => "ID",
@@ -102,6 +103,23 @@ class Group extends Data
         $groupUser->insert();
 
         return $group;
+    }
+
+    public function uploadPicture($fileTag)
+    {
+        $uploadPath = Rays::getFrameworkPath() . '/..' . self::PICTURE_PATH;
+        $picName = 'group_' . $this->id . RUploadHelper::get_extension($_FILES[$fileTag]['name']);
+        $upload = new RUploadHelper(array('file_name' => 'group_' . $picName, 'upload_path' => $uploadPath));
+
+        $upload->upload($fileTag);
+
+        if ($upload->error != '') {
+            return $upload->error;
+        } else {
+            $this->picture = "public/images/groups/" . $upload->file_name;
+            $this->update();
+            return true;
+        }
     }
 
     public function increaseCounter(){
@@ -242,6 +260,11 @@ class Group extends Data
         return $result;
     }
 
+    /**
+     * Recommend all selected groups to every selected users
+     * @param $groups
+     * @param $users
+     */
     public static function recommendGroups($groups,$users){
         foreach ($users as $userId) {
             $html = '<div class="row recommend-groups">';

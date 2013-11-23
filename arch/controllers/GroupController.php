@@ -15,7 +15,7 @@ class GroupController extends RController
     );
 
     /*
-     * actionFind: find groups/show all groups
+     * Find groups/show all groups
      */
     public function actionFind()
     {
@@ -44,8 +44,6 @@ class GroupController extends RController
 
         $groups = $group->find($pageSize * ($page - 1), $pageSize, array('key'=>'gro_id',"order"=>"desc"), $like);
 
-
-        $this->setHeaderTitle("Find Group");
         $data = array('group' => $groups);
         if ($searchStr != '') $data['searchstr'] = $searchStr;
 
@@ -56,14 +54,14 @@ class GroupController extends RController
             $url = RHtmlHelper::siteUrl('group/find');
 
         $pager = new RPagerHelper('page',$groupSum,$pageSize, $url,$page);
-        $pager = $pager->showPager();
-        $data['pager'] = $pager;
+        $data['pager'] = $pager->showPager();
 
+        $this->setHeaderTitle("Find Group");
         $this->render("find", $data, false);
     }
 
     /*
-     * actionView: view my groups
+     * View my groups
      */
     public function actionView($userId = null)
     {
@@ -74,6 +72,10 @@ class GroupController extends RController
         $this->render("view", $userGroup, false);
     }
 
+    /**
+     * View group detail
+     * @param $groupId
+     */
     public function actionDetail($groupId)
     {
         if(!is_numeric($groupId)){
@@ -87,6 +89,7 @@ class GroupController extends RController
             Rays::app()->page404();
             return;
         }
+
         $counter = $group->increaseCounter();
         $group->category->load();
         $group->groupCreator->load();
@@ -138,25 +141,22 @@ class GroupController extends RController
                 array('field' => 'category', 'label' => 'Category', 'rules' => 'required'),
                 array('field' => 'intro', 'label' => 'Group Introduction', 'rules' => 'trim|required|min_length[10]')
             );
-
+            $user = Rays::app()->getLoginUser();
             $validation = new RFormValidationHelper($rules);
             if ($validation->run()) {
                 $group = new Group();
-                $group = $group->buildGroup($_POST['group-name'], $_POST['category'], RHtmlHelper::encode($_POST['intro']), Rays::app()->getLoginUser()->id);
-                if (isset($_FILES['group_picture']) && ($_FILES['group_picture']['name'] != '')) {
-                    $upload = new RUploadHelper(array('file_name' => 'group_' . $group->id . RUploadHelper::get_extension($_FILES['group_picture']['name']),
-                        'upload_path' => Rays::getFrameworkPath() . '/../public/images/groups/'));
-                    $upload->upload('group_picture');
-                    if ($upload->error != '') {
-                        $this->flash("error", $upload->error);
-                    } else {
-                        $group->picture = "public/images/groups/" . $upload->file_name;
-                        $group->update();
+                $group = $group->buildGroup($_POST['group-name'], $_POST['category'], RHtmlHelper::encode($_POST['intro']), $user->id);
+
+                // upload group picture
+                $file = $_FILES['group_picture'];
+                if (isset($file) && ($file['name'] != '')) {
+                    if(($result = $group->uploadPicture('group_picture'))!=true){
+                        $this->flash('error',$result);
                     }
                 }
+
                 $this->flash("message", "Group was built successfully.");
-                $this->redirectAction('group', 'view', Rays::app()->getLoginUser()->id);
-                return;
+                $this->redirectAction('group', 'view', $user->id);
             } else {
                 // validation failed
                 $data['validation_errors'] = $validation->getErrors();
@@ -171,14 +171,17 @@ class GroupController extends RController
 
     public function actionEdit($groupId)
     {
+        $this->setHeaderTitle("Edit my group");
+
         $oldGroup = new Group();
         $oldGroup->load($groupId);
-        $this->setHeaderTitle("Edit my group");
+
         $category = new Category();
         $categories = $category->find();
+
         $data = array('categories' => $categories, 'groupId' => $groupId);
+
         if ($this->getHttpRequest()->isPostRequest()) {
-            $form = $_POST;
             $rules = array(
                 array('field' => 'group-name', 'label' => 'Group name', 'rules' => 'trim|required|min_length[5]|max_length[30]'),
                 array('field' => 'category', 'label' => 'Category', 'rules' => 'required'),
@@ -195,23 +198,21 @@ class GroupController extends RController
                 $group->categoryId = $_POST['category'];
                 $group->intro = RHtmlHelper::encode($_POST['intro']);
                 $group->update();
-                if (isset($_FILES['group_picture']) && $_FILES['group_picture']['name'] != '') {
-                    $upload = new RUploadHelper(array('file_name' => 'group_' . $group->id . RUploadHelper::get_extension($_FILES['group_picture']['name']),
-                        'upload_path' => Rays::getFrameworkPath() . '/../public/images/groups/'));
-                    $upload->upload('group_picture');
-                    if ($upload->error != '') {
-                        $this->flash("error", $upload->error);
-                    } else {
-                        $group->picture = "public/images/groups/" . $upload->file_name;
-                        $group->update();
+
+                // upload group picture
+                $file = $_FILES['group_picture'];
+                if (isset($file) && ($file['name'] != '')) {
+                    if(($result = $group->uploadPicture('group_picture'))!=true){
+                        $this->flash('error',$result);
                     }
                 }
+
                 $this->flash("message", "Edit group successfully.");
-                $this->redirectAction('group', 'view', Rays::app()->getLoginUser()->id);
+                $this->redirectAction('group', 'detail', $group->id);
                 return;
             } else {
                 // validation failed
-                $data['editForm'] = $form;
+                $data['editForm'] = $_POST;
                 $data['validation_errors'] = $validation->getErrors();
             }
         } else {
