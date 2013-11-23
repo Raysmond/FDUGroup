@@ -37,8 +37,13 @@ foreach($categories as $cat){
 
 echo RFormHelper::label('Group Introduction','intro',array());
 echo '<br/>';
-echo RFormHelper::textarea(array('id'=>'group_intro','class'=>'ckeditor','name'=>'intro','cols'=>'100','rows'=>'15'),(isset($form['intro']))?RHtmlHelper::decode($form['intro']):"");
-
+//echo RFormHelper::textarea(array('id'=>'group_intro','class'=>'ckeditor','name'=>'intro','cols'=>'100','rows'=>'15'),(isset($form['intro']))?RHtmlHelper::decode($form['intro']):"");
+$formIntro = isset($form['intro'])?$form['intro']:'';
+$this->module('ckeditor',
+    array('editorId'=>'intro',
+        'name'=>'intro',
+        'data'=>(isset($oldGroup)?$oldGroup->intro:$formIntro)
+    ));
 echo '<br/>';
 echo RFormHelper::label('Group picture','group_picture');
 echo RFormHelper::input(array('type'=>'file','name'=>'group_picture','accept'=>'image/gif, image/jpeg,image/png'));

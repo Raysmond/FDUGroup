@@ -165,7 +165,6 @@ class GroupController extends RController
         } else {
             //
         }
-        $this->addJs("/public/ckeditor/ckeditor.js");
         $this->render('build', $data, false);
     }
 

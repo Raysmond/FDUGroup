@@ -35,7 +35,7 @@ foreach($categories as $cat){
     array_push($cats,array('value'=>$cat->id,'text'=>$cat->name));
 }
 
-echo RFormHelper::select('category',$cats,array($cats[$index]['value']));
+echo RFormHelper::select('category',$cats,array($cats[$index]['value']),array('class'=>'form-control'));
 echo "<br/>";
 
 echo RFormHelper::label('Group Introduction','intro',array());

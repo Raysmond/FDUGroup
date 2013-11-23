@@ -1,17 +1,24 @@
-<h2><?= $topic->title ?></h2>
-<div>
-    Post by: <?= RHtmlHelper::linkAction('user', $topic->user->name, 'view', $topic->user->id) ?>
-    &nbsp;&nbsp;Post in group: <?= RHtmlHelper::linkAction('group', $topic->group->name, 'detail', $topic->group->id) ?>
-    &nbsp;&nbsp;<?=$counter->totalCount?> reads
-    &nbsp;&nbsp;<?= $topic->createdTime ?>
-</div>
+<div class="post">
+    <h2><?= $topic->title ?></h2>
 
-<div>
-    <?= RHtmlHelper::decode($topic->content) ?>
+    <div class="post-meta">
+        Post by:
+        <?= RHtmlHelper::linkAction('user', $topic->user->name, 'view', $topic->user->id) ?>
+        &nbsp;&nbsp;Post in
+        group: <?= RHtmlHelper::linkAction('group', $topic->group->name, 'detail', $topic->group->id) ?>
+        &nbsp;&nbsp;<?= $counter->totalCount ?> reads
+        &nbsp;&nbsp;<?= $topic->createdTime ?>
+    </div>
+
+    <div class="post-content row">
+        <?= RHtmlHelper::decode($topic->content) ?>
+    </div>
+    <br/><br/>
+
+    <div>
+        Actions: <?= RHtmlHelper::linkAction('post', 'Edit', 'edit', $topic->id, array('class' => 'btn btn-xs btn-info')) ?></div>
 </div>
-<br/><br/>
-<div>Actions: <?= RHtmlHelper::linkAction('post', 'Edit', 'edit', $topic->id,array('class' => 'btn btn-xs btn-info')) ?></div>
-<hr/>
+    <hr/>
 
 <h2>Comments</h2>
 <?php

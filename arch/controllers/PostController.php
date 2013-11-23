@@ -36,7 +36,7 @@ class PostController extends RController {
 
             $validation = new RFormValidationHelper(array(
                 array("field" => "title", "label" => "Title", "rules" => "trim|required"),
-                array("field" => "content", "label" => "Content", "rules" => "trim|required"),
+                array("field" => "post-content", "label" => "Content", "rules" => "trim|required"),
             ));
 
             if ($validation->run()) {
@@ -44,7 +44,7 @@ class PostController extends RController {
                 $topic->groupId = $groupId;
                 $topic->userId = Rays::app()->getLoginUser()->id;
                 $topic->title = $form["title"];
-                $topic->content = RHtmlHelper::encode($form['content']);
+                $topic->content = RHtmlHelper::encode($form['post-content']);
                 date_default_timezone_set(Rays::app()->getTimeZone());
                 $topic->createdTime = date('Y-m-d H:i:s');
                 $topic->lastCommentTime = date('Y-m-d H:i:s');
@@ -59,7 +59,6 @@ class PostController extends RController {
         }
 
         $this->setHeaderTitle("New topic");
-        $this->addJs('/public/ckeditor/ckeditor.js');
         $this->render("edit", $data, false);
     }
 
@@ -73,11 +72,11 @@ class PostController extends RController {
 
             $validation = new RFormValidationHelper(array(
                 array("field" => "title", "label" => "Title", "rules" => "trim|required"),
-                array("field" => "content", "label" => "Content", "rules" => "trim|required"),
+                array("field" => "post-content", "label" => "Content", "rules" => "trim|required"),
             ));
             $form = $_POST;
             $topic->title = $form['title'];
-            $topic->content = RHtmlHelper::encode($form['content']);
+            $topic->content = RHtmlHelper::encode($form['post-content']);
 
             if ($validation->run()) {
                 $topic->update();
@@ -92,7 +91,6 @@ class PostController extends RController {
         $group->load($topic->groupId);
         $data = array("type" => "edit", "topic" => $topic,'group'=>$group);
         $this->setHeaderTitle("Edit post: ".$topic->title);
-        $this->addJs('/public/ckeditor/ckeditor.js');
         $this->render('edit', $data, false);
     }
 

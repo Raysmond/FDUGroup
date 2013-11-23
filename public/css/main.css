@@ -101,6 +101,15 @@ blockquote
     border-right-width: 5px;
 }
 
+/* Posts */
+.post-meta{
+    color: gray;
+}
+
+.post-content{
+    padding: 10px 5px;
+}
+
 /* Comment */
 .comment-item{
     padding: 10px 0 10px 0;

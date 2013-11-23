@@ -31,13 +31,26 @@ else {
     'placeholder' => 'Title'
 ), $title)?>
 <br/>
-<?=RFormHelper::textarea(array(
-    'id' => 'content',
-    'name' => 'content',
-    'class' => 'ckeditor form-control',
-    'rows' => 14,
-    'placeholder' => 'Content'
-), $content)?>
+
+<?php
+/*
+    echo RFormHelper::textarea(array(
+        'id' => 'post-content',
+        'name' => 'post-content',
+        'class' => 'ckeditor form-control',
+        'rows' => 14,
+        'placeholder' => 'Content'
+    ), $content);
+ */
+
+$this->module('ckeditor',
+    array('editorId'=>'post-content',
+        'name'=>'content',
+        'data'=>$content
+    ));
+?>
+
+
 <br/><br/>
 <?=RFormHelper::input(array('class' => 'btn btn-lg btn-primary btn-block', 'type' => 'submit', 'value' => $submitText))?>
 <?=RFormHelper::endForm()?>
