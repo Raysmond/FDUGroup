@@ -7,8 +7,8 @@ class Ads extends Data{
     public $publisher;
     public $id,$userId,$pubTime,$title,$content,$status,$paidPrice;
 
-    public static $NORMAL = 1;
-    public static $REMOVED = 2;
+    const NORMAL = 1;
+    const REMOVED = 2;
 
     public function __construct()
     {
@@ -57,5 +57,16 @@ class Ads extends Data{
                 $this->update();
             }
         }
+    }
+
+    public function getUserAds($userId, $type) {
+        if(!isset($userId)||$userId==''){
+            return null;
+        }
+        $ads = new Ads();
+        $ads->userId = $userId;
+        $ads->status = $type;
+        /* TODO pager */
+        return $ads->find(0, 0, ['key' => 'ads_id', 'order' => 'desc']);
     }
 }

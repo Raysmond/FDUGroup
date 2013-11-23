@@ -6,7 +6,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <?= RHtmlHelper::linkAction("user",$appName,"home",null,array('class'=>'navbar-brand')); ?>
+            <?= RHtmlHelper::linkAction("",$appName,"",null,array('class'=>'navbar-brand')); ?>
         </div>
         <div class="collapse navbar-collapse">
             <ul class="nav navbar-nav">

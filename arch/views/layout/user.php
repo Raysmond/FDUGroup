@@ -64,7 +64,7 @@ $baseUrl = Rays::app()->getBaseUrl();
                             <div><?=$user->region?>
                                 <?php if ($user->weibo!='') { ?>
                                     <?php if ($user->region!='') { ?>|<?php } ?>
-                                    微博: <?=RHtmlHelper::link($user->weibo,$user->weibo,$user->weibo)?>
+                                    Micro-Blog: <?=RHtmlHelper::link($user->weibo,$user->weibo,$user->weibo)?>
                                 <?php } ?>
                             </div>
                         </div>
