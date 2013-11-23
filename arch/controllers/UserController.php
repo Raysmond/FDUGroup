@@ -294,6 +294,8 @@ class UserController extends RController
      * by songrenchu
      */
     public function actionApplyVIP() {
+        $this->setHeaderTitle('VIP application');
+
         $this->layout = 'user';
         $user = Rays::app()->getLoginUser();
         $data = array('user'=>$user);
@@ -332,7 +334,7 @@ class UserController extends RController
      * by songrenchu
      */
     public function actionProcessVIP() {
-        //$this->setHeaderTitle('User administration');
+        $this->setHeaderTitle('Censor VIP');
         $this->layout = 'admin';
         $data = array();
 
