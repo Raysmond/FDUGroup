@@ -87,4 +87,8 @@ class RUploadHelper
         $x = explode('.', $filename);
         return '.'.end($x);
     }
+
+    public static function get_name($file_name) {
+        return preg_replace('/\.[a-zA-Z]+$/', '', $file_name);
+    }
 }

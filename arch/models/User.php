@@ -72,9 +72,11 @@ class User extends Data{
 
     public function load($id=null)
     {
-        parent::load($id);
+        $result = parent::load($id);
+        if($result==null) return null;
         $this->role = new Role();
         $this->role->roleId = $this->roleId;
+        return $this;
     }
 
     public function setDefaults()
@@ -111,6 +113,26 @@ class User extends Data{
         $this->mail = $email;
         $id = $this->insert();
         $this->load($id);
+    }
+
+    public function login($postForm){
+        $validation = new RFormValidationHelper(array(
+            array('field' => 'username', 'label' => 'User name', 'rules' => 'trim|required'),
+            array('field' => 'password', 'label' => 'password', 'rules' => 'trim|required')
+        ));
+
+        if ($validation->run()) {
+            $login = $this->verifyLogin($postForm['username'], $postForm['password']);
+            if ($login instanceof User) {
+                $this->id = $login->id;
+                $this->name = $login->name;
+                return true;
+            } else {
+                return array('verify_error'=>$login);
+            }
+        } else {
+            return array('validation_errors'=>$validation->getErrors());
+        }
     }
 
     /**

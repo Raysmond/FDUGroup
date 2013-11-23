@@ -29,6 +29,8 @@ class RModule
 
         if (isset($params['name']))
             $this->setName($params['name']);
+
+        $this->init($params);
     }
 
     /**
@@ -36,7 +38,7 @@ class RModule
      * You should override the method if you wanna do some initial work before
      * running the module
      */
-    public function init()
+    public function init($params=array())
     {
 
     }
@@ -72,6 +74,10 @@ class RModule
         return $this->_path;
     }
 
+    public function getModulePath(){
+        return Rays::app()->getBaseUrl().'/arch/modules/' . $this->getId();
+    }
+
     /**
      * Render a module view and get render content
      * @param string $viewFileName
@@ -92,6 +98,16 @@ class RModule
         else{
             die("Module view file not exists: ".$viewFile);
         }
+    }
+
+    public function addCss($cssPath)
+    {
+        Rays::app()->getClientManager()->registerCss($cssPath);
+    }
+
+    public function addJs($jsPath)
+    {
+        Rays::app()->getClientManager()->registerScript($jsPath);
     }
 
     /**

@@ -19,29 +19,23 @@ class UserController extends RController
     {
         $data = array();
         if (Rays::app()->isUserLogin()) {
-            $this->redirectAction('user','home');
+            $this->redirectAction('user', 'home');
         }
 
         if ($this->getHttpRequest()->isPostRequest()) {
-
-            $validation = new RFormValidationHelper(array(
-                array('field' => 'username', 'label' => 'User name', 'rules' => 'trim|required'),
-                array('field' => 'password', 'label' => 'password', 'rules' => 'trim|required')
-            ));
-
-            if ($validation->run()) {
-                $user = new User();
-                $login = $user->verifyLogin($_POST['username'], $_POST['password']);
-                if ($login instanceof User) {
-                    $this->getSession()->set("user", $login->id);
-                    $this->redirectAction('user','home');
-                } else {
-                    $this->flash("error", $login);
-                    $data['loginForm'] = $_POST;
-                }
+            $user = new User();
+            $login = $user->login($_POST);
+            if ($login == true) {
+                $this->getSession()->set("user", $user->id);
+                $this->redirectAction('user', 'home');
             } else {
-                $data['validation_errors'] = $validation->getErrors();
                 $data['loginForm'] = $_POST;
+                if (isset($login['verify_error'])) {
+                    $this->flash('error', $login['verify_error']);
+                }
+                if (isset($login['validation_errors'])) {
+                    $data['validation_errors'] = $login['validation_errors'];
+                }
             }
         }
         $this->setHeaderTitle("Login");
@@ -66,8 +60,7 @@ class UserController extends RController
     public function actionView($userId)
     {
         $user = new User();
-        $user->load($userId);
-        if (!isset($user->id)) { // no such user
+        if ($user->load($userId)==null) {
             Rays::app()->page404();
             return;
         }

@@ -1,3 +1,4 @@
 *.bak
 .idea
 .svn
+arch/modules/ckeditor
