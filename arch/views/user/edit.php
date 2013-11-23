@@ -108,8 +108,6 @@ echo RFormHelper::label("Picture");
 echo RFormHelper::input(array('type'=>'file','name'=>'user_picture','accept'=>'image/gif, image/jpeg,image/png'));
 echo "<br/>";
 
-$this->module('ckeditor',array('id'=>'ckeditor','editorId'=>'user_edit_intro'));
-
 echo RFormHelper::input(array('type'=>'submit','value'=>'Complete edit','class'=>"btn btn-lg btn-primary btn-block"));
 echo RFormHelper::endForm();
 

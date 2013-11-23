@@ -86,7 +86,7 @@ class RModule
      */
     public function render($viewFileName='', $data='')
     {
-        $viewFile = $this->getModuleDir()."/".$viewFileName.".php";
+        $viewFile = $this->getModuleDir()."/".$viewFileName.".view.php";
         if(file_exists($viewFile)){
             if (is_array($data))
                 extract($data);
