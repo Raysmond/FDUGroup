@@ -9,6 +9,7 @@ class AdsController extends RController {
 
     public $access = [
         Role::VIP => ['view','apply','remove'],
+        Role::ADMINISTRATOR => ['approve']
     ];
 
     public function actionView($type='active') {
@@ -79,6 +80,26 @@ class AdsController extends RController {
             } else {
                 die('Permission denied');
             }
+        } else {
+            Rays::app()->page404();
+        }
+    }
+
+    /**
+     * Approved ads can appear on some positions within appointed pages
+     * @access administrator
+     */
+    public function actionApprove($adId=''){
+        if(!isset($adId) || !is_numeric($adId)){
+            Rays::app()->page404();
+            return;
+        }
+        $ad = new Ads();
+        $ad->id = $adId;
+        $ad = $ad->load();
+        if ($ad !== null) {
+            $ad->approve();
+            $this->flash('message','Ads approved.');
         } else {
             Rays::app()->page404();
         }

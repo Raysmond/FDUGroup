@@ -11,6 +11,9 @@ class Ads extends Data{
     const NORMAL = 2;
     const REMOVED = 3;
 
+    // Approved ads can show on some pages of the site
+    const APPROVED = 4;
+
     public function __construct()
     {
         $options = array(
@@ -58,22 +61,25 @@ class Ads extends Data{
     }
 
     public function block($adId=''){
-        $this->markStatus($adId,self::$REMOVED);
+        $this->markStatus($adId,self::REMOVED);
     }
 
     public function activate($adId=''){
-        $this->markStatus($adId,self::$NORMAL);
+        $this->markStatus($adId,self::NORMAL);
     }
 
-    public function markStatus($adId, $status)
+    public function approve($adsId=''){
+        $this->markStatus($adsId,self::APPROVED);
+    }
+
+    private function markStatus($adId, $status)
     {
         if (isset($adId) && is_numeric($adId)) {
             $this->id = $adId;
-            $result = $this->load();
-            if ($result != null) {
-                $this->status = $status;
-                $this->update();
-            }
+        }
+        if(isset($this->id) && is_numeric($this->id)){
+            $this->status = $status;
+            $this->update();
         }
     }
 
