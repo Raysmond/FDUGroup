@@ -40,11 +40,11 @@ class Ads extends Data{
     }
 
     public function block($adId=''){
-        $this->markStatus($adId,self::$REMOVED);
+        $this->markStatus($adId,self::REMOVED);
     }
 
     public function activate($adId=''){
-        $this->markStatus($adId,self::$NORMAL);
+        $this->markStatus($adId,self::NORMAL);
     }
 
     public function markStatus($adId, $status)
