@@ -16,6 +16,16 @@
             echo '<li ' . ($isMessageUrl ? 'class="active"' : "") . '><a href="' . RHtmlHelper::siteUrl('message/view') . '">';
             echo 'Messages&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="badge">' . $count . '</span></a></li>';
         }
+
+        if ($user->roleId == Role::VIP_ID) {
+        ?>
+            <li <?= ($currentUrl == 'user/ads') ? 'class="active"' : "" ?>>
+                <a href="<?=RHtmlHelper::siteUrl('user/ads')?>">
+                    Advertisement&nbsp;&nbsp;<span class="badge badge-vip">VIP</span>
+                </a>
+            </li>
+        <?php
+        }
         ?>
     </ul>
     </div>
