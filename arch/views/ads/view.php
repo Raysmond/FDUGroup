@@ -10,7 +10,8 @@
 </div>
 
 <div class="navbar-right">
-    <?php echo RHtmlHelper::linkAction('ads',"Active",'view','active',array('class'=>'btn btn-sm btn-success'));?>
+    <?php echo RHtmlHelper::linkAction('ads',"Application",'view','applying',array('class'=>'btn btn-sm btn-default'));?>
+    <?php echo RHtmlHelper::linkAction('ads',"Published",'view','published',array('class'=>'btn btn-sm btn-info'));?>
     <?php echo RHtmlHelper::linkAction('ads',"Blocked",'view','blocked',array('class'=>'btn btn-sm btn-danger'));?>
 </div>
 <div class="clearfix" style="margin-bottom: 10px;"></div>
@@ -42,7 +43,7 @@ foreach($ads as $ad)
     <div class="panel-body">
         <div class="message-meta">
             <?php
-                if ($data['type'] == Ads::NORMAL) {
+                if ($data['type'] == Ads::APPROVED) {
                     echo 'You don\'t have any active advertisements.';
                 } else {
                     echo 'You don\'t have any blocked advertisements.';

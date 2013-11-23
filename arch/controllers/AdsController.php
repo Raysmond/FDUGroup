@@ -16,12 +16,19 @@ class AdsController extends RController {
         $this->setHeaderTitle('My Advertisements');
         $currentUserId = Rays::app()->getLoginUser()->id;
 
-        if ($type === 'active') {
-            $data['ads'] = (new Ads())->getUserAds($currentUserId, Ads::NORMAL);
-            $data['type'] = Ads::NORMAL;
-        } else {
-            $data['ads'] = (new Ads())->getUserAds($currentUserId, Ads::REMOVED);
+        $ads = new Ads();
+        if ($type === 'applying') {
+            $data['ads'] = $ads->getUserAds($currentUserId, Ads::APPLYING);
+            $data['type'] = Ads::APPLYING;
+        } else if($type === 'blocked'){
+            $data['ads'] = $ads->getUserAds($currentUserId, Ads::REMOVED);
             $data['type'] = Ads::REMOVED;
+        } else if($type === 'published'){
+            $data['ads'] = $ads->getUserAds($currentUserId, Ads::APPROVED);
+            $data['type'] = Ads::APPROVED;
+        } else{
+            Rays::app()->page404();
+            return;
         }
 
         $this->render('view', $data, false);

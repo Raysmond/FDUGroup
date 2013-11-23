@@ -8,11 +8,10 @@ class Ads extends Data{
     public $id,$userId,$pubTime,$title,$content,$status,$paidPrice;
 
     const APPLYING = 1;
-    const NORMAL = 2;
-    const REMOVED = 3;
+    const REMOVED = 2;
 
     // Approved ads can show on some pages of the site
-    const APPROVED = 4;
+    const APPROVED = 3;
 
     public function __construct()
     {
@@ -62,10 +61,6 @@ class Ads extends Data{
 
     public function block($adId=''){
         $this->markStatus($adId,self::REMOVED);
-    }
-
-    public function activate($adId=''){
-        $this->markStatus($adId,self::NORMAL);
     }
 
     public function approve($adsId=''){
