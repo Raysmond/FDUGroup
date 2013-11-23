@@ -6,13 +6,17 @@
  * Time: PM10:56
  */
 ?>
-<div class="row">
+<div class="row" style="margin-bottom: 10px;">
     <?php
     $form = isset($applyForm)?$applyForm:array();
     if(isset($validation_errors)){
         RHtmlHelper::showValidationErrors($validation_errors);
     }
     ?>
+    &nbsp;&nbsp;&nbsp;
+    <?=RHtmlHelper::linkAction('ads','Back to ads','view',null,array(
+        'class'=>'btn btn-xs btn-info'
+    ))?>
 </div>
 <div class="panel panel-default">
     <div class="panel-heading"><b>Ads application</b></div>
