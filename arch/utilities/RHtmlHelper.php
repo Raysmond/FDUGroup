@@ -99,12 +99,18 @@ class RHtmlHelper
 
     public static function css($cssPath)
     {
-        return '<link rel="stylesheet" type="text/css" href="' . Rays::app()->getBaseUrl() . $cssPath . '" />';
+        if(!(strpos($cssPath,'//')>0)){
+            $cssPath = Rays::app()->getBaseUrl().$cssPath;
+        }
+        return '<link rel="stylesheet" type="text/css" href="' . $cssPath . '" />';
     }
 
     public static function script($scriptPath)
     {
-        return '<script type="text/javascript" src="' . Rays::app()->getBaseUrl() . $scriptPath . '"></script>';
+        if(!(strpos($scriptPath,'//')>0)){
+            $scriptPath = Rays::app()->getBaseUrl().$scriptPath;
+        }
+        return '<script type="text/javascript" src="'. $scriptPath . '"></script>';
     }
 
     public static function showFlashMessages(){

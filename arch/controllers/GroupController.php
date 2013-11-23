@@ -258,7 +258,6 @@ class GroupController extends RController
             $groupUser = new GroupUser();
             $groupUser->groupId = $censor->secondId;
             $groupUser->userId = $censor->firstId;
-            date_default_timezone_set(Rays::app()->getTimeZone());
             $groupUser->joinTime = date('Y-m-d H:i:s');
             $groupUser->status = 1;
 
@@ -272,14 +271,15 @@ class GroupController extends RController
 
                 $this->flash("message", "The request is processed.");
 
+                $title = "Join group request accepted";
                 $content = 'Group creator has accepted your request of joining in group ' . RHtmlHelper::linkAction('group', $group->name, 'detail', $group->id);
+                $content = RHtmlHelper::encode($content);
                 $message = new Message();
-                $message->sendMsg("group", $group->id, $groupUser->userId, "Join group request accepted", $content, '');
+                $message->sendMsg("group", $group->id, $groupUser->userId, $title, $content);
 
             }else{
-                $this->flash("warning","TA is already a member of this group.");
+                $this->flash("warning","You're already a member of this group.");
             }
-
 
             $censor->passCensor($censorId);
             $this->redirectAction('message','view');
@@ -293,7 +293,6 @@ class GroupController extends RController
             $groupUser = new GroupUser();
             $groupUser->groupId = $censor->secondId;
             $groupUser->userId = $censor->firstId;
-            date_default_timezone_set(Rays::app()->getTimeZone());
             $groupUser->joinTime = date('Y-m-d H:i:s');
             $groupUser->status = 1;
 
@@ -303,13 +302,14 @@ class GroupController extends RController
                 $group = new Group();
                 $group->load($groupUser->groupId);
 
+                $title = "Join group request accepted";
                 $content = 'Group creator have declined your request of joining in group ' . RHtmlHelper::linkAction('group', $group->name, 'detail', $group->id);
+                $content = RHtmlHelper::encode($content);
                 $message = new Message();
-                $message->sendMsg("group", $group->id, $groupUser->userId, "Join group request accepted", $content, '');
+                $message->sendMsg("group", $group->id, $groupUser->userId, $title, $content);
             }else{
                 $this->flash("warning","TA is already a member of this group.");
             }
-
 
             $censor->failCensor($censorId);
             $this->redirectAction('message','view');
