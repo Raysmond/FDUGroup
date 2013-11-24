@@ -50,8 +50,10 @@
             echo '<td>'.RHtmlHelper::linkAction('group', $row['group_name'], 'detail', $row['group_id']).'</td>';
             echo '<td>'.$row['group_member_count'].'</td>';
             echo '<td>'.$row['group_created_time'].'</td>';
-            if(isset($row['group_picture'])&&$row['group_picture']!='')
-                echo '<td>'.RHtmlHelper::showImage($row['group_picture'],$row['group_name'],array("style"=>'width:64px;')).'</td>';
+            if(isset($row['group_picture'])&&$row['group_picture']!=''){
+                $picture = RImageHelper::styleSrc($row['group_picture'],Group::getPicOptions());
+                echo '<td>'.RHtmlHelper::showImage($picture,$row['group_name'],array("style"=>'width:64px;')).'</td>';
+            }
             echo '</tr>';
         }
         ?>

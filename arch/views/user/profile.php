@@ -49,11 +49,10 @@
             <div style="margin-top: 30px;">
                 <?php
                 $pic = (isset($user->picture) && $user->picture != '') ? $user->picture : "public/images/default_pic.png";
-                echo RHtmlHelper::showImage($pic, $user->name, array('class' => 'img-thumbnail', 'style' => 'width:200px;'));
+                $thumbnail = RImageHelper::styleSrc($user->picture,$user::getPicOptions());
+                echo RHtmlHelper::showImage($thumbnail, $user->name, array('class' => 'img-thumbnail', 'width' => '200px'));
                 ?>
             </div>
         </div>
     </div>
-
-
 </div>

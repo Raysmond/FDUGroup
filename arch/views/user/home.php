@@ -12,10 +12,13 @@
                 ?>
                 <div class="row topic-item">
                     <div class="col-lg-2 topic-picture">
-                        <?php if ($topic['u_picture'] == '') {
+                        <?php
+                        if ($topic['u_picture'] == '') {
                             $topic['u_picture'] = User::$defaults['picture'];
-                        }?>
-                        <?= RHtmlHelper::showImage($topic['u_picture'], $topic['u_name'], array('width' => '64px')) ?>
+                        }
+                        $thumbnail = RImageHelper::styleSrc($topic['u_picture'],User::getPicOptions());
+                        ?>
+                        <?= RHtmlHelper::showImage($thumbnail, $topic['u_name'], array('width' => '64px')) ?>
 
                     </div>
                     <div class="col-lg-10 topic-content">
