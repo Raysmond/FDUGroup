@@ -265,7 +265,7 @@ class Group extends Data
      * @param $groups
      * @param $users
      */
-    public static function recommendGroups($groups,$users){
+    public static function recommendGroups($groups,$users,$words = ''){
         foreach ($users as $userId) {
             $html = '<div class="row recommend-groups">';
             foreach ($groups as $groupId) {
@@ -283,6 +283,7 @@ class Group extends Data
                 }
             }
             $html .= '</div>';
+            $html .= '<div class="recommend-content">'.RHtmlHelper::encode($words).'</div>';
             $msg = new Message();
             $msg->sendMsg('system', 0, $userId, 'Groups recommendation', $html, date('Y-m-d H:i:s'));
         }

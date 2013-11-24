@@ -63,6 +63,16 @@
                 </div>
             </div>
         </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading"><b>Recommend words</b></div>
+            <div class="panel-body">
+                <?php
+                    $this->module("ckeditor",array('editorId'=>'recommend-words','name'=>'recommend-words'));
+                ?>
+            </div>
+        </div>
+
     </div>
 </div>
 <?=RFormHelper::endForm()?>

@@ -535,7 +535,8 @@ class GroupController extends RController
             if (isset($_POST['selected_recommend_groups']) && isset($_POST['selected_recommend_users'])) {
                 $groups = $_POST['selected_recommend_groups'];
                 $users = $_POST['selected_recommend_users'];
-                Group::recommendGroups($groups,$users);
+                $words = $_POST['recommend-words'];
+                Group::recommendGroups($groups,$users,$words);
                 $this->flash('message','Send group recommendations successfully.');
             }
         }

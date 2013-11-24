@@ -16,6 +16,13 @@ $baseurl = Rays::app()->getBaseUrl();
     // link custom css files
     echo RHtmlHelper::linkCssArray(Rays::app()->getClientManager()->css);
     ?>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <script type="text/javascript" src="<?php echo $baseurl; ?>/public/js/jquery.min.js"></script>
+    <script type="text/javascript" src="<?php echo $baseurl; ?>/public/bootstrap-3.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="<?php echo $baseurl; ?>/public/js/main.js"></script>
+
 </head>
 
 <body>
@@ -141,12 +148,7 @@ $baseurl = Rays::app()->getBaseUrl();
 </div>
 <!--/.container-->
 
-<!-- Bootstrap core JavaScript
-    ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->
-<script type="text/javascript" src="<?php echo $baseurl; ?>/public/js/jquery.min.js"></script>
-<script type="text/javascript" src="<?php echo $baseurl; ?>/public/bootstrap-3.0/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="<?php echo $baseurl; ?>/public/js/main.js"></script>
 <?php
 // link custom script files
 echo RHtmlHelper::linkScriptArray(Rays::app()->getClientManager()->script);
