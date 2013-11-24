@@ -10,7 +10,7 @@ class GroupController extends RController
     public $layout = "index";
     public $defaultAction = "index";
     public $access = array(
-        Role::AUTHENTICATED => array('view', 'build', 'edit', 'join', 'accept', 'decline', 'exit','delete','invite'),
+        Role::AUTHENTICATED => array('view', 'build', 'edit', 'join', 'accept', 'decline', 'exit','delete','invite', 'acceptInvite'),
         Role::ADMINISTRATOR => array('findAdmin','buildAdmin','admin','recommend'),
     );
 
@@ -248,10 +248,38 @@ class GroupController extends RController
             $this->redirectAction('group','find');
     }
 
+    public function actionAcceptInvite($censorId = null) {
+        $censor = new Censor();
+        $censor->id = (int)$censorId;
+        if ($censor->load() !== null) {
+            if ($censor->firstId == Rays::app()->getLoginUser()->id) {
+                $groupUser = new GroupUser();
+                $groupUser->groupId = $censor->secondId;
+                $groupUser->userId = $censor->firstId;
+                $groupUser->joinTime = date('Y-m-d H:i:s');
+                $groupUser->status = 1;
+
+                $gu = new GroupUser();
+                if(!$gu->isUserInGroup($groupUser->userId,$groupUser->groupId)){
+                    $groupUser->insert();
+                    $group = new Group();
+                    $group->load($groupUser->groupId);
+                    $group->memberCount++;
+                    $group->update();
+                    $this->flash("message", "Join group successfully.");
+                }else{
+                    $this->flash("warning","You're already a member of this group.");
+                }
+                $censor->passCensor($censorId);
+            }
+            $this->redirectAction('message','view');
+        }
+    }
+
     public function actionAccept($censorId = null)
     {
         $censor = new Censor();
-        $censor->id = $censorId;
+        $censor->id = (int)$censorId;
         if ($censor->load() !==null) {
             $groupUser = new GroupUser();
             $groupUser->groupId = $censor->secondId;

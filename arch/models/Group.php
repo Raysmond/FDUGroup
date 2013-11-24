@@ -171,16 +171,20 @@ class Group extends Data
         $group = new Group();
         $group->load($groupId);
         foreach ($invitees as $friendId) {
+            $censor = new Censor();
+            $censor->joinGroupApplication($friendId, $group->id);
+
             $msg = new Message();
             $content = RHtmlHelper::linkAction('user', $user->name, 'view', $user->id)
                 . ' invited you to join group '
                 . RHtmlHelper::linkAction('group', $group->name, 'detail', $group->id)
                 . '&nbsp;&nbsp;'
-                . RHtmlHelper::linkAction('group', 'Accept invitation', 'join', $group->id, array('class' => 'btn btn-xs btn-info'))
+                . RHtmlHelper::linkAction('group', 'Accept invitation', 'acceptInvite', $censor->id, array('class' => 'btn btn-xs btn-info'))
                 . '</br>'
                 . $invitationMsg;
             $content = RHtmlHelper::encode($content);
             $msg->sendMsg('group', $user->id, $friendId, 'new group invitation', $content);
+
         }
     }
 

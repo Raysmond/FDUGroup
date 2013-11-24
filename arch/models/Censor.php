@@ -145,4 +145,18 @@ class Censor extends Data{
         $result = $this->find();
         return count($result) == 0 ? null : $result[0]->id;
     }
+
+    public function joinGroupInvitationApplication($userId, $groupId) {  //Invite to join Group
+        $this->postApplication('join_group_invite', $userId, $groupId);
+        return $this;
+    }
+
+    public function joinGroupInvitationExist($userId, $groupId) {
+        $this->getTypeIdbyTypeName('join_group_invite');
+        $this->firstId = $userId;
+        $this->secondId = $groupId;
+        $this->status = self::UNPROCESS;
+        $result = $this->find();
+        return count($result) == 0 ? null : $result[0]->id;
+    }
 }
