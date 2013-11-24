@@ -49,18 +49,7 @@ $baseUrl = Rays::app()->getBaseUrl();
                         <div class="col-lg-10">
                             <h2>
                                 <?=$user->name?>&nbsp;
-                                <?php
-                                    if ($user->roleId == Role::VIP_ID) {
-                                ?>
-                                        <span class="badge badge-vip">VIP Grouper</span>
-                                <?php
-                                    } else {
-                                ?>
-                                        <span class="badge">FDUGrouper</span>
-                                <?php
-                                    }
-                                ?>
-
+                                <span class="badge badge-<?=Role::getRoleNameById($user->roleId);?>"><?=Role::getBadgeById($user->roleId);?></span>
                             </h2>
                             <div><?=RHtmlHelper::decode($user->intro)?></div>
                             <div><?=$user->region?>

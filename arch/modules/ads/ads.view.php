@@ -5,7 +5,7 @@
  */
 ?>
 <div class="panel panel-info">
-    <div class="panel-body" style="margin:10px;padding:0;overflow: hidden;">
+    <div class="panel-body ads-container" style="margin:5px;padding:0;overflow: hidden;">
         <input type="hidden" id="ad_number" value="<?=count($ads);?>"/>
         <?php
         $c = 0;
@@ -26,6 +26,12 @@
                 ad_total_number = $('#ad_number').val();
                 $('.Ad_List').hide();
                 $('#Ad_0').show();
+                $('.Ad_List img').each(
+                    function() {
+                        $(this).css('width','250px');
+                        $(this).css('height','auto');
+                    }
+                );
                 setTimeout('ad_loop_display()',5000);
             }
         );
