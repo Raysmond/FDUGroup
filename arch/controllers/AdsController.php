@@ -8,7 +8,7 @@ class AdsController extends RController {
     public $defaultAction = "view";
 
     public $access = [
-        Role::VIP => ['view','apply','remove'],
+        Role::VIP => ['view','apply','remove', 'edit'],
         Role::ADMINISTRATOR => ['approve','admin']
     ];
 
@@ -93,6 +93,48 @@ class AdsController extends RController {
         } else {
             Rays::app()->page404();
         }
+    }
+
+    public function actionEdit($adId = null, $type) {
+        $data = array();
+        $ad = new Ads();
+        $ad->id = $adId;
+        $ad->load();
+        $data['ad'] = $ad;
+        $data['edit'] = true;
+        $data['type'] = $type;
+        if($this->getHttpRequest()->isPostRequest()){
+            $rules = array(
+                array('field'=>'ads-title','label'=>'Ads title','rules'=>'trim|required|min_length[5]|max_length[255]'),
+                array('field'=>'ads-content','label'=>'Ads content','rules'=>'required'),
+                array('field'=>'paid-price','label'=>'Paid price','rules'=>'trim|required|number'),
+            );
+            $validation = new RFormValidationHelper($rules);
+            if($validation->run()){
+                $ads = new Ads();
+                $ads->id = $adId;
+                $ads->load();
+                $ads->title = $_POST['ads-title'];
+                $ads->content = RHtmlHelper::encode($_POST['ads-content']);
+                $ads->update();
+                $this->flash('message','Your ads was edited successfully.');
+                $redirect = null;
+                switch ($type) {
+                    case Ads::APPROVED: $redirect = 'published';break;
+                    case Ads::APPLYING: $redirect = 'applying';break;
+                    case Ads::BLOCKED: $redirect = 'blocked';break;
+                }
+                $this->redirectAction('ads','view', $redirect);
+                return;
+            }
+            else{
+                $data['applyForm'] = $_POST;
+                $data['validation_errors'] = $validation->getErrors();
+            }
+        }
+
+        $this->setHeaderTitle("Edit Advertisement");
+        $this->render('apply',$data,false);
     }
 
     public function actionAdmin() {
