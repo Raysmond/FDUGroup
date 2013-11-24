@@ -148,24 +148,4 @@ class AdsController extends RController {
 
         $this->render('admin', $data, false);
     }
-
-    /**
-     * Approved ads can appear on some positions within appointed pages
-     * @access administrator
-     */
-    public function actionApprove($adId=''){
-        if(!isset($adId) || !is_numeric($adId)){
-            Rays::app()->page404();
-            return;
-        }
-        $ad = new Ads();
-        $ad->id = $adId;
-        $ad = $ad->load();
-        if ($ad !== null) {
-            $ad->approve();
-            $this->flash('message','Ads approved.');
-        } else {
-            Rays::app()->page404();
-        }
-    }
 }
