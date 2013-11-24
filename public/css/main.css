@@ -188,6 +188,7 @@ blockquote
 /* Ads */
 .ads-container{
     position: relative;
+    min-height:80px;
 }
 .ads-container p{
     margin:0;

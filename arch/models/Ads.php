@@ -9,11 +9,11 @@ class Ads extends Data{
 
     const APPLYING = 1;
     const BLOCKED = 2;
-
-    const ENTITY_ID = 3;
-
     // Approved ads can show on some pages of the site
     const APPROVED = 3;
+    const REMOVED = 4;
+
+    const ENTITY_ID = 3;
 
     public function __construct()
     {
@@ -97,5 +97,9 @@ class Ads extends Data{
         $ads = new Ads();
         $ads->status = Ads::APPROVED;
         return $ads->find(0,0,['key' => '(' . $this->columns['pubTime'] . ' / 10000 + ' . $this->columns['paidPrice'] . ')' , 'order' => 'desc']);
+    }
+
+    public function delete() {
+        $this->markStatus($this->id, Ads::REMOVED);
     }
 }

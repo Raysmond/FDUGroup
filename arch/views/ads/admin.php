@@ -43,7 +43,15 @@
             foreach ($ads as $ad) {
         ?>
             <tr>
-                <td><?=RFormHelper::input(array('name'=>'checked_ads[]', 'type'=>'checkbox','value'=>$ad->id))?></td>
+                <td>
+                    <?php
+                        if ($ad->status != Ads::REMOVED) {
+                    ?>
+                    <?=RFormHelper::input(array('name'=>'checked_ads[]', 'type'=>'checkbox','value'=>$ad->id))?>
+                    <?php
+                        } else echo "<span class='glyphicon glyphicon-ban-circle' style='color:red;'></spam>";
+                    ?>
+                </td>
                 <td><?=RHtmlHelper::linkAction('user', $ad->publisher->name, 'view', $ad->publisher->id);?></td>
                 <td><?=$ad->pubTime?></td>
                 <td><?=$ad->paidPrice?></td>
@@ -54,6 +62,7 @@
                     if ($ad->status == Ads::APPROVED) echo '<span style="color:green">active</span>';
                     else if ($ad->status == Ads::BLOCKED) echo '<span style="color:red">blocked</span>';
                     else if ($ad->status == Ads::APPLYING) echo '<span>applying</span>';
+                    else if ($ad->status == Ads::REMOVED) echo '<span style="color:#ccc">removed</span>';
                     ?>
                 </td>
 
