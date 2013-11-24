@@ -67,7 +67,6 @@ class Message extends Data{
         $this->sendTime = $sendTime;
         $this->status = $status;
         if(!isset($this->sendTime)||$this->sendTime==''){
-            date_default_timezone_set(Rays::app()->getTimeZone());
             $this->sendTime = date('Y-m-d H:i:s');;
         }
         $_id = $this->insert();

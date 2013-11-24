@@ -57,13 +57,7 @@ $baseurl = Rays::app()->getBaseUrl();
                     </ul>
                 </li>
 
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Category <b class="caret"></b></a>
-                    <ul class="dropdown-menu">
-                        <li><?php echo RHtmlHelper::linkAction('category',"All categories",'all'); ?></li>
-                        <li><?php echo RHtmlHelper::linkAction('category',"New category",'new'); ?></li>
-                    </ul>
-                </li>
+                <li><?php echo RHtmlHelper::linkAction('category',"Categories",'admin'); ?></li>
 
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Groups <b class="caret"></b></a>

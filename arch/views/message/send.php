@@ -39,13 +39,24 @@ echo "<br/>";
 echo RFormHelper::label('Content','content',array());
 echo "<br/>";
 
-echo RFormHelper::textarea(
-    array('id'=>'content',
-        'name'=>'content',
-        'cols'=>100,
-        'rows'=>6,
-        'placeholder'=>'Content',
-    ),$form);
+if(Rays::app()->getLoginUser()->roleId==Role::ADMINISTRATOR_ID){
+    $this->module('ckeditor',
+        array('editorId'=>'msg-content',
+            'name'=>'msg-content',
+            'data'=>(isset($form['content'])?$form['content']:'')
+        ));
+}
+else{
+    echo RFormHelper::textarea(
+        array('id'=>'msg-content',
+            'name'=>'msg-content',
+            'class'=>'form-control',
+            'cols'=>100,
+            'rows'=>6,
+            'placeholder'=>'Content',
+        ),$form);
+}
+
 
 echo "<br/>";
 echo "<br/>";
