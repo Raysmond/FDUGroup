@@ -69,6 +69,7 @@ class Wallet extends Data{
     private function updateMoney($money){
         if($this->isSetUserId()){
             $this->money = $money;
+            $this->timestamp = date('Y-m-d H:i:s');
             $this->update();
             return true;
         }

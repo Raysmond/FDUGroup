@@ -11,6 +11,8 @@ class User extends Data{
     public $registerTime,$status,$picture,$intro,$homepage,$credits,$permission,$privacy;
 
     public $role;
+    private $_wallet;
+
     const STATUS_BLOCKED = 0;
     const STATUS_ACTIVE = 1;
 
@@ -79,6 +81,26 @@ class User extends Data{
         return $this;
     }
 
+    public function getWallet()
+    {
+        if ($this->_wallet instanceof Wallet)
+            return $this->_wallet;
+        else {
+            $this->_wallet = null;
+            if (isset($this->id) && is_numeric($this->id)) {
+                $this->_wallet = new Wallet();
+                $this->_wallet->userId = $this->id;
+                $result = $this->_wallet->load();
+                if ($result === null) {
+                    $this->_wallet->timestamp = date('Y-m-d H:i:s');
+                    $this->_wallet->insert();
+                    $this->_wallet->load();
+                }
+            }
+            return $this->_wallet;
+        }
+    }
+
     public function setDefaults()
     {
         foreach(self::$defaults as $key=>$val){
@@ -86,7 +108,6 @@ class User extends Data{
                 $this->$key = $val;
         }
         if(!isset($this->registerTime)){
-            date_default_timezone_set(Rays::app()->getTimeZone());
             $this->registerTime = date('Y-m-d H-i-s');
         }
     }
@@ -197,7 +218,4 @@ class User extends Data{
             'height' => 200
         );
     }
-
-
-
 }

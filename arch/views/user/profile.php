@@ -38,6 +38,8 @@
                 echo '</li>';
 
             }
+            $wallet = $user->getWallet();
+            echo '<li class="list-group-item">Wallet: '.$wallet->money.'</li>';
             ?>
             </ul>
         </div>
