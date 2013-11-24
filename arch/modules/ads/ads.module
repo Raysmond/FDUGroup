@@ -1,0 +1,21 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: songrenchu
+ */
+class ads_module extends RModule {
+
+    /**
+     * Override module_content method
+     * @return string|void
+     */
+    public function module_content() {
+        $ads = new Ads();
+        $ads = $ads->getPublishedAds();
+
+        return $this->render('ads',
+            array(
+                'ads'=>$ads,
+            ));
+    }
+}

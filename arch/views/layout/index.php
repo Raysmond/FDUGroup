@@ -50,6 +50,8 @@
                     $this->module("friend_users",array('id'=>'friend_users','name'=>"Friends"));
                     $this->module("group_users",array('id'=>'group_users','name'=>"Group Users"));
                     $this->module("new_users",array('id'=>'new_users','name'=>"New Users"));
+                    $this->module("ads",array('id'=>'ads','name'=>"Ads"));
+
                     ?>
             <!--
             <div class="well sidebar-nav">
