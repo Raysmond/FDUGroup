@@ -49,7 +49,9 @@ foreach($ads as $ad)
         <div class="message-meta">
             <?php
                 if ($data['type'] == Ads::APPROVED) {
-                    echo 'You don\'t have any active advertisements.';
+                    echo 'You don\'t have any published advertisements.';
+                } else if ($data['type'] == Ads::APPLYING) {
+                    echo 'You don\'t have any applying advertisements.';
                 } else {
                     echo 'You don\'t have any blocked advertisements.';
                 }

@@ -10,6 +10,8 @@ class Ads extends Data{
     const APPLYING = 1;
     const BLOCKED = 2;
 
+    const ENTITY_ID = 3;
+
     // Approved ads can show on some pages of the site
     const APPROVED = 3;
 
@@ -94,6 +96,6 @@ class Ads extends Data{
     public function getPublishedAds() {     //get published advertisements, order by paid price, but the effectiveness of price deminish along with the elapse of time
         $ads = new Ads();
         $ads->status = Ads::APPROVED;
-        return $ads->find(0,0,['key' => '(' . $this->columns['pubTime'] . ' / 10000 + ' . $this->columns['paidPrice'] . ')' , 'value' => 'desc']);
+        return $ads->find(0,0,['key' => '(' . $this->columns['pubTime'] . ' / 10000 + ' . $this->columns['paidPrice'] . ')' , 'order' => 'desc']);
     }
 }
