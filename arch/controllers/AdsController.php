@@ -79,7 +79,13 @@ class AdsController extends RController {
                 $ad->delete();
 
                 $this->flash('message', 'Advertisement removed successfully.');
-                $this->redirectAction('ads', 'view', $type == Ads::NORMAL?'active':'blocked');
+                $redirect = null;
+                switch ($type) {
+                    case Ads::APPROVED: $redirect = 'published';break;
+                    case Ads::APPLYING: $redirect = 'applying';break;
+                    case Ads::BLOCKED: $redirect = 'blocked';break;
+                }
+                $this->redirectAction('ads', 'view', $redirect);
                 return;
             } else {
                 die('Permission denied');

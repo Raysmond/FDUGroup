@@ -22,7 +22,7 @@ class GroupController extends RController
         $page = $this->getHttpRequest()->getQuery('page',1);
         if($page<=0) $page = 1;
 
-        $pageSize = $this->getHttpRequest()->getQuery('pagesize',6);
+        $pageSize = $this->getHttpRequest()->getQuery('pagesize',12);
 
         $searchStr = '';
         if ($this->getHttpRequest()->isPostRequest()) $searchStr = ($_POST['searchstr']);

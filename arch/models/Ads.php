@@ -90,4 +90,10 @@ class Ads extends Data{
         /* TODO pager */
         return $ads->find(0, 0, ['key' => 'ads_id', 'order' => 'desc']);
     }
+
+    public function getPublishedAds() {     //get published advertisements, order by paid price, but the effectiveness of price deminish along with the elapse of time
+        $ads = new Ads();
+        $ads->status = Ads::APPROVED;
+        return $ads->find(0,0,['key' => '(' . $this->columns['pubTime'] . ' / 10000 + ' . $this->columns['paidPrice'] . ')' , 'value' => 'desc']);
+    }
 }
