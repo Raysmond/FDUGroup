@@ -41,8 +41,10 @@ $baseUrl = Rays::app()->getBaseUrl();
                 <?php $user = Rays::app()->getLoginUser(); if($user!=null): ?>
                     <div class="row">
                         <div class="col-lg-2">
-                            <?php if(!isset($user->picture)||$user->picture=='') $user->picture=User::$defaults['picture']; ?>
-                            <?=RHtmlHelper::showImage($user->picture,$user->name, array('class'=>'img-thumbnail','width'=>'120px'))?>
+                            <?php if(!isset($user->picture)||$user->picture=='') $user->picture=User::$defaults['picture'];
+                                $thumbnail = RImageHelper::styleSrc($user->picture,$user::getPicOptions());
+                                echo RHtmlHelper::showImage($thumbnail,$user->name, array('class'=>'img-thumbnail','width'=>'120px'))
+                            ?>
                         </div>
                         <div class="col-lg-10">
                             <h2>

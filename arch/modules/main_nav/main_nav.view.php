@@ -41,7 +41,9 @@
                     <a href="#" id="account-dropdown" class="dropdown-toggle" data-toggle="dropdown" >
                         <span class="username"><?=$user->name?></span>
                         <?php
-                        $pic = (isset($user->picture)&&$user->picture!='')?$user->picture:"public/images/default_pic.png"; ?>
+                        $pic = (isset($user->picture)&&$user->picture!='')?$user->picture:"public/images/default_pic.png";
+                        $pic = RImageHelper::styleSrc($pic,User::getPicOptions());
+                        ?>
                         <?=RHtmlHelper::showImage($pic,$user->name,array('class'=>'img-thumbnails'))?>
                     </a>
                     <ul class="dropdown-menu">

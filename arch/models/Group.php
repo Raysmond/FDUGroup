@@ -288,4 +288,12 @@ class Group extends Data
             $msg->sendMsg('system', 0, $userId, 'Groups recommendation', $html, date('Y-m-d H:i:s'));
         }
     }
+
+    public static function getPicOptions(){
+        return array(
+            'name'=>'groups',
+            'width'=>200,
+            'height'=>200
+        );
+    }
 }

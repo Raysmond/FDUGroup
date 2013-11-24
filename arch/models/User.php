@@ -190,4 +190,12 @@ class User extends Data{
         $message->sendMsg('system', 0, $this->id, $title, RHtmlHelper::encode($content), null, 1);
     }
 
+    public static function getPicOptions(){
+        return array(
+            'name' => 'users',
+            'width' => 200,
+            'height' => 200
+        );
+    }
+
 }

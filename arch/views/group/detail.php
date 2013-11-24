@@ -25,7 +25,8 @@
             <?php
             if (isset($group->picture) && $group->picture != '') {
                 echo '<div class="col-xs-3">';
-                echo RHtmlHelper::showImage($group->picture, $group->name,
+                $picture = RImageHelper::styleSrc($group->picture,Group::getPicOptions());
+                echo RHtmlHelper::showImage($picture, $group->name,
                     array('class' => 'img-thumbnail', 'style' => 'width:200px;'));
                 echo '</div>';
             }

@@ -5,7 +5,9 @@
     echo '<div class="row user-list">';
     foreach($users as $user){
         echo '<div class="user-item col-lg-4">';
-        echo '<a href="'.RHtmlHelper::siteUrl('user/view/'.$user->id).'">'.RHtmlHelper::showImage(isset($user->picture)&&$user->picture!=''?$user->picture:User::$defaults['picture'],$user->name,array('width'=>'64px','height'=>'64px')).'</a>';
+        $picture = isset($user->picture)&&$user->picture!=''?$user->picture:User::$defaults['picture'];
+        $picture = RImageHelper::styleSrc($picture,User::getPicOptions());
+        echo '<a href="'.RHtmlHelper::siteUrl('user/view/'.$user->id).'">'.RHtmlHelper::showImage($picture,$user->name,array('width'=>'64px','height'=>'64px')).'</a>';
         $name = $user->name;
         if(mb_strlen($name)>7) $name = mb_substr($name,0,8)."..";
         echo RHtmlHelper::linkAction('user', $name, 'view', $user->id,array('title'=>$user->name))."  ";

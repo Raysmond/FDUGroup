@@ -8,7 +8,9 @@
         }
         foreach($friends as $friend){
             echo '<div class="user-item col-lg-4">';
-            echo '<a href="'.RHtmlHelper::siteUrl('user/view/'.$friend->id).'">'.RHtmlHelper::showImage(isset($friend->picture)&&$friend->picture!=''?$friend->picture:User::$defaults['picture'],$friend->name,array('width'=>'64px','height'=>'64px')).'</a>';
+            $picture = isset($friend->picture)&&$friend->picture!=''?$friend->picture:User::$defaults['picture'];
+            $picture = RImageHelper::styleSrc($picture,User::getPicOptions());
+            echo '<a href="'.RHtmlHelper::siteUrl('user/view/'.$friend->id).'">'.RHtmlHelper::showImage($picture,$friend->name,array('width'=>'64px','height'=>'64px')).'</a>';
             $name = $friend->name;
             if(mb_strlen($name)>7) $name = mb_substr($name,0,8)."..";
             echo RHtmlHelper::linkAction('user', $name, 'view', $friend->id,array('title'=>$friend->name))."  ";

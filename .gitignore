@@ -2,3 +2,5 @@
 .idea
 .svn
 public/userfiles
+public/images/styles/users/*.*
+public/images/styles/groups/*.*
