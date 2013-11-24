@@ -8,6 +8,8 @@ class Category extends Tree
 {
     public $id, $pid, $name;
 
+    const DEFAULT_CATEGORY_ID = 48;
+
     public function __construct()
     {
         $option = array(
@@ -24,5 +26,17 @@ class Category extends Tree
         parent::init($option);
     }
 
+    public function delete($assignment=array()){
+        if(!isset($this->id)||$this->id=='')
+            return;
 
+        $group = new Group();
+        $group->categoryId = $this->id;
+        $groups = $group->find();
+        foreach($groups as $item){
+            $item->categoryId = self::DEFAULT_CATEGORY_ID;
+            $item->update();
+        }
+        parent::delete($assignment);
+    }
 }

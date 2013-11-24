@@ -29,7 +29,7 @@
             <?php
 
             if($pic = (isset($user->picture)&&$user->picture!='')?$user->picture:"public/images/default_pic.png"){
-
+                $pic = RImageHelper::styleSrc($pic,User::getPicOptions());
                 echo RHtmlHelper::showImage($pic,$user->name,array('class'=>'img-thumbnail','style'=>'width:200px;'));
             }
 

@@ -58,7 +58,7 @@ class MessageController extends RController
 
             $config = array(
                 array('field' => 'title', 'label' => 'Title', 'rules' => 'trim|required'),
-                array('field' => 'content', 'label' => 'Content', 'rules' => 'trim|required'),
+                array('field' => 'msg-content', 'label' => 'Content', 'rules' => 'trim|required'),
                 array('field' => 'receiver', 'label' => 'Receiver', 'rules' => 'required'),
                 array('field' => 'type', 'label' => 'Message type', 'rules' => 'trim|required'),
             );
@@ -82,7 +82,8 @@ class MessageController extends RController
                     }
 
                     $title = isset($_POST['title']) ? trim($_POST['title']) : "";
-                    $message->sendMsg($_POST['type'], $senderId, $receiver->id, $title, $_POST['content'], null, 1);
+                    $msgContent = RHtmlHelper::encode($_POST['msg-content']);
+                    $message->sendMsg($_POST['type'], $senderId, $receiver->id, $title, $msgContent, null, 1);
 
                     if (isset($message->id) && $message->id != '') {
                         $this->flash("message", "Send message successfully.");
