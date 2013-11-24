@@ -28,7 +28,8 @@ foreach($ads as $ad)
     <div class="panel-heading">
         <div style="float:right;margin-top: -2px;">
             <?=$ad->pubTime?>
-            &nbsp;&nbsp;&nbsp;&nbsp;paid <?=$ad->paidPrice?> credits&nbsp;&nbsp;&nbsp;&nbsp;
+            &nbsp;&nbsp;&nbsp;&nbsp;Paid <?=$ad->paidPrice?> Credits&nbsp;&nbsp;
+            <?=RHtmlHelper::linkAction('ads','edit','edit',[$ad->id, $data['type']],['class' => 'btn btn-xs btn-primary'])?>
             <?=RHtmlHelper::linkAction('ads','remove','remove',[$ad->id, $data['type']],['class' => 'btn btn-xs btn-danger','onclick' => "return confirm('Are you sure to remove selected advertisement? (Removed advertisements cannot be recovered, and paid credits will not be returned.)')"])?>
         </div>
         <h3 class="panel-title">

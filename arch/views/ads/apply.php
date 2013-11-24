@@ -19,17 +19,16 @@
     ))?>
 </div>
 <div class="panel panel-default">
-    <div class="panel-heading"><b>Ads application</b></div>
+    <div class="panel-heading"><b><?php if (isset($edit)) echo 'Edit Advertisement'; else echo 'Ads application'; ?></b></div>
     <div class="panel-body">
-        <?=RFormHelper::openForm('ads/apply',array('id'=>'applyAdsForm'))?>
-
+        <?=RFormHelper::openForm('ads/'.(isset($edit)?'edit/'.$ad->id.'/'.$type:'apply'),array('id'=>'applyAdsForm'))?>
         <?=RFormHelper::label('Ads title','ads-title')?>
         <?=RFormHelper::input(
             array(
                 'id'=>'ads-title',
                 'name'=>'ads-title',
-                'class'=>'form-control'
-            ), $form)?>
+                'class'=>'form-control',
+            ), isset($form['ads-title'])?$form:(isset($edit)?$ad->title:$form))?>
 
         <br/>
 
@@ -39,7 +38,7 @@
                 array(
                     'editorId'=>'ads-content',
                     'name'=>'ads-content',
-                    'data'=>(isset($form['ads-content'])?$form['ads-content']:'')
+                    'data'=>(isset($form['ads-content'])?$form['ads-content']:($edit?$ad->content:''))
                 ));
         ?>
 
@@ -51,8 +50,9 @@
                 array(
                     'id'=>'paid-price',
                     'name'=>'paid-price',
-                    'class'=>'form-control'
-                ), $form)?>
+                    'readonly' => isset($edit),
+                    'class'=>'form-control',
+                ), isset($form['paid-price'])?$form:(isset($edit)?$ad->paidPrice:$form))?>
             <span class="input-group-addon">RMB</span>
         </div>
 
@@ -62,7 +62,7 @@
             array(
                 'type'=>'submit',
                 'class'=>'btn btn-sm btn-success',
-                'value'=>'Send Ads application'
+                'value'=>isset($edit)?'Save':'Send Ads application'
             ))?>
 
         <?=RFormHelper::endForm()?>

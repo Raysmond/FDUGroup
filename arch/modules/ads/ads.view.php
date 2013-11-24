@@ -68,6 +68,7 @@
             else if(ad==-1) ad = ad_total_number - 1;
             current_ad = ad;
             $(('#Ad_'+current_ad)).show();
+            //$('.ads-next').css('top',($(('#Ad_'+current_ad)).height()/2-12)+"px");
         }
 
         function ad_loop_display() {
