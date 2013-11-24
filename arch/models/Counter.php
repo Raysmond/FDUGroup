@@ -50,7 +50,7 @@ class Counter extends Data{
             }
         }
         else{
-            return "ddd";
+            return null;
         }
     }
 
