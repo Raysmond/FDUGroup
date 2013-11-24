@@ -16,6 +16,8 @@
             $c++;
         }
         ?>
+        <a class="ads-prev" href="javascript:ad_loop_prev()">Prev</a>
+        <a class="ads-next" href="javascript:ad_loop_next()" style="float: right;">Next</a>
 
     </div>
     <script language="javascript">
@@ -51,6 +53,22 @@
                 });
             }
         );
+
+        function ad_loop_next(){
+            ad_loop_show(current_ad + 1);
+        }
+
+        function ad_loop_prev(){
+            ad_loop_show(current_ad - 1);
+        }
+
+        function ad_loop_show(ad){
+            $(('#Ad_'+current_ad)).hide();
+            if(ad==ad_total_number) ad = 0;
+            else if(ad==-1) ad = ad_total_number - 1;
+            current_ad = ad;
+            $(('#Ad_'+current_ad)).show();
+        }
 
         function ad_loop_display() {
             $(('#Ad_'+current_ad)).hide();

@@ -54,9 +54,7 @@ footer {
     overflow: hidden;
 }
 
-.ads-container p{
-    margin:0;
-}
+
 
 .badge-administrator {
     background-color: #428bca;
@@ -184,4 +182,64 @@ blockquote
 .recommend-groups .recommend-group-item img{
     width: 140px;
     height: 140px;
+}
+
+
+/* Ads */
+.ads-container{
+    position: relative;
+}
+.ads-container p{
+    margin:0;
+}
+
+.ads-container .ads-prev{
+    height: 50px;
+    width: 27px;
+    background: url(../images/prev-btn.png) no-repeat 0 50%;
+    display: block;
+    position: absolute;
+    top: 40%;
+    text-indent: -9999em;
+    font-size: 0;
+    cursor: pointer;
+    opacity: 0;
+    outline: none;
+    filter: alpha(opacity=0);
+    text-decoration: none;
+    cursor: pointer;
+    -webkit-transition: opacity .4s;
+    -moz-transition: opacity .4s;
+    transition: opacity .4s;
+
+}
+
+.ads-container .ads-next{
+    height: 50px;
+    width: 27px;
+    background: url(../images/next-btn.png) no-repeat 0 50%;
+    display: block;
+    position: absolute;
+    top: 40%;
+    right: 0;
+    text-indent: -9999em;
+    font-size: 0;
+    cursor: pointer;
+    outline: none;
+    opacity: 0;
+    filter: alpha(opacity=0);
+    text-decoration: none;
+    cursor: pointer;
+    -webkit-transition: opacity .4s;
+    -moz-transition: opacity .4s;
+    transition: opacity .4s;
+}
+
+.ads-container:hover .ads-prev,.ads-container:hover .ads-next{
+    opacity: 0.6;
+    filter: alpha(opacity=0.6);
+}
+.ads-container:hover .ads-prev:hover,.ads-container:hover .ads-next:hover{
+    opacity: 1.0;
+    filter: alpha(opacity=1.0);
 }
