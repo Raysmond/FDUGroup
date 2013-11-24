@@ -154,4 +154,13 @@ class AdsController extends RController {
 
         $this->render('admin', $data, false);
     }
+
+    public function actionHitAd() {
+        if ($this->getHttpRequest()->getIsAjaxRequest()) {
+            $adId = (int)$_POST['adId'];
+            if ((new Ads)->load($adId) !== null) {
+                (new Counter())->increaseCounter($adId, Ads::ENTITY_ID);
+            }
+        }
+    }
 }

@@ -10,7 +10,7 @@
         <?php
         $c = 0;
         foreach ($ads as $ad) {
-            echo '<div class="Ad_List" id="Ad_'.$c.'" title="'.$ad->title.'" >';
+            echo '<div class="Ad_List" id="Ad_'.$c.'" adid="'.$ad->id.'" title="'.$ad->title.'" >';
             echo RHtmlHelper::decode($ad->content);
             echo '</div>';
             $c++;
@@ -32,7 +32,23 @@
                         $(this).css('height','auto');
                     }
                 );
-                setTimeout('ad_loop_display()',5000);
+                setTimeout('ad_loop_display()',10000);
+            }
+        );
+
+        //$('.Ad_List a').attr('target','_blank');
+
+        $('.Ad_List a').click(
+            function() {
+                var element = $(this).parent();
+                while ($(element).attr('class') != 'Ad_List') {
+                    element = $(element).parent();
+                }
+                $.ajax({
+                    type: 'POST',
+                    url: '<?=RHtmlHelper::siteUrl('ads/hitAd')?>',
+                    data: {'adId':$(element).attr('adid')}
+                });
             }
         );
 
@@ -43,7 +59,7 @@
                 current_ad = 0;
             }
             $(('#Ad_'+current_ad)).show();
-            setTimeout('ad_loop_display()',5000);
+            setTimeout('ad_loop_display()',10000);
         }
     </script>
 </div>
