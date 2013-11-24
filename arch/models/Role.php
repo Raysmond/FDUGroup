@@ -19,6 +19,7 @@ class Role extends Data{
     const VIP_ID = 4;
 
     public static $Roles = array('administrator','authenticated','anonymous', 'vip');
+    public static $Roles_Badge = array('Admin', 'Grouper', 'Guest', 'VIP Grouper');
 
     public static function getRoleNameById($roleId){
         switch($roleId){
@@ -27,6 +28,16 @@ class Role extends Data{
             case 3: return self::$Roles[2];
             case 4: return self::$Roles[3];
             default: return self::$Roles[2];
+        }
+    }
+
+    public static function getBadgeById($roleId) {
+        switch($roleId){
+            case 1 : return self::$Roles_Badge[0];
+            case 2: return self::$Roles_Badge[1];
+            case 3: return self::$Roles_Badge[2];
+            case 4: return self::$Roles_Badge[3];
+            default: return self::$Roles_Badge[2];
         }
     }
 

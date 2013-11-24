@@ -6,7 +6,7 @@
 ?>
 <div class="jumbotron">
     <div class="page-header">
-        <h2>Hi!<?php echo " " . $user->name . " "; ?><span class="badge">FDUGroup</span></h2>
+        <h2>Hi!<?php echo " " . $user->name . " "; ?><span class="badge badge-<?=Role::getRoleNameById($user->roleId);?>"><?=Role::getBadgeById($user->roleId);?></span></h2>
     </div>
     <div class="navbar-right" style="margin-top:-40px;">
         <?php
