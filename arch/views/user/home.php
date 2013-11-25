@@ -44,6 +44,16 @@
                                 'Reply(' . $topic['top_comment_count'] . ')',
                                 'view', $topic['top_id'] . '#reply',
                                 array('class'=>'btn btn-xs btn-info')) ?>
+                            <?php
+                                $this->module("rating_plus",
+                                    array(
+                                        'id'=>'rating_plus',
+                                        'entityType'=>Topic::$entityType,
+                                        'entityId'=>$topic['top_id'],
+                                        'count'=>$topic['plusCount'],
+                                        'buttonClass'=>'btn btn-info btn-xs'
+                                    ));
+                            ?>
                         </div>
 
                     </div>
@@ -104,8 +114,9 @@
                     html += '</div>'; //end of meta
                     html += '<div>' + item['topic_content'] + '</div>';
                     html += '<div>';
-                    html += '<a class="btn btn-xs btn-info" href="' + item['topic_link'] + '#reply" title="Reply post">Reply(' + item['topic_reply_count'] + ')</a></div>';
-                    html += '</div>'; //end of content
+                    html += '<a class="btn btn-xs btn-info" href="' + item['topic_link'] + '#reply" title="Reply post">Reply(' + item['topic_reply_count'] + ')</a>';
+                    html += '&nbsp;<button type="button" onclick="javascript:plusEntity(\'<?=RHtmlHelper::siteUrl('rating/plus')?>\',\''+item['entityType']+'\',\''+item['topic_id']+'\')" class="rating-plus-button btn btn-info btn-xs"><span class="glyphicon glyphicon-star"></span> Plus <span id="'+item['entityType']+'_'+item['topic_id']+'_counter" class="badge">'+((item['plusCount']==null)?'0':item['plusCount'])+'</span></button>';
+                    html += '</div></div>'; //end of content
 
                     html += '</div><hr>';
                 }

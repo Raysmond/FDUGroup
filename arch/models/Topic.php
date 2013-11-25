@@ -72,6 +72,7 @@ class Topic extends Data
             $json['user_name'] = $topic['u_name'];
             $json['user_id'] = $topic['u_id'];
             $json['topic_title'] = $topic['top_title'];
+            $json['topic_id'] = $topic['top_id'];
             $json['user_picture'] = RImageHelper::styleSrc($topic['u_picture'], User::getPicOptions());
             $json['picture_src'] = $topic['u_picture'];
             $json['user_link'] = RHtmlHelper::siteUrl('user/view/'.$topic['u_id']);
@@ -81,6 +82,8 @@ class Topic extends Data
             $json['group_link'] = RHtmlHelper::siteUrl('group/detail/'.$topic['gro_id']);
             $json['topic_created_time'] = $topic['top_created_time'];
             $json['topic_reply_count'] = $topic['top_comment_count'];
+            $json['plusCount'] = $topic['plusCount'];
+            $json['entityType'] = Topic::$entityType;
             $topic['top_content'] = strip_tags(RHtmlHelper::decode($topic['top_content']));
             if (mb_strlen($topic['top_content']) > 140) {
                 $json['topic_content'] =  mb_substr($topic['top_content'], 0, 140,'UTF-8') . '...';
@@ -104,10 +107,28 @@ class Topic extends Data
 
         $user = new User();
         $group = new Group();
+        $ratingStats = new RatingStatistic();
+        $entityType = Topic::$entityType;
 
-        $sql = "SELECT * FROM {$topics->table} AS topic "
+        $sql = "SELECT "
+            ."user.{$user->columns['id']},"
+            ."user.{$user->columns['name']},"
+            ."user.{$user->columns['picture']},"
+            ."topic.{$topics->columns['id']},"
+            ."topic.{$topics->columns['title']},"
+            ."topic.{$topics->columns['content']},"
+            ."topic.{$topics->columns['createdTime']},"
+            ."topic.{$topics->columns['commentCount']},"
+            ."groups.{$group->columns['id']},"
+            ."groups.{$group->columns['name']},"
+            ."rating.{$ratingStats->columns['value']} AS plusCount"
+            ." FROM {$topics->table} AS topic "
             ."LEFT JOIN {$user->table} AS user on topic.{$topics->columns['userId']}=user.{$user->columns['id']} "
-            ."LEFT JOIN {$group->table} AS groups on groups.{$group->columns['id']}=topic.{$topics->columns['groupId']} ";
+            ."LEFT JOIN {$group->table} AS groups on groups.{$group->columns['id']}=topic.{$topics->columns['groupId']} "
+            ."LEFT JOIN {$ratingStats->table} AS rating on rating.{$ratingStats->columns['entityType']}={$entityType} "
+            ."AND rating.{$ratingStats->columns['entityId']}=topic.{$topics->columns['id']} "
+            ."AND rating.{$ratingStats->columns['tag']}='plus' "
+            ."AND rating.{$ratingStats->columns['type']}='count'";
 
         $where = " WHERE 1=1 ";
         if(!empty($ids)){

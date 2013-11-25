@@ -36,6 +36,4 @@ class RatingStatistic extends Data
         return parent::insert();
     }
 
-
-
 }
