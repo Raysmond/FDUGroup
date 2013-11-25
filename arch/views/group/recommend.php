@@ -141,11 +141,11 @@
 
 
     function search_users(){
-        if($str = $('#search_users').val()){
+        if(str = $('#search_users').val()){
             $.ajax({
                 type: 'POST',
                 url: $('#search_users').attr('search_url'),
-                data: {'action':'search_users','name':$str}
+                data: {'action':'search_users','name':str}
             }).done(function(data){
                     var users = eval('('+data+')');
                     recommendUsers = users;

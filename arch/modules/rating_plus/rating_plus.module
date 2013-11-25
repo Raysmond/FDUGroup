@@ -1,0 +1,46 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: Raysmond
+ * Date: 13-11-25
+ * Time: PM1:04
+ */
+
+class rating_plus_module extends RModule
+{
+    public $entityType = null;
+    public $entityId = null;
+
+    private $url = 'rating/plus';
+
+    public function __construct($params = array())
+    {
+        parent::init($params);
+        if(isset($params['entityType'])){
+            $this->entityType = $params['entityType'];
+        }
+        if(isset($params['entityId'])){
+            $this->entityId = $params['entityId'];
+        }
+    }
+
+    public function module_content()
+    {
+        $this->addJs($this->getModulePath().'/rating_plus.js');
+        $html = '<div style="text-align: center;width: 100%;">';
+        if($this->checkEntity()){
+            $html .= '<button type="button" onclick="javascript:plusEntity(\''.RHtmlHelper::siteUrl($this->url).'\',\''.$this->entityType.'\',\''.$this->entityId.'\')" class="btn btn-default btn-sm">'
+            .'<span class="glyphicon glyphicon-star"></span> Plus</button>';
+        }
+        $html.='</div>';
+        return $html;
+    }
+
+    private function checkEntity(){
+        if(isset($this->entityType)&&isset($this->entityId)){
+            if(is_numeric($this->entityId))
+                return true;
+        }
+        return false;
+    }
+} 

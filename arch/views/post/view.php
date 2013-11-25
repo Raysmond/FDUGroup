@@ -16,7 +16,13 @@
     <br/><br/>
 
     <div>
-        Actions: <?= RHtmlHelper::linkAction('post', 'Edit', 'edit', $topic->id, array('class' => 'btn btn-xs btn-info')) ?></div>
+        Actions: <?= RHtmlHelper::linkAction('post', 'Edit', 'edit', $topic->id, array('class' => 'btn btn-xs btn-info')) ?>
+    </div>
+    <div>
+        <?php
+            $this->module('rating_plus',array('id'=>'rating_plus','entityType'=>'topic','entityId'=>$topic->id));
+        ?>
+    </div>
 </div>
     <hr/>
 
