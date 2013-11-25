@@ -4,7 +4,7 @@
  * @author: Raysmond
  */
 
-class RatingController extends RController
+class RatingController extends BaseController
 {
     public $layout = "index";
     public $defaultAction = "index";

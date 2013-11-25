@@ -4,7 +4,7 @@
  * @author: Raysmond
  */
 
-class CommentController extends RController
+class CommentController extends BaseController
 {
     public $layout = "index";
     public $defaultAction = "index";

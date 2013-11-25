@@ -4,7 +4,7 @@
  * @author: Raysmond
  */
 
-class CategoryController extends RController{
+class CategoryController extends BaseController{
     public $layout = "index";
     public $defaultAction = "index";
 

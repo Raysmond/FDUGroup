@@ -4,7 +4,7 @@
  * @author: Raysmond
  */
 
-class AdminController extends RController{
+class AdminController extends BaseController{
     public $layout = 'admin';
     public $defaultAction = 'index';
     public $access = array(Role::ADMINISTRATOR=>array('index'));

@@ -1,6 +1,6 @@
 <?php
 
-class PostController extends RController {
+class PostController extends BaseController {
     public $access = array(
         Role::AUTHENTICATED=>array('new','list','edit','delete','comment'),
         Role::ADMINISTRATOR=>array('admin','active')

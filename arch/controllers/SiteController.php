@@ -4,7 +4,7 @@
  * @author: Raysmond
  */
 
-class SiteController extends RController
+class SiteController extends BaseController
 {
 
     public $layout = "index";

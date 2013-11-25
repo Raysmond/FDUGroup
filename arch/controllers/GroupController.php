@@ -5,7 +5,7 @@
  * Time: 上午11:41
  */
 
-class GroupController extends RController
+class GroupController extends BaseController
 {
     public $layout = "index";
     public $defaultAction = "index";

@@ -3,7 +3,7 @@
  * Created by PhpStorm.
  * User: songrenchu
  */
-class AdsController extends RController {
+class AdsController extends BaseController {
     public $layout = "user";
     public $defaultAction = "view";
 

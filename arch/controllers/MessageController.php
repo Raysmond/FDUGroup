@@ -4,7 +4,7 @@
  * @author: Raysmond
  */
 
-class MessageController extends RController
+class MessageController extends BaseController
 {
     public $layout = 'user';
     public $defaultAction = 'index';

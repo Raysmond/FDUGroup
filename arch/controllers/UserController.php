@@ -4,7 +4,7 @@
  * @author: Raysmond
  */
 
-class UserController extends RController
+class UserController extends BaseController
 {
     public $layout = "index";
     public $defaultAction = "home";

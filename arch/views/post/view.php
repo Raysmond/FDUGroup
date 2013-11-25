@@ -18,7 +18,7 @@
     <div>
         Actions: <?= RHtmlHelper::linkAction('post', 'Edit', 'edit', $topic->id, array('class' => 'btn btn-xs btn-info')) ?>
     </div>
-    <div>
+    <div style="width: 100%; text-align: center;">
         <?php
             $this->module('rating_plus',array('id'=>'rating_plus','entityType'=>Topic::$entityType,'entityId'=>$topic->id));
         ?>

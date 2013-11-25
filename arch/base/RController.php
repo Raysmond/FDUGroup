@@ -20,6 +20,8 @@ class RController
     
     private $_params;
 
+    private $_headerTitle;
+
     /**
      * Define accessibility for actions, like restrict some actions only accessible
      * by administrators
@@ -144,6 +146,11 @@ class RController
         return true;
     }
 
+    public function afterAction()
+    {
+
+    }
+
     protected function userCanAccessAction()
     {
         $roleId = Role::ANONYMOUS_ID;
@@ -197,6 +204,10 @@ class RController
         $this->setCurrentAction($action);
         $this->setActionParams($params);
 
+        if ($this->beforeAction($action) == false) {
+            return;
+        }
+
         if(!$this->userCanAccessAction()){
 
             if(!Rays::app()->isUserLogin()){
@@ -206,10 +217,6 @@ class RController
             }
             $this->flash("error","Sorry, you're not authorized to view the requested page.");
             Rays::app()->page404();
-            return;
-        }
-
-        if ($this->beforeAction($action) == false) {
             return;
         }
 
@@ -251,6 +258,7 @@ class RController
         } else {
             Rays::app()->page404();
         }
+        $this->afterAction();
     }
 
     public function addCss($cssPath)
@@ -270,7 +278,12 @@ class RController
      */
     public function setHeaderTitle($title)
     {
+        $this->_headerTitle = $title;
         Rays::app()->getClientManager()->setHeaderTitle($title);
+    }
+
+    public function getHeaderTitle(){
+        return $this->_headerTitle;
     }
 
     /**

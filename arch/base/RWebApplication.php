@@ -89,6 +89,7 @@ class RWebApplication extends RBaseApplication
 
         $this->httpRequestHandler->normalizeRequest();
         $this->runController($this->router->getRouteUrl());
+
     }
 
 
