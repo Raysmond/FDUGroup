@@ -15,7 +15,6 @@ class BaseController extends RController{
         $accessLog->userId = Rays::app()->isUserLogin()?Rays::app()->getLoginUser()->id: 0;
         $accessLog->title = $this->getHeaderTitle();
         $accessLog->uri = $this->getHttpRequest()->getUrlReferrer();
-        var_dump($accessLog);
         $accessLog->insert();
     }
 } 
