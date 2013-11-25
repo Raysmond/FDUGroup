@@ -128,6 +128,9 @@ class GroupController extends BaseController
         $this->render('detail', $data, false);
     }
 
+    /**
+     * Build a new group
+     */
     public function actionBuild()
     {
         $this->setHeaderTitle("Build my group");
@@ -168,6 +171,10 @@ class GroupController extends BaseController
         $this->render('build', $data, false);
     }
 
+    /**
+     * Edit group information
+     * @param $groupId
+     */
     public function actionEdit($groupId)
     {
         $this->setHeaderTitle("Edit my group");
@@ -219,6 +226,7 @@ class GroupController extends BaseController
         }
         $this->render('edit', $data, false);
     }
+
 
     public function actionJoin($groupId) {  //by songrenchu: need censorship by group creator
         $currentUserId = Rays::app()->getLoginUser()->id;
