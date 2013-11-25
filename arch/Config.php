@@ -45,7 +45,7 @@ return array(
     'defaultAction' => 'index',
 
     'cache' => array(
-        'cache_dir' => 'cache',
+        'cache_dir' => '/cache',
         'cache_prefix' => "cache_",
         'cache_time' => 1800, //seconds
     )

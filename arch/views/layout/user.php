@@ -24,17 +24,19 @@ $baseUrl = Rays::app()->getBaseUrl();
 
 <body>
 <?php
-
-$cache = RCacheFactory::create('RFileCacheHelper', array('cache_dir'=>Rays::getFrameworkPath()."/../public/cache/"));
+    echo $this->module('main_nav',array('id'=>'main_nav','name'=>'Main navigation'));
+/*
+$cache = RCacheFactory::create('RFileCacheHelper', Rays::app()->getCacheConfig());
 if ( ($menuContent = $cache->get("user.menu", "user", 3600)) != FALSE ) {
     echo $menuContent;
 }
 else{
     $menuContent = $this->module('main_nav',array('id'=>'main_nav','name'=>'Main navigation'), true);
-    echo $menuContent;
     $cache->set("user.menu", "user", $menuContent);
+    echo $menuContent;
     unset($menuContent);
 }
+*/
 
 ?>
 
@@ -96,7 +98,19 @@ else{
 
             <?php
             $this->module("friend_users",array('id'=>'friend_users','name'=>"Friends"));
-            $this->module("new_users",array('id'=>'new_users','name'=>"New Users"));
+
+            $cache = RCacheFactory::create('RFileCacheHelper', Rays::app()->getCacheConfig());
+
+            if ( ($cacheContent = $cache->get("users", "new_users", 60)) != FALSE ) {
+                echo $cacheContent;
+            }
+            else{
+                $cacheContent =$this->module("new_users",array('id'=>'new_users','name'=>"New Users"),true);
+                $cache->set("users", "new_users", $cacheContent);
+                echo $cacheContent;
+                unset($cacheContent);
+            }
+
             $this->module("ads",array('id'=>'ads','name'=>"Ads"));
             ?>
         </div><!--/span-->

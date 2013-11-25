@@ -21,6 +21,8 @@ class RBaseApplication
 
     private $_config = array();
 
+    private $_cache = array();
+
     public function __construct($config = null)
     {
         $this->init($config);
@@ -47,6 +49,9 @@ class RBaseApplication
             $this->_db = $config['db'];
         if (isset($config['timeZone']))
             $this->timeZone = $config['timeZone'];
+        if (isset($config['cache'])){
+            $this->_cache = $config['cache'];
+        }
     }
 
     /**
@@ -138,5 +143,9 @@ class RBaseApplication
     public function getDBPrefix()
     {
         return isset($this->_db['table_prefix'])?$this->_db['table_prefix']:"";
+    }
+
+    public function getCacheConfig(){
+        return $this->_cache;
     }
 }

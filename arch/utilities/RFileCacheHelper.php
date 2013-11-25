@@ -11,31 +11,40 @@ class RFileCacheHelper implements RICacheHelper
 
     private $length = 3000;
     public $cacheDir = null;
+    public $cacheTime = 3600;
+    public $cachePrefix = 'cache_';
 
-
-    public function __construct($_args)
+    public function __construct($_args = array())
     {
         if ($_args != null) {
             if (isset($_args['cache_dir']))
-                $this->cacheDir = $_args['cache_dir'];
+                $this->cacheDir = Rays::getFrameworkPath().$_args['cache_dir'].'/';
             if (isset($_args['length']))
                 $this->length = $_args['length'];
+            if(isset($_args['cacheTime']))
+                $this->cacheTime = $_args['cacheTime'];
+            if(isset($_args['cachePrefix']))
+                $this->cachePrefix = $_args['cachePrefix'];
         }
     }
 
     private function getCacheFile($cacheId, $name)
     {
         $path = $this->cacheDir . str_replace('.', '/', $cacheId);
-        return $path . '/' . ($name !== null ? $name . '.cache.html' : 'default.cache.html');
+        return $path . '/' . ($name !== null ? $this->cachePrefix . $name . '.html' : $this->cachePrefix.'untitled.html');
     }
 
-    public function get($cacheId, $name, $expireTime)
+    public function get($cacheId, $name, $expireTime=null)
     {
         $cachedFile = $this->getCacheFile($cacheId, $name);
+        $time = $this->cacheTime;
+        if($expireTime!=null){
+            $time = $expireTime;
+        }
 
         if (!file_exists($cachedFile)) return FALSE;
-        if ($expireTime < 0) return file_get_contents($cachedFile);
-        if (filemtime($cachedFile) + $expireTime < time()) return FALSE;
+        if ($time < 0) return file_get_contents($cachedFile);
+        if (filemtime($cachedFile) + $time < time()) return FALSE;
         return file_get_contents($cachedFile);
     }
 
