@@ -1,9 +1,8 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: Raysmond
+ * Plus one rating module class file
+ * @author: Raysmond
  * Date: 13-11-25
- * Time: PM1:04
  */
 
 class rating_plus_module extends RModule
@@ -13,32 +12,64 @@ class rating_plus_module extends RModule
 
     private $url = 'rating/plus';
 
+    private $plus = null;
+
     public function __construct($params = array())
     {
         parent::init($params);
-        if(isset($params['entityType'])){
+        if (isset($params['entityType'])) {
             $this->entityType = $params['entityType'];
         }
-        if(isset($params['entityId'])){
+        if (isset($params['entityId'])) {
             $this->entityId = $params['entityId'];
         }
     }
 
     public function module_content()
     {
-        $this->addJs($this->getModulePath().'/rating_plus.js');
-        $html = '<div style="text-align: center;width: 100%;">';
-        if($this->checkEntity()){
-            $html .= '<button type="button" onclick="javascript:plusEntity(\''.RHtmlHelper::siteUrl($this->url).'\',\''.$this->entityType.'\',\''.$this->entityId.'\')" class="btn btn-default btn-sm">'
-            .'<span class="glyphicon glyphicon-star"></span> Plus</button>';
+        $this->loadPlus();
+        $count = $this->getCount();
+        $counterId = $this->entityType . '_' . $this->entityId . '_counter';
+        $actionUrl = RHtmlHelper::siteUrl($this->url);
+
+        $this->addJs($this->getModulePath() . '/rating_plus.js');
+
+        $html = '<div class="rating-plus" style="text-align: center; width: 100%;">';
+        if ($this->checkEntity()) {
+            $html .= '<button type="button" '
+                . 'onclick="javascript:plusEntity(\''
+                . $actionUrl . '\',\'' . $this->entityType . '\',\'' . $this->entityId . '\')" '
+                . 'class="btn btn-default btn-sm">'
+                . '<span class="glyphicon glyphicon-star"></span> Plus '
+                . '<span id="' . $counterId . '" class="badge">' . $count . '</span>'
+                . '</button>';
         }
-        $html.='</div>';
+        $html .= '</div>';
         return $html;
     }
 
-    private function checkEntity(){
-        if(isset($this->entityType)&&isset($this->entityId)){
-            if(is_numeric($this->entityId))
+    private function getCount()
+    {
+        $count = 0;
+        if ($this->plus !== null) {
+            $counter = $this->plus->getCounter();
+            if ($counter !== null) {
+                $count = $counter->value;
+            }
+        }
+        return $count;
+    }
+
+    private function loadPlus()
+    {
+        $plus = new RatingPlus($this->entityType, $this->entityId);
+        $this->plus = $plus;
+    }
+
+    private function checkEntity()
+    {
+        if (isset($this->entityType) && isset($this->entityId)) {
+            if (is_numeric($this->entityId))
                 return true;
         }
         return false;

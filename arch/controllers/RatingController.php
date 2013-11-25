@@ -17,7 +17,7 @@ class RatingController extends RController
     public function actionPlus()
     {
         if ($this->getHttpRequest()->getIsAjaxRequest()) {
-            $result = false;
+            $result = ["result"=>false];
             if (isset($_POST['plusId']) && isset($_POST['plusType'])) {
                 if (is_numeric($_POST['plusId'])) {
                     $plusId = $_POST['plusId'];
@@ -27,24 +27,28 @@ class RatingController extends RController
                     $host = $this->getHttpRequest()->getUserHostAddress();
 
                     switch ($_POST['plusType']) {
-                        case "topic":
+                        case Topic::$entityType:
                             $post = new Topic();
                             if ($post->load($plusId) !== null) {
                                 $plus = new RatingPlus(Topic::$entityType, $plusId, $userId,$host);
-                                $result = $plus->rate();
+                                if($plus->rate()){
+                                    $result = ["result"=>true,"counter"=>$plus->getCounter()->value];
+                                }
                             }
                             break;
-                        case "group":
+                        case Group::ENTITY_TYPE:
                             $group = new Group();
                             if ($group->load($plusId) !== null) {
-                                $plus = new RatingPlus(Group::ENTITY_TYPE, $plusId, $userId,$host);
-                                $result = $plus->rate();
+                                $plus = new RatingPlus(Group::ENTITY_TYPE, $plusId, $userId, $host);
+                                if($plus->rate()){
+                                    $result = ["result"=>true,"counter"=>$plus->getCounter()->value];
+                                }
                             }
                             break;
                     }
                 }
             }
-            echo $result ? "success" : "failed";
+            echo json_encode($result);
             exit;
         }
     }

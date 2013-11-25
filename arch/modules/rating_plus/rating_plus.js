@@ -8,6 +8,9 @@ function plusEntity(url,entityType,entityId){
         url: url,
         data: {'plusType': entityType,'plusId': entityId}
     }).done(function(data){
-            alert(data);
+            var json = eval('('+data+')');
+            if(json.result==true){
+                $("#"+entityType+"_"+entityId+"_counter").html(json.counter);
+            }
         });
 }

@@ -12,11 +12,13 @@ class RatingPlus
     private $_rating = null;
     private $_ratingId = null;
 
+    private $_counter = null;
+
     const VALUE_TYPE = 'integer';
     const TAG = "plus";
     const VALUE = 1;
 
-    public function __construct($entityType, $entityId, $userId,$host)
+    public function __construct($entityType, $entityId, $userId = 0, $host = "")
     {
         $this->entityType = $entityType;
         $this->entityId = $entityId;
@@ -39,11 +41,53 @@ class RatingPlus
                 $ratingId = $plus->insert();
                 if ($ratingId !== null && is_numeric($ratingId)) {
                     $this->_ratingId = $ratingId;
+                    $this->updatePlusCounter();
                     return true;
                 }
             }
         }
         return false;
+    }
+
+    /**
+     * Plus counter for every plus rating
+     */
+    private function updatePlusCounter(){
+        $counter = new RatingStatistic();
+        $counter->entityType = $this->entityType;
+        $counter->entityId = $this->entityId;
+        $counter->type = 'count';
+        $counter->valueType = self::VALUE_TYPE;
+        $counter->tag = self::TAG;
+        $result = $counter->find();
+        if(count($result)===0){
+            $counter->value = 1;
+            $id = $counter->insert();
+            $counter->id = $id;
+        }
+        else{
+            $counter = $result[0];
+            $counter->value++;
+            $counter->timestamp = date('Y-m-d H:i:s');
+            $counter->update();
+        }
+        $this->_counter = $counter;
+    }
+
+    public function getCounter(){
+        if($this->_counter===null){
+            $counter = new RatingStatistic();
+            $counter->entityType = $this->entityType;
+            $counter->entityId = $this->entityId;
+            $counter->type = 'count';
+            $counter->valueType = self::VALUE_TYPE;
+            $counter->tag = self::TAG;
+            $result = $counter->find();
+            if(count($result)!==0){
+                $this->_counter = $result[0];
+            }
+        }
+        return $this->_counter;
     }
 
     public function getRating()

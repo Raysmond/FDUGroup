@@ -20,7 +20,7 @@
     </div>
     <div>
         <?php
-            $this->module('rating_plus',array('id'=>'rating_plus','entityType'=>'topic','entityId'=>$topic->id));
+            $this->module('rating_plus',array('id'=>'rating_plus','entityType'=>Topic::$entityType,'entityId'=>$topic->id));
         ?>
     </div>
 </div>
