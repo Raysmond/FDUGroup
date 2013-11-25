@@ -11,16 +11,13 @@ USE `fdugroup` ;
 DROP TABLE IF EXISTS `fdugroup`.`group_wallet` ;
 
 CREATE TABLE IF NOT EXISTS `fdugroup`.`group_wallet` (
-  `w_id` INT NOT NULL AUTO_INCREMENT,
-  `u_id` INT(11) NOT NULL,
+  `u_id` INT(11) NOT NULL AUTO_INCREMENT,
   `w_type` VARCHAR(45) NOT NULL,
   `w_money` INT NOT NULL DEFAULT 0,
   `w_frozen_money` INT NOT NULL,
   `w_timestamp` TIMESTAMP NOT NULL,
-  PRIMARY KEY (`w_id`))
+  PRIMARY KEY (`u_id`))
 ENGINE = InnoDB;
-
-CREATE INDEX `fk_group_wallet_group_users1_idx` ON `fdugroup`.`group_wallet` (`u_id` ASC);
 
 
 SET SQL_MODE=@OLD_SQL_MODE;

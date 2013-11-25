@@ -33,11 +33,6 @@ class CommentController extends RController
             }
         }
 
-        if($this->getHttpRequest()->getIsAjaxRequest()){
-            echo 'ajax delete, need to be implemented.';
-            exit;
-        }
-
         $curPage = $this->getHttpRequest()->getQuery('page', 1);
         $pageSize = (isset($_GET['pagesize'])&&is_numeric($_GET['pagesize']))?$_GET['pagesize']:5;
 

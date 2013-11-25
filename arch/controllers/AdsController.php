@@ -95,11 +95,20 @@ class AdsController extends RController {
         }
     }
 
-    public function actionEdit($adId = null, $type) {
+    public function actionEdit($adId, $type) {
+        if(!isset($adId)||!is_numeric($adId)){
+            Rays::app()->page404();
+            return;
+        }
         $data = array();
         $ad = new Ads();
         $ad->id = $adId;
-        $ad->load();
+        $result = $ad->load();
+
+        if($result===null){
+            Rays::app()->page404();
+            return;
+        }
         $data['ad'] = $ad;
         $data['edit'] = true;
         $data['type'] = $type;
@@ -125,7 +134,6 @@ class AdsController extends RController {
                     case Ads::BLOCKED: $redirect = 'blocked';break;
                 }
                 $this->redirectAction('ads','view', $redirect);
-                return;
             }
             else{
                 $data['applyForm'] = $_POST;
@@ -200,7 +208,7 @@ class AdsController extends RController {
     public function actionHitAd() {
         if ($this->getHttpRequest()->getIsAjaxRequest()) {
             $adId = (int)$_POST['adId'];
-            if ((new Ads)->load($adId) !== null) {
+            if ((new Ads())->load($adId) !== null) {
                 (new Counter())->increaseCounter($adId, Ads::ENTITY_ID);
             }
         }

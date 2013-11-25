@@ -81,6 +81,10 @@ class User extends Data{
         return $this;
     }
 
+    /**
+     * Get user wallet, create a wallet for the user if no wallet is found
+     * @return null|Wallet
+     */
     public function getWallet()
     {
         if ($this->_wallet instanceof Wallet)
