@@ -13,7 +13,7 @@ class RBaseApplication
 
     public $timeZone = 'PRC';
 
-    private $_basePath;
+    private $_basePath = '';
 
     private $_baseUrl;
 
@@ -73,7 +73,7 @@ class RBaseApplication
     public function getBaseUrl()
     {
         if (!isset($this->_baseUrl)) {
-            $this->_baseUrl = 'http://' . $_SERVER['SERVER_NAME'];
+            $this->_baseUrl = 'http://' . $_SERVER['SERVER_NAME'].(isset($this->_basePath)?$this->_basePath:"");
         }
         return $this->_baseUrl;
     }
@@ -90,9 +90,7 @@ class RBaseApplication
 
     public function setBasePath($path)
     {
-        if (($this->_basePath = realpath($path)) === false || !is_dir($this->_basePath)) {
-            // no such path
-        }
+        $this->_basePath = $path;
     }
 
     public function getName()

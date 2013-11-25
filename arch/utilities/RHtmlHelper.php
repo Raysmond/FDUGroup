@@ -33,12 +33,12 @@ class RHtmlHelper
     /**
      * Return site url
      * @param $url like "site/about"
-     * @return string like: http://localhost/FDUGroup/site/about
-     * or http://localhost/FDUGroup/?q=site/about
+     * @return string like: /FDUGroup/site/about
+     * or /FDUGroup/?q=site/about
      */
     public static function siteUrl($url)
     {
-        return self::tryCleanLink(Rays::app()->getBaseUrl() . "/" . $url);
+        return self::tryCleanLink(Rays::app()->getBasePath().'/'. $url);
     }
 
     public static function linkAction($controller, $name, $action = null, $params = null,$attributes=array())
@@ -55,7 +55,7 @@ class RHtmlHelper
                 }
             }
         }
-        return self::link($name, $name, Rays::app()->getBaseUrl() . "/" . $link,$attributes);
+        return self::link($name, $name, Rays::app()->getBasePath() . "/" . $link,$attributes);
     }
 
     public static function link($title, $content, $href, $attributes=array())
@@ -168,7 +168,7 @@ class RHtmlHelper
     public static function showImage($src,$title='',$attributes = array()){
         $defaults = array();
         if(strpos($src,'://')==false){
-            $src = Rays::app()->getBaseUrl()."/".$src;
+            $src = Rays::app()->getBasePath()."/".$src;
         }
         $defaults['src'] = $src;
         $defaults['title'] = $title;

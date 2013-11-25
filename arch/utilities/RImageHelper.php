@@ -34,7 +34,7 @@ class RImageHelper {
         }
 
         $stylePath = $styleDir.'/'.$name;
-        $targetSrc = RHtmlHelper::siteUrl(self::IMAGE_DIR.'/'.$style.'/'.$name);
+        $targetSrc = self::IMAGE_DIR.'/'.$style.'/'.$name;
         if(file_exists($stylePath)){
             return $targetSrc;
         }
@@ -45,7 +45,7 @@ class RImageHelper {
             if($flag){
                 return $targetSrc;
             }else{
-                return RHtmlHelper::siteUrl($src);
+                return $src;
             }
         }
 

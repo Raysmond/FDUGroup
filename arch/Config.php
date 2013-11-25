@@ -9,8 +9,6 @@ return array(
     'name' => 'FDUGroup',
 
     // database configuration
-
-
     'db' => array(
         'host' => 'localhost',
         'user' => 'fdugroup',
@@ -20,8 +18,8 @@ return array(
         'charset' => 'utf8',
     ),
 
-
-    'baseUrl' => "http://localhost/FDUGroup",
+    # 'baseUrl' => "http://localhost/FDUGroup",
+    'basePath' => "/FDUGroup",
 
 
     // lab server db configuration
