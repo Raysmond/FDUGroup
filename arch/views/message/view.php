@@ -22,7 +22,7 @@
 
 <?php echo RHtmlHelper::linkAction('message',"Read messages",'view','read',array('class'=>'btn btn-sm btn-default'));?>
 
-<?php echo RHtmlHelper::linkAction('message',"Outbox",'view','send',array('class'=>'btn btn-sm btn-default'));?>
+<?php //echo RHtmlHelper::linkAction('message',"Outbox",'view','send',array('class'=>'btn btn-sm btn-default'));?>
 
 <?php echo RHtmlHelper::linkAction('message',"Trash",'view','trash',array('class'=>'btn btn-sm btn-danger'));?>
 

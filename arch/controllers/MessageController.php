@@ -109,14 +109,14 @@ class MessageController extends RController
 
     public function actionRead($msgId)
     {
+        $referrer = $this->getHttpRequest()->getUrlReferrer();
         $message = new Message();
         $message = $message->load($msgId);
         if (Rays::app()->getLoginUser()->id != $message->receiverId) {
             $this->flash("error", "Sorry. You don't have the right to mark the message read.");
-            $this->redirectAction('message', 'view', 'all');
         }
         $message->markRead($msgId);
-        $this->redirectAction('message', 'view', 'all');
+        $this->redirect($referrer);
     }
 
 
@@ -130,19 +130,25 @@ class MessageController extends RController
         $this->setHeaderTitle("Messages");
         $messages = new Message();
         $userId = Rays::app()->getLoginUser()->id;
-        if ($msgType == 'all') {
-            $messages = $messages->getUserMsgs($userId);
-        } else if ($msgType == 'read') {
-            $messages = $messages->getReadMsgs($userId);
-        } else if ($msgType == 'unread') {
-            $messages = $messages->getUnReadMsgs($userId);
-        } else if ($msgType == 'send') {
-            $messages = $messages->getUserSentMsgs($userId);
-        } else if($msgType == 'trash'){
-            $messages = $messages->getTrashMsgs($userId);
-        } else {
-            Rays::app()->page404();
-            return;
+        switch($msgType){
+            case "all":
+                $messages = $messages->getUserMsgs($userId);
+                break;
+            case "read":
+                $messages = $messages->getReadMsgs($userId);
+                break;
+            case "unread":
+                $messages = $messages->getUnReadMsgs($userId);
+                break;
+            //case "send":
+            //    $messages = $messages->getUserSentMsgs($userId);
+            //    break;
+            case "trash":
+                $messages = $messages->getTrashMsgs($userId);
+                break;
+            default:
+                Rays::app()->page404();
+                return;
         }
         if($messages==null) $messages = array();
         $this->render('view', array('msgs' => $messages, 'type' => $msgType), false);
@@ -157,7 +163,7 @@ class MessageController extends RController
                 $msg->markTrash($msgId);
             }
         }
-        $this->redirectAction('message', 'view', 'trash');
+        $this->redirect($this->getHttpRequest()->getUrlReferrer());
     }
 
     public function actionDelete($msgId)
@@ -170,7 +176,7 @@ class MessageController extends RController
                 $msg->delete();
             }
         }
-        $this->redirectAction('message', 'view', 'all');
+        $this->redirect($this->getHttpRequest()->getUrlReferrer());
     }
 
     public function actionSendAdmin()
