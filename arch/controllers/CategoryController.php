@@ -24,7 +24,7 @@ class CategoryController extends BaseController{
         }
         $category = new Category();
         $category->load($categoryId);
-        if($category->load($categoryId)===nul){
+        if($category->load($categoryId)===null){
             Rays::app()->page404();
             return;
         }

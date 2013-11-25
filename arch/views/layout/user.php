@@ -23,7 +23,20 @@ $baseUrl = Rays::app()->getBaseUrl();
 </head>
 
 <body>
-<?php $this->module('main_nav',array('id'=>'main_nav','name'=>'Main navigation')); ?>
+<?php
+
+$cache = RCacheFactory::create('RFileCacheHelper', array('cache_dir'=>Rays::getFrameworkPath()."/../public/cache/"));
+if ( ($menuContent = $cache->get("user.menu", "user", 3600)) != FALSE ) {
+    echo $menuContent;
+}
+else{
+    $menuContent = $this->module('main_nav',array('id'=>'main_nav','name'=>'Main navigation'), true);
+    echo $menuContent;
+    $cache->set("user.menu", "user", $menuContent);
+    unset($menuContent);
+}
+
+?>
 
 <div class="container">
 
@@ -101,5 +114,4 @@ $baseUrl = Rays::app()->getBaseUrl();
 echo RHtmlHelper::linkScriptArray(Rays::app()->getClientManager()->script);
 ?>
 </body>
-
 </html>

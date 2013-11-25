@@ -124,7 +124,7 @@ class GroupController extends BaseController
                 $data['isManager'] = true;
         }
 
-        $this->setHeaderTitle("Group details");
+        $this->setHeaderTitle($group->name);
         $this->render('detail', $data, false);
     }
 

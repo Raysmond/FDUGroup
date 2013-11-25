@@ -73,7 +73,7 @@ class Topic extends Data
             $json['user_id'] = $topic['u_id'];
             $json['topic_title'] = $topic['top_title'];
             $json['topic_id'] = $topic['top_id'];
-            $json['user_picture'] = RImageHelper::styleSrc($topic['u_picture'], User::getPicOptions());
+            $json['user_picture'] = RHtmlHelper::siteUrl(RImageHelper::styleSrc($topic['u_picture'], User::getPicOptions()));
             $json['picture_src'] = $topic['u_picture'];
             $json['user_link'] = RHtmlHelper::siteUrl('user/view/'.$topic['u_id']);
             $json['topic_link'] = RHtmlHelper::siteUrl('post/view/'.$topic['top_id']);
