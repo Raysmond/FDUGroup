@@ -10,7 +10,7 @@ return array(
 
     // database configuration
     'db' => array(
-        'host' => 'localhost',
+        'host' => '127.0.0.1',
         'user' => 'fdugroup',
         'password' => 'fdugroup',
         'db_name' => 'fdugroup',
@@ -18,13 +18,7 @@ return array(
         'charset' => 'utf8',
     ),
 
-    # 'baseUrl' => "http://localhost/FDUGroup",
-    'basePath' => "/FDUGroup",
-
-
-    // lab server db configuration
-
-
+    // online production database configuration
     /*
     'db' => array(
         'host' => '10.141.200.211',
@@ -36,7 +30,13 @@ return array(
     ),
     */
 
+    # 'baseUrl' => "http://localhost/FDUGroup",
 
+    /*
+     * The / at the beginning of the base Path stands for the base path of
+     * the web host address like: localhost
+     */
+    'basePath' => "/FDUGroup",
 
     'isCleanUri' => true,
 

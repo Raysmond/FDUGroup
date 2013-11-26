@@ -16,9 +16,11 @@
                 <li <?= ($curUrl=='group/find'?'class="active"':''); ?>>
                     <?= RHtmlHelper::linkAction("group","Find Group","find"); ?>
                 </li>
+                <?php if(isset($user)): ?>
                 <li <?php echo (Rays::app()->getHttpRequest()->urlMatch('group/view/*')?'class="active"':''); ?>>
-                    <?php echo RHtmlHelper::linkAction("group","My Group","view", Rays::app()->isUserLogin()?Rays::app()->getLoginUser()->id:null); ?>
+                    <?php echo RHtmlHelper::linkAction("group","My Group","view",null); ?>
                 </li>
+                <?php endif; ?>
             </ul>
 
             <ul class="nav navbar-nav navbar-right">
