@@ -98,7 +98,7 @@ class Message extends Data{
         }
     }
 
-    public function getUnReadMsgs($receiverId)
+    public function getUnReadMsgs($receiverId,$page=0,$pageSize=0)
     {
         if(!isset($receiverId)||$receiverId==''){
             return null;
@@ -106,10 +106,10 @@ class Message extends Data{
         $msgs = new Message();
         $msgs->status = self::$STATUS_UNREAD;
         $msgs->receiverId = $receiverId;
-        return $msgs->find(0,0,array('key'=>'msg_id','order'=>'desc'));
+        return $msgs->find($page,$pageSize,array('key'=>'msg_id','order'=>'desc'));
     }
 
-    public function getReadMsgs($receiverId)
+    public function getReadMsgs($receiverId,$page=0,$pageSize=0)
     {
         if(!isset($receiverId)||$receiverId==''){
             return null;
@@ -117,17 +117,17 @@ class Message extends Data{
         $msgs = new Message();
         $msgs->status = self::$STATUS_READ;
         $msgs->receiverId = $receiverId;
-        return $msgs->find(0,0,array('key'=>'msg_id','order'=>'desc'));
+        return $msgs->find($page,$pageSize,array('key'=>'msg_id','order'=>'desc'));
     }
 
-    public function getUserMsgs($receiverId)
+    public function getUserMsgs($receiverId,$page=0,$pageSize=0)
     {
         if(!isset($receiverId)||$receiverId==''){
             return null;
         }
         $msgs = new Message();
         $msgs->receiverId = $receiverId;
-        return $msgs->find(0,0,array('key'=>'msg_status,msg_id','order'=>'desc'),array(),
+        return $msgs->find($page,$pageSize,array('key'=>'msg_status,msg_id','order'=>'desc'),array(),
             array('status'=>array(self::$STATUS_READ,self::$STATUS_UNREAD)));
     }
 

@@ -4,7 +4,7 @@
  */
 ?>
 
-<h2><?php echo count($msgs); ?> messages <?php echo ($type=='all'?"":$type); ?></h2>
+<h2><?php echo $count; ?> messages <?php echo ($type=='all'?"":$type); ?></h2>
 <div class="navbar-left">
     <?php
     echo RFormHelper::openForm('message/send/user');
@@ -72,3 +72,6 @@
         echo '</div></div>';
     }
 ?>
+<div>
+    <?=$pager?>
+</div>

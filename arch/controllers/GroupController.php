@@ -434,6 +434,9 @@ class GroupController extends BaseController
         }
     }
 
+    /**
+     * Groups administration
+     */
     public function actionAdmin(){
         $this->setHeaderTitle('Group administration');
         $this->layout = 'admin';
