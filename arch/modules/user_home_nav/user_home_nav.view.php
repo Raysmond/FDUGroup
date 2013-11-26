@@ -2,12 +2,19 @@
     <div class="panel-heading"><b>Navigation</b></div>
     <div class="panel-body">
     <ul class="nav nav-pills nav-stacked">
+
         <li <?= (Rays::app()->getHttpRequest()->urlMatch(array('user/home','user','user/'), $currentUrl)) ? 'class="active"' : "" ?>>
             <?= RHtmlHelper::linkAction('user', 'Home page', 'home') ?>
         </li>
+
+        <li <?= ($currentUrl == 'user/myposts') ? 'class="active"' : "" ?>>
+            <?=RHtmlHelper::linkAction('user','My posts', 'myposts')?>
+        </li>
+
         <li <?= ($currentUrl == 'user/profile') ? 'class="active"' : "" ?>>
             <?= RHtmlHelper::linkAction('user', 'Profile', 'profile') ?>
         </li>
+
         <?php
         $isMessageUrl = Rays::app()->getHttpRequest()->urlMatch('message/*', $currentUrl);
         if (($count = $user->countUnreadMsgs()) == 0) {

@@ -9,7 +9,7 @@ class UserController extends BaseController
     public $layout = "index";
     public $defaultAction = "home";
     public $access = array(
-        Role::AUTHENTICATED => array('edit', 'logout','home','profile', 'applyVIP'),
+        Role::AUTHENTICATED => array('edit', 'logout','home','profile','myPosts', 'applyVIP'),
         Role::ADMINISTRATOR=>array('admin','processVIP'));
 
     /**
@@ -194,6 +194,29 @@ class UserController extends BaseController
         }
         $this->setHeaderTitle("Edit profile - " . $user->name);
         $this->render('edit', $data, false);
+    }
+
+    public function actionMyPosts(){
+        $data = array();
+
+        $curPage = $this->getHttpRequest()->getQuery('page',1);
+        $pageSize = (isset($_GET['pagesize'])&&is_numeric($_GET['pagesize']))?$_GET['pagesize'] : 5;
+
+        $userId = Rays::app()->getLoginUser()->id;
+        $posts = new Topic();
+        $posts->userId = $userId;
+        $count = $posts->count();
+        $posts = $posts->find(($curPage-1)*$pageSize,$pageSize,['key'=>$posts->columns['id'],'order'=>'desc']);
+        $data['posts'] = $posts;
+        $data['count'] = $count;
+
+        $url = RHtmlHelper::siteUrl('user/myposts');
+        $pager = new RPagerHelper('page',$count,$pageSize,$url,$curPage);
+        $data['pager'] = $pager->showPager();
+
+        $this->layout = 'user';
+        $this->setHeaderTitle("My posts");
+        $this->render('myposts',$data,false);
     }
 
     public function actionAdmin()
