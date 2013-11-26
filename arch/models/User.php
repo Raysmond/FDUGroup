@@ -198,6 +198,7 @@ class User extends Data{
     private function setStatus($userId='',$status){
         if($userId!='') $this->id = $userId;
         if(isset($this->id)){
+            $this->load();
             $this->status = $status;
             $this->update();
         }
