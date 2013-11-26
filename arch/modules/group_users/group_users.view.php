@@ -14,13 +14,15 @@
                 echo 'No group users';
             }
             else{
-                echo '<div class="row">';
+                echo '<div class="row user-list">';
                 foreach($users as $user){
-                    echo '<div class="col-6 col-sm-6 col-lg-4">';
+                    echo '<div class="user-item col-lg-4">';
                     $user->picture = $user->picture!=''?$user->picture:User::$defaults['picture'];
                     $picture = RImageHelper::styleSrc($user->picture,User::getPicOptions());
-                    echo RHtmlHelper::showImage($picture,$user->name,array("width"=>"64px","height"=>"64px"))."<br/>";
-                    echo RHtmlHelper::linkAction('user',$user->name,'view',$user->id)."  ";
+                    echo '<a href="' . RHtmlHelper::siteUrl('user/view/' . $user->id) . '">' . RHtmlHelper::showImage($picture,$user->name,array("width"=>"64px","height"=>"64px")). '</a>';
+                    $name = $user->name;
+                    if (mb_strlen($name) > 7) $name = mb_substr($name, 0, 8) . "..";
+                    echo RHtmlHelper::linkAction('user', $name, 'view', $user->id, array('title' => $user->name)) . "  ";
                     echo '</div>';
                 }
                 echo '</div>';
