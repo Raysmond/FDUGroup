@@ -57,7 +57,7 @@ class UserController extends BaseController
      * View user profile
      * @param $userId
      */
-    public function actionView($userId, $part = 'all')
+    public function actionView($userId, $part = 'joins')
     {
         $user = new User();
         if ($user->load($userId)==null) {
@@ -83,9 +83,20 @@ class UserController extends BaseController
         switch ($part) {
             case 'joins': $userGroup = (new GroupUser())->userGroups($userId);break;
             case 'posts': $postTopics = (new Topic())->getUserTopics($userId);break;
-           // case 'likes': $likeTopics = (new Topics())
+            case 'likes': break;//$userGroup = (new GroupUser())->userGroups()
+            case 'profile': break;
+            default: return;
         }
-        $this->render('view', array('user' => $user, 'canEdit' => $canEdit, 'canAdd' => $canAdd, 'canCancel' => $canCancel), false);
+        $this->render('view',
+            array('user' => $user,
+                'canEdit' => $canEdit,
+                'canAdd' => $canAdd,
+                'canCancel' => $canCancel,
+                'part' => $part,
+                'userGroup' => $userGroup,
+                'postTopics' => $postTopics,
+                'likeTopics' => $likeTopics,
+            ), false);
     }
 
     public function actionProfile($action=null){
