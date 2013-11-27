@@ -176,7 +176,6 @@ class Data
 
     public function count($like = array())
     {
-        $result = array();
         $where = " where 1 = 1 ";
         foreach ($this->columns as $objCol => $dbCol) {
             if ($this->$objCol) {

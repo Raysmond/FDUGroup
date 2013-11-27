@@ -7,7 +7,7 @@
             <?= RHtmlHelper::linkAction('user', 'Home page', 'home') ?>
         </li>
 
-        <li <?= ($currentUrl == 'user/myposts') ? 'class="active"' : "" ?>>
+        <li <?= (Rays::app()->getHttpRequest()->urlMatch(array('user/myposts','user/myposts?*'), $currentUrl)) ? 'class="active"' : "" ?>>
             <?=RHtmlHelper::linkAction('user','My posts', 'myposts')?>
         </li>
 
