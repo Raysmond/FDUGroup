@@ -135,6 +135,11 @@ class UserController extends BaseController
                 $user = new User();
                 $user->register($_POST['username'], md5($_POST['password']), $_POST['email']);
                 $user->sendWelcomeMessage();
+                $emailResult = RMailHelper::sendEmail("Welcome to FDUGroup family","<b>Welcome to FDUGroup family</b><br/>-- FDUGroup team <br/>".date('Y-m-d H:i:s'),$_POST['email']);
+                if($emailResult!==true){
+                    var_dump($emailResult);
+                    exit;
+                }
                 $this->flash("message", "Hello," . $user->name . ", please " . RHtmlHelper::linkAction('user', 'login', 'login') . " !");
                 $this->redirectAction('user', 'view', $user->id);
             } else {
