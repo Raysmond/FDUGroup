@@ -48,7 +48,9 @@
     </div>
     <?php $skip = ['id', 'status', 'picture', 'privacy', 'permission', 'password', 'credits']; ?>
     <div class="panel-body">
-        <?php if ($part == 'profile') { ?>
+        <?php
+        if ($part == 'profile') {       //Profile of a User
+        ?>
             <ul class="list-group">
             <?php
             foreach ($user->columns as $objCol => $dbCol) {
@@ -74,8 +76,62 @@
                     echo "</li>";
                 }
             }
+            echo '</ul>';
+        } else if ($part == 'joins') {          //Groups joined by a User
+            if ($userGroup == null) {
+                echo "<p>This guy has not joined any groups!</p>";
+            } else {
+                echo '<div class="row">';
+                foreach ($userGroup as $group) {
+
+                    echo '<div class="col-6 col-sm-6 col-lg-4" style="height: 190px;">';
+                    echo "<div class='panel panel-default' style='height: 170px;'>";
+                    echo "<div class='panel-heading'>";
+                    if (isset($group->picture) && $group->picture != '') {
+                        //echo RHtmlHelper::showImage($group->picture,$group->name,array('style'=>'height:32px;'));
+                    }
+                    echo RHtmlHelper::linkAction('group', $group->name, 'detail', $group->id);
+                    echo "</div>";
+
+                    echo "<div class='panel-body'>";
+                    echo $group->memberCount . " members";
+                    $content = strip_tags(RHtmlHelper::decode($group->intro));
+                    if (mb_strlen($content) > 70) {
+                        echo '<p>' . mb_substr($content, 0, 70, "UTF-8") . '...</p>';
+                    } else echo '<p>' . ($content) . '</p>';
+
+                    echo RHtmlHelper::linkAction('group', 'View details', 'detail', $group->id
+                        , array('class' => 'btn btn-xs btn-info', 'style' => 'position:absolute;top:140px;right:30px;'));
+
+                    echo "</div></div>";
+                    echo "</div>";
+
+                }
+                echo '</div>';
+            }
+        } else
+        if ($part == 'posts') {         //User published Topics
+            if (!count($postTopics)) {
+                echo "<p>This guy has not posted any topics!</p>";
+            } else {
+        ?>
+            <table class="table table-hover table-condensed">
+                <thead><tr><th>Title</th><th>Replies</th><th>Time</th><th>Last comment</th></tr></thead>
+                <tbody><?php
+
+                foreach ($postTopics as $topic) {
+                    ?><tr><td><b><?=RHtmlHelper::linkAction('post', $topic->title, 'view', $topic->id)?></b></td>
+                    <td><?=$topic->commentCount?></td>
+                    <td><?=$topic->createdTime?></td>
+                    <td><?=$topic->lastCommentTime?></td></tr><?php
+                }
+
+                ?></tbody>
+            </table>
+        <?php
+            }
         }
-        echo '</ul>';
+
         ?>
 
 
