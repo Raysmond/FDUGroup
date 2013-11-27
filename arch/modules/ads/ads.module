@@ -10,8 +10,7 @@ class ads_module extends RModule {
      * @return string|void
      */
     public function module_content() {
-        $ads = new Ads();
-        $ads = $ads->getPublishedAds();
+        $ads = Ads::getPublishedAds();
 
         return $this->render('ads',
             array(

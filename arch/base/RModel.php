@@ -17,19 +17,20 @@ class _RModelQueryer {
     public function __construct($model)
     {
         $this->model = $model;
-        $this->query_cond = null;
+        $this->query_cond = "1 = 1";
         $this->prepare_list = array();
     }
 
     private function _select($suffix = "")
     {
-        $stmt = RModel::getConnection()->prepare("SELECT * FROM [$this->model::$table] WHERE $this->query_cond $suffix");
+        $model = $this->model;
+        $stmt = RModel::getConnection()->prepare("SELECT * FROM ".Rays::app()->getDBPrefix().$model::$table." WHERE $this->query_cond $suffix");
         $stmt->execute($this->prepare_list);
         $rs = $stmt->fetchAll();
         $ret = array();
         foreach ($rs as $row) {
             $obj = new $this->model();
-            foreach ($this->model::$mapping as $member => $db_member) {
+            foreach ($model::$mapping as $member => $db_member) {
                 $obj->$member = $row[$db_member];
             }
             $ret[] = $obj;
@@ -43,7 +44,7 @@ class _RModelQueryer {
      */
     public function first()
     {
-        $ret = _select("LIMIT 1");
+        $ret = $this->_select("LIMIT 1");
         if (count($ret) == 0)
             return null;
         else
@@ -56,7 +57,7 @@ class _RModelQueryer {
      */
     public function range($firstrow, $rowcount)
     {
-        return _select("LIMIT $firstrow, $rowcount");
+        return $this->_select("LIMIT $firstrow, $rowcount");
     }
 
     /**
@@ -65,7 +66,7 @@ class _RModelQueryer {
      */
     public function all()
     {
-        return _select();
+        return $this->_select();
     }
 
     /**
@@ -73,17 +74,15 @@ class _RModelQueryer {
      */
     public function delete()
     {
-        $stmt = RModel::getConnection()->prepare("DELETE FROM [$this->model::$table] WHERE $this->query_cond");
+        $model = $this->model;
+        $stmt = RModel::getConnection()->prepare("DELETE FROM ".Rays::app()->getDBPrefix().$model::$table." WHERE $this->query_cond");
         $stmt->execute($this->prepare_list);
     }
 
     private function _find($constraints)
     {
         foreach ($constraints as $member => $value) {
-            if ($this->query_cond != null) {
-                $this->query_cond .= " AND ";
-            }
-            $this->query_cond .= "$this->model::$mapping[$member] == ?";
+            $this->query_cond .= "AND $this->model::$mapping[$member] == ?";
             $this->prepare_list[] = $value;
         }
         return $this;
@@ -95,7 +94,7 @@ class _RModelQueryer {
      * find(constraints) : constraints is an array of 2 * N values which consists of N constraints
      * @return This object
      */
-    public function where($memberName, $memberValue = null)
+    public function find($memberName, $memberValue = null)
     {
         if ($memberValue == null) {
             return _find($memberName);
@@ -115,15 +114,18 @@ abstract class RModel {
      */
     public static function getConnection()
     {
-        if ($this->connection == null) {
-            $connection = new PDO("mysql:host=$dbConfig['host'];dbname=$dbConfig['db_name'];charset=$dbConfig['charset']", $dbConfig['user'], $dbConfig['password']);
+        if (self::$connection == null) {
+            $dbConfig = Rays::app()->getDbConfig();
+            self::$connection = new PDO("mysql:host={$dbConfig['host']};dbname={$dbConfig['db_name']};charset={$dbConfig['charset']}", $dbConfig['user'], $dbConfig['password']);
         }
-        return $this->connection;
+        return self::$connection;
     }
 
-    public static function where($memberName, $memberValue = null)
+    public static function find($memberName = null, $memberValue = null)
     {
-        return (new _RModelQueryer(get_called_class()))->where($memberName, $memberValue);
+        if ($memberName == null)
+            return new _RModelQueryer(get_called_class());
+        return (new _RModelQueryer(get_called_class()))->find($memberName, $memberValue);
     }
 
     /**
@@ -136,24 +138,25 @@ abstract class RModel {
         $columns = "";
         $values = "";
         $delim = "";
-	    for (self::$mapping as $member => $column) {
-            if ($member != self::$primary_key) {
+        $primary_key = self::$primary_key;
+	    foreach (self::$mapping as $member => $column) {
+            if ($member != $primary_key) {
                 $columns = "$columns$delim$column";
                 $values = "$values$delim?";
                 $delim = ", ";
             }
         }
-        $sql = "INSERT OR UPDATE INTO [self::$table] ($columns) VALUES ($values)";
+        $sql = "INSERT OR UPDATE INTO ".Rays::app()->getDBPrefix().self::$table." ($columns) VALUES ($values)";
 
         /* Now prepare SQL statement */
         $stmt = RModel::getConnection()->prepare($sql);
         $i = 1;
-        for (self::$mapping as $member => $column) {
+        foreach (self::$mapping as $member => $column) {
             $stmt->bindParam($i++, $member);
         }
         $stmt->execute();
-        $this->(self::$primary_key) = $stmt->lastInsertId();
-        return $this->($this->primary_key);
+        $this->$primary_key = $stmt->lastInsertId();
+        return $this->$primary_key;
     }
 
     /**
@@ -161,7 +164,8 @@ abstract class RModel {
      */
     public function delete()
     {
-        $sql = "DELETE FROM [self::$table] WHERE self::$mapping[self::$primary_key] == $this->(self::$primary_key)";
+        $primary_key = self::$primary_key;
+        $sql = "DELETE FROM ".Rays::app()->getDBPrefix().self::$table." WHERE {self::$mapping[$primary_key]} == $this->$primary_key";
         RModel::getConnection()->exec($sql);
     }
 }
