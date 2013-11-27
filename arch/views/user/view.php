@@ -26,9 +26,6 @@
             </div>
             <div class="navbar-left">
                 <?php
-                if ($canEdit) {
-                    echo RHtmlHelper::linkAction('user', 'Edit', 'edit', $user->id, array('class' => 'btn btn-success'));
-                }
                 if ($canAdd) {
                     echo RHtmlHelper::linkAction('friend', '+ Add friend', 'add', $user->id, array('class' => 'btn btn-success'));
                 }
