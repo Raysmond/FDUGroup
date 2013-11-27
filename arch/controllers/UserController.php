@@ -57,7 +57,7 @@ class UserController extends BaseController
      * View user profile
      * @param $userId
      */
-    public function actionView($userId)
+    public function actionView($userId, $part = 'all')
     {
         $user = new User();
         if ($user->load($userId)==null) {
@@ -76,8 +76,15 @@ class UserController extends BaseController
             $canCancel = ($friend->uid !== $friend->fid && !$canAdd);
             $canEdit = ($currentUser->id == $user->id);
         }
-
         $this->setHeaderTitle($user->name);
+        $userGroup = [];
+        $postTopics = [];
+        $likeTopics = [];
+        switch ($part) {
+            case 'joins': $userGroup = (new GroupUser())->userGroups($userId);break;
+            case 'posts': $postTopics = (new Topic())->getUserTopics($userId);break;
+           // case 'likes': $likeTopics = (new Topics())
+        }
         $this->render('view', array('user' => $user, 'canEdit' => $canEdit, 'canAdd' => $canAdd, 'canCancel' => $canCancel), false);
     }
 
