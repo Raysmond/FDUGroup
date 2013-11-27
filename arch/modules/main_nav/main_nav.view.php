@@ -14,11 +14,11 @@
                     <?= RHtmlHelper::linkAction("user","Home","home"); ?>
                 </li>
                 <li <?= ($curUrl=='group/find'?'class="active"':''); ?>>
-                    <?= RHtmlHelper::linkAction("group","Find Group","find"); ?>
+                    <?= RHtmlHelper::linkAction("group","Find Groups","find"); ?>
                 </li>
                 <?php if(isset($user)): ?>
                 <li <?php echo (Rays::app()->getHttpRequest()->urlMatch('group/view/*')?'class="active"':''); ?>>
-                    <?php echo RHtmlHelper::linkAction("group","My Group","view",null); ?>
+                    <?php echo RHtmlHelper::linkAction("group","My Groups","view",null); ?>
                 </li>
                 <?php endif; ?>
             </ul>

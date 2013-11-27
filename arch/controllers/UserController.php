@@ -303,6 +303,7 @@ class UserController extends BaseController
         $this->layout = 'user';
         $user = Rays::app()->getLoginUser();
         $data = array('user' => $user);
+        $defaultSize = 5;
 
         // ajax request
         // load more posts
@@ -310,12 +311,23 @@ class UserController extends BaseController
             $topics = new Topic();
             $lastLoadedTime = @$_POST['lastLoadedTime'];
             $lastLoadedTime = $lastLoadedTime != '' ? $lastLoadedTime : null;
-            $topics = $topics->getUserFriendsTopicsJsonArray($user->id, 4, $lastLoadedTime);
-            echo json_encode($topics);
+
+            //$topics = $topics->getUserFriendsTopicsJsonArray($user->id, 4, $lastLoadedTime);
+            //echo json_encode($topics);
+
+            $topics = $topics->getUserFriendsTopics($user->id, $defaultSize,$lastLoadedTime);
+            $result = array();
+            if(count($topics)>0){
+                $result['content'] = $this->renderPartial('posts_list',array('topics'=>$topics),true);
+                $result['lastLoadTime'] = $topics[count($topics)-1]['top_created_time'];
+                echo json_encode($result);
+            }
+            else{
+                echo json_encode(['content'=>'']);
+            }
             exit;
         }
 
-        $defaultSize = 5;
         $topics = new Topic();
         $data['topics'] = $topics->getUserFriendsTopics($user->id, $defaultSize);
 
