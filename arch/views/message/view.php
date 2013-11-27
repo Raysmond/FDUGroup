@@ -10,12 +10,7 @@
     <div class="panel-body">
 
         <div class="navbar-left">
-            <?php
-            echo RFormHelper::openForm('message/send/user');
-            echo RFormHelper::input(array('type'=>'hidden','name'=>'new','value'=>'true'));
-            echo RFormHelper::input(array('type'=>'submit','value'=>'+ Write a message','class'=>'btn btn-sm btn-info'));
-            echo RFormHelper::endForm();
-            ?>
+            <?=RHtmlHelper::linkAction('message','+ Send a message','send',null,array('class'=>'btn btn-sm btn-info'))?>
         </div>
 
         <div class="navbar-right">
@@ -37,9 +32,9 @@
                 <div style="float:right;margin-top: -2px;">
                     <?php
                     if($msg->receiverId==Rays::app()->getLoginUser()->id){
-                        if($msg->status==Message::$STATUS_UNREAD) echo RHtmlHelper::linkAction('message',"Mark read",'read',$msg->id,array('class'=>'btn btn-xs btn-success'));
+                        if($msg->status==Message::$STATUS_UNREAD) echo RHtmlHelper::linkAction('message',"Mark as read",'read',$msg->id,array('class'=>'btn btn-xs btn-success'));
                         echo '&nbsp;&nbsp;';
-                        if($msg->status!=Message::$STATUS_TRASH) echo RHtmlHelper::linkAction('message',"Mark trash",'trash',$msg->id,array('class'=>'btn btn-xs btn-danger'));
+                        if($msg->status!=Message::$STATUS_TRASH) echo RHtmlHelper::linkAction('message',"Move to trash",'trash',$msg->id,array('class'=>'btn btn-xs btn-danger'));
                         if($type=='trash') echo RHtmlHelper::linkAction('message',"Delete",'delete',$msg->id,array('class'=>'btn btn-xs btn-danger'));
                     }
                     ?>

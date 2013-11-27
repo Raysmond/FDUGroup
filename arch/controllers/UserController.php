@@ -53,10 +53,7 @@ class UserController extends BaseController
         $this->redirect(Rays::app()->getBaseUrl());
     }
 
-    /**
-     * View user profile
-     * @param $userId
-     */
+
     public function actionView($userId, $part = 'joins')
     {
         $user = new User();
@@ -76,7 +73,7 @@ class UserController extends BaseController
             $canCancel = ($friend->uid !== $friend->fid && !$canAdd);
             $canEdit = ($currentUser->id == $user->id);
         }
-        $this->setHeaderTitle($user->name);
+
         $userGroup = [];
         $postTopics = [];
         $likeTopics = [];
@@ -87,6 +84,8 @@ class UserController extends BaseController
             case 'profile': break;
             default: return;
         }
+
+        $this->setHeaderTitle($user->name);
         $this->render('view',
             array('user' => $user,
                 'canEdit' => $canEdit,
@@ -97,6 +96,10 @@ class UserController extends BaseController
                 'postTopics' => $postTopics,
                 'likeTopics' => $likeTopics,
             ), false);
+
+        // Need to be complete because the codes below will increase the counter every time this page is viewed
+        $counter = new Counter();
+        $counter->increaseCounter($user->id,User::ENTITY_TYPE);
     }
 
     public function actionProfile($action=null){
@@ -132,6 +135,15 @@ class UserController extends BaseController
                 $user = new User();
                 $user->register($_POST['username'], md5($_POST['password']), $_POST['email']);
                 $user->sendWelcomeMessage();
+
+                /*
+                $emailResult = RMailHelper::sendEmail("Welcome to FDUGroup family","<b>Welcome to FDUGroup family</b><br/>-- FDUGroup team <br/>".date('Y-m-d H:i:s'),$_POST['email']);
+                if($emailResult!==true){
+                    var_dump($emailResult);
+                    exit;
+                }
+                */
+                
                 $this->flash("message", "Hello," . $user->name . ", please " . RHtmlHelper::linkAction('user', 'login', 'login') . " !");
                 $this->redirectAction('user', 'view', $user->id);
             } else {
@@ -303,6 +315,7 @@ class UserController extends BaseController
         $this->layout = 'user';
         $user = Rays::app()->getLoginUser();
         $data = array('user' => $user);
+        $defaultSize = 5;
 
         // ajax request
         // load more posts
@@ -310,12 +323,20 @@ class UserController extends BaseController
             $topics = new Topic();
             $lastLoadedTime = @$_POST['lastLoadedTime'];
             $lastLoadedTime = $lastLoadedTime != '' ? $lastLoadedTime : null;
-            $topics = $topics->getUserFriendsTopicsJsonArray($user->id, 4, $lastLoadedTime);
-            echo json_encode($topics);
+
+            $topics = $topics->getUserFriendsTopics($user->id, $defaultSize,$lastLoadedTime);
+            $result = array();
+            if(count($topics)>0){
+                $result['content'] = $this->renderPartial('posts_list',array('topics'=>$topics),true);
+                $result['lastLoadTime'] = $topics[count($topics)-1]['top_created_time'];
+                echo json_encode($result);
+            }
+            else{
+                echo json_encode(['content'=>'']);
+            }
             exit;
         }
 
-        $defaultSize = 5;
         $topics = new Topic();
         $data['topics'] = $topics->getUserFriendsTopics($user->id, $defaultSize);
 

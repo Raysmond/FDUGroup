@@ -52,8 +52,8 @@ class rating_plus_module extends RModule
                 . 'onclick="javascript:plusEntity(\''
                 . $actionUrl . '\',\'' . $this->entityType . '\',\'' . $this->entityId . '\')" '
                 . 'class="rating-plus-button '.$this->buttonClass.'">'
-                . '<span class="glyphicon glyphicon-star"></span> Plus '
-                . '<span id="' . $counterId . '" class="badge">' . $this->count . '</span>'
+                . '<span class="glyphicon glyphicon-thumbs-up"></span> '
+                . '<span id="' . $counterId . '" class="">(' . $this->count . ')</span>'
                 . '</button>';
         }
         return $html;
