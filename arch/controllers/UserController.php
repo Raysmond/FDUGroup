@@ -53,10 +53,7 @@ class UserController extends BaseController
         $this->redirect(Rays::app()->getBaseUrl());
     }
 
-    /**
-     * View user profile
-     * @param $userId
-     */
+
     public function actionView($userId, $part = 'joins')
     {
         $user = new User();
@@ -76,7 +73,7 @@ class UserController extends BaseController
             $canCancel = ($friend->uid !== $friend->fid && !$canAdd);
             $canEdit = ($currentUser->id == $user->id);
         }
-        $this->setHeaderTitle($user->name);
+
         $userGroup = [];
         $postTopics = [];
         $likeTopics = [];
@@ -87,6 +84,8 @@ class UserController extends BaseController
             case 'profile': break;
             default: return;
         }
+
+        $this->setHeaderTitle($user->name);
         $this->render('view',
             array('user' => $user,
                 'canEdit' => $canEdit,
@@ -97,6 +96,10 @@ class UserController extends BaseController
                 'postTopics' => $postTopics,
                 'likeTopics' => $likeTopics,
             ), false);
+
+        // Need to be complete because the codes below will increase the counter every time this page is viewed
+        $counter = new Counter();
+        $counter->increaseCounter($user->id,User::ENTITY_TYPE);
     }
 
     public function actionProfile($action=null){

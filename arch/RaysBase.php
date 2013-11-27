@@ -14,7 +14,7 @@ define('MODEL_PATH', SYSTEM_PATH . '/models');
 
 define('VIEW_PATH', SYSTEM_PATH . '/views');
 
-define('UTILITIES_PATH', SYSTEM_PATH . '/utilities');
+define('UTILITIES_PATH', SYSTEM_PATH . '/helpers');
 
 define('MODULES_PATH', SYSTEM_PATH . '/modules');
 
