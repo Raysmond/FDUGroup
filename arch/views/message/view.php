@@ -32,7 +32,8 @@
         foreach($msgs as $msg)
         {
         ?>
-        <div class="panel panel-info"><div class="panel-heading">
+        <div class="panel panel-info">
+            <div class="panel-heading">
                 <div style="float:right;margin-top: -2px;">
                     <?php
                     if($msg->receiverId==Rays::app()->getLoginUser()->id){
