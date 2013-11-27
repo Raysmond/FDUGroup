@@ -38,7 +38,7 @@
                 array(
                     'editorId'=>'ads-content',
                     'name'=>'ads-content',
-                    'data'=>(isset($form['ads-content'])?$form['ads-content']:($edit?$ad->content:''))
+                    'data'=>(isset($form['ads-content'])?$form['ads-content']:(isset($edit) ?$ad->content:''))
                 ));
         ?>
 

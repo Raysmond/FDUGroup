@@ -146,6 +146,12 @@ blockquote
     width: 89.33333333333334%;
 }
 
+/* Friends */
+#list-all-friends {
+    float: left;
+    margin-left:10px;
+}
+
 /* Message */
 .message-meta{
     color: gray;
