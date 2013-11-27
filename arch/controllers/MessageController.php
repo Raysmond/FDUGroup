@@ -37,9 +37,13 @@ class MessageController extends BaseController
 
     // to be implemented
     // permissions should be considered
-    public function actionSend($type)
+    public function actionSend($type=null)
     {
-        if (!in_array($type, array('system', 'user', 'private', 'group'))) {
+        $types = array('system', 'user', 'private', 'group');
+        if(!$type){
+            $type = 'private';
+        }
+        if (!in_array($type, $types)) {
             Rays::app()->page404();
             return;
         }

@@ -27,10 +27,10 @@
             <div class="navbar-left">
                 <?php
                 if ($canAdd) {
-                    echo RHtmlHelper::linkAction('friend', '+ Add friend', 'add', $user->id, array('class' => 'btn btn-success'));
+                    echo RHtmlHelper::linkAction('friend', '+ Add friend', 'add', $user->id, array('class' => 'btn btn-xs btn-success'));
                 }
                 if ($canCancel) {
-                    echo RHtmlHelper::linkAction('friend', '- Cancel friend', 'cancel', $user->id, array('class' => 'btn btn-success'));
+                    echo RHtmlHelper::linkAction('friend', '- Cancel friend', 'cancel', $user->id, array('class' => 'btn btn-xs btn-success'));
                 }
                 echo '<div class="clearfix"></div>';
                 ?>
