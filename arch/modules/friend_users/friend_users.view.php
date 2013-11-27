@@ -16,7 +16,10 @@
             echo RHtmlHelper::linkAction('user', $name, 'view', $friend->id,array('title'=>$friend->name))."  ";
             echo '</div>';
         }
+        if ($friNumber > 9) {
+            echo '<div class="clearfix"></div>'.RHtmlHelper::linkAction('friend', 'Show all my '.$friNumber.' friends >>', 'myFriend', null, ['id' => 'list-all-friends']);
+        }
         echo '</div>';
         ?>
     </div>
-    </div>
+</div>

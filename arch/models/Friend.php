@@ -16,11 +16,12 @@ class Friend extends Data {
         parent::init($option);
     }
 
-    public function getFriends($uid = '', $friendLimit = '',$exceptFriendIds=array())
+    public function getFriends($uid = '', $friendLimit = '', $exceptFriendIds=array(), $friendStart = 0)
     {
         if ($uid != '')
             $this->uid = $uid;
-        $friends = $this->find(0,0,array('key'=>$this->columns['id'],'value'=>'desc'));
+        $friends = $this->find($friendStart, $friendLimit,array('key'=>$this->columns['id'],'value'=>'desc'));
+        $friNumber = $this->count();
         $result = array();
         foreach ($friends as $friend) {
             if(!in_array($friend->fid,$exceptFriendIds)){
@@ -30,7 +31,7 @@ class Friend extends Data {
                 array_push($result, $user);
             }
         }
-        return $result;
+        return [$result, $friNumber];
     }
 
     public function getFriendsToInvite($uid,$groupId, $limit=0){

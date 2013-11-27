@@ -98,4 +98,24 @@ class FriendController extends RController {
 
         $this->redirectAction('user', 'view', $userId);
     }
+
+    public function actionMyFriend() {
+        $this->layout = 'user';
+        $user = Rays::app()->getLoginUser();
+
+        $friends = new Friend();
+        $curPage = $this->getHttpRequest()->getQuery('page', 1);
+        $pageSize = (isset($_GET['pagesize'])&&is_numeric($_GET['pagesize']))?$_GET['pagesize']:36;
+
+        list($friends, $count) = $friends->getFriends($user->id, $pageSize, [], ($curPage - 1) * $pageSize);
+        $data['count'] = $count;
+
+        $pager = new RPagerHelper('page', $count, $pageSize, RHtmlHelper::siteUrl('friend/myFriend'), $curPage);
+        $data['friends'] = $friends;
+        $data['pager'] = $pager->showPager();
+        $data['friNumber'] = $count;
+
+        return $this->render('my_friend',$data);
+
+    }
 }

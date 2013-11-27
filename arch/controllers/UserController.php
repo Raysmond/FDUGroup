@@ -9,7 +9,7 @@ class UserController extends BaseController
     public $layout = "index";
     public $defaultAction = "home";
     public $access = array(
-        Role::AUTHENTICATED => array('edit', 'logout','home','profile','myPosts', 'applyVIP'),
+        Role::AUTHENTICATED => array('edit', 'logout','home','profile','myPosts', 'applyVIP', 'listFriend'),
         Role::ADMINISTRATOR=>array('admin','processVIP'));
 
     /**
