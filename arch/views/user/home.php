@@ -31,6 +31,7 @@
 </div>
 <script>
     function loadMorePosts() {
+        $("#get_more_post_btn").addClass('disabled');
         $.ajax({
             type: "POST",
             url: $('#loadMorePostsForm').attr('action'),
@@ -45,6 +46,7 @@
                 else{
                     $('#latest-topics-list').append(data.content);
                     $('#last-loaded-time').val(data.lastLoadTime);
+                    $("#get_more_post_btn").removeClass('disabled');
                 }
             });
     }

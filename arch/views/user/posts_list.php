@@ -50,7 +50,7 @@
                     <?=
                     RHtmlHelper::linkAction(
                         'post',
-                        'Reply(' . $topic['top_comment_count'] . ')',
+                        'Reply (' . $topic['top_comment_count'] . ')',
                         'view', $topic['top_id'] . '#reply',
                         array('class' => 'btn btn-xs btn-info')) ?>
 

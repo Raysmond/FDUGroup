@@ -16,6 +16,8 @@ class User extends Data{
     const STATUS_BLOCKED = 0;
     const STATUS_ACTIVE = 1;
 
+    const ENTITY_TYPE = 4;
+
 
     public static $labels = array(
                 "id"=>"ID",

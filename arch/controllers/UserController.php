@@ -312,9 +312,6 @@ class UserController extends BaseController
             $lastLoadedTime = @$_POST['lastLoadedTime'];
             $lastLoadedTime = $lastLoadedTime != '' ? $lastLoadedTime : null;
 
-            //$topics = $topics->getUserFriendsTopicsJsonArray($user->id, 4, $lastLoadedTime);
-            //echo json_encode($topics);
-
             $topics = $topics->getUserFriendsTopics($user->id, $defaultSize,$lastLoadedTime);
             $result = array();
             if(count($topics)>0){

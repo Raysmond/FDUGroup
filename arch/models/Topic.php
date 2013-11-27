@@ -64,35 +64,6 @@ class Topic extends Data
         return $result;
     }
 
-    public function getUserFriendsTopicsJsonArray($uid,$limit=0,$endTime=null){
-        $topics = $this->getUserFriendsTopics($uid,$limit,$endTime);
-        $result = array();
-        foreach($topics as $topic){
-            $json = array();
-            $json['user_name'] = $topic['u_name'];
-            $json['user_id'] = $topic['u_id'];
-            $json['topic_title'] = $topic['top_title'];
-            $json['topic_id'] = $topic['top_id'];
-            $json['user_picture'] = RHtmlHelper::siteUrl(RImageHelper::styleSrc($topic['u_picture'], User::getPicOptions()));
-            $json['picture_src'] = $topic['u_picture'];
-            $json['user_link'] = RHtmlHelper::siteUrl('user/view/'.$topic['u_id']);
-            $json['topic_link'] = RHtmlHelper::siteUrl('post/view/'.$topic['top_id']);
-            $json['group_name'] = $topic['gro_name'];
-            $json['group_id'] = $topic['gro_id'];
-            $json['group_link'] = RHtmlHelper::siteUrl('group/detail/'.$topic['gro_id']);
-            $json['topic_created_time'] = $topic['top_created_time'];
-            $json['topic_reply_count'] = $topic['top_comment_count'];
-            $json['plusCount'] = $topic['plusCount'];
-            $json['entityType'] = Topic::$entityType;
-            $topic['top_content'] = strip_tags(RHtmlHelper::decode($topic['top_content']));
-            if (mb_strlen($topic['top_content']) > 140) {
-                $json['topic_content'] =  mb_substr($topic['top_content'], 0, 140,'UTF-8') . '...';
-            } else $json['topic_content'] = $topic['top_content'];
-            $result[] = $json;
-        }
-        return $result;
-    }
-
     public function getUserTopics($uid, $start = 0, $limit = 0) {
         $topics = new Topic();
         $topics->userId = $uid;
