@@ -55,10 +55,10 @@ class RPagerHelper
      * @param bool $showNext whether or not to show next page link
      * @param bool $showFirst whether or not to show the first page link
      * @param bool $showLast whether or not to show the last page link
-     * @param int $pagesViewNum how many pager link should be showed
+     * @param int $pagesViewNum number of previous and next page links displayed
      * @return string pager link HTML
      */
-    public function showPager($showPrev = true, $showNext = true, $showFirst = true, $showLast = true, $pagesViewNum = 10)
+    public function showPager($showPrev = true, $showNext = true, $showFirst = true, $showLast = true, $pagesViewNum = 4)
     {
         $pager = '<ul id="pager-'.$this->pageId.'" class="pagination">';
         $isOdd = $pagesViewNum % 2 > 0 ? true : false;
@@ -70,53 +70,43 @@ class RPagerHelper
         if(strpos($this->url,'?')>0)
             $appendStr = '&&';
 
+        $prevStyle = ($curPage > 1) ? '': ' disabled';
+        $nextStyle = ($curPage < $this->pageSum) ? '': ' disabled';
+
         if ($showFirst) {
-            $pager .= '<li class="pager-item"><a href="' . $this->url . $appendStr . $this->pageId . '=1">' . $this->pagerText['first'] . '</a></li>';
+            $pager .= '<li class="pager-item' . $prevStyle . '"><a href="' . $this->url . $appendStr . $this->pageId . '=1">' . $this->pagerText['first'] . '</a></li>';
         }
         if ($showPrev) {
             $num = $curPage == 1 ? 1 : ($curPage - 1);
-            $pager .= '<li class="pager-item"><a href="' . $this->url . $appendStr . $this->pageId . '=' . $num . '">' . $this->pagerText['prev'] . '</a></li>';
+            $pager .= '<li class="pager-item' . $prevStyle . '"><a href="' . $this->url . $appendStr . $this->pageId . '=' . $num . '">' . $this->pagerText['prev'] . '</a></li>';
         }
 
-        $beginPage = 1;
-        $count = $pagesViewNum;
-        if (($this->pageSum > $pagesViewNum) && $curPage > ($pagesViewNum / 2)) {
-            $pager .= '<li class="pager-item"><a href="#">...</a></li>';
-            $beginPage = $curPage - ceil($pagesViewNum / 2) + 1;
-            if ($isOdd) $beginPage++;
-            $count--;
+        $current = $curPage;
+        $current = max($pagesViewNum + 1, $current);
+        $current = min($this->pageSum - $pagesViewNum, $current);
+        $beginPage = max(1, $current - $pagesViewNum);
+        $endPage = min(max(1, $this->pageSum), $current + $pagesViewNum);
+        if ($beginPage >= $endPage) {
+            $beginPage = $endPage = 1;
         }
-
-        $leftMore = 0;
-        $insertRight = false;
-        if (($this->pageSum - $curPage) > ($pagesViewNum / 2)) {
-            $insertRight = true;
-            $count--;
-        } else {
-            $leftMore = ceil($pagesViewNum / 2) - $this->pageSum + $curPage;
-            if (!$isOdd) $beginPage++;
-            if ($isOdd) $leftMore--;
+        if ($beginPage > 1) {
+            $pager .= '<li class="pager-item"><a href="' . $this->url . $appendStr . $this->pageId . '=' . ($beginPage - 1) . '">...</a></li>';
         }
-
-        for ($i = 0; $i < $count; $i++) {
-            if (($num = $beginPage + $i - $leftMore) <= $this->pageSum) {
-                if($num<=0) continue;
-                $pager .= '<li class="pager-item '.(($num==$this->curPage)?'active':'').'"><a href="' . $this->url . $appendStr . $this->pageId . '=' . ($num) . '">' . ($num) . '</a></li>';
-            }
+        for ($i = $beginPage; $i <= $endPage; $i++) {
+            $pager .= '<li class="pager-item '.(($i==$this->curPage)?'active':'').'"><a href="' . $this->url . $appendStr . $this->pageId . '=' . ($i) . '">' . ($i) . '</a></li>';
         }
-
-        if ($insertRight) {
-            $pager .= '<li class="pager-item"><a href="#">...</a></li>';
+        if ($endPage < $this->pageSum) {
+            $pager .= '<li class="pager-item"><a href="' . $this->url . $appendStr . $this->pageId . '=' . ($endPage + 1) . '">...</a></li>';
         }
 
         if ($showNext) {
             $num = ($curPage == $this->pageSum ? $this->pageSum : ($curPage + 1));
-            $pager .= '<li class="pager-item"><a href="' . $this->url . $appendStr . $this->pageId . '=' . $num . '">' . $this->pagerText['next'] . '</a></li>';
+            $pager .= '<li class="pager-item' . $nextStyle . '"><a href="' . $this->url . $appendStr . $this->pageId . '=' . $num . '">' . $this->pagerText['next'] . '</a></li>';
         }
 
 
         if ($showLast) {
-            $pager .= '<li class="pager-item"><a href="' . $this->url . $appendStr . $this->pageId . '=' . $this->pageSum . '">' . $this->pagerText['last'] . '</a></li>';
+            $pager .= '<li class="pager-item' . $nextStyle . '"><a href="' . $this->url . $appendStr . $this->pageId . '=' . $this->pageSum . '">' . $this->pagerText['last'] . '</a></li>';
         }
         $pager.="</ul>";
         return $pager;
