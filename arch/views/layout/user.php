@@ -54,7 +54,7 @@ else{
             </div>
             <div>
                 <?php $user = Rays::app()->getLoginUser(); if($user!=null): ?>
-                    <div class="row">
+                    <div class="row user-profile-tiny">
                         <div class="col-lg-2">
                             <?php if(!isset($user->picture)||$user->picture=='') $user->picture=User::$defaults['picture'];
                                 $thumbnail = RImageHelper::styleSrc($user->picture,$user::getPicOptions());

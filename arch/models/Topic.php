@@ -93,6 +93,12 @@ class Topic extends Data
         return $result;
     }
 
+    public function getUserTopics($uid, $start = 0, $limit = 0) {
+        $topics = new Topic();
+        $topics->userId = $uid;
+        return $topics->find($start, $limit, ['key' => $this->columns['id'], 'order' => 'desc']);
+    }
+
     public function getUserFriendsTopics($uid,$limit=0,$endTime=null){
         $friends = new Friend();
         $friends->uid = $uid;

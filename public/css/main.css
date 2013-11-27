@@ -164,6 +164,9 @@ blockquote
     padding: 5px;
     text-align: center;
 }
+.user-profile-tiny h2{
+    margin-top:0;
+}
 
 /* Groups */
 .group-content{
