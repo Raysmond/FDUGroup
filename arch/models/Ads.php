@@ -88,10 +88,7 @@ class Ads extends RModel {
     }
 
     public static function getPublishedAds() {     //get published advertisements, order by paid price, but the effectiveness of price deminish along with the elapse of timer
-        return self::find()->all();
-        //$ads = new Ads();
-        //$ads->status = Ads::APPROVED;
-        //return $ads->find(0,0,['key' => '(' . $this->columns['pubTime'] . ' / 10000 + ' . $this->columns['paidPrice'] . ')' , 'order' => 'desc']);
+        return self::find()->order("desc", self::$mapping['pubTime'] . " / 10000 + " . self::$mapping['paidPrice'])->all();
     }
 
     public function delete() {

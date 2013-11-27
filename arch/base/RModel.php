@@ -11,21 +11,27 @@
  */
 class _RModelQueryer {
     private $model;
-    private $query_cond;
-    private $prepare_list;
+    private $query_where, $query_order;
+    private $args_where;
 
     public function __construct($model)
     {
         $this->model = $model;
-        $this->query_cond = "1 = 1";
-        $this->prepare_list = array();
+        $this->query_where = "";
+        $this->args_where = array();
+        $this->query_order = "";
+    }
+
+    private function _args()
+    {
+        return $this->args_where;
     }
 
     private function _select($suffix = "")
     {
         $model = $this->model;
-        $stmt = RModel::getConnection()->prepare("SELECT * FROM ".Rays::app()->getDBPrefix().$model::$table." WHERE $this->query_cond $suffix");
-        $stmt->execute($this->prepare_list);
+        $stmt = RModel::getConnection()->prepare("SELECT * FROM ".Rays::app()->getDBPrefix().$model::$table." $this->query_where $this->query_order $suffix");
+        $stmt->execute($this->_args());
         $rs = $stmt->fetchAll();
         $ret = array();
         foreach ($rs as $row) {
@@ -75,15 +81,21 @@ class _RModelQueryer {
     public function delete()
     {
         $model = $this->model;
-        $stmt = RModel::getConnection()->prepare("DELETE FROM ".Rays::app()->getDBPrefix().$model::$table." WHERE $this->query_cond");
-        $stmt->execute($this->prepare_list);
+        $stmt = RModel::getConnection()->prepare("DELETE FROM ".Rays::app()->getDBPrefix().$model::$table." $this->query_where $this->query_order");
+        $stmt->execute($this->_args());
     }
 
     private function _find($constraints)
     {
         foreach ($constraints as $member => $value) {
-            $this->query_cond .= "AND $this->model::$mapping[$member] == ?";
-            $this->prepare_list[] = $value;
+            if ($this->query_where == "") {
+                $this->query_where = "WHERE ";
+            }
+            else {
+                $this->query_where .= " AND ";
+            }
+            $this->query_where .= "$this->model::$mapping[$member] == ?";
+            $this->args_where[] = $value;
         }
         return $this;
     }
@@ -102,6 +114,46 @@ class _RModelQueryer {
         else {
             return _find(array($memberName, $memberValue));
         }
+    }
+
+    /**
+     * Add a free-form order clause
+     * @param string $order "asc" or "desc", case insensitive
+     * @param string $expression An expression used for ordering
+     * @return This object
+     */
+    public function order($order, $expression)
+    {
+        if ($this->query_order == "") {
+            $this->query_order = "ORDER BY ";
+        }
+        else {
+            $this->query_order .= ", ";
+        }
+        $this->query_order .= "($expression) $order";
+        return $this;
+    }
+
+    /**
+     * Add an ascending order clause
+     * @param string $memberName Column namd for ordering
+     * @return This object
+     */
+    public function order_asc($memberName)
+    {
+        $model = $this->model;
+        return $this->order("ASC", $model::$mapping[$memberName]);
+    }
+
+    /**
+     * Add a descending order clause
+     * @param string $memberName Column name for ordering
+     * @return This object
+     */
+    public function order_desc($memberName)
+    {
+        $model = $this->model;
+        return $this->order("DESC", $model::$mapping[$memberName]);
     }
 }
 
