@@ -291,6 +291,8 @@ class RController
 
         } else {
             Rays::app()->page404();
+            Rays::log("Page not found! On action matched.",RLog::LEVEL_WARNING,"system");
+            Rays::logger()->flush();
         }
         $this->afterAction();
     }
