@@ -16,10 +16,13 @@ class RController
     // default action is provided if there's no action requested from the URL
     public $defaultAction = "index";
 
+    // current action id
     private $_action;
-    
+
+    // Parameters passed to the action methd
     private $_params;
 
+    // Header title within the <title> tag in HTML
     private $_headerTitle;
 
     /**
@@ -36,6 +39,10 @@ class RController
     // the unique ID of the controller
     private $_id = '';
 
+    /**
+     * Construction method
+     * @param string $id the unique id of the controller
+     */
     public function __construct($id='')
     {
         if ($id != null)
@@ -84,10 +91,10 @@ class RController
     }
 
     /** Render a view
-     * @param string $view the name of the view to be rendered
-     * @param null $data
-     * @param bool $return
-     * @return mixed
+     * @param string $view the name of the view used to render the data
+     * @param array/null $data data in array which need to be rendered
+     * @param bool $return whether to return the rendered content or not
+     * @return mixed the rendered content if $return=true or null
      */
     public function render($view, $data = null, $return = false)
     {
@@ -100,6 +107,13 @@ class RController
             echo $output;
     }
 
+    /**
+     * Render partial content without the layout
+     * @param $view the name of the view file used to render the data
+     * @param $data data in array which need to be rendered
+     * @param bool $return whether to return the rendered content or not
+     * @return string the rendered content if $return=true or null
+     */
     public function renderPartial($view, $data, $return = false)
     {
         if (($viewFile = $this->getViewFile($view)) != false) {
@@ -113,6 +127,13 @@ class RController
         }
     }
 
+    /**
+     * Render data with a view file
+     * @param $fileName the name of the view file
+     * @param $data data to be rendered
+     * @param bool $return whether to return the rendered content or just print it
+     * @return string rendered content if $return=true or null
+     */
     public function renderFile($fileName, $data, $return = false)
     {
         if (is_array($data))
@@ -141,16 +162,28 @@ class RController
             return false;
     }
 
+    /**
+     * Method called before the runAction method
+     * @param $action
+     * @return bool
+     */
     public function beforeAction($action)
     {
         return true;
     }
 
+    /**
+     * Method called after the runAction method
+     */
     public function afterAction()
     {
 
     }
 
+    /**
+     * Whether the current user has the right to view the page
+     * @return bool
+     */
     protected function userCanAccessAction()
     {
         $roleId = Role::ANONYMOUS_ID;
@@ -195,7 +228,8 @@ class RController
     }
 
     /**
-     * Run an antion
+     * Run an action, handle the parameters(usually GET or POST method), interact with the data models
+     * and decide whether to rendering a page in HTML or just return some content
      * @param $action string action ID
      * @param $params array parameters
      */
@@ -261,11 +295,19 @@ class RController
         $this->afterAction();
     }
 
+    /**
+     * Add a css asset file
+     * @param $cssPath
+     */
     public function addCss($cssPath)
     {
         Rays::app()->getClientManager()->registerCss($cssPath);
     }
 
+    /**
+     * Add a javascript asset file
+     * @param $jsPath
+     */
     public function addJs($jsPath)
     {
         Rays::app()->getClientManager()->registerScript($jsPath);
@@ -357,6 +399,12 @@ class RController
         exit;
     }
 
+    /**
+     * Redirect to a new action within a specific controller
+     * @param string $controller the controller id
+     * @param string $action the action id
+     * @param $params parameters passed to the action
+     */
     public function redirectAction($controller = '', $action = '', $params)
     {
         if ($controller == '') $controller = $this->getId();
@@ -366,7 +414,7 @@ class RController
 
 
     /**
-     * Generate action link
+     * Generate an action link
      * @param $controller
      * @param $action
      * @param $params action parameters

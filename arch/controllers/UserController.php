@@ -143,7 +143,7 @@ class UserController extends BaseController
                     exit;
                 }
                 */
-                
+
                 $this->flash("message", "Hello," . $user->name . ", please " . RHtmlHelper::linkAction('user', 'login', 'login') . " !");
                 $this->redirectAction('user', 'view', $user->id);
             } else {
@@ -327,7 +327,7 @@ class UserController extends BaseController
             $topics = $topics->getUserFriendsTopics($user->id, $defaultSize,$lastLoadedTime);
             $result = array();
             if(count($topics)>0){
-                $result['content'] = $this->renderPartial('posts_list',array('topics'=>$topics),true);
+                $result['content'] = $this->renderPartial('_posts_list',array('topics'=>$topics),true);
                 $result['lastLoadTime'] = $topics[count($topics)-1]['top_created_time'];
                 echo json_encode($result);
             }

@@ -27,7 +27,7 @@
         foreach($msgs as $msg)
         {
         ?>
-        <div class="panel panel-info">
+        <div class="panel <?=($msg->status==Message::$STATUS_READ)?"panel-default":"panel-info"?>">
             <div class="panel-heading">
                 <div style="float:right;margin-top: -2px;">
                     <?php

@@ -7,7 +7,7 @@
     <div class="panel-heading"><b>Latest posts</b></div>
     <div class="panel-body">
         <div id="latest-topics-list">
-        <?php $this->renderPartial('posts_list',array('topics'=>$topics),false); ?>
+        <?php $this->renderPartial('_posts_list',array('topics'=>$topics),false); ?>
         </div>
         <?php
         if (count($topics) > 0) {

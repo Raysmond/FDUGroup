@@ -9,6 +9,7 @@ return array(
     'name' => 'FDUGroup',
 
     // database configuration
+
     'db' => array(
         'host' => '127.0.0.1',
         'user' => 'fdugroup',
@@ -19,16 +20,18 @@ return array(
     ),
 
     // online production database configuration
+
     /*
     'db' => array(
         'host' => '10.141.200.211',
-        'user' => 'fdugroup',
-        'password' => 'fdugroup',
+        'user' => 'groups',
+        'password' => '2013groups',
         'db_name' => 'fdugroup',
         'table_prefix' => 'group_',
         'charset' => 'utf8',
     ),
     */
+
 
     # 'baseUrl' => "http://localhost/FDUGroup",
 
