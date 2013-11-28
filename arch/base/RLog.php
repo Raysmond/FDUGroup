@@ -21,19 +21,17 @@ class RLog
      */
     private $logCount = 0;
 
-    private $logTypes;
-
     /**
      * @var int the to 0 will disable auto flushing
      */
     public $flushCount = 100;
 
+    /**
+     * The handler used to handle the 'onFlush' event, currently we only support a single
+     * handler, but it's better to support multiple handlers.
+     * @var object
+     */
     private $handler;
-
-
-    public function __construct()
-    {
-    }
 
     /**
      * Log a message
