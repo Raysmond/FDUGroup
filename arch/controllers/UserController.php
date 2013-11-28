@@ -80,7 +80,20 @@ class UserController extends BaseController
         switch ($part) {
             case 'joins': $userGroup = (new GroupUser())->userGroups($userId);break;
             case 'posts': $postTopics = (new Topic())->getUserTopics($userId);break;
-            case 'likes': break;//$userGroup = (new GroupUser())->userGroups()
+            case 'likes': $topicList = new Rating();
+                          $topicList->entityType = Topic::$entityType;
+                          $topicList->userId = $userId;
+                          $topicList = $topicList->find();
+                          $topicIdList = array_map(function($value) {
+                              return $value->entityId;
+                          }, $topicList);
+                          $likeTopics = new Topic();
+                          $likeTopics = $likeTopics->find(0,0,
+                              ['key' => $likeTopics->columns['id'], 'order' => 'desc'],
+                              null,
+                              ['id' => $topicIdList]
+                          );
+                break;
             case 'profile': break;
             default: return;
         }
