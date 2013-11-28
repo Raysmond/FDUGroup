@@ -97,14 +97,14 @@ class PostController extends BaseController {
     /* View topic */
     public function actionView($topicId = null) {
         if (!is_numeric($topicId) && $topicId === null) {
-            Rays::app()->page404();
+            $this->page404();
             return;
         }
 
         $topic = new Topic();
         $result = $topic->load($topicId);
         if($result===null){
-            Rays::app()->page404();
+            $this->page404();
             return;
         }
 
@@ -139,7 +139,7 @@ class PostController extends BaseController {
     /* Add comment */
     public function actionComment($topicId) {
         if($topicId===null&&!is_numeric($topicId)){
-            Rays::app()->page404();
+            $this->page404();
             return;
         }
         if ($this->getHttpRequest()->isPostRequest()) {
@@ -232,7 +232,7 @@ class PostController extends BaseController {
     public function actionDelete($topicId)
     {
         if (!isset($topicId) || $topicId == '' || !is_numeric($topicId)) {
-            Rays::app()->page404();
+            $this->page404();
             return;
         }
         $topic = new Topic();

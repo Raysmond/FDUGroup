@@ -58,7 +58,7 @@ class UserController extends BaseController
     {
         $user = new User();
         if ($user->load($userId)==null) {
-            Rays::app()->page404();
+            $this->page404();
             return;
         }
         $canEdit = false;
@@ -161,7 +161,7 @@ class UserController extends BaseController
     public function actionEdit($userId = null)
     {
         if (!Rays::app()->isUserLogin()||(isset($userId)) && (!is_numeric($userId))){
-            Rays::app()->page404();
+            $this->page404();
             return;
         }
         if (isset($userId) && Rays::app()->getLoginUser()->roleId != Role::ADMINISTRATOR_ID&&Rays::app()->getLoginUser()->id!=$userId) {

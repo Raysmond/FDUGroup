@@ -36,6 +36,10 @@ class RaysBase
 
     public static $copyright;
 
+    public static $logger;
+
+    public static $startTime;
+
     public static $_includePaths = array(
         CONTROLLER_PATH,
         MODEL_PATH,
@@ -44,6 +48,16 @@ class RaysBase
         UTILITIES_PATH,
         MODULES_PATH,
     );
+
+    public static function log($message,$level='info',$category='system')
+    {
+        static::$logger->log($message,$level,$category);
+    }
+
+    public static function logger()
+    {
+        return static::$logger;
+    }
 
     public static function setApplication($app)
     {
@@ -61,6 +75,9 @@ class RaysBase
 
     public static function createApplication($config)
     {
+        static::$startTime = microtime(true);
+        static::$logger = new RLog();
+
         return new RWebApplication($config);
     }
 
