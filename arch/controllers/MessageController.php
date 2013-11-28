@@ -17,7 +17,7 @@ class MessageController extends BaseController
     public function actionDetail($msgId = '')
     {
         if ($msgId == '') {
-            Rays::app()->page404();
+            $this->page404();
             return false;
         }
         $message = new Message();
@@ -44,7 +44,7 @@ class MessageController extends BaseController
             $type = 'private';
         }
         if (!in_array($type, $types)) {
-            Rays::app()->page404();
+            $this->page404();
             return;
         }
 
@@ -167,7 +167,7 @@ class MessageController extends BaseController
                 $messages = $messages->getTrashMsgs($userId);
                 break;
             default:
-                Rays::app()->page404();
+                $this->page404();
                 return;
         }
         if($messages==null) $messages = array();

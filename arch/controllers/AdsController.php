@@ -91,13 +91,14 @@ class AdsController extends BaseController {
                 die('Permission denied');
             }
         } else {
-            Rays::app()->page404();
+            $this->page404();
+            return;
         }
     }
 
     public function actionEdit($adId, $type) {
         if(!isset($adId)||!is_numeric($adId)){
-            Rays::app()->page404();
+            $this->page404();
             return;
         }
         $data = array();
@@ -106,7 +107,7 @@ class AdsController extends BaseController {
         $result = $ad->load();
 
         if($result===null){
-            Rays::app()->page404();
+            $this->page404();
             return;
         }
         $data['ad'] = $ad;

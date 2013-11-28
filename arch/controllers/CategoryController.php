@@ -19,13 +19,13 @@ class CategoryController extends BaseController{
     public function actionGroups($categoryId='')
     {
         if($categoryId==''||!is_numeric($categoryId)){
-            Rays::app()->page404();
+            $this->page404();
             return;
         }
         $category = new Category();
         $category->load($categoryId);
         if($category->load($categoryId)===null){
-            Rays::app()->page404();
+            $this->page404();
             return;
         }
         else{

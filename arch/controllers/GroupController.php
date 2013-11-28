@@ -79,14 +79,14 @@ class GroupController extends BaseController
     public function actionDetail($groupId)
     {
         if(!is_numeric($groupId)){
-            Rays::app()->page404();
+            $this->page404();
             return;
         }
 
         $group = new Group();
         $result = $group->load($groupId);
         if($result==null){
-            Rays::app()->page404();
+            $this->page404();
             return;
         }
 
@@ -424,12 +424,12 @@ class GroupController extends BaseController
                 }
             } else {
                 $this->flash("error", "No such group.");
-                Rays::app()->page404();
+                $this->page404();
                 return;
             }
         } else {
             $this->flash("error", "No such group.");
-            Rays::app()->page404();
+            $this->page404();
             return;
         }
     }
@@ -488,14 +488,14 @@ class GroupController extends BaseController
 
     public function actionInvite($groupId){
         if(!isset($groupId)||!is_numeric($groupId)){
-            Rays::app()->page404();
+            $this->page404();
             return;
         }
 
         $group = new Group();
         $result = $group->load($groupId);
         if($result==null){
-            Rays::app()->page404();
+            $this->page404();
             return;
         }
 
