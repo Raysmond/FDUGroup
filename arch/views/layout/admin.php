@@ -96,7 +96,7 @@ $baseurl = Rays::app()->getBaseUrl();
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Reports <b class="caret"></b></a>
                     <ul class="dropdown-menu">
-                        <li><a href="#">System logs</a></li>
+                        <li><?=RHtmlHelper::linkAction('admin','System logs','logs')?></li>
                         <li><a href="#">Users accounting</a></li>
                         <li><a href="#">Topics report</a></li>
                     </ul>
