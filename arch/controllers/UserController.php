@@ -88,11 +88,17 @@ class UserController extends BaseController
                               return $value->entityId;
                           }, $topicList);
                           $likeTopics = new Topic();
-                          $likeTopics = $likeTopics->find(0,0,
-                              ['key' => $likeTopics->columns['id'], 'order' => 'desc'],
-                              null,
-                              ['id' => $topicIdList]
-                          );
+                          if(count($topicList)>0){
+                              $likeTopics = $likeTopics->find(0,0,
+                                  ['key' => $likeTopics->columns['id'], 'order' => 'desc'],
+                                  null,
+                                  ['id' => $topicIdList]
+                              );
+                          }
+                          else{
+                              $likeTopics = array();
+                          }
+
                 break;
             case 'profile': break;
             default: return;

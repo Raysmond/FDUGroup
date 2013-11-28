@@ -118,6 +118,7 @@ class Data
         {
             foreach ($assignment as $objCol => $value) {
                 if(is_array($value)){
+                    if(count($value)==0) continue;
                     $where .= " and " . $this->columns[$objCol] . " in (";
                     $count_value = count($value);
                     $count_cur = 0;

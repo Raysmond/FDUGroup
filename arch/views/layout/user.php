@@ -58,12 +58,16 @@ else{
                         <div class="col-lg-2">
                             <?php if(!isset($user->picture)||$user->picture=='') $user->picture=User::$defaults['picture'];
                                 $thumbnail = RImageHelper::styleSrc($user->picture,$user::getPicOptions());
+                            ?>
+                            <a href="<?=RHtmlHelper::siteUrl('user/view/'.$user->id)?>" >
+                            <?php
                                 echo RHtmlHelper::showImage($thumbnail,$user->name, array('class'=>'img-thumbnail','width'=>'120px'))
                             ?>
+                            </a>
                         </div>
                         <div class="col-lg-10">
                             <h2>
-                                <?=$user->name?>&nbsp;
+                                <?=RHtmlHelper::linkAction('user',$user->name,'view',$user->id)?>&nbsp;
                                 <span class="badge badge-<?=Role::getRoleNameById($user->roleId);?>"><?=Role::getBadgeById($user->roleId);?></span>
                             </h2>
                             <div><?=RHtmlHelper::decode($user->intro)?></div>

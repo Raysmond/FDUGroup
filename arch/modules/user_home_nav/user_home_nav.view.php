@@ -4,7 +4,7 @@
     <ul class="nav nav-pills nav-stacked">
 
         <li <?= (Rays::app()->getHttpRequest()->urlMatch(array('user/home','user','user/'), $currentUrl)) ? 'class="active"' : "" ?>>
-            <?= RHtmlHelper::linkAction('user', 'Home page', 'home') ?>
+            <?= RHtmlHelper::linkAction('user', 'Latest posts', 'home') ?>
         </li>
 
         <li <?= (Rays::app()->getHttpRequest()->urlMatch(array('user/myposts','user/myposts?*'), $currentUrl)) ? 'class="active"' : "" ?>>
