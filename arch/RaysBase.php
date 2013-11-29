@@ -89,9 +89,17 @@ class RaysBase
     public static function importModule($moduleId)
     {
         if (!isset(self::$moduleMap[$moduleId])) {
-            $path = Rays::app()->modulePath . "/" . $moduleId . "/" . $moduleId . self::app()->moduleFileExtension;
+            $path = static::app()->modulePath . "/" . $moduleId . "/" . $moduleId . self::app()->moduleFileExtension;
             self::$moduleMap[$moduleId] = $path;
             require($path);
+        }
+    }
+
+    public static function autoImports($imports = array())
+    {
+        foreach($imports as $import)
+        {
+            static::import($import);
         }
     }
 
@@ -141,15 +149,16 @@ class RaysBase
     /**
      * Class autoload loader
      * This method is invoked within an __antoload() magic method
-     * @param string $classname class name
+     * @param string $className class name
      */
-    public static function autoload($classname)
+    public static function autoload($className)
     {
-        if (isset(self::$classMap[$classname]))
-            require(self::$classMap[$classname]);
+        if (isset(self::$classMap[$className]))
+            require(self::$classMap[$className]);
         else {
+            $className = end(explode("\\",$className));
             foreach (self::$_includePaths as $path) {
-                $classFile = $path . DIRECTORY_SEPARATOR . $classname . '.php';
+                $classFile = $path . DIRECTORY_SEPARATOR . $className . '.php';
                 if (is_file($classFile)) {
                     require($classFile);
                     break;

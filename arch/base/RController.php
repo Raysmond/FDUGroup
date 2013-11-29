@@ -1,13 +1,10 @@
 <?php
 /**
  * RController class file.
+ * This is the base controller for all controllers in the framework.
  * @author: Raysmond
  */
 
-/**
- * Class RController
- * This is the base controller for all controllers in the framework.
- */
 class RController
 {
     // the layout for the controller
