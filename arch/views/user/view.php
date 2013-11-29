@@ -45,8 +45,8 @@
     <div class="panel-body">
         <ul class="nav nav-tabs">
             <li <?php if ($part == 'joins') echo 'class="active"';?>><?=RHtmlHelper::linkAction('user','Joined Groups','view',$user->id)?></li>
-            <li <?php if ($part == 'posts') echo 'class="active"';?>><?=RHtmlHelper::linkAction('user','Posted Topics','view',[$user->id, 'posts'])?></li>
-            <li <?php if ($part == 'likes') echo 'class="active"';?>><?=RHtmlHelper::linkAction('user','Liked Topics','view',[$user->id, 'likes'])?></li>
+            <li <?php if ($part == 'posts') echo 'class="active"';?>><?=RHtmlHelper::linkAction('user','Posts','view',[$user->id, 'posts'])?></li>
+            <li <?php if ($part == 'likes') echo 'class="active"';?>><?=RHtmlHelper::linkAction('user','Favorites','view',[$user->id, 'likes'])?></li>
             <li <?php if ($part == 'profile') echo 'class="active"';?>><?=RHtmlHelper::linkAction('user','Profile','view',[$user->id, 'profile'])?></li>
         </ul>
     </div>

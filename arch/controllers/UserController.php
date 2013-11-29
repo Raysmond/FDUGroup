@@ -262,6 +262,7 @@ class UserController extends BaseController
         $url = RHtmlHelper::siteUrl('user/myposts');
         $pager = new RPagerHelper('page',$count,$pageSize,$url,$curPage);
         $data['pager'] = $pager->showPager();
+        $data['enabledDelete'] = true;
 
         $this->layout = 'user';
         $this->setHeaderTitle("My posts");

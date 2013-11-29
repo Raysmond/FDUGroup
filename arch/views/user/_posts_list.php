@@ -9,6 +9,7 @@
 ?>
 <div class="posts-list">
     <?php
+    $currentUserId = Rays::app()->isUserLogin()?Rays::app()->getLoginUser()->id:0;
     foreach ($topics as $topic) {
         ?>
         <div class="row topic-item">
@@ -47,14 +48,24 @@
 
                 <!-- Actions for the post -->
                 <div>
-                    <?=
-                    RHtmlHelper::linkAction(
+                    <?php
+                    echo RHtmlHelper::linkAction(
                         'post',
                         'Reply (' . $topic['top_comment_count'] . ')',
                         'view', $topic['top_id'] . '#reply',
-                        array('class' => 'btn btn-xs btn-info')) ?>
+                        array('class' => 'btn btn-xs btn-info'));
 
-                    <?php
+                    if(isset($enabledDelete)&&$enabledDelete){
+                        if($currentUserId!==0&&$topic['u_id']==$currentUserId){
+                            echo '&nbsp;';
+                            echo RHtmlHelper::linkAction(
+                                'post',
+                                'Delete',
+                                'delete', $topic['top_id'],
+                                array('class' => 'btn btn-xs btn-danger'));
+                        }
+                    }
+                    echo '&nbsp;';
                     $this->module("rating_plus",
                         array(
                             'id' => 'rating_plus',

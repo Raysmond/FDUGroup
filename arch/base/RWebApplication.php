@@ -184,5 +184,4 @@ class RWebApplication extends RBaseApplication
         return $this->isCleanUri != false;
     }
 
-
 }

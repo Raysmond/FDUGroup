@@ -40,6 +40,13 @@
                             'view', $post->id . '#reply',
                             array('class' => 'btn btn-xs btn-info')) ?>
                         <?php
+                        echo RHtmlHelper::linkAction(
+                            'post',
+                            'Delete',
+                            'delete', $post->id,
+                            array('class' => 'btn btn-xs btn-danger'));
+                        ?>
+                        <?php
                         /*
                         $this->module("rating_plus",
                             array(

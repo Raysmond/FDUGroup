@@ -46,8 +46,8 @@
                         <?=RHtmlHelper::showImage($pic,$user->name,array('class'=>'img-thumbnails'))?>
                     </a>
                     <ul class="dropdown-menu">
-                        <li><?=RHtmlHelper::linkAction("user","My Home Page","home")?></li>
-                        <li><?=RHtmlHelper::linkAction("user","My profile","view",$user->id)?></li>
+                        <li><?=RHtmlHelper::linkAction("user","Home Page","home")?></li>
+                        <li><?=RHtmlHelper::linkAction("user","Personal Page","view",$user->id)?></li>
                         <li role="presentation" class="divider"></li>
                         <?php
                             if(($count = Rays::app()->getLoginUser()->countUnreadMsgs())==0){
