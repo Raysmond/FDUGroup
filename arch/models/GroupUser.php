@@ -50,6 +50,13 @@ class GroupUser extends Data
         return $result;
     }
 
+    public static function removeUsers($groupId,$userIds=array()){
+        $groupUser = new GroupUser();
+        foreach($userIds as $id){
+            $groupUser->delete(array('groupId'=>$groupId, 'userId'=>$id));
+        }
+    }
+
     public function isUserInGroup($userId, $groupId){
         $allUsers = $this->groupUsers($groupId);
         foreach($allUsers as $user){

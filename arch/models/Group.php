@@ -61,12 +61,18 @@ class Group extends Data
 
     }
 
-    public function groupUsers($limit=0, $orderby='', $order='ASC'){
-        $groupusers = new GroupUser();
-        $groupusers->groupId = $this->id;
-        $groupusers = $groupusers->find(0,$limit,array('key'=>$orderby,'order'=>$order));
+    public static function countTopics($groupId){
+        $topic = new Topic();
+        $topic->groupId = $groupId;
+        return $topic->count();
+    }
+
+    public function groupUsers($limit=0, $orderby=null, $order='ASC'){
+        $groupUsers = new GroupUser();
+        $groupUsers->groupId = $this->id;
+        $groupUsers = $groupUsers->find(0,$limit,array('key'=>$orderby,'order'=>$order));
         $result = array();
-        foreach($groupusers as $row){
+        foreach($groupUsers as $row){
             $user = new User();
             $user->load($row->userId);
             array_push($result,$user);

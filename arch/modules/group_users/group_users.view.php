@@ -26,6 +26,7 @@
                     echo '</div>';
                 }
                 echo '</div>';
+                echo '<span class="glyphicon glyphicon-user"></span>&nbsp;'.RHtmlHelper::linkAction('group',"All group members",'members',$groupId);
             }
         ?>
     </div>

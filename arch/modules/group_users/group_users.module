@@ -12,8 +12,8 @@ class group_users_module extends RModule{
         $group = new Group();
         $params = Rays::app()->controller->getActionParams();
         $group->id = $params[0];
-        $users = $group->groupUsers(10,'join_time','desc');
-        return $this->render('group_users',array('users'=>$users));
+        $users = $group->groupUsers(9,'join_time','desc');
+        return $this->render('group_users',array('users'=>$users,'groupId'=>$group->id));
     }
 
 
