@@ -233,47 +233,7 @@ class GroupController extends BaseController
      */
     public function actionMembers($groupId)
     {
-        if (!is_numeric($groupId)) {
-            $this->page404();
-            return;
-        }
-
-        if ($this->getHttpRequest()->isPostRequest()) {
-            // remove members request
-            if (isset($_POST['selected_members'])) {
-                $ids = $_POST['selected_members'];
-                if (is_array($ids)) {
-                    $flag = true;
-                    foreach ($ids as $id) {
-                        if (!is_numeric($id)) {
-                            $flag = false;
-                            break;
-                        }
-                    }
-                    if ($flag) {
-                        GroupUser::removeUsers($groupId, $ids);
-                    }
-                }
-            }
-        }
-
-        $group = new Group();
-        if (($group = $group->load($groupId)) !== null) {
-            $members = $group->groupUsers();
-            $this->setHeaderTitle("Members in " . $group->name);
-            $this->render(
-                'members',
-                array(
-                    'members' => $members,
-                    'manager' => (new User())->load($group->creator),
-                    'group' => $group,
-                    'memberCount' => count($members),
-                    'topicCount' => Group::countTopics($groupId)),
-                false);
-        } else {
-            $this->page404();
-            return;
-        }
+        return $this->dispatchAction('members','controllers.groups.MembersAction');
     }
 
 

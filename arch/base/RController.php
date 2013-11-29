@@ -298,6 +298,32 @@ class RController
     }
 
     /**
+     * Dispatch an action
+     * @param string $actionPath the path of the action class
+     * @param string $actionId the unique id of the target action
+     * @return mixed
+     * @throws RException
+     */
+    public function dispatchAction($actionId,$actionPath = ''){
+        if($actionPath!==''){
+            $className = end(explode(".",$actionPath));
+            Rays::import($actionPath);
+            if(class_exists($className)){
+                $action = new $className($this,$actionId,$this->getActionParams());
+                if(method_exists($action,"run")){
+                    return $action->run();
+                }else{
+                    throw new RException("An action class must implements \'run\' method!");
+                }
+            }
+            else{
+                $file = Rays::getFrameworkPath().str_replace(".","/",$actionPath).".php";
+                throw new RException("Class ($className) not exists. Class file: $file");
+            }
+        }
+    }
+
+    /**
      * Add a css asset file
      * @param $cssPath
      */
