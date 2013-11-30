@@ -4,7 +4,7 @@
  * @author: Raysmond
  */
 
-require(dirname(__FILE__).'/RaysBase.php');
+require(dirname(__FILE__) . '/RaysBase.php');
 
 class Rays extends RaysBase{
 

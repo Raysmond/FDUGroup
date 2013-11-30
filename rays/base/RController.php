@@ -314,7 +314,7 @@ class RController
                 }
             }
             else{
-                $file = Rays::getFrameworkPath().str_replace(".","/",$actionPath).".php";
+                $file = Rays::app()->getBaseDir().str_replace(".","/",$actionPath).".php";
                 throw new RException("Class ($className) not exists. Class file: $file");
             }
         }

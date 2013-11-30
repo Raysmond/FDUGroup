@@ -22,9 +22,11 @@ class RWebApplication extends RBaseApplication
 
     public $modelPath;
     public $controllerPath;
+    public $modulePath;
+
     public $viewPath;
     public $layoutPath;
-    public $modulePath;
+
     public $controller;
 
     public $router;
@@ -43,28 +45,11 @@ class RWebApplication extends RBaseApplication
 
         $config = $this->getConfig();
 
-        Rays::setApplication($this);
-
-        $this->modelPath = MODEL_PATH;
-        $this->controllerPath = CONTROLLER_PATH;
-        $this->viewPath = VIEW_PATH;
-        $this->layoutPath = VIEW_PATH;
-        $this->modulePath = MODULES_PATH;
-
-        if (isset($config['modelPath']))
-            $this->modelPath = $config['modelPath'];
-
-        if (isset($config['controllerPath']))
-            $this->controllerPath = $config['controllerPath'];
-
-        if (isset($config['viewPath']))
-            $this->viewPath = $config['viewPath'];
-
-        if (isset($config['layoutPath']))
-            $this->layoutPath = $config['layoutPath'];
-
-        if (isset($config['modulePath']))
-            $this->layoutPath = $config['modulePath'];
+        $this->modelPath = $this->getBaseDir().'/models';
+        $this->controllerPath = $this->getBaseDir().'/controllers';
+        $this->viewPath = $this->getBaseDir().'/views';
+        $this->layoutPath = $this->getBaseDir().'/views/layout';
+        $this->modulePath = $this->getBaseDir().'/modules';
 
         if (isset($config['defaultController']))
             $this->defaultController = $config['defaultController'];
@@ -74,6 +59,8 @@ class RWebApplication extends RBaseApplication
 
         if (isset($config['isCleanUri']))
             $this->isCleanUri = $config['isCleanUri'];
+
+        Rays::setApplication($this);
     }
 
     /**

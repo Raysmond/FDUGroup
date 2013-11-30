@@ -8,15 +8,8 @@ define('SYSTEM_PATH', dirname(__FILE__));
 
 define('SYSTEM_CORE_PATH', SYSTEM_PATH . '/base');
 
-define('CONTROLLER_PATH', SYSTEM_PATH . '/controllers');
+define('HELPER_PATH', SYSTEM_PATH . '/helpers');
 
-define('MODEL_PATH', SYSTEM_PATH . '/models');
-
-define('VIEW_PATH', SYSTEM_PATH . '/views');
-
-define('UTILITIES_PATH', SYSTEM_PATH . '/helpers');
-
-define('MODULES_PATH', SYSTEM_PATH . '/modules');
 
 
 /**
@@ -41,12 +34,9 @@ class RaysBase
     public static $startTime;
 
     public static $_includePaths = array(
-        CONTROLLER_PATH,
-        MODEL_PATH,
-        VIEW_PATH,
+        SYSTEM_PATH,
         SYSTEM_CORE_PATH,
-        UTILITIES_PATH,
-        MODULES_PATH,
+        HELPER_PATH,
     );
 
     public static function log($message,$level='info',$category='system')
@@ -61,8 +51,10 @@ class RaysBase
 
     public static function setApplication($app)
     {
-        if (self::$_app === null && $app != null)
-            self::$_app = $app;
+        if (static::$_app === null && $app != null){
+            static::$_app = $app;
+            static::initPath();
+        }
         else {
             die("Application not found!");
         }
@@ -70,7 +62,7 @@ class RaysBase
 
     public static function app()
     {
-        return self::$_app;
+        return static::$_app;
     }
 
     public static function createApplication($config)
@@ -79,6 +71,13 @@ class RaysBase
         static::$logger = new RLog();
 
         return new RWebApplication($config);
+    }
+
+    public static function initPath()
+    {
+        static::$_includePaths[] = static::app()->controllerPath;
+        static::$_includePaths[] = static::app()->modelPath;
+        static::$_includePaths[] = static::app()->modulePath;
     }
 
     public static function getFrameworkPath()
@@ -117,7 +116,7 @@ class RaysBase
             $fileName = end(explode('/', $files));
             if ($fileName !== '*') {
                 if (!isset(static::$imports[$files])) {
-                    $path = static::getFrameworkPath() . '/' . $files . '.php';
+                    $path = static::app()->getBaseDir() . '/' . $files . '.php';
                     if (is_file($path)) {
                         static::$imports[$files] = $path;
                         require($path);
@@ -125,7 +124,7 @@ class RaysBase
                 }
             } else {
                 $files = str_replace('/*', '', $files);
-                $dir = static::getFrameworkPath() . '/' . $files;
+                $dir = static::app()->getBaseDir() . '/' . $files;
                 if (is_dir($dir)) {
                     $dp = dir($dir);
                     while ($file = $dp->read()) {
@@ -170,7 +169,7 @@ class RaysBase
     public static function getCopyright()
     {
         if (!isset(self::$copyright)) {
-            return "© Copyright " . self::app()->name . " 2013, All Rights Reserved.";
+            return "© Copyright " . static::app()->name . " 2013, All Rights Reserved.";
         } else return self::$copyright;
     }
 }

@@ -15,6 +15,8 @@ class RModule
     // The path of the module directory
     private $_path;
 
+    static $moduleBaseUri = null;
+
     // The module shall appear in what pages
     // For example:
     // array('site/about','user/*')
@@ -29,6 +31,11 @@ class RModule
 
         if (isset($params['name']))
             $this->setName($params['name']);
+
+        if(static::$moduleBaseUri===null){
+            $pos = strpos(Rays::app()->modulePath, Rays::app()->getBasePath()) + strlen(Rays::app()->getBasePath()) + 1;
+            static::$moduleBaseUri = Rays::app()->getBaseUrl() . '/' . substr(Rays::app()->modulePath, $pos);
+        }
 
         $this->init($params);
     }
@@ -75,7 +82,7 @@ class RModule
     }
 
     public function getModulePath(){
-        return Rays::app()->getBaseUrl().'/arch/modules/' . $this->getId();
+        return static::$moduleBaseUri . '/' . $this->getId();
     }
 
     /**

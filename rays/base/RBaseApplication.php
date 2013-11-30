@@ -13,6 +13,8 @@ class RBaseApplication
 
     public $timeZone = 'PRC';
 
+    private $_baseDir = '';
+
     private $_basePath = '';
 
     private $_baseUrl;
@@ -51,6 +53,9 @@ class RBaseApplication
             $this->timeZone = $config['timeZone'];
         if (isset($config['cache'])){
             $this->_cache = $config['cache'];
+        }
+        if(isset($config['baseDir'])){
+            $this->_baseDir = $config['baseDir'];
         }
     }
 
@@ -96,6 +101,11 @@ class RBaseApplication
     public function setBasePath($path)
     {
         $this->_basePath = $path;
+    }
+
+    public function getBaseDir()
+    {
+        return $this->_baseDir;
     }
 
     public function getName()

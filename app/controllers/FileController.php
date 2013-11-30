@@ -14,7 +14,7 @@ class FileController extends RController{
         $fileTag = 'upload';
         $user = Rays::app()->getLoginUser();
         if(isset($_FILES[$fileTag])){
-            $path = Rays::getFrameworkPath() . "/../public/userfiles/u_".$user->id."/";
+            $path = Rays::app()->getBaseDir() . "/files/userfiles/u_".$user->id."/";
             if(!file_exists($path)){
                 mkdir($path);
             }

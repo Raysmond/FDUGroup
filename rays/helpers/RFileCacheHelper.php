@@ -18,7 +18,7 @@ class RFileCacheHelper implements RICacheHelper
     {
         if ($_args != null) {
             if (isset($_args['cache_dir']))
-                $this->cacheDir = Rays::getFrameworkPath().$_args['cache_dir'].'/';
+                $this->cacheDir = Rays::app()->getBaseDir().$_args['cache_dir'].'/';
             if (isset($_args['length']))
                 $this->length = $_args['length'];
             if(isset($_args['cacheTime']))

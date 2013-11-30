@@ -5,6 +5,8 @@
  */
 
 return array(
+    'baseDir' => dirname(__FILE__),
+
     // the title of the web application
     'name' => 'FDUGroup',
 
