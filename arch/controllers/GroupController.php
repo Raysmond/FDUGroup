@@ -230,6 +230,7 @@ class GroupController extends BaseController
     /**
      * Show all group members
      * @param $groupId
+     * @return mixed
      */
     public function actionMembers($groupId)
     {
@@ -250,9 +251,10 @@ class GroupController extends BaseController
 
             $content = RHtmlHelper::linkAction('user',$currentUserName,'view',$currentUserId)." wants to join your group ".
                 RHtmlHelper::linkAction('group', $group->name, 'detail', $group->id)
-                ."<br/>" .
-                RHtmlHelper::link("Accept", "Accept", Rays::app()->getBaseUrl() . "/group/accept/{$censor->id}",array('class'=>'btn btn-xs btn-success'))."&nbsp;&nbsp;".
-                RHtmlHelper::link("Decline", "Decline", Rays::app()->getBaseUrl() . "/group/decline/{$censor->id}",array('class'=>'btn btn-xs btn-danger'));
+                ."<br/>"
+                .RHtmlHelper::linkAction('group','Accept','accept',$censor->id,array('class'=>'btn btn-xs btn-success'))
+                ."&nbsp;&nbsp;"
+                .RHtmlHelper::linkAction('group','Decline','decline',$censor->id,array('class'=>'btn btn-xs btn-danger'));
 
             $message = new Message();
             $message->sendMsg("group", $groupId, $group->creator, "Join group request", $content, '');
