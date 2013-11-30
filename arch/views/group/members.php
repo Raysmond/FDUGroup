@@ -57,7 +57,7 @@ if ($isManager) {
                 echo '<a href="' . RHtmlHelper::siteUrl('user/view/' . $member->id) . '">';
                 echo RHtmlHelper::showImage(RImageHelper::styleSrc($picture, User::getPicOptions()), $member->name, array('width' => '64px', 'height' => '64px'));
                 echo '</a><br/>';
-                if ($isManager) {
+                if ($isManager && $member->id != $manager->id) {
                     echo RFormHelper::input(array('type' => 'checkbox', 'value' => $member->id, 'name' => 'selected_members[]'));
                     echo '&nbsp;';
                 }

@@ -19,27 +19,28 @@ class MembersAction extends RAction
             return;
         }
 
-        if ($this->getController()->getHttpRequest()->isPostRequest()) {
-            // remove members request
-            if (isset($_POST['selected_members'])) {
-                $ids = $_POST['selected_members'];
-                if (is_array($ids)) {
-                    $flag = true;
-                    foreach ($ids as $id) {
-                        if (!is_numeric($id)) {
-                            $flag = false;
-                            break;
+        $group = new Group();
+        if (($group = $group->load($groupId)) !== null) {
+
+            if ($this->getController()->getHttpRequest()->isPostRequest()) {
+                // remove members request
+                if (isset($_POST['selected_members'])) {
+                    $ids = $_POST['selected_members'];
+                    if (is_array($ids)) {
+                        $flag = true;
+                        foreach ($ids as $id) {
+                            if (!is_numeric($id) || $id == $group->creator) {
+                                $flag = false;
+                                break;
+                            }
                         }
-                    }
-                    if ($flag) {
-                        GroupUser::removeUsers($groupId, $ids);
+                        if ($flag) {
+                            GroupUser::removeUsers($groupId, $ids);
+                        }
                     }
                 }
             }
-        }
 
-        $group = new Group();
-        if (($group = $group->load($groupId)) !== null) {
             $members = $group->groupUsers();
             $this->getController()->setHeaderTitle("Members in " . $group->name);
             $this->getController()->render(
