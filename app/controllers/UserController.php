@@ -156,7 +156,8 @@ class UserController extends BaseController
                 $user->sendWelcomeMessage();
 
                 /*
-                $emailResult = RMailHelper::sendEmail("Welcome to FDUGroup family","<b>Welcome to FDUGroup family</b><br/>-- FDUGroup team <br/>".date('Y-m-d H:i:s'),$_POST['email']);
+                Rays::import("extensions.phpmailer.*");
+                $emailResult = MailHelper::sendEmail("Welcome to FDUGroup family","<b>Welcome to FDUGroup family</b><br/>-- FDUGroup team <br/>".date('Y-m-d H:i:s'),$_POST['email']);
                 if($emailResult!==true){
                     var_dump($emailResult);
                     exit;
@@ -222,14 +223,15 @@ class UserController extends BaseController
                     //print_r($_FILES['user_picture']);
                     $upload = new RUploadHelper(array(
                         "file_name" => "pic_u_" . $user->id . RUploadHelper::get_extension($_FILES['user_picture']['name']),
-                        "upload_path" => Rays::getFrameworkPath() . "/../public/images/users/"));
+                        "upload_path" => Rays::app()->getBaseDir() . "/../files/images/users/"));
                     $upload->upload('user_picture');
 
                     if ($upload->error != '') {
                         $this->flash("error", $upload->error);
                     } else {
-                        $user->picture = "public/images/users/" . $upload->file_name;
+                        $user->picture = "files/images/users/" . $upload->file_name;
                         $user->update();
+                        RImageHelper::updateStyle($user->picture, User::getPicOptions());
                     }
                 }
                 $this->redirectAction('user', 'view', $user->id);

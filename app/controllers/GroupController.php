@@ -423,7 +423,7 @@ class GroupController extends BaseController
 
                     // Delete group's picture from local file system
                     if (isset($group->picture) && $group->picture != '') {
-                        $picture = Rays::getFrameworkPath() . "/../" . $group->picture;
+                        $picture = Rays::app()->getBaseDir() . "/../" . $group->picture;
                         if (file_exists($picture))
                             unlink($picture);
                     }

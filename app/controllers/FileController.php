@@ -41,7 +41,7 @@ class FileController extends RController{
                 //$this->flash("error", $upload->error);
             } else {
                 // success
-                $uri = "public/userfiles/u_".$user->id."/".$upload->file_name;
+                $uri = "files/userfiles/u_".$user->id."/".$upload->file_name;
                 echo $uri;
             }
         }

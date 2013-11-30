@@ -7,9 +7,8 @@
  */
 
 class RImageHelper {
-    const IMAGE_DIR = "public/images/styles";
 
-    public static function styleSrc($src,$options=array()){
+    public static function styleSrc($src,$options=array(),$updateStyle=false){
 
         if(!isset($src)){
             return $src;
@@ -19,26 +18,30 @@ class RImageHelper {
             return $src;
         }
 
+        $dir = Rays::app()->getBaseDir().'/../'.$options['path'];
         $styleName = $options['name'];
         $width = $options['width'];
         $height = $options['height'];
 
         $style = trim($styleName);
-        $fp =  Rays::getFrameworkPath();
-        $srcPath = $fp.'/../'.$src;
+        $srcPath = Rays::app()->getBaseDir().'/../'.$src;
         $name = self::getName($srcPath).self::getExtension($srcPath);
-        $styleDir = $fp.'/../'.self::IMAGE_DIR.'/'.$style;
+        $styleDir = $dir.'/'.$style;
 
         if(!file_exists($styleDir)){
             mkdir($styleDir);
         }
 
         $stylePath = $styleDir.'/'.$name;
-        $targetSrc = self::IMAGE_DIR.'/'.$style.'/'.$name;
-        if(file_exists($stylePath)){
+        $targetSrc = $options['path'].'/'.$style.'/'.$name;
+
+        if(!$updateStyle && file_exists($stylePath)){
             return $targetSrc;
         }
         else{
+            if(file_exists($stylePath)){
+                unlink($stylePath);
+            }
             $img = new Img ();
             $option = array ('width' => $width, 'height' => $height );
             $flag = $img->thumb_img ( $srcPath, $stylePath, $option );
@@ -49,6 +52,11 @@ class RImageHelper {
             }
         }
 
+    }
+
+    public static function updateStyle($src,$options = array())
+    {
+        static::styleSrc($src,$options,true);
     }
 
     public static function getExtension($filename)

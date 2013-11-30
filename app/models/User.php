@@ -220,6 +220,7 @@ class User extends Data{
 
     public static function getPicOptions(){
         return array(
+            'path' => 'files/images/styles',
             'name' => 'users',
             'width' => 200,
             'height' => 200

@@ -20,28 +20,28 @@ class RClient
     public function registerCoreCss($cssPath)
     {
         if (!$this->isRegisteredCoreCss($cssPath)) {
-            $this->coreCss[count($this->coreCss)] = $cssPath;
+            $this->coreCss[$cssPath] = $cssPath;
         }
     }
 
     public function registerCss($cssPath)
     {
         if (!$this->isRegisteredCss($cssPath)) {
-            $this->css[count($this->css)] = $cssPath;
+            $this->css[$cssPath] = $cssPath;
         }
     }
 
     public function registerCoreScript($scriptPath)
     {
         if (!$this->isRegisteredCoreScript($scriptPath)) {
-            $this->coreScript[count($this->coreScript)] = $scriptPath;
+            $this->coreScript[$scriptPath] = $scriptPath;
         }
     }
 
     public function registerScript($scriptPath)
     {
         if (!$this->isRegisteredScript($scriptPath)) {
-            $this->script[count($this->script)] = $scriptPath;
+            $this->script[$scriptPath] = $scriptPath;
         }
     }
 

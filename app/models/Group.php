@@ -11,7 +11,7 @@ class Group extends Data
     public $id, $creator, $categoryId, $name, $memberCount, $createdTime, $intro,$picture;
 
     const ENTITY_TYPE = 2;
-    const PICTURE_PATH = '/public/images/groups/';
+    const PICTURE_PATH = '/files/images/groups/';
 
     public static $labels = array(
         "id" => "ID",
@@ -24,7 +24,7 @@ class Group extends Data
         "picture"=>'Picture'
     );
 
-    public static $defaults = array('picture'=>'public/images/default_pic.png');
+    public static $defaults = array('picture'=>'files/images/default_pic.png');
 
     public function __construct()
     {
@@ -113,17 +113,18 @@ class Group extends Data
 
     public function uploadPicture($fileTag)
     {
-        $uploadPath = Rays::getFrameworkPath() . '/..' . self::PICTURE_PATH;
+        $uploadPath = Rays::app()->getBaseDir() . '/../' . self::PICTURE_PATH;
         $picName = 'group_' . $this->id . RUploadHelper::get_extension($_FILES[$fileTag]['name']);
-        $upload = new RUploadHelper(array('file_name' => 'group_' . $picName, 'upload_path' => $uploadPath));
+        $upload = new RUploadHelper(array('file_name' => $picName, 'upload_path' => $uploadPath));
 
         $upload->upload($fileTag);
 
         if ($upload->error != '') {
             return $upload->error;
         } else {
-            $this->picture = "public/images/groups/" . $upload->file_name;
+            $this->picture = "files/images/groups/" . $upload->file_name;
             $this->update();
+            RImageHelper::updateStyle($this->picture,static::getPicOptions());
             return true;
         }
     }
@@ -301,6 +302,7 @@ class Group extends Data
 
     public static function getPicOptions(){
         return array(
+            'path' => 'files/images/styles',
             'name'=>'groups',
             'width'=>200,
             'height'=>200

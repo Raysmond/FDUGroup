@@ -32,12 +32,16 @@ class RModule
         if (isset($params['name']))
             $this->setName($params['name']);
 
-        if(static::$moduleBaseUri===null){
+        $this->init($params);
+    }
+
+    public static function getModuleBasePath()
+    {
+        if (static::$moduleBaseUri === null) {
             $pos = strpos(Rays::app()->modulePath, Rays::app()->getBasePath()) + strlen(Rays::app()->getBasePath()) + 1;
             static::$moduleBaseUri = Rays::app()->getBaseUrl() . '/' . substr(Rays::app()->modulePath, $pos);
         }
-
-        $this->init($params);
+        return static::$moduleBaseUri;
     }
 
     /**
@@ -45,7 +49,7 @@ class RModule
      * You should override the method if you wanna do some initial work before
      * running the module
      */
-    public function init($params=array())
+    public function init($params = array())
     {
 
     }
@@ -81,8 +85,9 @@ class RModule
         return $this->_path;
     }
 
-    public function getModulePath(){
-        return static::$moduleBaseUri . '/' . $this->getId();
+    public function getModulePath()
+    {
+        return static::getModuleBasePath() . '/' . $this->getId();
     }
 
     /**
@@ -91,19 +96,18 @@ class RModule
      * @param string $data
      * @return string
      */
-    public function render($viewFileName='', $data='')
+    public function render($viewFileName = '', $data = '')
     {
-        $viewFile = $this->getModuleDir()."/".$viewFileName.".view.php";
-        if(file_exists($viewFile)){
+        $viewFile = $this->getModuleDir() . "/" . $viewFileName . ".view.php";
+        if (file_exists($viewFile)) {
             if (is_array($data))
                 extract($data);
             ob_start();
             ob_implicit_flush(false);
             require($viewFile);
             return ob_get_clean();
-        }
-        else{
-            die("Module view file not exists: ".$viewFile);
+        } else {
+            die("Module view file not exists: " . $viewFile);
         }
     }
 
