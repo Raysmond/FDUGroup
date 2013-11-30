@@ -5,9 +5,7 @@
  * @date: 13-11-27
  */
 
-Rays::import("extensions.phpmailer.*");
-
-class RMailHelper {
+class MailHelper {
 
     public static $host = 'smtp.126.com';
 
