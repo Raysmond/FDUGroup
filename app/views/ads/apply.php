@@ -44,16 +44,17 @@
 
         <br/>
 
-        <?=RFormHelper::label('Paid price','paid-price')?>
+        <?=RFormHelper::label('Paid price ('. Rays::app()->getLoginUser()->getWallet()->money ." Group Coins in your wallet)",'paid-price')?>
         <div class="input-group">
             <?=RFormHelper::input(
-                array(
+                array_merge(array(
                     'id'=>'paid-price',
                     'name'=>'paid-price',
-                    'readonly' => isset($edit),
                     'class'=>'form-control',
-                ), isset($form['paid-price'])?$form:(isset($edit)?$ad->paidPrice:$form))?>
-            <span class="input-group-addon">RMB</span>
+                    ),isset($edit)?['readonly' => true]:[]
+                ),
+                isset($form['paid-price'])?$form:(isset($edit)?$ad->paidPrice:$form))?>
+            <span class="input-group-addon">Group Coins</span>
         </div>
 
         <br/>
