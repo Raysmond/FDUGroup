@@ -1,7 +1,8 @@
 *.bak
 .idea
 .svn
-arch/cache
+cache
+files/userfiles/*
+files/images/styles/*
+public/images/styles
 public/userfiles
-public/images/styles/users/*.*
-public/images/styles/groups/*.*

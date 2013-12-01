@@ -4,9 +4,9 @@
  * @author: Raysmond
  */
 
-$raysFramework = dirname(__FILE__).'/arch/Rays.php';
-$config = dirname(__FILE__).'/arch/Config.php';
+$rays = dirname(__FILE__).'/rays/Rays.php';
+$config = dirname(__FILE__).'/app/Config.php';
 
-require_once($raysFramework);
+require_once($rays);
 
 Rays::createApplication($config)->run();
