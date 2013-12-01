@@ -45,7 +45,7 @@ class AdsController extends BaseController {
                 $money = Rays::app()->getLoginUser()->getWallet()->money;
                 if ($money<(int)$_POST['paid-price']) {
                     /* TODO 这个要整合到Validation里面去 to Raysmond */
-                    $this->flash('error','You cannot overdraft your Group Coins to publish advertisements.');
+                    $this->flash('error','You cannot overdraft your '.Wallet::COIN_NAME.' to publish advertisements.');
                     $data['applyForm'] = $_POST;
                 } else {
                     Rays::app()->getLoginUser()->getWallet()->cutMoney((int)$_POST['paid-price']);      //Pay the price

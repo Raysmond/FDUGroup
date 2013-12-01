@@ -39,7 +39,7 @@
 
             }
             $wallet = $user->getWallet();
-            echo '<li class="list-group-item">Wallet: '.$wallet->money.'</li>';
+            echo '<li class="list-group-item">Wallet: '.$wallet->money.' '.Wallet::COIN_NAME.'</li>';
             ?>
             </ul>
         </div>
