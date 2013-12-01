@@ -44,7 +44,7 @@
 
         <br/>
 
-        <?=RFormHelper::label('Paid price ('. Rays::app()->getLoginUser()->getWallet()->money ." Group Coins in your wallet)",'paid-price')?>
+        <?=RFormHelper::label('Paid price ('. Rays::app()->getLoginUser()->getWallet()->money ." ". Wallet::COIN_NAME ." in your wallet)",'paid-price')?>
         <div class="input-group">
             <?=RFormHelper::input(
                 array_merge(array(
@@ -54,7 +54,7 @@
                     ),isset($edit)?['readonly' => true]:[]
                 ),
                 isset($form['paid-price'])?$form:(isset($edit)?$ad->paidPrice:$form))?>
-            <span class="input-group-addon">Group Coins</span>
+            <span class="input-group-addon"><?=Wallet::COIN_NAME?></span>
         </div>
 
         <br/>

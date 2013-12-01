@@ -9,6 +9,8 @@
 class Wallet extends Data{
     public $user;
 
+    const COIN_NAME = 'Group Coins';
+
     public $userId,$type,$money,$frozenMoney,$timestamp;
 
     public function __construct(){
