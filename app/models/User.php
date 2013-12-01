@@ -40,9 +40,9 @@ class User extends Data{
             );
 
     public static $defaults = array(
-        'status'=>1,
+        'status'=>self::STATUS_ACTIVE,
         'credits'=>1,
-        'roleId'=>2,
+        'roleId'=>Role::AUTHENTICATED_ID,
         'picture'=>'public/images/default_pic.png'
     );
 
