@@ -10,7 +10,7 @@ if(isset($editForm))
     $form = $editForm;
 
 echo RFormHelper::openForm('group/edit/'.$groupId,array('id'=>'edit-group-form',
-    'enctype'=>'multipart/form-data','class'=>'form-signin build-group-form'));
+    'enctype'=>'multipart/form-data','class'=>'build-group-form'));
 
 echo RFormHelper::label('Group name','group-name',array());
 echo RFormHelper::input(
@@ -52,6 +52,18 @@ $this->module('ckeditor',
     ));
 
 echo '<br/>';
+
+if(isset($oldGroup)){
+    $picture = $oldGroup->picture?$oldGroup->picture:Group::$defaults['picture'];
+    echo RHtmlHelper::showImage(
+        RImageHelper::styleSrc($picture, Group::getPicOptions()),
+        $oldGroup->name,
+        array('class'=>'img-thumbnail','width'=>'120px')
+    );
+}
+
+echo '<br/>';
+
 echo RFormHelper::label('New group picture','group_picture');
 echo RFormHelper::input(array('type'=>'file','name'=>'group_picture','accept'=>'image/gif, image/jpeg,image/png'));
 

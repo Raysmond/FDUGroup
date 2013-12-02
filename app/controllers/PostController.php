@@ -10,7 +10,11 @@ class PostController extends BaseController {
     public function actionList($groupId = null) {
         $group = new Group();
         $group->id = $groupId;
-        $group->load();
+
+        if(!is_numeric($groupId) || $group->load()===null){
+            $this->page404();
+            return;
+        }
 
         $topic = new Topic();
         $topic->groupId = $groupId;
@@ -45,7 +49,6 @@ class PostController extends BaseController {
                 $topic->userId = Rays::app()->getLoginUser()->id;
                 $topic->title = $form["title"];
                 $topic->content = RHtmlHelper::encode($form['post-content']);
-                date_default_timezone_set(Rays::app()->getTimeZone());
                 $topic->createdTime = date('Y-m-d H:i:s');
                 $topic->lastCommentTime = date('Y-m-d H:i:s');
                 $topic->commentCount = 0;
@@ -156,7 +159,6 @@ class PostController extends BaseController {
             $topic->load($topicId);
 
             $topic->commentCount++;
-            date_default_timezone_set(Rays::app()->getTimeZone());
             $topic->lastCommentTime = date('Y-m-d H:i:s');
             $topic->update();
 
