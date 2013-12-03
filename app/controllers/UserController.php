@@ -22,7 +22,7 @@ class UserController extends BaseController
         if ($this->getHttpRequest()->isPostRequest()) {
             $user = new User();
             $login = $user->login($_POST);
-            if ($login == true) {
+            if ($login === true) {
                 $this->getSession()->set("user", $user->id);
                 $this->redirectAction('user', 'home');
             } else {
