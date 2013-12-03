@@ -7,19 +7,22 @@
  */
 ?>
 <div class="row" style="margin-bottom: 10px;">
-    <?php
-    $form = isset($applyForm)?$applyForm:array();
-    if(isset($validation_errors)){
-        RHtmlHelper::showValidationErrors($validation_errors);
-    }
-    ?>
-    &nbsp;&nbsp;&nbsp;
-    <?=RHtmlHelper::linkAction('ads','Back to ads','view',null,array(
-        'class'=>'btn btn-xs btn-info'
-    ))?>
+
 </div>
 <div class="panel panel-default">
-    <div class="panel-heading"><b><?php if (isset($edit)) echo 'Edit Advertisement'; else echo 'Ads application'; ?></b></div>
+    <div class="panel-heading"><b>
+        <?php if (isset($edit)) echo 'Edit Advertisement'; else echo 'Ads application'; ?>
+        <?php
+        $form = isset($applyForm)?$applyForm:array();
+        if(isset($validation_errors)){
+            RHtmlHelper::showValidationErrors($validation_errors);
+        }
+        ?>
+        &nbsp;&nbsp;&nbsp;
+        <?=RHtmlHelper::linkAction('ads','Back to ads','view',null,array(
+            'class'=>'btn btn-xs btn-info'
+        ))?>
+    </b></div>
     <div class="panel-body">
         <?=RFormHelper::openForm('ads/'.(isset($edit)?'edit/'.$ad->id.'/'.$type:'apply'),array('id'=>'applyAdsForm'))?>
         <?=RFormHelper::label('Ads title','ads-title')?>
