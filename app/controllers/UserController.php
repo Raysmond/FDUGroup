@@ -12,9 +12,6 @@ class UserController extends BaseController
         Role::AUTHENTICATED => array('edit', 'logout','home','profile','myPosts', 'applyVIP', 'listFriend'),
         Role::ADMINISTRATOR=>array('admin','processVIP'));
 
-    /**
-     * Login action
-     */
     public function actionLogin()
     {
         $data = array();
@@ -43,9 +40,6 @@ class UserController extends BaseController
         $this->render('login', $data, false);
     }
 
-    /**
-     * Logout action
-     */
     public function actionLogout()
     {
         $this->getSession()->deleteSession("user");
@@ -57,7 +51,7 @@ class UserController extends BaseController
     public function actionView($userId, $part = 'joins')
     {
         $user = new User();
-        if ($user->load($userId)==null) {
+        if (!is_numeric($userId) || $user->load($userId) === null) {
             $this->page404();
             return;
         }
@@ -129,8 +123,7 @@ class UserController extends BaseController
             return;
         }
         $this->setHeaderTitle($user->name);
-        $data = array('user'=>$user);
-        $this->render('profile',$data,false);
+        $this->render('profile',array('user'=>$user),false);
     }
 
 
@@ -247,28 +240,29 @@ class UserController extends BaseController
         $this->render('edit', $data, false);
     }
 
-    public function actionMyPosts(){
+    public function actionMyPosts()
+    {
         $data = array();
 
-        $curPage = $this->getHttpRequest()->getQuery('page',1);
-        $pageSize = (isset($_GET['pagesize'])&&is_numeric($_GET['pagesize']))?$_GET['pagesize'] : 5;
+        $curPage = $this->getHttpRequest()->getQuery('page', 1);
+        $pageSize = (isset($_GET['pagesize']) && is_numeric($_GET['pagesize'])) ? $_GET['pagesize'] : 5;
 
         $userId = Rays::app()->getLoginUser()->id;
         $posts = new Topic();
         $posts->userId = $userId;
         $count = $posts->count();
-        $posts = $posts->find(($curPage-1)*$pageSize,$pageSize,['key'=>$posts->columns['id'],'order'=>'desc']);
+        $posts = $posts->find(($curPage - 1) * $pageSize, $pageSize, ['key' => $posts->columns['id'], 'order' => 'desc']);
         $data['posts'] = $posts;
         $data['count'] = $count;
 
         $url = RHtmlHelper::siteUrl('user/myposts');
-        $pager = new RPagerHelper('page',$count,$pageSize,$url,$curPage);
+        $pager = new RPagerHelper('page', $count, $pageSize, $url, $curPage);
         $data['pager'] = $pager->showPager();
         $data['enabledDelete'] = true;
 
         $this->layout = 'user';
         $this->setHeaderTitle("My posts");
-        $this->render('myposts',$data,false);
+        $this->render('myposts', $data, false);
     }
 
     public function actionAdmin()
