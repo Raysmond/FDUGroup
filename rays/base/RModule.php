@@ -38,7 +38,8 @@ class RModule
     public static function getModuleBasePath()
     {
         if (static::$moduleBaseUri === null) {
-            $pos = strpos(Rays::app()->modulePath, Rays::app()->getBasePath()) + strlen(Rays::app()->getBasePath()) + 1;
+            $basePath = substr(Rays::app()->getBasePath(), 1);
+            $pos = strpos(Rays::app()->modulePath, $basePath) + strlen($basePath) + 1;
             static::$moduleBaseUri = Rays::app()->getBaseUrl() . '/' . substr(Rays::app()->modulePath, $pos);
         }
         return static::$moduleBaseUri;

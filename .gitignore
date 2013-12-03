@@ -4,3 +4,5 @@
 cache
 files/userfiles/*
 files/images/styles/*
+public/images/styles
+public/userfiles

@@ -11,9 +11,15 @@
         echo RHtmlHelper::linkAction('group', '+ Join the group', 'join', $group->id ."?returnurl=".Rays::app()->getHttpRequest()->getRequestUri(), array('class' => 'btn btn-xs btn-info'));
     else if ($isManager){
         echo RHtmlHelper::linkAction('group', 'Manager: Edit group', 'edit', $group->id, array('class' => 'btn btn-xs btn-info'));
-        echo '&nbsp;&nbsp;';echo RHtmlHelper::linkAction('group', 'Manager: Delete group', 'delete', $group->id, array('class' => 'btn btn-xs btn-danger', 'onclick' => "return confirm('Are you sure to delete this group? (All related data will be deleted at the same time)')"));
-        echo '&nbsp;&nbsp;';echo RHtmlHelper::linkAction('group','Invite friends', 'invite', $group->id,array('class' => 'btn btn-xs btn-info'));
-    }
+        echo '&nbsp;&nbsp;';
+
+        echo RHtmlHelper::linkAction('group','Invite friends', 'invite', $group->id,array('class' => 'btn btn-xs btn-info'));
+
+
+        echo '&nbsp;&nbsp;';
+        echo RHtmlHelper::linkAction('group', 'Manager: Delete group', 'delete', $group->id,
+            array('class' => 'btn btn-xs btn-danger', 'onclick' => "return confirm('Are you sure to delete this group? (All related data will be deleted at the same time)')"));
+}
     else echo RHtmlHelper::linkAction('group', '- Exit group', 'exit', $group->id, array('class' => 'btn btn-xs btn-info'));
     ?>
 </h2>

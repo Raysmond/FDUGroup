@@ -41,20 +41,31 @@ class AdsController extends BaseController {
             );
             $validation = new RFormValidationHelper($rules);
             if($validation->run()){
-                $ads = new Ads();
-                $result = $ads->apply(
-                    Rays::app()->getLoginUser()->id,
-                    $_POST['ads-title'],
-                    RHtmlHelper::encode($_POST['ads-content']),
-                    $_POST['paid-price']
-                );
-                if($result==true){
-                    $this->flash('message','Your ads was applied successfully.');
-                }
-                else{
+                //Money cannot exceed wallet remaining
+                $money = Rays::app()->getLoginUser()->getWallet()->money;
+                if ($money<(int)$_POST['paid-price']) {
+                    /* TODO 这个要整合到Validation里面去 to Raysmond */
+                    $this->flash('error','You cannot overdraft your '.Wallet::COIN_NAME.' to publish advertisements.');
                     $data['applyForm'] = $_POST;
-                    $this->flash('message','Apply failed.');
+                } else {
+                    Rays::app()->getLoginUser()->getWallet()->cutMoney((int)$_POST['paid-price']);      //Pay the price
+                    $ads = new Ads();
+                    $result = $ads->apply(
+                        Rays::app()->getLoginUser()->id,
+                        $_POST['ads-title'],
+                        RHtmlHelper::encode($_POST['ads-content']),
+                        $_POST['paid-price']
+                    );
+                    if($result==true){
+                        $this->flash('message','Your ads was applied successfully.');
+                    }
+                    else{
+                        $data['applyForm'] = $_POST;
+                        $this->flash('message','Apply failed.');
+                    }
                 }
+
+
             }
             else{
                 $data['applyForm'] = $_POST;
@@ -209,8 +220,15 @@ class AdsController extends BaseController {
     public function actionHitAd() {
         if ($this->getHttpRequest()->getIsAjaxRequest()) {
             $adId = (int)$_POST['adId'];
-            if ((new Ads())->load($adId) !== null) {
-                (new Counter())->increaseCounter($adId, Ads::ENTITY_ID);
+            $ad = (new Ads())->load($adId);
+            if ($ad !== null) {
+                (new Counter())->increaseCounter($adId, Ads::ENTITY_ID);        //Ad访问计数器
+                /** TODO 刷广告访问监测机制 */
+                $user = (new User())->load($ad->userId);
+                if ($user !== null) {
+                    $wallet = $user->getWallet();                               //访问一次挣一元钱
+                    $wallet->addMoney(1);
+                }
             }
         }
     }
