@@ -50,6 +50,40 @@ class RatingPlus
     }
 
     /**
+     * Get user like topics
+     * @param $userId user id
+     * @return array|Topic topic array
+     */
+    public static function getUserPlusTopics($userId)
+    {
+        $plus = new Rating();
+        $plus->entityType = Topic::$entityType;
+        $plus->userId = $userId;
+        $plus->valueType = self::VALUE_TYPE;
+        $plus->value = self::VALUE;
+        $plus->tag = self::TAG;
+
+        $topicList = $plus->find();
+        $topicIdList = array_map(function($value) {
+            return $value->entityId;
+        }, $topicList);
+
+        $likeTopics = new Topic();
+        if(count($topicList)>0){
+            $likeTopics = $likeTopics->find(0,0,
+                ['key' => $likeTopics->columns['id'], 'order' => 'desc'],
+                null,
+                ['id' => $topicIdList]
+            );
+        }
+        else{
+            $likeTopics = array();
+        }
+
+        return $likeTopics;
+    }
+
+    /**
      * Plus counter for every plus rating
      */
     private function updatePlusCounter(){

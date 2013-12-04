@@ -70,4 +70,24 @@ class BaseController extends RController
             }
         }
     }
+
+    public function getPage($key, $default = 1)
+    {
+        $page = $this->getHttpRequest()->getParam($key, $default);
+        if (!is_numeric($page) || $page < 1) {
+            $page = 1;
+        }
+        return $page;
+    }
+
+    const DEFAULT_PAGE_SIZE = 10;
+
+    public function getPageSize($key, $default = DEFAULT_PAGE_SIZE)
+    {
+        $size = $this->getHttpRequest()->getParam($key, $default);
+        if (!is_numeric($size) || $size < 1) {
+            $size = DEFAULT_PAGE_SIZE;
+        }
+        return $size;
+    }
 }

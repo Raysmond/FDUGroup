@@ -47,7 +47,6 @@ class UserController extends BaseController
         $this->redirect(Rays::app()->getBaseUrl());
     }
 
-
     public function actionView($userId, $part = 'joins')
     {
         $user = new User();
@@ -55,70 +54,43 @@ class UserController extends BaseController
             $this->page404();
             return;
         }
-        $canEdit = false;
-        $canAdd = false;
-        $canCancel = false;
-        $currentUser = Rays::app()->getLoginUser();
-        if ($currentUser != null) {
+        $data = array('user' => $user, 'part' => $part);
+        if (Rays::app()->isUserLogin()) {
             $friend = new Friend();
-            $friend->uid = $currentUser->id;
+            $friend->uid = Rays::app()->getLoginUser()->id;
             $friend->fid = $user->id;
-            $canAdd = ($friend->uid !== $friend->fid && count($friend->find()) == 0);
-            $canCancel = ($friend->uid !== $friend->fid && !$canAdd);
-            $canEdit = ($currentUser->id == $user->id);
+            $data['canAdd'] = ($friend->uid !== $friend->fid && count($friend->find()) == 0);
+            $data['canCancel'] = ($friend->uid !== $friend->fid && !$data['canAdd']);
         }
 
-        $userGroup = [];
-        $postTopics = [];
-        $likeTopics = [];
         switch ($part) {
-            case 'joins': $userGroup = (new GroupUser())->userGroups($userId);break;
-            case 'posts': $postTopics = (new Topic())->getUserTopics($userId);break;
-            case 'likes': $topicList = new Rating();
-                          $topicList->entityType = Topic::$entityType;
-                          $topicList->userId = $userId;
-                          $topicList = $topicList->find();
-                          $topicIdList = array_map(function($value) {
-                              return $value->entityId;
-                          }, $topicList);
-                          $likeTopics = new Topic();
-                          if(count($topicList)>0){
-                              $likeTopics = $likeTopics->find(0,0,
-                                  ['key' => $likeTopics->columns['id'], 'order' => 'desc'],
-                                  null,
-                                  ['id' => $topicIdList]
-                              );
-                          }
-                          else{
-                              $likeTopics = array();
-                          }
-
+            case 'joins':
+                $data['userGroup'] = GroupUser::userGroups($userId);
                 break;
-            case 'profile': break;
-            default: return;
+            case 'posts':
+                $data['postTopics'] = Topic::getUserTopics($userId);
+                break;
+            case 'likes':
+                $data['likeTopics'] = RatingPlus::getUserPlusTopics($userId);
+                break;
+            case 'profile':
+                break;
+            default:
+                return;
         }
 
         $this->setHeaderTitle($user->name);
-        $this->render('view',
-            array('user' => $user,
-                'canEdit' => $canEdit,
-                'canAdd' => $canAdd,
-                'canCancel' => $canCancel,
-                'part' => $part,
-                'userGroup' => $userGroup,
-                'postTopics' => $postTopics,
-                'likeTopics' => $likeTopics,
-            ), false);
+        $this->render('view', $data, false);
 
         // Need to be complete because the codes below will increase the counter every time this page is viewed
         $counter = new Counter();
-        $counter->increaseCounter($user->id,User::ENTITY_TYPE);
+        $counter->increaseCounter($user->id, User::ENTITY_TYPE);
     }
 
     public function actionProfile($action=null){
         $this->layout = 'user';
         $user = Rays::app()->getLoginUser();
-        if($action=='edit'){
+        if($action==='edit'){
             $this->actionEdit();
             return;
         }
@@ -244,8 +216,8 @@ class UserController extends BaseController
     {
         $data = array();
 
-        $curPage = $this->getHttpRequest()->getQuery('page', 1);
-        $pageSize = (isset($_GET['pagesize']) && is_numeric($_GET['pagesize'])) ? $_GET['pagesize'] : 5;
+        $curPage = $this->getPage("page");
+        $pageSize = $this->getPageSize("pagesize",10);
 
         $userId = Rays::app()->getLoginUser()->id;
         $posts = new Topic();
@@ -308,13 +280,13 @@ class UserController extends BaseController
         $count = $user->count($like);
         $data['count'] = $count;
 
-        $curPage = $this->getHttpRequest()->getQuery('page', 1);
-        $pageSize = (isset($_GET['pagesize']) && is_numeric($_GET['pagesize'])) ? $_GET['pagesize'] : 10;
+        $curPage = $this->getPage("page");
+        $pageSize = $this->getPageSize("pagesize",10);
         $users = new User();
         $users = $users->find(($curPage - 1) * $pageSize, $pageSize, array('key' => $users->columns["id"], "order" => 'desc'), $like);
         $data['users'] = $users;
 
-        $url = RHtmlHelper::siteUrl('group/admin');
+        $url = RHtmlHelper::siteUrl('user/admin');
         if ($filterStr != null) $url .= '?search=' . urlencode(trim($filterStr));
 
         $pager = new RPagerHelper('page', $count, $pageSize, $url, $curPage);
@@ -470,9 +442,8 @@ class UserController extends BaseController
 
     public function actionFind() {
         $this->layout = 'user';
-        $page = $this->getHttpRequest()->getQuery('page', 1);
-        if (!is_numeric($page) || $page < 1) $page = 1;
-        $pageSize = $this->getHttpRequest()->getQuery('pageSize', 24);
+        $page = $this->getPage("page");
+        $pageSize = $this->getPageSize("pagesize",24);
 
         $searchStr = '';
         if ($this->getHttpRequest()->isPostRequest()) $searchStr = ($_POST['searchstr']);

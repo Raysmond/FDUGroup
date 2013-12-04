@@ -19,10 +19,8 @@ class GroupController extends BaseController
      */
     public function actionFind()
     {
-        $page = $this->getHttpRequest()->getParam('page',1);
-        if($page<=0) $page = 1;
-
-        $pageSize = $this->getHttpRequest()->getParam('pagesize',12);
+        $page = $this->getPage("page");
+        $pageSize = $this->getPageSize("pagesize",5);
 
         $searchStr = '';
         if ($this->getHttpRequest()->isPostRequest()) $searchStr = ($_POST['searchstr']);
@@ -40,24 +38,21 @@ class GroupController extends BaseController
             $group = new Group();
         }
 
-        $groups = $group->find(0, 0, array('key'=>'gro_id',"order"=>"desc"), $like);
-        $groupSum = count($groups);
-
         $groups = $group->find($pageSize * ($page - 1), $pageSize, array('key'=>'gro_id',"order"=>"desc"), $like);
 
         $data = array('group' => $groups);
         if ($searchStr != '') $data['searchstr'] = $searchStr;
 
-        $url = '';
-        if($searchStr!='')
-            $url = RHtmlHelper::siteUrl('group/find?search='.urlencode($searchStr));
-        else
-            $url = RHtmlHelper::siteUrl('group/find');
-
-//        if (count($groups)) {
-//            $pager = new RPagerHelper('page',$groupSum,$pageSize, $url,$page);
-//            $data['pager'] = $pager->showPager();
-//        }
+//        $url = '';
+//        if($searchStr!='')
+//            $url = RHtmlHelper::siteUrl('group/find?search='.urlencode($searchStr));
+//        else
+//            $url = RHtmlHelper::siteUrl('group/find');
+//
+////        if (count($groups)) {
+////            $pager = new RPagerHelper('page',$groupSum,$pageSize, $url,$page);
+////            $data['pager'] = $pager->showPager();
+////        }
 
         if($this->getHttpRequest()->getIsAjaxRequest()){
             $this->renderPartial("_groups_list", array("groups"=>$groups),false);
@@ -76,12 +71,10 @@ class GroupController extends BaseController
      */
     public function actionView($userId = null)
     {
+        $this->layout = 'user';
         $this->addCss('/public/css/group.css');
         $this->addJs('/public/js/masonry.pkgd.min.js');
-        $this->layout = 'user';
-        $userGroup = new GroupUser();
-        if($userId == null) $userId = Rays::app()->getLoginUser()->id;
-        $userGroup = $userGroup->userGroups($userId);
+        $userGroup = GroupUser::userGroups(Rays::app()->getLoginUser()->id);
         $this->setHeaderTitle("My Groups");
         $this->render("view", ['groups' => $userGroup, 'exitGroup' => true], false);
     }
@@ -92,14 +85,8 @@ class GroupController extends BaseController
      */
     public function actionDetail($groupId)
     {
-        if(!is_numeric($groupId)){
-            $this->page404();
-            return;
-        }
-
         $group = new Group();
-        $result = $group->load($groupId);
-        if($result==null){
+        if(!is_numeric($groupId) || $group->load($groupId)===null){
             $this->page404();
             return;
         }
@@ -125,17 +112,9 @@ class GroupController extends BaseController
         $data['hasJoined'] = false;
         $data['isManager'] = false;
         if(Rays::app()->isUserLogin()){
-            $userId = Rays::app()->getLoginUser()->id;
-            // whether the user has joined the group
-            $g_u = new GroupUser();
-            $g_u->userId = $userId;
-            $g_u->groupId = $group->id;
-            if(count($g_u->find())>0)
-                $data['hasJoined'] = true;
-
-            // whether the login user is the manager of the group
-            if($group->creator==$userId)
-                $data['isManager'] = true;
+            $uid = Rays::app()->getLoginUser()->id;
+            $data['hasJoined'] = GroupUser()->isUserInGroup($uid,$group->id);
+            $data['isManager'] = $group->creator==$uid;
         }
 
         $this->setHeaderTitle($group->name);
@@ -195,7 +174,10 @@ class GroupController extends BaseController
         $this->setHeaderTitle("Edit my group");
 
         $oldGroup = new Group();
-        $oldGroup->load($groupId);
+        if(!is_numeric($groupId) || $oldGroup->load($groupId)===null){
+            $this->page404();
+            return;
+        }
 
         $category = new Category();
         $categories = $category->find();
@@ -497,16 +479,16 @@ class GroupController extends BaseController
         $count = $rows->count($like);
         $data['count'] = $count;
 
-        $curPage = $this->getHttpRequest()->getQuery('page',1);
-        $pageSize = (isset($_GET['pagesize'])&&is_numeric($_GET['pagesize']))?$_GET['pagesize'] : 4;
+        $curPage = $this->getPage("page");
+        $size = $this->getPageSize("pagesize",5);
         $groups = new Group();
-        $data['groups'] = $groups->findAll(($curPage-1)*$pageSize,$pageSize,array('key'=>'id',"order"=>'desc'),array(),$like);;
+        $data['groups'] = $groups->findAll(($curPage-1)*$size,$size,array('key'=>'id',"order"=>'desc'),array(),$like);;
 
         $url = RHtmlHelper::siteUrl('group/admin');
         if($filterStr!=null) $url .= '?search='.urlencode(trim($filterStr));
 
         // pager
-        $pager = new RPagerHelper('page',$count,$pageSize,$url,$curPage);
+        $pager = new RPagerHelper('page',$count,$size,$url,$curPage);
         $data['pager'] = $pager->showPager();
 
         $this->render('admin',$data,false);

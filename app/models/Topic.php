@@ -64,10 +64,10 @@ class Topic extends Data
         return $result;
     }
 
-    public function getUserTopics($uid, $start = 0, $limit = 0) {
+    public static function getUserTopics($uid, $start = 0, $limit = 0) {
         $topics = new Topic();
         $topics->userId = $uid;
-        return $topics->find($start, $limit, ['key' => $this->columns['id'], 'order' => 'desc']);
+        return $topics->find($start, $limit, ['key' => $topics->columns['id'], 'order' => 'desc']);
     }
 
     public function getUserFriendsTopics($uid,$limit=0,$endTime=null){
