@@ -24,7 +24,7 @@ $baseUrl = Rays::app()->getBaseUrl();
     <script type="text/javascript" src="<?php echo $baseUrl; ?>/public/js/main.js"></script>
 </head>
 
-<body>
+<body class="user-home">
 <?php
     echo $this->module('main_nav',array('id'=>'main_nav','name'=>'Main navigation'));
 /*
@@ -42,7 +42,7 @@ else{
 
 ?>
 
-<div class="container">
+<div id="main-wrapper" class="container">
 
     <div class="row row-offcanvas row-offcanvas-right">
         <div class="col-xs-12 col-sm-9">

@@ -6,3 +6,22 @@
 .find-user .search-bar {
     margin-bottom: 10px;
 }
+
+/* User home page navigation */
+.user-home-navigation{
+
+}
+
+.user-home-navigation .nav-pills{
+
+}
+.user-home-navigation .nav-pills>li.active>a,
+.user-home-navigation .nav-pills>li.active>a:hover,
+.user-home-navigation .nav-pills>li.active>a:focus {
+    color: #f04d4d;
+    background-color: #e5e5e5;
+}
+
+.user-home-navigation .nav-pills>li .badge{
+    float: right;
+}
