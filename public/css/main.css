@@ -26,12 +26,12 @@ footer {
     }
 
     .row-offcanvas-right
-  .sidebar-offcanvas {
+    .sidebar-offcanvas {
         right: -50%; /* 6 columns */
     }
 
     .row-offcanvas-left
-  .sidebar-offcanvas {
+    .sidebar-offcanvas {
         left: -50%; /* 6 columns */
     }
 
@@ -186,7 +186,7 @@ blockquote
 }
 
 .recommend-groups .recommend-group-item{
-   text-align: center;
+    text-align: center;
 }
 .recommend-groups .recommend-group-item img{
     width: 140px;
