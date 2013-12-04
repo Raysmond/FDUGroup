@@ -1,7 +1,7 @@
 *.bak
 .idea
 .svn
-cache
+cache_*.html
 files/userfiles/*
 files/images/styles/*
 public/images/styles
