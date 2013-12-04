@@ -67,6 +67,7 @@ class GroupController extends BaseController
      */
     public function actionView($userId = null)
     {
+        $this->layout = 'user';
         $userGroup = new GroupUser();
         if($userId == null) $userId = Rays::app()->getLoginUser()->id;
         $userGroup = $userGroup->userGroups($userId);
@@ -135,6 +136,7 @@ class GroupController extends BaseController
      */
     public function actionBuild()
     {
+        $this->layout = 'user';
         $this->setHeaderTitle("Build my group");
         $category = new Category();
         $categories = $category->find();
