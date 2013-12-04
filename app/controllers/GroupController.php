@@ -33,9 +33,10 @@ class GroupController extends BaseController
         $like = array();
         if (isset($group->name) && $group->name != '') {
             $names = explode(' ', $group->name);
-            foreach ($names as $val) {
-                array_push($like, array('key' => 'name', 'value' => $val));
-            }
+            foreach ($names as $val)
+                if ($val = trim($val)){
+                    array_push($like, array('key' => 'name', 'value' => $val));
+                }
             $group = new Group();
         }
 
@@ -52,9 +53,10 @@ class GroupController extends BaseController
             $url = RHtmlHelper::siteUrl('group/find?search='.urlencode($searchStr));
         else
             $url = RHtmlHelper::siteUrl('group/find');
-
-        $pager = new RPagerHelper('page',$groupSum,$pageSize, $url,$page);
-        $data['pager'] = $pager->showPager();
+        if (count($groups)) {
+            $pager = new RPagerHelper('page',$groupSum,$pageSize, $url,$page);
+            $data['pager'] = $pager->showPager();
+        }
 
         $this->setHeaderTitle("Find Group");
         $this->render("find", $data, false);

@@ -477,11 +477,12 @@ class UserController extends BaseController
         $searchStr = '';
         if ($this->getHttpRequest()->isPostRequest()) $searchStr = ($_POST['searchstr']);
         else if(isset($_GET['search'])) $searchStr = $_GET['search'];
-        $vector = explode(' ', $searchStr);
+        $vector = explode(' ', trim($searchStr));
         $like = [];
-        foreach ($vector as $value) {
-            $like[] = ['key' => 'name', 'value' => $value];
-        }
+        foreach ($vector as $value)
+            if ($value = trim($value)){
+                $like[] = ['key' => 'name', 'value' => $value];
+            }
         $user = new User();
         $user->status = User::STATUS_ACTIVE;
         $userNumber = $user->count($like);
@@ -495,8 +496,10 @@ class UserController extends BaseController
         else
             $url = RHtmlHelper::siteUrl('user/find');
 
-        $pager = new RPagerHelper('page',$userNumber,$pageSize, $url,$page);
-        $data['pager'] = $pager->showPager();
+        if (count($user)) {
+            $pager = new RPagerHelper('page',$userNumber,$pageSize, $url,$page);
+            $data['pager'] = $pager->showPager();
+        }
 
         $this->setHeaderTitle("Find User");
         $this->render("find", $data, false);

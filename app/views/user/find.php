@@ -33,7 +33,7 @@ if ($lastSearchStr != '')
         <div class="user-list">
             <?php
             if(empty($users)){
-                echo '<div>&nbsp;&nbsp;No user is found!</div>';
+                echo '<div>&nbsp;&nbsp;No users found!</div>';
             }
             foreach ($users as $user) {
                 echo '<div class="user-item col-lg-2">';
@@ -49,7 +49,7 @@ if ($lastSearchStr != '')
         </div>
         <div class="clearfix"></div>
         <div>
-            <?= $pager ?>
+            <?=(isset($pager)?$pager:"")?>
         </div>
     </div>
 </div>
