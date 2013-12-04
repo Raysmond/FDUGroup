@@ -6,11 +6,7 @@ body {
     background: #eee;
 }
 
-body.user-home{
-
-}
-
-body.user-home #main-wrapper{
+body #main-wrapper{
     background: #fff;
     padding-top: 20px;
 }

@@ -331,7 +331,7 @@ class UserController extends BaseController
         $this->layout = 'user';
         $user = Rays::app()->getLoginUser();
         $data = array('user' => $user);
-        $defaultSize = 5;
+        $defaultSize = 10;
 
         // ajax request
         // load more posts

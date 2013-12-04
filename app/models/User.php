@@ -89,10 +89,10 @@ class User extends Data
     {
         switch ($genderId) {
             case 1:
-                return "Boy";
+                return "Male";
                 break;
             case 2:
-                return "Girl";
+                return "Female";
                 break;
             default:
                 return "Unknown";

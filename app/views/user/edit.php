@@ -60,11 +60,10 @@
 
         <select name="gender" class="form-control">
             <option value="0" <?=($user->gender==0?"selected":"") ?>>Unknown</option>
-            <option value="1" <?=($user->gender==1?"selected":"") ?>>Boy</option>
-            <option value="2" <?=($user->gender==2?"selected":"") ?>>Girl</option>
+            <option value="1" <?=($user->gender==1?"selected":"") ?>>Male</option>
+            <option value="2" <?=($user->gender==2?"selected":"") ?>>Female</option>
         </select>
 
-        <br />
         <?php
 
         echo RFormHelper::label("Region", 'region');
