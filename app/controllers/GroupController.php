@@ -77,6 +77,7 @@ class GroupController extends BaseController
     public function actionView($userId = null)
     {
         $this->addCss('/public/css/group.css');
+        $this->addJs('/public/js/masonry.pkgd.min.js');
         $this->layout = 'user';
         $userGroup = new GroupUser();
         if($userId == null) $userId = Rays::app()->getLoginUser()->id;
