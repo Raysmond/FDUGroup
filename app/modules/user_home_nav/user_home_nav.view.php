@@ -25,6 +25,12 @@
             </a>
         </li>
 
+        <li <?= ($currentUrl == 'friend/myfriend') ? 'class="active"' : "" ?>>
+            <a href="<?=RHtmlHelper::siteUrl('friend/myfriend')?>">
+                <span class="glyphicon glyphicon-user"></span> &nbsp; My friends
+            </a>
+        </li>
+
         <?php
         $isMessageUrl = Rays::app()->getHttpRequest()->urlMatch('message/*', $currentUrl);
         if (($count = $user->countUnreadMsgs()) == 0) {
