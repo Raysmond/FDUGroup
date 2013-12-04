@@ -25,8 +25,6 @@ echo '<div>';
 </div>
 
 <?php
-
-
 echo '<div class="clearfix" style="margin-bottom: 10px;"></div>';
 
 echo '<div class="row find-groups">';
@@ -37,7 +35,7 @@ if (!count($groups)) {
 ?>
 <div id="waterfall-groups" class="waterfall">
     <?php
-    $this->renderPartial("_groups_list",array('groups'=>$groups),false);
+        $this->renderPartial("_groups_list",array('groups'=>$groups),false);
     ?>
 </div>
 </div>
