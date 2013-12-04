@@ -48,12 +48,10 @@
 
                 <!-- Actions for the post -->
                 <div>
+                    <a href="<?=RHtmlHelper::siteUrl('post/view/'.$topic['top_id']).'#reply'?>">
+                        <span class="glyphicon glyphicon-comment"></span> <?=$topic['top_comment_count']?>
+                    </a>
                     <?php
-                    echo RHtmlHelper::linkAction(
-                        'post',
-                        'Reply (' . $topic['top_comment_count'] . ')',
-                        'view', $topic['top_id'] . '#reply',
-                        array('class' => 'btn btn-xs btn-info'));
 
                     if(isset($enabledDelete)&&$enabledDelete){
                         if($currentUserId!==0&&$topic['u_id']==$currentUserId){
@@ -71,8 +69,7 @@
                             'id' => 'rating_plus',
                             'entityType' => Topic::$entityType,
                             'entityId' => $topic['top_id'],
-                            'count' => $topic['plusCount'],
-                            'buttonClass' => 'btn btn-info btn-xs'
+                            'count' => $topic['plusCount']
                         ));
                     ?>
                 </div>

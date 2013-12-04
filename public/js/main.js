@@ -4,7 +4,6 @@ $(document).ready(function() {
         $('.row-offcanvas').toggleClass('active');
     });
     $('#account-dropdown').append('<b class="caret"></b>');
-    $('#');
 });
 
 var checkAllFlag = false;

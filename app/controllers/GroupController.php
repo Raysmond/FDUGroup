@@ -19,10 +19,10 @@ class GroupController extends BaseController
      */
     public function actionFind()
     {
-        $page = $this->getHttpRequest()->getQuery('page',1);
+        $page = $this->getHttpRequest()->getParam('page',1);
         if($page<=0) $page = 1;
 
-        $pageSize = $this->getHttpRequest()->getQuery('pagesize',12);
+        $pageSize = $this->getHttpRequest()->getParam('pagesize',12);
 
         $searchStr = '';
         if ($this->getHttpRequest()->isPostRequest()) $searchStr = ($_POST['searchstr']);
@@ -53,12 +53,21 @@ class GroupController extends BaseController
             $url = RHtmlHelper::siteUrl('group/find?search='.urlencode($searchStr));
         else
             $url = RHtmlHelper::siteUrl('group/find');
-        if (count($groups)) {
-            $pager = new RPagerHelper('page',$groupSum,$pageSize, $url,$page);
-            $data['pager'] = $pager->showPager();
+
+//        if (count($groups)) {
+//            $pager = new RPagerHelper('page',$groupSum,$pageSize, $url,$page);
+//            $data['pager'] = $pager->showPager();
+//        }
+
+        if($this->getHttpRequest()->getIsAjaxRequest()){
+            $this->renderPartial("_groups_list", array("groups"=>$groups),false);
+            exit;
         }
 
         $this->setHeaderTitle("Find Group");
+
+        $this->addJs("/public/js/masonry.pkgd.min.js");
+        $this->addCss("/public/css/group.css");
         $this->render("find", $data, false);
     }
 
