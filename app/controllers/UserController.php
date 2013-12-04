@@ -227,7 +227,7 @@ class UserController extends BaseController
                         RImageHelper::updateStyle($user->picture, User::getPicOptions());
                     }
                 }
-                $this->redirectAction('user', 'view', $user->id);
+                $this->redirect($this->getHttpRequest()->getUrlReferrer());
                 return;
             } else {
                 $errors = $validation->getErrors();
