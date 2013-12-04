@@ -39,6 +39,9 @@ echo '<div class="clearfix" style="margin-bottom: 10px;"></div>';
 
 echo '<div class="row">';
 $groups = $data['group'];
+if (!count($groups)) {
+    echo '<div>&nbsp;&nbsp;No groups found!</div>';
+}
 foreach ($groups as $group) {
     echo '<div class="col-6 col-sm-6 col-lg-4" style="height: 190px;">';
     echo "<div class='panel panel-default' style='height: 170px;'>";
