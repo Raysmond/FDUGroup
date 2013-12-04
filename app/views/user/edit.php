@@ -55,6 +55,18 @@
                 'class' => 'form-control',
                 'placeholder' => "Password confirm"));
 
+        echo RFormHelper::label('Gender','gender');
+        ?>
+
+        <select name="gender" class="form-control">
+            <option value="0" <?=($user->gender==0?"selected":"") ?>>Unknown</option>
+            <option value="1" <?=($user->gender==1?"selected":"") ?>>Boy</option>
+            <option value="2" <?=($user->gender==2?"selected":"") ?>>Girl</option>
+        </select>
+
+        <br />
+        <?php
+
         echo RFormHelper::label("Region", 'region');
         echo RFormHelper::input(
             array('id' => 'region',

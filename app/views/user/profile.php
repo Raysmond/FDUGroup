@@ -4,11 +4,14 @@
         <div class="col-lg-8">
             <ul class="list-group">
             <?php
-            $skip = array('id', 'status', 'picture', 'privacy', 'permission', 'password', 'credits', 'name');
+            $skip = array('id', 'status', 'picture', 'privacy', 'password', 'credits', 'name');
             foreach ($user->columns as $objCol => $dbCol) {
                 if (in_array($objCol, $skip)) continue;
                 echo '<li class="list-group-item">';
                 switch ($objCol) {
+                    case "gender":
+                        echo "Gender: " . User::getGenderName($user->gender);
+                        break;
                     case "registerTime":
                         echo "Register time: " . $user->registerTime . "<br/>";
                         break;

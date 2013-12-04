@@ -55,7 +55,7 @@
             <li <?php if ($part == 'profile') echo 'class="active"';?>><?=RHtmlHelper::linkAction('user','Profile','view',[$user->id, 'profile'])?></li>
         </ul>
     </div>
-    <?php $skip = ['id', 'status', 'picture', 'privacy', 'permission', 'password', 'credits']; ?>
+    <?php $skip = ['id', 'status', 'picture', 'privacy', 'password', 'credits']; ?>
     <div class="panel-body">
             <?php
             if ($part == 'profile') {       //Profile of a User
@@ -66,6 +66,9 @@
                     if ($user->$objCol && !in_array($objCol, $skip)) {
                         echo "<li class='list-group-item'>";
                         switch ($objCol) {
+                            case "gender":
+                                echo "Gender: " . User::getGenderName($user->gender);
+                                break;
                             case "registerTime":
                                 echo "Register time: " . $user->registerTime . "<br/>";
                                 break;
