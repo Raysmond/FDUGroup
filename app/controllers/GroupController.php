@@ -76,12 +76,13 @@ class GroupController extends BaseController
      */
     public function actionView($userId = null)
     {
+        $this->addCss('/public/css/group.css');
         $this->layout = 'user';
         $userGroup = new GroupUser();
         if($userId == null) $userId = Rays::app()->getLoginUser()->id;
         $userGroup = $userGroup->userGroups($userId);
         $this->setHeaderTitle("My Groups");
-        $this->render("view", $userGroup, false);
+        $this->render("view", ['groups' => $userGroup, 'exitGroup' => true], false);
     }
 
     /**
