@@ -7,6 +7,11 @@
 <div class="panel panel-default row">
     <div class="panel panel-heading" style="font-weight: bold;">
         My Friends (<?=$friNumber?>)
+        <div class="navbar-right">
+            <a class="btn btn-xs btn-success" title="Find users" href="<?=RHtmlHelper::siteUrl('user/find')?>">
+                <span class="glyphicon glyphicon-search">&nbsp;</span>Find Users
+            </a>
+        </div>
     </div>
     <div class="panel-body">
         <div class="user-list">

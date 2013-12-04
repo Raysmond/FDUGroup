@@ -9,7 +9,7 @@ class UserController extends BaseController
     public $layout = "index";
     public $defaultAction = "home";
     public $access = array(
-        Role::AUTHENTICATED => array('edit', 'logout','home','profile','myPosts', 'applyVIP', 'listFriend'),
+        Role::AUTHENTICATED => array('edit', 'logout','home','profile','myPosts', 'applyVIP', 'listFriend', 'find'),
         Role::ADMINISTRATOR=>array('admin','processVIP'));
 
     public function actionLogin()
@@ -466,5 +466,39 @@ class UserController extends BaseController
         $data['pager'] = $pager;
 
         $this->render('process_vip',$data,false);
+    }
+
+    public function actionFind() {
+        $this->layout = 'user';
+        $page = $this->getHttpRequest()->getQuery('page', 1);
+        if (!is_numeric($page) || $page < 1) $page = 1;
+        $pageSize = $this->getHttpRequest()->getQuery('pageSize', 24);
+
+        $searchStr = '';
+        if ($this->getHttpRequest()->isPostRequest()) $searchStr = ($_POST['searchstr']);
+        else if(isset($_GET['search'])) $searchStr = $_GET['search'];
+        $vector = explode(' ', $searchStr);
+        $like = [];
+        foreach ($vector as $value) {
+            $like[] = ['key' => 'name', 'value' => $value];
+        }
+        $user = new User();
+        $user->status = User::STATUS_ACTIVE;
+        $userNumber = $user->count($like);
+        $user = $user->find(($page - 1)*$pageSize, $pageSize, ['key' => $user->columns['id'], 'order' => 'desc'], $like);
+
+        $data = array('users' => $user);
+        if ($searchStr != '') $data['searchstr'] = $searchStr;
+
+        if($searchStr!='')
+            $url = RHtmlHelper::siteUrl('user/find?search='.urlencode($searchStr));
+        else
+            $url = RHtmlHelper::siteUrl('user/find');
+
+        $pager = new RPagerHelper('page',$userNumber,$pageSize, $url,$page);
+        $data['pager'] = $pager->showPager();
+
+        $this->setHeaderTitle("Find User");
+        $this->render("find", $data, false);
     }
 }
