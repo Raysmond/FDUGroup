@@ -1,3 +1,6 @@
+<div class="row panel panel-default">
+    <div class="panel-heading"><b>Latest posts</b></div>
+    <div class="panel-body">
 <?php
 /**
  * show my groups
@@ -80,3 +83,5 @@ echo '</div>';
         });
     });
 </script>
+    </div>
+</div>

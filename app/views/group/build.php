@@ -1,3 +1,6 @@
+<div class="row panel panel-default">
+    <div class="panel-heading"><b>Latest posts</b></div>
+    <div class="panel-body">
 <?php
 if(isset($validation_errors)){
     RHtmlHelper::showValidationErrors($validation_errors);
@@ -54,3 +57,5 @@ echo RFormHelper::input(
 
 echo RFormHelper::endForm();
 ?>
+    </div>
+</div>

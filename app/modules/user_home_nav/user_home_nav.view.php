@@ -11,6 +11,10 @@
             <?=RHtmlHelper::linkAction('user','My posts', 'myposts')?>
         </li>
 
+        <li <?= ($currentUrl == 'group/view') ? 'class="active"' : "" ?>>
+            <?= RHtmlHelper::linkAction('group', 'My Groups', 'view') ?>
+        </li>
+
         <li <?= ($currentUrl == 'user/profile') ? 'class="active"' : "" ?>>
             <?= RHtmlHelper::linkAction('user', 'Profile', 'profile') ?>
         </li>
