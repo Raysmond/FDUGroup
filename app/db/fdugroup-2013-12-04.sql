@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2013 年 11 月 30 日 18:10
+-- 生成日期: 2013 年 12 月 04 日 09:54
 -- 服务器版本: 5.5.31
 -- PHP 版本: 5.4.16
 
@@ -297,42 +297,43 @@ CREATE TABLE IF NOT EXISTS `group_counter` (
   `timestamp` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP COMMENT 'last view time',
   PRIMARY KEY (`cid`),
   KEY `fk_group_counter_group_entity_type1_idx` (`entity_type_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=34 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=35 ;
 
 --
 -- 转存表中的数据 `group_counter`
 --
 
 INSERT INTO `group_counter` (`cid`, `entity_id`, `entity_type_id`, `totalcount`, `daycount`, `weekcount`, `timestamp`) VALUES
-(1, 7, 1, 27, 3, 14, '2013-11-30 15:20:42'),
+(1, 7, 1, 28, 1, 1, '2013-12-04 08:24:08'),
 (2, 8, 1, 3, 1, 1, '2013-11-25 07:05:36'),
 (4, 13, 1, 15, 13, 13, '2013-11-25 07:34:23'),
 (5, 5, 1, 40, 33, 33, '2013-11-25 07:44:42'),
-(9, 10, 1, 34, 1, 1, '2013-11-25 07:07:28'),
+(9, 10, 1, 35, 1, 2, '2013-11-30 17:19:33'),
 (10, 9, 1, 3, 1, 1, '2013-11-25 07:07:24'),
 (11, 11, 1, 3, 1, 3, '2013-11-23 17:33:42'),
 (12, 6, 1, 2, 1, 1, '2013-11-26 02:47:36'),
-(13, 10, 2, 16, 1, 3, '2013-11-29 03:56:09'),
+(13, 10, 2, 17, 1, 4, '2013-12-01 04:10:32'),
 (14, 3, 2, 3, 2, 2, '2013-11-25 09:05:42'),
 (15, 5, 2, 8, 1, 1, '2013-11-25 07:37:02'),
-(16, 2, 2, 106, 51, 79, '2013-11-30 16:38:44'),
-(17, 4, 2, 12, 4, 4, '2013-11-25 07:07:29'),
+(16, 2, 2, 108, 2, 2, '2013-12-04 08:24:10'),
+(17, 4, 2, 13, 1, 1, '2013-12-04 07:54:07'),
 (18, 6, 2, 11, 1, 10, '2013-11-26 03:38:50'),
 (19, 7, 2, 10, 1, 4, '2013-11-30 16:37:29'),
 (20, 3, 1, 7, 4, 4, '2013-11-25 07:17:34'),
 (21, 1, 2, 9, 5, 8, '2013-11-30 16:45:01'),
 (22, 8, 2, 4, 2, 2, '2013-11-26 02:47:44'),
 (23, 6, 3, 6, 1, 1, '2013-11-24 16:08:30'),
-(24, 7, 3, 5, 5, 5, '2013-11-24 14:47:33'),
+(24, 7, 3, 6, 1, 1, '2013-12-01 16:50:11'),
 (25, 14, 1, 6, 3, 6, '2013-11-30 16:37:25'),
 (26, 4, 3, 1, 1, 1, '2013-11-25 07:46:15'),
 (27, 1, 1, 20, 19, 20, '2013-11-26 03:36:41'),
-(28, 1, 4, 46, 18, 46, '2013-11-30 16:25:31'),
+(28, 1, 4, 73, 20, 20, '2013-12-04 08:52:04'),
 (29, 2, 4, 2, 1, 2, '2013-11-30 17:10:04'),
 (30, 10, 4, 20, 20, 20, '2013-11-28 12:08:25'),
-(31, 8, 4, 2, 2, 2, '2013-11-28 12:08:46'),
-(32, 3, 4, 1, 1, 1, '2013-11-29 02:26:16'),
-(33, 12, 4, 4, 4, 4, '2013-11-30 16:50:52');
+(31, 8, 4, 4, 2, 4, '2013-11-30 17:20:06'),
+(32, 3, 4, 2, 1, 1, '2013-12-04 08:02:04'),
+(33, 12, 4, 4, 4, 4, '2013-11-30 16:50:52'),
+(34, 5, 4, 2, 2, 2, '2013-11-30 17:49:26');
 
 -- --------------------------------------------------------
 
@@ -630,7 +631,20 @@ CREATE TABLE IF NOT EXISTS `group_rating` (
   `timestamp` varchar(45) NOT NULL,
   PRIMARY KEY (`rating_id`),
   KEY `fk_group_rating_group_entity_type1_idx` (`entity_type`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=8 ;
+
+--
+-- 转存表中的数据 `group_rating`
+--
+
+INSERT INTO `group_rating` (`rating_id`, `entity_type`, `entity_id`, `value`, `value_type`, `tag`, `u_id`, `host`, `timestamp`) VALUES
+(1, 1, 14, 1, 'integer', 'plus', 2, '::1', '2013-12-01 01:18:32'),
+(2, 1, 13, 1, 'integer', 'plus', 2, '::1', '2013-12-01 01:18:33'),
+(3, 1, 11, 1, 'integer', 'plus', 2, '::1', '2013-12-01 01:18:34'),
+(4, 1, 10, 1, 'integer', 'plus', 2, '::1', '2013-12-01 01:18:36'),
+(5, 1, 9, 1, 'integer', 'plus', 2, '::1', '2013-12-01 01:18:37'),
+(6, 1, 10, 1, 'integer', 'plus', 1, '::1', '2013-12-01 01:19:24'),
+(7, 1, 9, 1, 'integer', 'plus', 1, '::1', '2013-12-01 01:19:30');
 
 -- --------------------------------------------------------
 
@@ -649,7 +663,18 @@ CREATE TABLE IF NOT EXISTS `group_rating_statistic` (
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`stat_id`),
   KEY `fk_group_rating_statistic_group_entity_type1_idx` (`entity_type`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=6 ;
+
+--
+-- 转存表中的数据 `group_rating_statistic`
+--
+
+INSERT INTO `group_rating_statistic` (`stat_id`, `stat_type`, `entity_type`, `entity_id`, `value_type`, `value`, `tag`, `timestamp`) VALUES
+(1, 'count', 1, 14, 'integer', 1, 'plus', '2013-11-30 17:18:32'),
+(2, 'count', 1, 13, 'integer', 1, 'plus', '2013-11-30 17:18:33'),
+(3, 'count', 1, 11, 'integer', 1, 'plus', '2013-11-30 17:18:34'),
+(4, 'count', 1, 10, 'integer', 2, 'plus', '2013-11-30 17:19:24'),
+(5, 'count', 1, 9, 'integer', 2, 'plus', '2013-11-30 17:19:30');
 
 -- --------------------------------------------------------
 
@@ -742,7 +767,7 @@ CREATE TABLE IF NOT EXISTS `group_users` (
   `u_intro` text,
   `u_homepage` varchar(45) DEFAULT NULL,
   `u_credits` int(11) DEFAULT '0' COMMENT '积分',
-  `u_permission` int(11) DEFAULT NULL,
+  `u_gender` tinyint(4) DEFAULT '0' COMMENT '0 for unkown;1 for boy; 2 for girls',
   `u_privacy` int(11) DEFAULT NULL,
   PRIMARY KEY (`u_id`,`u_role_id`),
   UNIQUE KEY `u_name_UNIQUE` (`u_name`),
@@ -753,8 +778,8 @@ CREATE TABLE IF NOT EXISTS `group_users` (
 -- 转存表中的数据 `group_users`
 --
 
-INSERT INTO `group_users` (`u_id`, `u_role_id`, `u_name`, `u_mail`, `u_password`, `u_region`, `u_mobile`, `u_qq`, `u_weibo`, `u_register_time`, `u_status`, `u_picture`, `u_intro`, `u_homepage`, `u_credits`, `u_permission`, `u_privacy`) VALUES
-(1, 1, 'admin', 'admin@fudan.edu.cn', '96e79218965eb72c92a549dd5a330112', '上海', '18801730000', '10300240000', 'http://weibo.com/fdugroup', '0000-00-00 00:00:00', 1, 'files/images/users/pic_u_1.png', 'FDUGroup administrator!', 'http://localhost/FDUGroup', 0, 0, 0),
+INSERT INTO `group_users` (`u_id`, `u_role_id`, `u_name`, `u_mail`, `u_password`, `u_region`, `u_mobile`, `u_qq`, `u_weibo`, `u_register_time`, `u_status`, `u_picture`, `u_intro`, `u_homepage`, `u_credits`, `u_gender`, `u_privacy`) VALUES
+(1, 1, 'admin', 'admin@fudan.edu.cn', '96e79218965eb72c92a549dd5a330112', '上海', '18801730000', '10300240000', 'http://weibo.com/fdugroup', '0000-00-00 00:00:00', 1, 'files/images/users/pic_u_1.png', 'FDUGroup administrator!', 'http://localhost/FDUGroup', 0, 2, 0),
 (2, 4, 'Raysmond', 'jiankunlei@126.com', '96e79218965eb72c92a549dd5a330112', 'shanghai', '18801734441', '913282582', 'http://weibo.com/leijiankun', '2013-10-16 16:29:20', 1, 'files/images/users/pic_u_2.jpg', '"The task was appointed to you. If you do not find a way, no one will."', 'http://raysmond.com', 0, 0, 0),
 (3, 2, 'Klaus', 'klaus@fdugroup.com', '96e79218965eb72c92a549dd5a330112', '', '', '', '', '2013-10-16 17:57:37', 1, '', '', '', 1, 0, 0),
 (4, 2, 'raysmond1', 'raysmond1@126.com', '96e79218965eb72c92a549dd5a330112', '', '', '', '', '2013-11-17 03:13:56', 1, '', '', '', 1, 0, 0),
@@ -812,7 +837,7 @@ CREATE TABLE IF NOT EXISTS `group_wallet` (
 
 INSERT INTO `group_wallet` (`u_id`, `w_type`, `w_money`, `w_frozen_money`, `w_timestamp`) VALUES
 (1, '', 0, 0, '2013-11-24 16:18:23'),
-(2, '', 0, 0, '2013-11-24 16:17:06');
+(2, '', 1, 0, '2013-12-01 16:50:11');
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
