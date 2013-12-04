@@ -15,6 +15,10 @@
     overflow: hidden;
 }
 
+.panel-my-group #waterfall-groups .item{
+    width: 30%;
+}
+
 #waterfall-groups .item .item-heading{
     padding: 10px;
     font-weight: bold;
