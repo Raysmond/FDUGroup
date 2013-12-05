@@ -1,9 +1,8 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: Raysmond
- * Date: 13-11-24
- * Time: PM7:27
+ * Wallet data model class
+ * @author: Raysmond
+ * @date: 13-11-24
  */
 
 class Wallet extends Data{

@@ -54,7 +54,7 @@ class rating_plus_module extends RModule
                 . 'class="rating-plus-button '.$this->buttonClass.'">'
                 . '<span class="glyphicon glyphicon-heart"></span> '
                 . '<span id="' . $counterId . '" class="">' . $this->count . '</span>'
-                . '</button>';
+                . '</a>';
         }
         return $html;
     }

@@ -283,3 +283,8 @@ blockquote
     opacity: 1.0;
     filter: alpha(opacity=1.0);
 }
+
+.rating-plus-button{
+    cursor: pointer;
+    text-decoration: none;
+}
