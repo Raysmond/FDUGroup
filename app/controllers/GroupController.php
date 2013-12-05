@@ -43,17 +43,6 @@ class GroupController extends BaseController
         $data = array('group' => $groups);
         if ($searchStr != '') $data['searchstr'] = $searchStr;
 
-//        $url = '';
-//        if($searchStr!='')
-//            $url = RHtmlHelper::siteUrl('group/find?search='.urlencode($searchStr));
-//        else
-//            $url = RHtmlHelper::siteUrl('group/find');
-//
-////        if (count($groups)) {
-////            $pager = new RPagerHelper('page',$groupSum,$pageSize, $url,$page);
-////            $data['pager'] = $pager->showPager();
-////        }
-
         if($this->getHttpRequest()->getIsAjaxRequest()){
             $this->renderPartial("_groups_list", array("groups"=>$groups),false);
             exit;
@@ -113,7 +102,7 @@ class GroupController extends BaseController
         $data['isManager'] = false;
         if(Rays::app()->isUserLogin()){
             $uid = Rays::app()->getLoginUser()->id;
-            $data['hasJoined'] = GroupUser()->isUserInGroup($uid,$group->id);
+            $data['hasJoined'] = GroupUser::isUserInGroup($uid,$group->id);
             $data['isManager'] = $group->creator==$uid;
         }
 
@@ -171,8 +160,6 @@ class GroupController extends BaseController
      */
     public function actionEdit($groupId)
     {
-        $this->setHeaderTitle("Edit my group");
-
         $oldGroup = new Group();
         if(!is_numeric($groupId) || $oldGroup->load($groupId)===null){
             $this->page404();
@@ -221,6 +208,7 @@ class GroupController extends BaseController
         } else {
             $data['oldGroup'] = $oldGroup;
         }
+        $this->setHeaderTitle("Edit my group");
         $this->render('edit', $data, false);
     }
 
@@ -236,32 +224,42 @@ class GroupController extends BaseController
 
 
     public function actionJoin($groupId) {  //by songrenchu: need censorship by group creator
-        $currentUserId = Rays::app()->getLoginUser()->id;
-        $currentUserName = Rays::app()->getLoginUser()->name;
+        $userId = Rays::app()->getLoginUser()->id;
+        $userName = Rays::app()->getLoginUser()->name;
 
+        $joinRequest = false;
+        $text = '';
         $group = new Group();
-        $group->id = $groupId;
-        if ($group->load() !== null) {
+        if (is_numeric($groupId) && $group->load($groupId) !== null) {
             //join group sensor item
             $censor = new Censor();
-            $censor = $censor->joinGroupApplication($currentUserId, $group->id);
+            $censor = $censor->joinGroupApplication($userId, $group->id);
 
-            $content = RHtmlHelper::linkAction('user',$currentUserName,'view',$currentUserId)." wants to join your group ".
+            $content = RHtmlHelper::linkAction('user',$userName,'view',$userId)." wants to join your group ".
                 RHtmlHelper::linkAction('group', $group->name, 'detail', $group->id)
                 ."<br/>"
-                .RHtmlHelper::linkAction('group','Accept','accept',$censor->id,array('class'=>'btn btn-xs btn-success'))
+                .RHtmlHelper::linkAction('group','Accept','accept', $censor->id,array('class'=>'btn btn-xs btn-success'))
                 ."&nbsp;&nbsp;"
-                .RHtmlHelper::linkAction('group','Decline','decline',$censor->id,array('class'=>'btn btn-xs btn-danger'));
+                .RHtmlHelper::linkAction('group','Decline','decline', $censor->id,array('class'=>'btn btn-xs btn-danger'));
 
             $message = new Message();
             $message->sendMsg("group", $groupId, $group->creator, "Join group request", $content, '');
 
-            $this->flash('message', 'Joining group request has been sent.');
+            $joinRequest = true;
+            $text = 'Your join-group request has been send to the group manager!';
         }
-        if(isset($_GET['returnurl']))
-            $this->redirect($_GET['returnurl']);
-        else
-            $this->redirectAction('group','find');
+        else{
+            $text = 'Group does not exist!';
+        }
+
+        if($this->getHttpRequest()->getIsAjaxRequest()){
+            echo json_encode(['result'=>$joinRequest,'text'=>$text]);
+            exit;
+        }
+        else{
+            $this->flash(($joinRequest?"message":"warning"),$text);
+            $this->redirect($this->getHttpRequest()->getUrlReferrer());
+        }
     }
 
     public function actionAcceptInvite($censorId = null) {
@@ -275,8 +273,7 @@ class GroupController extends BaseController
                 $groupUser->joinTime = date('Y-m-d H:i:s');
                 $groupUser->status = 1;
 
-                $gu = new GroupUser();
-                if(!$gu->isUserInGroup($groupUser->userId,$groupUser->groupId)){
+                if(!GroupUser::isUserInGroup($groupUser->userId,$groupUser->groupId)){
                     $groupUser->insert();
                     $group = new Group();
                     $group->load($groupUser->groupId);
@@ -303,8 +300,7 @@ class GroupController extends BaseController
             $groupUser->joinTime = date('Y-m-d H:i:s');
             $groupUser->status = 1;
 
-            $gu = new GroupUser();
-            if(!$gu->isUserInGroup($groupUser->userId,$groupUser->groupId)){
+            if(!GroupUser::isUserInGroup($groupUser->userId,$groupUser->groupId)){
                 $groupUser->insert();
                 $group = new Group();
                 $group->load($groupUser->groupId);
@@ -338,8 +334,7 @@ class GroupController extends BaseController
             $groupUser->joinTime = date('Y-m-d H:i:s');
             $groupUser->status = 1;
 
-            $gu = new GroupUser();
-            if(!$gu->isUserInGroup($groupUser->userId,$groupUser->groupId)){
+            if(!GroupUser::isUserInGroup($groupUser->userId,$groupUser->groupId)){
                 $this->flash("message", "The request is processed.");
                 $group = new Group();
                 $group->load($groupUser->groupId);

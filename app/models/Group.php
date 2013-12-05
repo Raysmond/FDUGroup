@@ -24,7 +24,7 @@ class Group extends Data
         "picture"=>'Picture'
     );
 
-    public static $defaults = array('picture'=>'files/images/default_pic.png');
+    public static $defaults = array('picture'=>'public/images/default_pic.png');
 
     public function __construct()
     {
