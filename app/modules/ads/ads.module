@@ -5,6 +5,8 @@
  */
 class ads_module extends RModule {
 
+    public $denyAccess = array("<front>","site/*",'user/login','user/register');
+
     /**
      * Override module_content method
      * @return string|void

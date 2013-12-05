@@ -24,6 +24,8 @@ class RModule
     // <front> for the front page
     public $access = array();
 
+    public $denyAccess = array();
+
     public function __construct($params = array())
     {
         if (isset($params['id']))
@@ -61,7 +63,7 @@ class RModule
      */
     public function run()
     {
-        if ($this->canAccess()) {
+        if (!$this->denyAccess() && $this->canAccess()) {
             $content = $this->module_content();
             echo $content;
         } else
@@ -128,6 +130,11 @@ class RModule
     public function canAccess()
     {
         return Rays::app()->getHttpRequest()->urlMatch($this->access);
+    }
+
+    public function denyAccess()
+    {
+        return empty($this->denyAccess)? false : Rays::app()->getHttpRequest()->urlMatch($this->denyAccess);
     }
 
     public function setId($id)
