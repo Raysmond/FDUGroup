@@ -121,21 +121,20 @@ $baseUrl = Rays::app()->getBaseUrl();
         <div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar" role="navigation">
 
             <?php
-            $this->module("friend_users",array('id'=>'friend_users','name'=>"Friends"));
+            $this->module("friend_users");
 
             $cache = RCacheFactory::create('RFileCacheHelper', Rays::app()->getCacheConfig());
-
-            if ( ($cacheContent = $cache->get("users", "new_users", 60)) != FALSE ) {
+            if ( ($cacheContent = $cache->get("users", "new_users", 3600)) != FALSE ) {
                 echo $cacheContent;
             }
             else{
-                $cacheContent =$this->module("new_users",array('id'=>'new_users','name'=>"New Users"),true);
+                $cacheContent =$this->module("new_users",array(),true);
                 $cache->set("users", "new_users", $cacheContent);
                 echo $cacheContent;
                 unset($cacheContent);
             }
 
-            $this->module("ads",array('id'=>'ads','name'=>"Ads"));
+            $this->module("ads");
             ?>
         </div><!--/span-->
     </div><!--/row-->

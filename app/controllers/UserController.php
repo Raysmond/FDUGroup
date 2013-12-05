@@ -50,7 +50,7 @@ class UserController extends BaseController
     public function actionView($userId, $part = 'joins')
     {
         $user = new User();
-        if (!is_numeric($userId) || $user->load($userId) === null) {
+        if (!is_numeric($userId) || $user->load($userId) === null || $user->status==User::STATUS_BLOCKED) {
             $this->page404();
             return;
         }
