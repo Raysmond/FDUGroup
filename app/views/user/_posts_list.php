@@ -30,7 +30,7 @@
 
             <div class="col-lg-10 topic-content">
                 <div class="inner">
-                    <div><?= RHtmlHelper::linkAction('post', $topic['top_title'], 'view', $topic['top_id']) ?></div>
+                    <div class="topic-title"><?= RHtmlHelper::linkAction('post', $topic['top_title'], 'view', $topic['top_id']) ?></div>
 
                     <!-- Topic meta info -->
                     <div class="topic-meta">
