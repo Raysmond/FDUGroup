@@ -4,6 +4,9 @@ $(document).ready(function() {
         $('.row-offcanvas').toggleClass('active');
     });
     $('#account-dropdown').append('<b class="caret"></b>');
+
+    $(".posts-list .topic-item .topic-content img").css("maxWidth","538px").css("height","auto");
+
 });
 
 var checkAllFlag = false;
