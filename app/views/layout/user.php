@@ -43,6 +43,34 @@ $baseUrl = Rays::app()->getBaseUrl();
                         ?>
                     </a>
                 </div>
+
+                <div class="user-statistics">
+                    <div class="stat-item">
+                        <div class="number">
+                            <?=$user->countFriends($user->id)?>
+                        </div>
+                        <div class="text">
+                            Friends
+                        </div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="number">
+                            <?=$user->countGroups($user->id)?>
+                        </div>
+                        <div class="text">
+                            Groups
+                        </div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="number">
+                            <?=$user->countPosts($user->id)?>
+                        </div>
+                        <div class="text">
+                            Posts
+                        </div>
+                    </div>
+                </div>
+
                 <div class="user-profile">
                     <h2>
                         <?=RHtmlHelper::linkAction('user',$user->name,'view',$user->id)?>&nbsp;
@@ -56,6 +84,7 @@ $baseUrl = Rays::app()->getBaseUrl();
                         <?php } ?>
                     </div>
                 </div>
+
             </div>
 
         <?php endif; ?>

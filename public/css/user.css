@@ -37,6 +37,38 @@ body.user-home .content-wrapper{
     opacity: 0.6;
 }
 
+.user-home .user-panel .user-statistics{
+    float: right;
+    margin: 30px 50px 0 0;
+    padding: 10px 0;
+    border: 1px #eee solid;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
+    -webkit-box-shadow: 0 1px 1px rgba(0,0,0,.08), inset 0 1px 0 rgba(255,255,255,.8);
+    -moz-box-shadow: 0 1px 1px rgba(0,0,0,.08), inset 0 1px 0 rgba(255,255,255,.8);
+    box-shadow: 0 1px 1px rgba(0,0,0,.08), inset 0 1px 0 rgba(255,255,255,.8);
+}
+
+.user-home .user-panel .user-statistics .stat-item{
+    float: left;
+    padding: 0 15px 0 14px;
+    text-align: center;
+    border-right: 1px #eee solid;
+    width: 70px;
+    margin-right: -1px;
+}
+.user-home .user-panel .user-statistics .stat-item .number{
+    font-size: 16px;
+    font-weight: bold;
+}
+.user-home .user-panel .user-statistics .stat-item .text
+{
+    color: #999;
+    font-weight: bold;
+    text-align: center;
+    line-height: 15px;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
+}
 /* User home page navigation */
 .user-home-navigation{
 

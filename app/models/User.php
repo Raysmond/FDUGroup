@@ -158,6 +158,26 @@ class User extends Data
         $this->load($id);
     }
 
+    public static function countPosts($userId){
+        $post = new Topic();
+        $post->userId = $userId;
+        return $post->count();
+    }
+
+    public static function countFriends($userId)
+    {
+        $friends = new Friend();
+        $friends->uid = $userId;
+        return $friends->count();
+    }
+
+    public static function countGroups($userId)
+    {
+        $group = new Group();
+        $group->creator = $userId;
+        return $group->count();
+    }
+
     public function login($postForm)
     {
         $validation = new RFormValidationHelper(array(
