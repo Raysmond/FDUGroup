@@ -44,7 +44,8 @@ foreach ($groups as $group) {
                 if (!GroupUser::isUserInGroup(Rays::app()->getLoginUser()->id,$group->id)) {
                     ?>
                     <div class="action">
-                        <a href="#"><span class="glyphicon glyphicon-plus"></span></a>
+                        <?php $url = RHtmlHelper::siteUrl('group/join'); ?>
+                        <a href="javascript: joinGroup('<?=$url?>','<?=$group->id?>')" title="Join the group"><span class="glyphicon glyphicon-plus"></span></a>
                     </div>
                 <?php
                 }
@@ -64,3 +65,17 @@ foreach ($groups as $group) {
     </div>
 <?php
 }
+?>
+
+<script>
+    function joinGroup(url, groupId){
+        $.ajax({
+            url: url+'/'+groupId,
+            type: 'post',
+            success: function(data){
+                data = eval('('+data+')');
+                alert(data.text);
+            }
+        });
+    }
+</script>
