@@ -15,11 +15,11 @@ class UserController extends BaseController
     public function actionLogin()
     {
         $data = array();
-        if (Rays::app()->isUserLogin()) {
+        if (Rays::isLogin()) {
             $this->redirectAction('user', 'home');
         }
 
-        if ($this->getHttpRequest()->isPostRequest()) {
+        if (Rays::isPost()) {
             $user = new User();
             $login = $user->login($_POST);
             if ($login === true) {
@@ -44,7 +44,7 @@ class UserController extends BaseController
     {
         $this->getSession()->deleteSession("user");
         $this->flash("message", "You have already logout.");
-        $this->redirect(Rays::app()->getBaseUrl());
+        $this->redirect(Rays::baseUrl());
     }
 
     public function actionView($userId, $part = 'joins')
@@ -55,9 +55,9 @@ class UserController extends BaseController
             return;
         }
         $data = array('user' => $user, 'part' => $part);
-        if (Rays::app()->isUserLogin()) {
+        if (Rays::isLogin()) {
             $friend = new Friend();
-            $friend->uid = Rays::app()->getLoginUser()->id;
+            $friend->uid = Rays::user()->id;
             $friend->fid = $user->id;
             $data['canAdd'] = ($friend->uid !== $friend->fid && count($friend->find()) == 0);
             $data['canCancel'] = ($friend->uid !== $friend->fid && !$data['canAdd']);
@@ -89,7 +89,7 @@ class UserController extends BaseController
 
     public function actionProfile($action=null){
         $this->layout = 'user';
-        $user = Rays::app()->getLoginUser();
+        $user = Rays::user();
         if($action==='edit'){
             $this->actionEdit();
             return;
@@ -106,7 +106,7 @@ class UserController extends BaseController
     {
         $this->setHeaderTitle("Register");
         $form = '';
-        if ($this->getHttpRequest()->isPostRequest()) {
+        if (Rays::isPost()) {
             // validate the form data
             $rules = array(
                 array('field' => 'username', 'label' => 'User name', 'rules' => 'trim|required|min_length[5]|max_length[20]'),
@@ -145,21 +145,21 @@ class UserController extends BaseController
      */
     public function actionEdit($userId = null)
     {
-        if (!Rays::app()->isUserLogin()||(isset($userId)) && (!is_numeric($userId))){
+        if (!Rays::isLogin()||(isset($userId)) && (!is_numeric($userId))){
             $this->page404();
             return;
         }
-        if (isset($userId) && Rays::app()->getLoginUser()->roleId != Role::ADMINISTRATOR_ID&&Rays::app()->getLoginUser()->id!=$userId) {
+        if (isset($userId) && Rays::user()->roleId != Role::ADMINISTRATOR_ID&&Rays::user()->id!=$userId) {
             $this->flash("error", "You don't have the right to change the user information!");
             $this->redirectAction('user', 'view', $userId);
         }
         $user = new User();
 
-        //$user->load(($userId==null)?Rays::app()->getLoginUser()->id:$userId);
+        //$user->load(($userId==null)?Rays::user()->id:$userId);
         // for now , the user can only edit his own profile
-        $user->load(Rays::app()->getLoginUser()->id);
+        $user->load(Rays::user()->id);
         $data = array('user' => $user);
-        if ($this->getHttpRequest()->isPostRequest()) {
+        if (Rays::isPost()) {
             $config = array(
                 array('field' => 'username', 'label' => 'User name', 'rules' => 'trim|required|min_length[5]|max_length[20]'),
             );
@@ -219,7 +219,7 @@ class UserController extends BaseController
         $curPage = $this->getPage("page");
         $pageSize = $this->getPageSize("pagesize",10);
 
-        $userId = Rays::app()->getLoginUser()->id;
+        $userId = Rays::user()->id;
         $posts = new Topic();
         $posts->userId = $userId;
         $count = $posts->count();
@@ -244,7 +244,7 @@ class UserController extends BaseController
         $this->layout = 'admin';
         $data = array();
 
-        if ($this->getHttpRequest()->isPostRequest()) {
+        if (Rays::isPost()) {
             if (isset($_POST['checked_users'])) {
                 $selected = $_POST['checked_users'];
                 if (is_array($selected)) {
@@ -302,13 +302,13 @@ class UserController extends BaseController
     public function actionHome()
     {
         $this->layout = 'user';
-        $user = Rays::app()->getLoginUser();
+        $user = Rays::user();
         $data = array('user' => $user);
         $defaultSize = 10;
 
         // ajax request
         // load more posts
-        if ($this->getHttpRequest()->getIsAjaxRequest()) {
+        if (Rays::isAjax()) {
             $topics = new Topic();
             $lastLoadedTime = @$_POST['lastLoadedTime'];
             $lastLoadedTime = $lastLoadedTime != '' ? $lastLoadedTime : null;
@@ -342,10 +342,10 @@ class UserController extends BaseController
         $this->setHeaderTitle('VIP application');
 
         $this->layout = 'user';
-        $user = Rays::app()->getLoginUser();
+        $user = Rays::user();
         $data = array('user'=>$user);
 
-        if ($this->getHttpRequest()->isPostRequest()) {
+        if (Rays::isPost()) {
             $config = [
                 ['field' => 'content', 'label' => 'Statement', 'rules' => 'trim|required|min_length[10]|max_length[1000]'],
             ];
@@ -448,7 +448,7 @@ class UserController extends BaseController
         $pageSize = $this->getPageSize("pagesize",24);
 
         $searchStr = '';
-        if ($this->getHttpRequest()->isPostRequest()) $searchStr = ($_POST['searchstr']);
+        if (Rays::isPost()) $searchStr = ($_POST['searchstr']);
         else if(isset($_GET['search'])) $searchStr = $_GET['search'];
         $vector = explode(' ', trim($searchStr));
         $like = [];

@@ -239,9 +239,8 @@ class PostController extends BaseController {
         else{
             $topic->delete();
             $this->flash("message", "Post " . $topic->title . " was deleted.");
-            $uri = $this->getHttpRequest()->getUrlReferrer();
-            if($uri){
-                $this->redirect($uri);
+            if(Rays::referrerUri()){
+                $this->redirect(Rays::referrerUri());
             }
         }
     }
@@ -268,8 +267,8 @@ class PostController extends BaseController {
             }
         }
 
-        $curPage = $this->getHttpRequest()->getQuery('page', 1);
-        $pageSize = 5;
+        $curPage = $this->getPage("page");
+        $pageSize = $this->getPageSize("pagesize");
 
         $rows = new Topic();
         $count = $rows->count();

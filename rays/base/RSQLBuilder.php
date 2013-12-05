@@ -53,6 +53,8 @@ class RSQLBuilder
     public function __construct($dbConfig, $table)
     {
 
+        $this->dbConfig = $dbConfig;
+        $this->table = $table;
         return $this;
     }
 

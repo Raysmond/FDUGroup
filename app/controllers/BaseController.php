@@ -27,10 +27,10 @@ class BaseController extends RController
 
         $accessLog = new AccessLog();
         $accessLog->host = $this->getHttpRequest()->getUserHostAddress();
-        $accessLog->path = $this->getHttpRequest()->getRequestUriInfo();
-        $accessLog->userId = Rays::app()->isUserLogin() ? Rays::app()->getLoginUser()->id : 0;;
+        $accessLog->path = Rays::uri();
+        $accessLog->userId = Rays::isLogin()? Rays::user()->id : 0;;
         $accessLog->title = $this->getHeaderTitle();
-        $accessLog->uri = $this->getHttpRequest()->getUrlReferrer();
+        $accessLog->uri = Rays::referrerUri();
         $accessLog->insert();
     }
 
@@ -47,9 +47,9 @@ class BaseController extends RController
             foreach ($logs as $log) {
                 $sysLog = new SystemLog();
                 $sysLog->host = $this->getHttpRequest()->getUserHostAddress();
-                $sysLog->userId = Rays::app()->isUserLogin() ? Rays::app()->getLoginUser()->id : 0;
-                $sysLog->referrerUri = $this->getHttpRequest()->getUrlReferrer();
-                $sysLog->path = $this->getHttpRequest()->getRequestUriInfo();
+                $sysLog->userId = Rays::isLogin()? Rays::user()->id : 0;
+                $sysLog->referrerUri = Rays::referrerUri();
+                $sysLog->path = Rays::uri();
                 $sysLog->timestamp = $log['timestamp'];
                 $sysLog->message = $log['message'];
 
@@ -76,7 +76,7 @@ class BaseController extends RController
 
     public function getPage($key, $default = 1)
     {
-        $page = $this->getHttpRequest()->getParam($key, $default);
+        $page = Rays::getParam($key, $default);
         if (!is_numeric($page) || $page < 1) {
             $page = 1;
         }
@@ -87,7 +87,7 @@ class BaseController extends RController
 
     public function getPageSize($key, $default = DEFAULT_PAGE_SIZE)
     {
-        $size = $this->getHttpRequest()->getParam($key, $default);
+        $size = Rays::getParam($key, $default);
         if (!is_numeric($size) || $size < 1) {
             $size = DEFAULT_PAGE_SIZE;
         }

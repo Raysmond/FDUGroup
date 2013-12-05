@@ -125,6 +125,11 @@ class RWebApplication extends RBaseApplication
         return $this->httpRequestHandler;
     }
 
+    public function getRouter()
+    {
+        return $this->router;
+    }
+
     /**
      * Get client manager
      * @return RClient
