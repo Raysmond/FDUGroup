@@ -140,9 +140,17 @@ $baseUrl = Rays::app()->getBaseUrl();
         </div><!--/span-->
     </div><!--/row-->
     <hr>
-    <footer>
-        <p><?php echo RHtmlHelper::encode(Rays::getCopyright()); ?></p>
-    </footer>
+    <div id="footer" class="row">
+        <div class="copyright col-lg-5"><?php echo RHtmlHelper::encode(Rays::getCopyright()); ?></div>
+
+        <div class="footer-links col-lg-7">
+            <ul>
+                <li><?=RHtmlHelper::linkAction('site','About us','about')?></li>
+                <li><?=RHtmlHelper::linkAction('site','Contact','contact')?></li>
+                <li><?=RHtmlHelper::linkAction('site','Help','help')?></li>
+            </ul>
+        </div>
+    </div>
 
 </div><!--/.container-->
 

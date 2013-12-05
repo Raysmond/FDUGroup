@@ -31,6 +31,27 @@ footer {
 
 }
 
+#footer{
+    padding: 0 10px 10px 10px;
+}
+
+#footer .footer-links{
+
+}
+
+#footer .copyright{
+
+}
+
+#footer .footer-links ul{
+    float: right;
+    list-style: none;
+}
+#footer .footer-links ul li{
+    float: left;
+    padding: 0 10px;
+}
+
 /*
  * Off Canvas
  * --------------------------------------------------
