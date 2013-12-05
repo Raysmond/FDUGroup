@@ -22,25 +22,19 @@ class GroupController extends BaseController
         $page = $this->getPage("page");
         $pageSize = $this->getPageSize("pagesize",5);
 
-        $searchStr = '';
-        if ($this->getHttpRequest()->isPostRequest()) $searchStr = ($_POST['searchstr']);
-        else if(isset($_GET['search'])) $searchStr = $_GET['search'];
+        $searchStr = $this->getHttpRequest()->getParam("searchstr",'');
 
         $group = new Group();
-        $group->name = trim($searchStr);
         $like = array();
-        if (isset($group->name) && $group->name != '') {
-            $names = explode(' ', $group->name);
+        if ($name = trim($searchStr)) {
+            $names = preg_split("/[\s]+/", $name);
             foreach ($names as $val)
-                if ($val = trim($val)){
-                    array_push($like, array('key' => 'name', 'value' => $val));
-                }
-            $group = new Group();
+                array_push($like, array('key' => 'name', 'value' => $val));
         }
 
-        $groups = $group->find($pageSize * ($page - 1), $pageSize, array('key'=>'gro_id',"order"=>"desc"), $like);
+        $groups = $group->find($pageSize * ($page - 1), $pageSize, array('key'=>$group->columns['id'],"order"=>"desc"), $like);
 
-        $data = array('group' => $groups);
+        $data = array('groups' => $groups);
         if ($searchStr != '') $data['searchstr'] = $searchStr;
 
         if($this->getHttpRequest()->getIsAjaxRequest()){

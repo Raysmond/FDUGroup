@@ -41,10 +41,7 @@ foreach ($groups as $group) {
 
             <?php
             if (Rays::app()->isUserLogin()) {
-                $g_u = new GroupUser();
-                $g_u->userId = Rays::app()->getLoginUser()->id;
-                $g_u->groupId = $group->id;
-                if (count($g_u->find()) == 0) {
+                if (!GroupUser::isUserInGroup(Rays::app()->getLoginUser()->id,$group->id)) {
                     ?>
                     <div class="action">
                         <a href="#"><span class="glyphicon glyphicon-plus"></span></a>
