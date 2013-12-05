@@ -35,13 +35,13 @@ class GroupUser extends Data
         return $this->find();
     }
 
-    public static function userGroups($userId = null)
+    public static function userGroups($start = 0, $limit = 0, $userId = null)
     {
         if($userId == null) return null;
         $result = array();
         $groupUser = new GroupUser();
         $groupUser->userId = $userId;
-        $userGroups = $groupUser->find();
+        $userGroups = $groupUser->find($start, $limit);
         foreach($userGroups as $userGroup){
             $group = new Group();
             $group->id = $userGroup->groupId;

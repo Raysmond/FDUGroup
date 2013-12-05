@@ -38,7 +38,11 @@ class GroupController extends BaseController
         if ($searchStr != '') $data['searchstr'] = $searchStr;
 
         if($this->getHttpRequest()->getIsAjaxRequest()){
-            $this->renderPartial("_groups_list", array("groups"=>$groups),false);
+            if (!count($groups)) {
+                echo 'nomore';
+            } else {
+                $this->renderPartial("_groups_list", array("groups"=>$groups),false);
+            }
             exit;
         }
 
@@ -54,10 +58,21 @@ class GroupController extends BaseController
      */
     public function actionView($userId = null)
     {
+        $page = $this->getPage("page");
+        $pageSize = $this->getPageSize("pagesize",5);
+
         $this->layout = 'user';
         $this->addCss('/public/css/group.css');
         $this->addJs('/public/js/masonry.pkgd.min.js');
-        $userGroup = GroupUser::userGroups(Rays::app()->getLoginUser()->id);
+        $userGroup = GroupUser::userGroups(($page - 1) * $pageSize, $pageSize, Rays::app()->getLoginUser()->id);
+        if($this->getHttpRequest()->getIsAjaxRequest()){
+            if (!count($userGroup)) {
+                echo 'nomore';
+            } else {
+                $this->renderPartial("_groups_list", array("groups"=>$userGroup, 'exitGroup' => true),false);
+            }
+            exit;
+        }
         $this->setHeaderTitle("My Groups");
         $this->render("view", ['groups' => $userGroup, 'exitGroup' => true], false);
     }

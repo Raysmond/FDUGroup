@@ -57,7 +57,7 @@ foreach ($groups as $group) {
                 ?>
                 <div class="action">
                     <a href="<?= RHtmlHelper::siteUrl("group/exit/" . $group->id) ?>"
-                       onclick='javascript:confirmExit(<?= $group->id ?>)'><span
+                       onclick='javascript:return confirm("Do you really want to exit this group?")'><span
                             class="glyphicon glyphicon-remove"></span></a>
                 </div>
             <?php
