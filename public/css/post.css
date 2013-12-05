@@ -3,6 +3,12 @@
 
 }
 
+.posts-list .topic-item  .topic-title{
+    font-weight: bold;
+    font-size: 14px;
+    padding-bottom: 3px;
+}
+
 .posts-list .topic-item .topic-content{
     background: #fff;
     -moz-border-radius: 5px;
