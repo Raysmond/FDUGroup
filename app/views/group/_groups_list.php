@@ -6,7 +6,9 @@ foreach ($groups as $group) {
         <!-- Group picture -->
         <?php if ($group->picture) { ?>
             <div class="group-picture">
-                <?= RHtmlHelper::showImage(RImageHelper::styleSrc($group->picture, Group::getPicOptions()), $group->name); ?>
+                <a href="<?=RHtmlHelper::siteUrl('group/detail/'.$group->id)?>">
+                    <?= RHtmlHelper::showImage(RImageHelper::styleSrc($group->picture, Group::getPicOptions()), $group->name); ?>
+                </a>
             </div>
         <?php } ?>
 

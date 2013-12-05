@@ -117,7 +117,7 @@ class GroupController extends BaseController
         if ($this->getHttpRequest()->isPostRequest()) {
             $form = $_POST;
             $rules = array(
-                array('field' => 'group-name', 'label' => 'Group name', 'rules' => 'trim|required|min_length[5]|max_length[30]'),
+                array('field' => 'group-name', 'label' => 'Group name', 'rules' => 'trim|required|min_length[5]|max_length[50]'),
                 array('field' => 'category', 'label' => 'Category', 'rules' => 'required'),
                 array('field' => 'intro', 'label' => 'Group Introduction', 'rules' => 'trim|required|min_length[10]')
             );
@@ -167,7 +167,7 @@ class GroupController extends BaseController
 
         if ($this->getHttpRequest()->isPostRequest()) {
             $rules = array(
-                array('field' => 'group-name', 'label' => 'Group name', 'rules' => 'trim|required|min_length[5]|max_length[30]'),
+                array('field' => 'group-name', 'label' => 'Group name', 'rules' => 'trim|required|min_length[5]|max_length[50]'),
                 array('field' => 'category', 'label' => 'Category', 'rules' => 'required'),
                 array('field' => 'intro', 'label' => 'Group Introduction', 'rules' => 'trim|required|min_length[10]')
             );
