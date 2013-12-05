@@ -135,8 +135,8 @@ class MessageController extends BaseController
         $messages = new Message();
         $userId = Rays::app()->getLoginUser()->id;
 
-        $curPage = $this->getHttpRequest()->getQuery('page',1);
-        $pageSize = (isset($_GET['pagesize'])&&is_numeric($_GET['pagesize']))?$_GET['pagesize'] : 5;
+        $curPage = $this->getPage('page');
+        $pageSize = $this->getPageSize("pagesize",5);
 
         $count = new Message();
         $count->receiverId = $userId;
@@ -171,14 +171,17 @@ class MessageController extends BaseController
                 return;
         }
         if($messages==null) $messages = array();
-        $url = RHtmlHelper::siteUrl('message/view/'.$msgType);
-        $pager = new RPagerHelper('page',$count,$pageSize,$url,$curPage);
         $data =  array(
             'msgs' => $messages,
             'type' => $msgType,
-            'pager' => $pager->showPager(),
             'count'=>$count,
-            );
+        );
+
+        if($count>($curPage*$pageSize)){
+            $url = RHtmlHelper::siteUrl('message/view/'.$msgType);
+            $pager = new RPagerHelper('page', $count, $pageSize, $url, $curPage);
+            $data['pager'] = $pager->showPager();
+        }
 
         $this->render('view',$data, false);
     }

@@ -26,23 +26,42 @@ $baseUrl = Rays::app()->getBaseUrl();
 
 <body class="user-home">
 <?php
-    echo $this->module('main_nav',array('id'=>'main_nav','name'=>'Main navigation'));
-/*
-$cache = RCacheFactory::create('RFileCacheHelper', Rays::app()->getCacheConfig());
-if ( ($menuContent = $cache->get("user.menu", "user", 3600)) != FALSE ) {
-    echo $menuContent;
-}
-else{
-    $menuContent = $this->module('main_nav',array('id'=>'main_nav','name'=>'Main navigation'), true);
-    $cache->set("user.menu", "user", $menuContent);
-    echo $menuContent;
-    unset($menuContent);
-}
-*/
-
+    $this->module('main_nav',array('id'=>'main_nav','name'=>'Main navigation'));
 ?>
 
 <div id="main-wrapper" class="container">
+    <div class="row user-panel">
+        <?php $user = Rays::app()->getLoginUser(); if($user!=null): ?>
+            <div class="row user-profile-tiny">
+                <div class="user-picture">
+                    <?php if(!isset($user->picture)||$user->picture=='') $user->picture=User::$defaults['picture'];
+                    $thumbnail = RImageHelper::styleSrc($user->picture,$user::getPicOptions());
+                    ?>
+                    <a href="<?=RHtmlHelper::siteUrl('user/view/'.$user->id)?>" >
+                        <?php
+                        echo RHtmlHelper::showImage($thumbnail,$user->name, array('class'=>'img-thumbnail','width'=>'120px'))
+                        ?>
+                    </a>
+                </div>
+                <div class="user-profile">
+                    <h2>
+                        <?=RHtmlHelper::linkAction('user',$user->name,'view',$user->id)?>&nbsp;
+                        <span class="badge badge-<?=Role::getRoleNameById($user->roleId);?>"><?=Role::getBadgeById($user->roleId);?></span>
+                    </h2>
+                    <div><?=RHtmlHelper::decode($user->intro)?></div>
+                    <div><?=$user->region?>
+                        <?php if ($user->weibo!='') { ?>
+                            <?php if ($user->region!='') { ?>|<?php } ?>
+                            Micro-Blog: <?=RHtmlHelper::link($user->weibo,$user->weibo,$user->weibo)?>
+                        <?php } ?>
+                    </div>
+                </div>
+            </div>
+
+        <?php endif; ?>
+    </div>
+    <hr>
+
 
     <div class="row row-offcanvas row-offcanvas-right">
         <div class="col-xs-12 col-sm-9">
@@ -54,43 +73,13 @@ else{
                 echo RHtmlHelper::showFlashMessages();
                 ?>
             </div>
-            <div>
-                <?php $user = Rays::app()->getLoginUser(); if($user!=null): ?>
-                    <div class="row user-profile-tiny">
-                        <div class="col-lg-2">
-                            <?php if(!isset($user->picture)||$user->picture=='') $user->picture=User::$defaults['picture'];
-                                $thumbnail = RImageHelper::styleSrc($user->picture,$user::getPicOptions());
-                            ?>
-                            <a href="<?=RHtmlHelper::siteUrl('user/view/'.$user->id)?>" >
-                            <?php
-                                echo RHtmlHelper::showImage($thumbnail,$user->name, array('class'=>'img-thumbnail','width'=>'120px'))
-                            ?>
-                            </a>
-                        </div>
-                        <div class="col-lg-10">
-                            <h2>
-                                <?=RHtmlHelper::linkAction('user',$user->name,'view',$user->id)?>&nbsp;
-                                <span class="badge badge-<?=Role::getRoleNameById($user->roleId);?>"><?=Role::getBadgeById($user->roleId);?></span>
-                            </h2>
-                            <div><?=RHtmlHelper::decode($user->intro)?></div>
-                            <div><?=$user->region?>
-                                <?php if ($user->weibo!='') { ?>
-                                    <?php if ($user->region!='') { ?>|<?php } ?>
-                                    Micro-Blog: <?=RHtmlHelper::link($user->weibo,$user->weibo,$user->weibo)?>
-                                <?php } ?>
-                            </div>
-                        </div>
-                    </div>
-                    <hr>
-                <?php endif; ?>
-            </div>
 
             <div class="row">
-                <div class="col-lg-3">
+                <div class="col-lg-3 navigation-wrapper">
                     <?php $this->module("user_home_nav", array('id'=>'user_home_nav','name'=>'User home navigation')); ?>
                 </div>
 
-                <div class="col-lg-9">
+                <div class="col-lg-9 content-wrapper">
                     <div id="content">
                         <?php if(isset($content)) echo $content; ?>
                     </div>

@@ -69,7 +69,7 @@
                     }
                     ?>
                     <div>
-                        <?=$pager?>
+                        <?=(isset($pager)?$pager:"")?>
                     </div>
     </div>
 </div>

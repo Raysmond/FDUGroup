@@ -6,6 +6,36 @@
 .find-user .search-bar {
     margin-bottom: 10px;
 }
+body.user-home #main-wrapper{
+    padding-top: 0;
+}
+body.user-home .content-wrapper{
+    border-left: 1px #eee solid;
+}
+
+.user-home .user-panel {
+    padding: 10px 20px;
+    margin-top:0;
+    background: #fff;
+
+}
+
+.user-home .user-panel .user-picture{
+    float: left;
+    margin: 0 15px 0 10px;
+}
+
+.user-home .user-panel .user-profile{
+    padding-top: 25px;
+}
+
+.user-home .user-panel .user-profile h2>a{
+    color: #000;
+    text-decoration: none;
+}
+.user-home .user-panel .user-profile h2>a:hover{
+    opacity: 0.6;
+}
 
 /* User home page navigation */
 .user-home-navigation{

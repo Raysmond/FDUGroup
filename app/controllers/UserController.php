@@ -234,6 +234,7 @@ class UserController extends BaseController
 
         $this->layout = 'user';
         $this->setHeaderTitle("My posts");
+        $this->addCss('/public/css/post.css');
         $this->render('myposts', $data, false);
     }
 
@@ -329,6 +330,7 @@ class UserController extends BaseController
         $data['topics'] = $topics->getUserFriendsTopics($user->id, $defaultSize);
 
         $this->setHeaderTitle($user->name);
+        $this->addCss('/public/css/post.css');
         $this->render('home', $data, false);
     }
 

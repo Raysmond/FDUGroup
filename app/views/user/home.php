@@ -3,9 +3,7 @@
  * @author: Raysmond
  */
 ?>
-<div class="row panel panel-default">
-    <div class="panel-heading"><b>Latest posts</b></div>
-    <div class="panel-body">
+<div>
         <div id="latest-topics-list">
         <?php $this->renderPartial('_posts_list',array('topics'=>$topics),false); ?>
         </div>
@@ -27,7 +25,6 @@
             echo 'No posts yet. ';
         }
         ?>
-    </div>
 </div>
 <script>
     function loadMorePosts() {

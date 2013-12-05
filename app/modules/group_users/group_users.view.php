@@ -4,7 +4,7 @@
  * @author: Raysmond
  */
 ?>
-<div class="panel panel-info">
+<div class="panel panel-default">
     <div class="panel-heading">
         <h3 class="panel-title">Latest group users</h3>
     </div>
