@@ -13,7 +13,6 @@
     foreach ($topics as $topic) {
         ?>
         <div class="row topic-item">
-
             <!-- User picture -->
             <div class="col-lg-2 topic-picture">
                 <?php
@@ -97,10 +96,9 @@
                             ));
                         ?>
                     </div>
-
                 </div>
-
             </div>
+            <div class="i"></div>
         </div>
         <hr>
     <?php
