@@ -1,0 +1,11 @@
+<?php
+
+class help_nav_module extends RModule{
+    public $access = array("site/help");
+
+    public function module_content(){
+        $data = array();
+
+        return $this->render('help_nav',$data);
+    }
+}

@@ -45,6 +45,9 @@
         <div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar" role="navigation">
 
                     <?php
+
+                    $this->module("help_nav",array('id'=>'help_nav'));
+
                     $this->module("group_categories",array('id'=>'group_categories','name'=>"Categories"));
                     $this->module("friend_groups",array('id'=>'friend_groups','name'=>"Friend Groups"));
                     $this->module("friend_users",array('id'=>'friend_users','name'=>"Friends"));
