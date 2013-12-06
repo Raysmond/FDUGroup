@@ -3,8 +3,8 @@
  * User: Raysmond
  */
 ?>
-<div class="panel panel-default row">
-    <div class="panel panel-heading" style="font-weight: bold;">
+<div class="panel panel-default">
+    <div class="panel-heading" style="font-weight: bold;">
         <?php echo $count; ?> messages <?php echo ($type=='all'?"":$type); ?>
     </div>
     <div class="panel-body">

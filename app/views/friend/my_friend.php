@@ -4,8 +4,8 @@
  * User: songrenchu
  */
 ?>
-<div class="panel panel-default row">
-    <div class="panel panel-heading" style="font-weight: bold;">
+<div class="panel panel-default">
+    <div class="panel-heading" style="font-weight: bold;">
         My Friends (<?=$friNumber?>)
         <div class="navbar-right">
             <a class="btn btn-xs btn-success" title="Find users" href="<?=RHtmlHelper::siteUrl('user/find')?>">
@@ -24,6 +24,7 @@
                 $friend->picture = $friend->picture!=''?$friend->picture:User::$defaults['picture'];
                 $picture = RImageHelper::styleSrc($friend->picture,User::getPicOptions());
                 echo '<a href="' . RHtmlHelper::siteUrl('user/view/' . $friend->id) . '">' . RHtmlHelper::showImage($picture,$friend->name,array("width"=>"64px","height"=>"64px")). '</a>';
+                echo '<br/>';
                 $name = $friend->name;
                 if (mb_strlen($name) > 7) $name = mb_substr($name, 0, 8) . "..";
                 echo RHtmlHelper::linkAction('user', $name, 'view', $friend->id, array('title' => $friend->name)) . "  ";

@@ -1,4 +1,4 @@
-<div id="profile" class="row panel panel-default">
+<div id="profile" class="panel panel-default">
     <div class="panel-heading" style="font-weight: bold;"><?=$user->name?></div>
     <div class="panel-body">
         <div class="col-lg-8">
