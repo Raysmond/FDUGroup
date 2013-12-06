@@ -1,5 +1,5 @@
 <div>
-    <div class="row search-groups-form">
+    <div class="search-groups-form">
         <?= RFormHelper::openForm('group/find', array('class' => 'find-group-form')); ?>
         <div class="col-lg-4 search-group-bar">
             <div class="input-group">
@@ -14,7 +14,7 @@
 
     <div class="clearfix" style="margin-bottom: 10px;"></div>
 
-    <div class="row find-groups">
+    <div class="find-groups">
         <?php if (!count($groups)) {
             echo "<p>No groups found!</p>";
         } else {

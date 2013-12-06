@@ -5,7 +5,7 @@
  */
 ?>
 <div class="panel panel-default">
-    <div class="panel-heading" style="font-weight: bold;">
+    <div class="panel-heading">
         My Friends (<?=$friNumber?>)
         <div class="navbar-right">
             <a class="btn btn-xs btn-success" title="Find users" href="<?=RHtmlHelper::siteUrl('user/find')?>">

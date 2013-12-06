@@ -1,8 +1,8 @@
 <div class="panel panel-default">
-    <div class="panel-heading"><b>Friends</b></div>
+    <div class="panel-heading">Friends</div>
     <div class="panel-body">
         <?php
-        echo '<div class="row user-list">';
+        echo '<div class="user-list">';
         if(empty($friends)){
             echo '<div>&nbsp;&nbsp;You don\'t have any friends yet!</div>';
         }

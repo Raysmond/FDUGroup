@@ -6,6 +6,15 @@ body {
     background: #efefef;
 }
 
+.col-sm-3{
+    width: 28%;
+}
+.col-sm-9{
+    width: 72%;
+    padding-right: 5px;
+}
+
+
 body #main-wrapper{
     /*background: #fff;*/
     padding-top: 20px;
@@ -14,10 +23,46 @@ body #main-wrapper{
 body.user-home #main-wrapper{
     background: #f5f5f5;
 }
+
+#content .panel-wrapper{
+    padding: 10px;
+}
+
+#content{
+    overflow: hidden;
+}
+#content .panel{
+
+}
+
+#content .panel .panel-heading{
+    font-weight: bold;
+}
+
+#content .panel .panel-body{
+    padding: 10px;
+}
+
+#sidebar {
+    overflow: hidden;
+}
+
+#sidebar .panel{
+}
+
+#sidebar .panel .panel-heading{
+    font-weight: bold;
+}
+
+#sidebar .panel .panel-body{
+    padding: 5px 7px;
+}
+
 footer {
     padding-left: 15px;
     padding-right: 15px;
 }
+
 
 #main-navigation{
     background: none;
@@ -88,11 +133,6 @@ footer {
         width: 50%; /* 6 columns */
     }
 }
-
-#sidebar {
-    overflow: hidden;
-}
-
 
 
 .badge-administrator {

@@ -4,8 +4,8 @@
  * @author: Raysmond
  */
 ?>
-<div>
-    <div class="row user-profile-tiny">
+<div class="panel panel-wrapper">
+    <div class="user-profile-tiny">
         <div class="col-lg-2">
             <?php if(!isset($user->picture)||$user->picture=='') $user->picture=User::$defaults['picture'];
             $thumbnail = RImageHelper::styleSrc($user->picture,$user::getPicOptions());
@@ -42,6 +42,10 @@
         </div>
 
     </div>
+
+    <div class="clearfix"></div>
+    <hr>
+
     <?php
     if ($user->status == User::STATUS_BLOCKED) {
         echo '<div class="panel-body">This user has been blocked.</div>';

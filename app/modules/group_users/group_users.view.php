@@ -14,7 +14,7 @@
                 echo 'No group users';
             }
             else{
-                echo '<div class="row user-list">';
+                echo '<div class="user-list">';
                 foreach($users as $user){
                     echo '<div class="user-item col-lg-4">';
                     $user->picture = $user->picture!=''?$user->picture:User::$defaults['picture'];
@@ -26,6 +26,7 @@
                     echo '</div>';
                 }
                 echo '</div>';
+                echo '<div class="clearfix"></div>';
                 echo '<span class="glyphicon glyphicon-user"></span>&nbsp;'.RHtmlHelper::linkAction('group',"All group members",'members',$groupId);
             }
         ?>

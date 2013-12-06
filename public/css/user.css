@@ -6,9 +6,11 @@
 .find-user .search-bar {
     margin-bottom: 10px;
 }
+
 body.user-home #main-wrapper{
     padding-top: 0;
 }
+
 body.user-home .content-wrapper{
 
 }
