@@ -70,4 +70,10 @@ class SiteController extends BaseController
 
         $this->render('contact', $data, false);
     }
+
+    public function actionHelp(){
+        $this->setHeaderTitle("Site help");
+        $data = array();
+        $this->render('help',$data,false);
+    }
 }
