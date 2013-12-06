@@ -122,7 +122,7 @@ $baseUrl = Rays::app()->getBaseUrl();
 
             <?php
             $this->module("friend_users");
-
+            /*
             $cache = RCacheFactory::create('RFileCacheHelper', Rays::app()->getCacheConfig());
             if ( ($cacheContent = $cache->get("users", "new_users", 3600)) != FALSE ) {
                 echo $cacheContent;
@@ -133,6 +133,7 @@ $baseUrl = Rays::app()->getBaseUrl();
                 echo $cacheContent;
                 unset($cacheContent);
             }
+            */
 
             $this->module("ads");
             ?>
