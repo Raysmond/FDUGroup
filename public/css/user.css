@@ -10,11 +10,11 @@ body.user-home #main-wrapper{
     padding-top: 0;
 }
 body.user-home .content-wrapper{
-    border-left: 1px #eee solid;
+
 }
 
 .user-home .user-panel {
-    padding: 10px 20px;
+    padding: 10px 30px;
     margin-top:0;
     background: #fff;
 
@@ -71,7 +71,7 @@ body.user-home .content-wrapper{
 }
 /* User home page navigation */
 .user-home-navigation{
-
+    margin-bottom: 20px;
 }
 
 .user-home-navigation .nav-pills{

@@ -11,6 +11,7 @@ $baseUrl = Rays::app()->getBaseUrl();
     <meta name="description" content=""/>
 
     <link rel="stylesheet" type="text/css" href="<?php echo $baseUrl; ?>/public/bootstrap-3.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="<?php echo $baseUrl; ?>/public/css/non-responsive.css"/>
     <link rel="stylesheet" type="text/css" href="<?php echo $baseUrl; ?>/public/css/main.css"/>
     <link rel="stylesheet" type="text/css" href="<?php echo $baseUrl; ?>/public/css/user.css"/>
 
@@ -103,22 +104,19 @@ $baseUrl = Rays::app()->getBaseUrl();
                 ?>
             </div>
 
-            <div class="row">
-                <div class="col-lg-3 navigation-wrapper">
-                    <?php $this->module("user_home_nav", array('id'=>'user_home_nav','name'=>'User home navigation')); ?>
-                </div>
-
-                <div class="col-lg-9 content-wrapper">
-                    <div id="content">
-                        <?php if(isset($content)) echo $content; ?>
-                    </div>
+            <div class="content-wrapper">
+                <div id="content">
+                    <?php if(isset($content)) echo $content; ?>
                 </div>
             </div>
-
 
         </div><!--/span-->
 
         <div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar" role="navigation">
+
+            <div class="navigation-wrapper">
+                <?php $this->module("user_home_nav", array('id'=>'user_home_nav','name'=>'User home navigation')); ?>
+            </div>
 
             <?php
             $this->module("friend_users");

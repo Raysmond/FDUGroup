@@ -1,5 +1,7 @@
 
 .posts-list .topic-item{
+    margin-left: 0;
+    margin-right: 0;
 }
 
 .posts-list .topic-item  .topic-title{
