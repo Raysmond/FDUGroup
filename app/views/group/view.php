@@ -1,5 +1,11 @@
-<div class="row panel panel-default">
-    <div class="panel-heading"><b>My Groups</b></div>
+<div class=" panel panel-default">
+    <div class="panel-heading">
+        <div style="float: right;">
+            <?php echo RHtmlHelper::linkAction('group','Create my group','build',null,array('class'=>'btn btn-success btn-xs')); ?>
+        </div>
+
+        <b>My Groups</b>
+    </div>
     <div class="panel-body panel-my-group">
 <?php
 /**
@@ -8,8 +14,6 @@
  * Date: 13-10-14
  * Time: 下午1:53
  */
-
-    echo RHtmlHelper::linkAction('group','Build my group','build',null,array('class'=>'btn btn-success'));
 
     if(!count($groups)){
         echo "<p>You have not joint any groups!</p>";
