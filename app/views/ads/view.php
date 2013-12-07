@@ -4,13 +4,13 @@
  * User: songrenchu
  */
 ?>
-<div class="row panel panel-default">
-    <div class="panel-heading"><b>
+<div class="panel panel-default">
+    <div class="panel-heading"><h1 class="panel-title">
             <?php echo count($ads); ?> advertisements
             <?php echo ($type==Ads::APPLYING?"applied":""); ?>
             <?php echo ($type==Ads::BLOCKED?"blocked":""); ?>
             <?php echo ($type==Ads::APPROVED?"published":""); ?>
-    </b></div>
+    </h1></div>
     <div class="panel-body">
         <div class="navbar-left">
             <?=RHtmlHelper::linkAction('ads','+ Apply','apply',null,array('class'=>'btn btn-sm btn-info'))?>
@@ -31,7 +31,7 @@
                 <div style="float:right;margin-top: -2px;">
                     <?=$ad->pubTime?>
                     &nbsp;&nbsp;&nbsp;&nbsp;Paid <?=$ad->paidPrice?> Credits&nbsp;&nbsp;
-                    <?=RHtmlHelper::linkAction('ads','edit','edit',[$ad->id, $data['type']],['class' => 'btn btn-xs btn-primary'])?>
+                    <?=RHtmlHelper::linkAction('ads','edit','edit',[$ad->id, $data['type']],['class' => 'btn btn-xs btn-info'])?>
                     <?=RHtmlHelper::linkAction('ads','remove','remove',[$ad->id, $data['type']],['class' => 'btn btn-xs btn-danger','onclick' => "return confirm('Are you sure to remove selected advertisement? (Removed advertisements cannot be recovered, and paid credits will not be returned.)')"])?>
                 </div>
                 <h3 class="panel-title">

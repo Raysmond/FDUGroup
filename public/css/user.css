@@ -76,8 +76,14 @@ body.user-home .content-wrapper{
     margin-bottom: 20px;
 }
 
-.user-home-navigation .nav-pills{
-
+.user-home-navigation .nav-pills>li{
+    margin-top: 0;
+}
+.user-home-navigation .nav-pills>li>a{
+    border-radius: 0;
+    border-bottom: 1px #ddd solid;
+    border-top: 1px #ddd solid;
+    margin-bottom: -1px;
 }
 .user-home-navigation .nav-pills>li.active>a,
 .user-home-navigation .nav-pills>li.active>a:hover,
