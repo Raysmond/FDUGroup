@@ -66,5 +66,12 @@ class GroupUser extends Data
         }
         return false;
     }
+
+    public function delete($assignment = []) {
+        if(is_numeric($this->groupId) && is_numeric($this->userId)){
+            $sql = "DELETE FROM {$this->table} WHERE {$this->columns['groupId']}={$this->groupId} AND {$this->columns['userId']} = {$this->userId} LIMIT 1";
+            Data::executeSQL($sql);
+        }
+    }
 }
 

@@ -1,6 +1,6 @@
 <?php
 if (!count($groups)) {
-    echo '<div class="panel panel-default"><div class="panel-heading">'.$category->name.'</div><div class="panel-body">No groups in the category!</div></div>';
+    echo '<div class="panel panel-default"><div class="panel-heading"><h1 class="panel-title">'.$category->name.'</h1></div><div class="panel-body">No groups in the category!</div></div>';
 }
 ?>
 <div id="category-groups" >

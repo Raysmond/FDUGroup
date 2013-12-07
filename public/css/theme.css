@@ -33,6 +33,13 @@ a {
 .actions a{
     color:#999;
 }
+.popular-group-cat a {
+    color:#999;
+}
+
+.popular-group-title a {
+    color:#777;
+}
 
 a:hover {
     color:#ff6b6b;
@@ -163,7 +170,8 @@ a:active {
     color:#555;
     padding: 15px;
     font-size: 13px;
-    margin: -1px 0 -5px 0;
+    /*margin: -1px 0 -5px 0;*/
+    margin: -1px 0 5px 0;
 }
 
 .panel-default>.panel-heading>.heading-actions{
@@ -282,4 +290,35 @@ a:active {
 
 .badge-vip {
     background-color: #FFC200;
+}
+
+.popular-groups ul {
+    padding: 0 5px 0 5px;
+    margin-bottom:0;
+}
+
+.popular-groups li {
+    list-style: none;
+    padding-top:10px;
+    height:80px;
+}
+
+.popular-group-picture img {
+    width: 30%;
+    height: 30%;
+    float:left;
+}
+
+.popular-group-title {
+    width:70%;
+    float:left;
+    padding-left:10px;
+    font-weight:bold;
+    font-size:14px;
+}
+
+.popular-group-cat {
+    width:70%;
+    float:left;
+    padding-left:10px;
 }

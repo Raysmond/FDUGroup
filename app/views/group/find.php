@@ -1,5 +1,5 @@
 <?php if (!count($groups)) {
-    echo "<div  class='panel panel-default'><div class=\"panel-body\">No groups found!</div></div>";
+    echo "<div  class='panel panel-default'><div class='panel-heading'><h1 class='panel-title'>Search for: ".$searchstr."</h1></div><div class=\"panel-body\">No groups found!</div></div>";
 } else {
 ?>
 <div>
