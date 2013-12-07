@@ -50,7 +50,7 @@ a:active {
     border-right: 1px #666 dashed;
 }
 #main-navigation .navbar-inverse .navbar-nav>.active>a, #main-navigation .navbar-inverse .navbar-nav>.active>a:focus {
-    color: #f04d4d;
+    color: #ff6b6b;
     background: none;
 }
 
@@ -80,4 +80,30 @@ a:active {
 
 .panel {
     margin-bottom: 13px;
+}
+
+#main-navigation .navbar-form input{
+    background: #464646;
+    border: 1px solid #ddd;
+    font-size: 1em;
+    height: 40px;
+    line-height: 28px;
+    padding: 0 12px;
+    width: 160px;
+    color: #999;
+    border: 5px solid #2d2d2d;
+    border-radius: 30px;
+    -webkit-border-radius: 30px;
+    -moz-border-radius: 30px;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-shadow: none;
+    transition: width 0.7s ease 0s;
+    -o-transition: width 0.7s ease 0s;
+    -moz-transition: width 0.7s ease 0s;
+    -webkit-transition: width 0.7s ease 0s;
+    -webkit-background-clip: padding-box;
+    -moz-background-clip: padding-box;
+    margin: -3px 0 -5px 0;
 }
