@@ -86,8 +86,8 @@ a:active {
     background: #464646;
     border: 1px solid #ddd;
     font-size: 1em;
-    height: 40px;
-    line-height: 28px;
+    height: 38px;
+    line-height: 20px;
     padding: 0 12px;
     width: 160px;
     color: #999;
@@ -105,5 +105,5 @@ a:active {
     -webkit-transition: width 0.7s ease 0s;
     -webkit-background-clip: padding-box;
     -moz-background-clip: padding-box;
-    margin: -3px 0 -5px 0;
+    margin: -1px 0 -5px 0;
 }
