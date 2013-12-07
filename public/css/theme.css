@@ -44,6 +44,15 @@ a:active {
 #main-navigation{
 
 }
+
+#main-navigation .navbar>.container{
+    padding-right: 0;
+}
+
+#main-navigation .navbar>.container .navbar-collapse{
+    padding-right: 5px;
+}
+
 #main-navigation .navbar{
     background-color: #2c3036;
     border-bottom: 5px solid #ddd;
@@ -209,4 +218,29 @@ a:active {
     background: #ff6b6b;
     color: #fff;
     border: 0;
+}
+
+/* form */
+.btn-primary{
+    width: auto;
+    color: #fff;
+    font: normal normal 14px/1.8em 'Open Sans', 'Helvetica Neue', Helvetica, Arial, Sans-serif;
+    padding: 5px 20px;
+    background: #ff6b6b;
+    cursor: pointer;
+    box-shadow: 0px 1px 3px 0px #d5d5d5;
+    transition: .07s ease-in;
+    -moz-transition: .07s ease-in;
+    -webkit-transition: .07s ease-in;
+    -o-transition: .07s ease-in;
+    border: 0;
+    border-radius: 2px;
+}
+
+.btn-primary:hover{
+    background: #f65e5e;
+    transition: .07s ease-in;
+    -moz-transition: .07s ease-in;
+    -webkit-transition: .07s ease-in;
+    -o-transition: .07s ease-in;
 }

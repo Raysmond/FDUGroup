@@ -25,7 +25,7 @@ $baseUrl = Rays::app()->getBaseUrl();
     <script type="text/javascript" src="<?php echo $baseUrl; ?>/public/js/main.js"></script>
 </head>
 
-<body>
+<body class="index">
 <?php
 $this->module('main_nav',array('id'=>'main_nav','name'=>'Main navigation'));
 ?>

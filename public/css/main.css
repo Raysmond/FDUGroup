@@ -6,6 +6,11 @@ body {
     background: #ececec;
 }
 
+body.index #main-wrapper{
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
 .col-sm-3{
     width: 28%;
 }

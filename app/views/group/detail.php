@@ -5,7 +5,26 @@
  */
 ?>
 <div class="panel panel-default">
-    <div class="panel-heading"><h1 class="panel-title"><?= $group->name ?></h1></div>
+    <div class="panel-heading">
+        <div class="heading-actions" style="float: right;">
+            <?php
+                if($isManager){
+                    echo RHtmlHelper::linkAction('group',"Edit",'edit',$group->id,array('class'=>'btn btn-xs btn-success'));
+                    echo '&nbsp;';
+                    echo RHtmlHelper::linkAction('group',"Invite",'invite',$group->id,array('class'=>'btn btn-xs btn-info'));
+                    echo '&nbsp;';
+                }
+                if(!$hasJoined){
+                    echo RHtmlHelper::linkAction('group','Join','join',$group->id,array('class'=>'btn btn-xs btn-success'));
+                    echo '&nbsp;';
+                }
+                else{
+                    echo RHtmlHelper::linkAction('group','Quit','exit',$group->id,array('class'=>'btn btn-xs btn-danger','onclick'=>'return confirm(\'Are you sure to quit the group? This operation cannot be undone!\')'));
+                }
+            ?>
+        </div>
+        <h1 class="panel-title"><?= $group->name ?></h1>
+    </div>
     <div class="panel-body">
         <div class="row">
             <?php
@@ -76,11 +95,13 @@
                         ?>
                         </tbody>
                     </table>
+
                     <ul class="pager">
                         <li class="next"><a href="<?= RHtmlHelper::siteUrl('post/list/' . $group->id) ?>">More
                                 topics &rarr;</a>
                         </li>
                     </ul>
+
                 <?php endif; ?>
                 <?= (count($latestPosts) == 0) ? "No posts." : "" ?>
             </div>
