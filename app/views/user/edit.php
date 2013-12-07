@@ -5,7 +5,7 @@
  */
 ?>
 <div class="panel panel-default">
-    <div class="panel-heading"><b>User Information Edit</b></div>
+    <div class="panel-heading"><h1 class="panel-title">Edit profile: <?=$user->name?></h1></div>
     <div class="panel-body">
         <?php
         $form = array();
@@ -115,10 +115,16 @@
                 'placeholder' => "your introduction"));
 
         echo RFormHelper::label("Picture");
+        echo '<br/>';
+        if($user->picture){
+            $picture = RImageHelper::styleSrc($user->picture,User::getPicOptions());
+            echo RHtmlHelper::showImage($picture,$user->name,array("width"=>'120px','class'=>'img-thumbnail'));
+        }
+        echo '<br/><br/>';
         echo RFormHelper::input(array('type' => 'file', 'name' => 'user_picture', 'accept' => 'image/gif, image/jpeg,image/png'));
         echo "<br/>";
 
-        echo RFormHelper::input(array('type' => 'submit', 'value' => 'Complete edit', 'class' => "btn btn-lg btn-primary btn-block"));
+        echo RFormHelper::input(array('type' => 'submit', 'value' => 'Complete', 'class' => "btn btn-lg btn-primary"));
         echo RFormHelper::endForm();
         ?>
     </div>
