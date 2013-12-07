@@ -9,7 +9,7 @@
         <?php
         foreach($categories as $category){
             ?>
-            <a class="btn btn-sx parent-category" href="<?=RHtmlHelper::siteUrl('category/groups/'.$category->id)?>">
+            <a class="btn btn-sx parent-category <?=in_array($category->id, $cid) ? 'active':''?>" href="<?=RHtmlHelper::siteUrl('category/groups/'.$category->id)?>">
                 <?=RHtmlHelper::showImage('files/images/category/'.$category->id.'.png','', ['style'=>'width:24px;height:24px;'])?>&nbsp;
                 <?=$category->name?>
             </a>
@@ -30,7 +30,7 @@
                 <ul>
                 <?php
                     foreach ($subCategory as $cat) {
-                        echo '<li>'.RHtmlHelper::linkAction('category',$cat->name,'groups',$cat->id, ['class' => 'btn btn-sm children-category']).'</li>';
+                        echo '<li>'.RHtmlHelper::linkAction('category',$cat->name,'groups',$cat->id, ['class' => 'btn btn-sm children-category '. (in_array($cat->id, $cid) ? 'active':''),]).'</li>';
                     }
                 ?>
                 </ul>

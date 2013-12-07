@@ -41,7 +41,6 @@ class CategoryController extends BaseController
             }
             exit;
         }
-
         $this->render('groups', array('category' => $category, 'groups' => $groups), false);
 
     }

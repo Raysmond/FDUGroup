@@ -11,6 +11,10 @@ body.index #main-wrapper{
     padding-right: 5px;
 }
 
+body.index #content>.panel-default{
+    min-height: 450px;
+}
+
 .col-sm-3{
     width: 28%;
 }

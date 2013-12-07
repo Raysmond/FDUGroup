@@ -11,6 +11,19 @@ class group_categories_module extends RModule{
     {
         $categories = new Category();
         $categories = $categories->find(0,0,[],[],['pid' => 0]);
-        return $this->render('group_categories',array('title'=>$this->getName(),'categories'=>$categories));
+        $data = [
+            'title'=>$this->getName(),
+            'categories'=>$categories,
+            'cid' => [],
+        ];
+        $cid = Rays::router()->getParams()[0];
+        if (isset($cid) && $cid !== null) {
+            $data['cid'] []= $cid;$category= (new Category())->load($cid);
+            if ($category->pid != 0) {
+                $data['cid'] []= $category->pid;
+            }
+        }
+
+        return $this->render('group_categories',$data);
     }
 }

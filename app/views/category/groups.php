@@ -1,9 +1,10 @@
-<div id="category-groups" class="row">
-    <?php
-    if (!count($groups)) {
-        echo '<div>&nbsp;&nbsp;No groups in the category!</div>';
-    }
-    ?>
+<?php
+if (!count($groups)) {
+    echo '<div class="panel panel-default"><div class="panel-heading">'.$category->name.'</div><div class="panel-body">No groups in the category!</div></div>';
+}
+?>
+<div id="category-groups" >
+
     <div id="waterfall-groups" class="waterfall">
         <?php
         $this->renderPartial("_groups_list", array('groups' => $groups), false);

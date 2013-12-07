@@ -1,10 +1,10 @@
+<?php if (!count($groups)) {
+    echo "<div  class='panel panel-default'><div class=\"panel-body\">No groups found!</div></div>";
+} else {
+?>
 <div>
-
     <div class="find-groups">
-        <?php if (!count($groups)) {
-            echo "<p>No groups found!</p>";
-        } else {
-            ?>
+
             <div id="waterfall-groups" class="waterfall">
                 <?php
                 $this->renderPartial("_groups_list", array('groups' => $groups), false);
@@ -71,9 +71,9 @@
 
             </script>
 
-        <?php
-        } ?>
-
     </div>
 
 </div>
+
+<?php
+}

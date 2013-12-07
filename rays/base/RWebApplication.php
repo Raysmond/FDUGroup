@@ -176,4 +176,8 @@ class RWebApplication extends RBaseApplication
         return $this->isCleanUri != false;
     }
 
+    public function getController(){
+        return $this->controller;
+    }
+
 }
