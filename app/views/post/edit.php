@@ -29,7 +29,7 @@
             $submitText = "Edit";
         }
         ?>
-        <?=RFormHelper::openForm($url, array('id' => 'viewFrom', 'class' => '.form-signin registerForm'))?>
+        <?=RFormHelper::openForm($url, array('id' => 'viewFrom'))?>
         <?php if(isset($group)){
             echo 'In group: '.RHtmlHelper::linkAction('post',$group->name,'list',$group->id)."<br/><br/>";
         } ?>
