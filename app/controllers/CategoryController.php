@@ -28,8 +28,12 @@ class CategoryController extends BaseController
         $pageSize = 5;
 
         $groups = new Group();
-        $groups->categoryId = $categoryId;
-        $groups = $groups->find(($page-1)*$pageSize, $pageSize, ['key' => $groups->columns['id'], 'order' => 'desc']);
+        $cidList = [$categoryId];
+        foreach ((new Category())->load($categoryId)->children() as $sCat) {
+            $cidList[] = $sCat->id;
+        }
+
+        $groups = $groups->find(($page-1)*$pageSize, $pageSize, ['key' => $groups->columns['id'], 'order' => 'desc'], [], ['categoryId' => $cidList]);
 
         $this->addCss("/public/css/group.css");
         $this->addJs("/public/js/masonry.pkgd.min.js");

@@ -292,6 +292,12 @@ a:active {
     background-color: #FFC200;
 }
 
+.badge-user-panel {
+    float:left;
+    padding-top:9px;
+    padding-left:10px;
+}
+
 .popular-groups ul {
     padding: 0 5px 0 5px;
     margin-bottom:0;

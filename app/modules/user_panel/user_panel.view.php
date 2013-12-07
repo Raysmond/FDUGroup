@@ -41,9 +41,8 @@
 
             <div class="user-profile">
                 <h2>
-                    <?= RHtmlHelper::linkAction('user', $user->name, 'view', $user->id) ?>&nbsp;
-                    <span
-                        class="badge badge-<?= Role::getRoleNameById($user->roleId); ?>"><?= Role::getBadgeById($user->roleId); ?></span>
+                    <?= RHtmlHelper::linkAction('user', $user->name, 'view', $user->id, ['style' => 'float:left;']) ?>&nbsp;
+                    <div class="badge-user-panel"><span class="badge badge-<?= Role::getRoleNameById($user->roleId); ?>"><?= Role::getBadgeById($user->roleId); ?></span></div>
                 </h2>
 
                 <div><?= RHtmlHelper::decode($user->intro) ?></div>
