@@ -37,11 +37,15 @@ a {
     color:#999;
 }
 
+.home-actions .home-actions-item a{
+    color: #666;
+}
+
 .popular-group-title a {
     color:#777;
 }
 
-a:hover {
+a:hover, .home-actions .home-actions-item a:hover {
     color:#ff6b6b;
     text-decoration: none;
 }
