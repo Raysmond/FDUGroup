@@ -4,7 +4,11 @@ class FriendController extends BaseController {
         Role::AUTHENTICATED => array('add', 'confirm', 'decline')
     );
 
-    public $user;
+    public $_user;
+
+    public function filteredUser(){
+        return isset($this->_user)?$this->_user : null;
+    }
 
     public function beforeAction($action)
     {
@@ -19,7 +23,7 @@ class FriendController extends BaseController {
                 $user = new User();
                 if (isset($params) && isset($params[0]) && is_numeric($params[0]) && $user->load($params[0]) !== null) {
                     $result = true;
-                    $this->user = $user;
+                    $this->_user = $user;
                 }
                 break;
         }
@@ -34,7 +38,7 @@ class FriendController extends BaseController {
     public function actionAdd($userId = null) {
         // the user whose id = $userId
         // loaded in beforeAction() method
-        $user = $this->user;
+        // $user = $this->filteredUser();
 
         $uid = Rays::user()->id;
         if ($uid !== $userId) {

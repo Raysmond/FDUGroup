@@ -4,10 +4,11 @@
  * @author: Raysmond
  */
 
-class AdminController extends BaseController{
+class AdminController extends BaseController
+{
     public $layout = 'admin';
     public $defaultAction = 'index';
-    public $access = array(Role::ADMINISTRATOR=>array('index','logs'));
+    public $access = array(Role::ADMINISTRATOR => array('index', 'logs'));
 
     public function actionIndex()
     {
@@ -20,23 +21,16 @@ class AdminController extends BaseController{
      */
     public function actionLogs()
     {
-        $data = array();
+        $curPage = $this->getPage("page");
+        $pageSize = $this->getPageSize("pagesize", 10);
 
-        $curPage = $this->getHttpRequest()->getQuery('page',1);
-        $pageSize = (isset($_GET['pagesize'])&&is_numeric($_GET['pagesize']))?$_GET['pagesize'] : 8;
-        $count = new SystemLog();
-        $count = $count->count();
-
-        $url = RHtmlHelper::siteUrl('admin/logs');
-        $pager = new RPagerHelper('page',$count,$pageSize,$url,$curPage);
-        $data['pager'] = $pager->showPager();
-        $data['count'] = $count;
+        $count = (new SystemLog())->count();
+        $pager = new RPagerHelper('page', $count, $pageSize, RHtmlHelper::siteUrl('admin/logs'), $curPage);
 
         $sysLogs = new SystemLog();
-        $logs = $sysLogs->find(($curPage-1)*$pageSize,$pageSize,['key'=>$sysLogs->columns['id'],'order'=>'desc']);
+        $logs = $sysLogs->find(($curPage - 1) * $pageSize, $pageSize, ['key' => $sysLogs->columns['id'], 'order' => 'desc']);
 
-        $data['logs'] = $logs;
         $this->setHeaderTitle("System logs");
-        $this->render('logs',$data,false);
+        $this->render('logs', ['logs' => $logs, 'pager' => $pager->showPager(), 'count' => $count], false);
     }
 }

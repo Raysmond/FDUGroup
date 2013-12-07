@@ -14,7 +14,7 @@ class AdsController extends BaseController {
 
     public function actionView($type='active') {
         $this->setHeaderTitle('My Advertisements');
-        $currentUserId = Rays::app()->getLoginUser()->id;
+        $currentUserId = Rays::user()->id;
 
         $ads = new Ads();
         if($type === 'blocked'){
@@ -33,7 +33,7 @@ class AdsController extends BaseController {
 
     public function actionApply(){
         $data = array();
-        if($this->getHttpRequest()->isPostRequest()){
+        if(Rays::isPost()){
             $rules = array(
                 array('field'=>'ads-title','label'=>'Ads title','rules'=>'trim|required|min_length[5]|max_length[255]'),
                 array('field'=>'ads-content','label'=>'Ads content','rules'=>'required'),
@@ -42,16 +42,16 @@ class AdsController extends BaseController {
             $validation = new RFormValidationHelper($rules);
             if($validation->run()){
                 //Money cannot exceed wallet remaining
-                $money = Rays::app()->getLoginUser()->getWallet()->money;
+                $money = Rays::user()->getWallet()->money;
                 if ($money<(int)$_POST['paid-price']) {
                     /* TODO 这个要整合到Validation里面去 to Raysmond */
                     $this->flash('error','You cannot overdraft your '.Wallet::COIN_NAME.' to publish advertisements.');
                     $data['applyForm'] = $_POST;
                 } else {
-                    Rays::app()->getLoginUser()->getWallet()->cutMoney((int)$_POST['paid-price']);      //Pay the price
+                    Rays::user()->getWallet()->cutMoney((int)$_POST['paid-price']);      //Pay the price
                     $ads = new Ads();
                     $result = $ads->apply(
-                        Rays::app()->getLoginUser()->id,
+                        Rays::user()->id,
                         $_POST['ads-title'],
                         RHtmlHelper::encode($_POST['ads-content']),
                         $_POST['paid-price']
@@ -81,7 +81,7 @@ class AdsController extends BaseController {
         if (!isset($adId) || !is_numeric($adId)) {
             return;
         }
-        $currentUserId = Rays::app()->getLoginUser()->id;
+        $currentUserId = Rays::user()->id;
         $ad = new Ads();
         $ad->id = $adId;
         $ad = $ad->load();
@@ -124,7 +124,7 @@ class AdsController extends BaseController {
         $data['ad'] = $ad;
         $data['edit'] = true;
         $data['type'] = $type;
-        if($this->getHttpRequest()->isPostRequest()){
+        if(Rays::isPost()){
             $rules = array(
                 array('field'=>'ads-title','label'=>'Ads title','rules'=>'trim|required|min_length[5]|max_length[255]'),
                 array('field'=>'ads-content','label'=>'Ads content','rules'=>'required'),
@@ -162,7 +162,7 @@ class AdsController extends BaseController {
         $this->layout = 'admin';
         $data = [];
 
-        if ($this->getHttpRequest()->isPostRequest()) {
+        if (Rays::isPost()) {
             if (isset($_POST['checked_ads'])) {
                 $selected = $_POST['checked_ads'];
                 if (is_array($selected)) {
@@ -182,7 +182,7 @@ class AdsController extends BaseController {
             }
         }
 
-        $filterStr = $this->getHttpRequest()->getParam('search', null);
+        $filterStr = Rays::getParam('search', null);
 
         $like = array();
         if ($filterStr != null) {
@@ -199,8 +199,8 @@ class AdsController extends BaseController {
         $count = $ad->count($like);
         $data['count'] = $count;
 
-        $curPage = $this->getHttpRequest()->getQuery('page', 1);
-        $pageSize = (isset($_GET['pagesize']) && is_numeric($_GET['pagesize'])) ? $_GET['pagesize'] : 10;
+        $curPage = $this->getPage('page');
+        $pageSize = $this->getPageSize("pagesize",10);
         $ads = new Ads();
         $ads = $ads->find(($curPage - 1) * $pageSize, $pageSize, array('key' => $ads->columns["id"], "order" => 'desc'), $like);
         foreach ($ads as $ad) {
@@ -218,7 +218,7 @@ class AdsController extends BaseController {
     }
 
     public function actionHitAd() {
-        if ($this->getHttpRequest()->getIsAjaxRequest()) {
+        if (Rays::isAjax()) {
             $adId = (int)$_POST['adId'];
             $ad = (new Ads())->load($adId);
             if ($ad !== null) {

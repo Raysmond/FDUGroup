@@ -267,9 +267,7 @@ class PostController extends BaseController
 
         $topic->delete();
         $this->flash("message", "Post " . $topic->title . " was deleted.");
-        if (Rays::referrerUri()) {
-            $this->redirect(Rays::referrerUri());
-        }
+        $this->redirect(Rays::referrerUri());
     }
 
     /**
@@ -277,9 +275,6 @@ class PostController extends BaseController
      */
     public function actionAdmin()
     {
-        $this->layout = 'admin';
-        $data = array();
-
         // delete request
         if (Rays::isPost()) {
             if (isset($_POST['checked_topics'])) {
@@ -298,19 +293,12 @@ class PostController extends BaseController
         $curPage = $this->getPage("page");
         $pageSize = $this->getPageSize("pagesize");
 
-        $rows = new Topic();
-        $count = $rows->count();
-        $data['count'] = $count;
-
-        $topics = new Topic();
-        $topics = $topics->adminFindAll(($curPage - 1) * $pageSize, $pageSize, array('key' => 'id', "order" => 'desc'));
-        $data['topics'] = $topics;
-
+        $count = (new Topic())->count();
+        $topics = (new Topic())->adminFindAll(($curPage - 1) * $pageSize, $pageSize, array('key' => 'id', "order" => 'desc'));
         $pager = new RPagerHelper('page', $count, $pageSize, RHtmlHelper::siteUrl('post/admin'), $curPage);
-        $pager = $pager->showPager();
-        $data['pager'] = $pager;
 
-        $this->render('admin', $data, false);
+        $this->layout = 'admin';
+        $this->render('admin', ['pager'=>$pager->showPager(),'topics'=>$topics,'count'=>$count], false);
     }
 
 }

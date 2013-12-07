@@ -14,7 +14,11 @@ class GroupController extends BaseController
         Role::ADMINISTRATOR => array('findAdmin','buildAdmin','admin','recommend'),
     );
 
-    public $group;
+    public $_group;
+
+    public function filteredGroup(){
+        return isset($this->_group)?$this->_group : null;
+    }
 
     public function beforeAction($action){
         $params = $this->getActionParams();
@@ -29,7 +33,7 @@ class GroupController extends BaseController
                 $group = new Group();
                 $result = false;
                 if(isset($params[0]) && is_numeric($params[0]) && $group->load($params[0]) !== null){
-                    $this->group = $group;
+                    $this->_group = $group;
                     $result = true;
                 }
                 break;
@@ -112,7 +116,7 @@ class GroupController extends BaseController
     public function actionDetail($groupId)
     {
         // group loaded in beforeAction() method
-        $group = $this->group;
+        $group = $this->filteredGroup();
 
         $counter = $group->increaseCounter();
         $group->category->load();
@@ -195,7 +199,7 @@ class GroupController extends BaseController
     public function actionEdit($groupId)
     {
         // group loaded in beforeAction() method
-        $oldGroup = $this->group;
+        $oldGroup = $this->filteredGroup();
 
         $category = new Category();
         $categories = $category->find();
@@ -392,7 +396,7 @@ class GroupController extends BaseController
         $groupUser->userId = Rays::user()->id;
 
         // group loaded in beforeAction() method
-        $group = $this->group;
+        $group = $this->filteredGroup();
 
         // group creator cannot exit the group
         if($group->creator==$groupUser->userId){
@@ -435,7 +439,7 @@ class GroupController extends BaseController
     public function actionDelete($groupId)
     {
         // group loaded in beforeAction() method
-        $group = $this->group;
+        $group = $this->filteredGroup();
 
         $userId = Rays::user()->id;
         if ($group->creator == $userId) {
@@ -511,7 +515,7 @@ class GroupController extends BaseController
 
     public function actionInvite($groupId){
         // group loaded in beforeAction() method
-        $group = $this->group;
+        $group = $this->filteredGroup();
 
         $data = array();
         $data['group'] = $group;

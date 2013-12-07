@@ -24,7 +24,7 @@ class CategoryController extends BaseController
             $this->page404();
             return;
         }
-        $page = $this->getHttpRequest()->getParam("page",1);
+        $page = Rays::getParam("page",1);
         $pageSize = 5;
 
         $groups = new Group();
@@ -56,7 +56,7 @@ class CategoryController extends BaseController
     {
         $data = array();
 
-        if ($this->getHttpRequest()->isPostRequest()) {
+        if (Rays::isPost()) {
             if (isset($_POST['sub_items'])) {
                 $items = $_POST['sub_items'];
                 if (is_array($items)) {
