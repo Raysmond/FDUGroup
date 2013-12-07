@@ -10,9 +10,36 @@ class GroupController extends BaseController
     public $layout = "index";
     public $defaultAction = "index";
     public $access = array(
-        Role::AUTHENTICATED => array('view', 'build', 'edit', 'join', 'accept', 'decline', 'exit','delete','invite', 'acceptInvite'),
+        Role::AUTHENTICATED => array('myGroups', 'build', 'edit', 'join', 'accept', 'decline', 'exit','delete','invite', 'acceptInvite'),
         Role::ADMINISTRATOR => array('findAdmin','buildAdmin','admin','recommend'),
     );
+
+    public $group;
+
+    public function beforeAction($action){
+        $params = $this->getActionParams();
+        $result = true;
+        switch($action){
+            case "detail":
+            case "edit":
+            case "members":
+            case "exit":
+            case "delete":
+            case "invite":
+                $group = new Group();
+                $result = false;
+                if(isset($params[0]) && is_numeric($params[0]) && $group->load($params[0]) !== null){
+                    $this->group = $group;
+                    $result = true;
+                }
+                break;
+        }
+        if(!$result){
+            $this->page404();
+            return false;
+        }
+        return true;
+    }
 
     /*
      * Find groups/show all groups
@@ -56,14 +83,11 @@ class GroupController extends BaseController
     /*
      * View my groups
      */
-    public function actionView($userId = null)
+    public function actionMyGroups()
     {
         $page = $this->getPage("page");
         $pageSize = $this->getPageSize("pagesize",5);
 
-        $this->layout = 'user';
-        $this->addCss('/public/css/group.css');
-        $this->addJs('/public/js/masonry.pkgd.min.js');
         $userGroup = GroupUser::userGroups(($page - 1) * $pageSize, $pageSize, Rays::user()->id);
         if(Rays::isAjax()){
             if (!count($userGroup)) {
@@ -73,8 +97,12 @@ class GroupController extends BaseController
             }
             exit;
         }
+
+        $this->layout = 'user';
+        $this->addCss('/public/css/group.css');
+        $this->addJs('/public/js/masonry.pkgd.min.js');
         $this->setHeaderTitle("My Groups");
-        $this->render("view", ['groups' => $userGroup, 'exitGroup' => true], false);
+        $this->render("my_groups", ['groups' => $userGroup, 'exitGroup' => true], false);
     }
 
     /**
@@ -83,11 +111,8 @@ class GroupController extends BaseController
      */
     public function actionDetail($groupId)
     {
-        $group = new Group();
-        if(!is_numeric($groupId) || $group->load($groupId)===null){
-            $this->page404();
-            return;
-        }
+        // group loaded in beforeAction() method
+        $group = $this->group;
 
         $counter = $group->increaseCounter();
         $group->category->load();
@@ -126,9 +151,9 @@ class GroupController extends BaseController
     {
         $this->layout = 'user';
         $this->setHeaderTitle("Build my group");
-        $category = new Category();
-        $categories = $category->find();
-        $data = array('categories' => $categories);
+
+        $data = array('categories' => (new Category())->find());
+
         if (Rays::isPost()) {
             $form = $_POST;
             $rules = array(
@@ -169,11 +194,8 @@ class GroupController extends BaseController
      */
     public function actionEdit($groupId)
     {
-        $oldGroup = new Group();
-        if(!is_numeric($groupId) || $oldGroup->load($groupId)===null){
-            $this->page404();
-            return;
-        }
+        // group loaded in beforeAction() method
+        $oldGroup = $this->group;
 
         $category = new Category();
         $categories = $category->find();
@@ -369,8 +391,8 @@ class GroupController extends BaseController
         $groupUser->groupId = $groupId;
         $groupUser->userId = Rays::user()->id;
 
-        $group = new Group();
-        $group->load($groupId);
+        // group loaded in beforeAction() method
+        $group = $this->group;
 
         // group creator cannot exit the group
         if($group->creator==$groupUser->userId){
@@ -412,37 +434,26 @@ class GroupController extends BaseController
      */
     public function actionDelete($groupId)
     {
-        if (isset($groupId) && $groupId != '' && is_numeric($groupId)) {
-            $group = new Group();
-            $group->load($groupId);
-            if (isset($group->id) && $group->id != '') {
-                $userId = Rays::user()->id;
-                if ($group->creator == $userId) {
+        // group loaded in beforeAction() method
+        $group = $this->group;
 
-                    // Execute delete group transaction
-                    $group->deleteGroup();
+        $userId = Rays::user()->id;
+        if ($group->creator == $userId) {
 
-                    // Delete group's picture from local file system
-                    if (isset($group->picture) && $group->picture != '') {
-                        $picture = Rays::app()->getBaseDir() . "/../" . $group->picture;
-                        if (file_exists($picture))
-                            unlink($picture);
-                    }
-                    $this->flash("message", "Group " . $group->name . " was deleted.");
-                    $this->redirectAction("group", "view");
-                } else {
-                    $this->flash("error", "Sorry. You don't have the right to delete the group!");
-                    $this->redirectAction('group', 'detail', $group->id);
-                }
-            } else {
-                $this->flash("error", "No such group.");
-                $this->page404();
-                return;
+            // Execute delete group transaction
+            $group->deleteGroup();
+
+            // Delete group's picture from local file system
+            if (isset($group->picture) && $group->picture != '') {
+                $picture = Rays::app()->getBaseDir() . "/../" . $group->picture;
+                if (file_exists($picture))
+                    unlink($picture);
             }
+            $this->flash("message", "Group " . $group->name . " was deleted.");
+            $this->redirectAction("group", "view");
         } else {
-            $this->flash("error", "No such group.");
-            $this->page404();
-            return;
+            $this->flash("error", "Sorry. You don't have the right to delete the group!");
+            $this->redirectAction('group', 'detail', $group->id);
         }
     }
 
@@ -499,17 +510,8 @@ class GroupController extends BaseController
     }
 
     public function actionInvite($groupId){
-        if(!isset($groupId)||!is_numeric($groupId)){
-            $this->page404();
-            return;
-        }
-
-        $group = new Group();
-        $result = $group->load($groupId);
-        if($result==null){
-            $this->page404();
-            return;
-        }
+        // group loaded in beforeAction() method
+        $group = $this->group;
 
         $data = array();
         $data['group'] = $group;
