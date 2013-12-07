@@ -55,9 +55,11 @@
             data: {page: ++curPage},
             success: function (data) {
                 $('#loading-groups').hide(0);
-                if (data == '') {
-                    $("#category-groups").append("<span style='color: red;'>&nbsp;&nbsp;&nbsp;No more groups</span>");
-                    $("#load-more-groups").hide();
+                if (data == 'nomore') {
+                    nomore = true;
+                    $('#loading-groups').hide(0);
+                    //$('#load-more-groups').hide(0);
+                    return;
                 }
                 var $blocks = jQuery(data).filter('div.item');
                 $("#waterfall-groups").append($blocks);
