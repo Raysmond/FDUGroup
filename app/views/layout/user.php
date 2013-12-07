@@ -14,6 +14,7 @@ $baseUrl = Rays::app()->getBaseUrl();
     <link rel="stylesheet" type="text/css" href="<?php echo $baseUrl; ?>/public/css/non-responsive.css"/>
     <link rel="stylesheet" type="text/css" href="<?php echo $baseUrl; ?>/public/css/main.css"/>
     <link rel="stylesheet" type="text/css" href="<?php echo $baseUrl; ?>/public/css/user.css"/>
+    <link rel="stylesheet" type="text/css" href="<?php echo $baseUrl; ?>/public/css/theme.css"/>
 
     <?php
         // link custom css files

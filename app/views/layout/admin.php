@@ -12,6 +12,7 @@ $baseurl = Rays::app()->getBaseUrl();
 
     <link rel="stylesheet" type="text/css" href="<?php echo $baseurl; ?>/public/bootstrap-3.0/css/bootstrap.min.css"/>
     <link rel="stylesheet" type="text/css" href="<?php echo $baseurl; ?>/public/css/main.css"/>
+    <link rel="stylesheet" type="text/css" href="<?php echo $baseurl; ?>/public/css/theme.css"/>
     <?php
     // link custom css files
     echo RHtmlHelper::linkCssArray(Rays::app()->getClientManager()->css);
