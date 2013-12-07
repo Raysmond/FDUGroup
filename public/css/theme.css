@@ -135,3 +135,34 @@ a:active {
     font-size: 13px;
     margin: -1px 0 -5px 0;
 }
+
+#category-bar {
+    margin-bottom:20px;
+}
+
+.parent-category {
+    width:100px;
+}
+
+.category-children-container {
+    width:104px;
+    float:left;
+}
+.category-children-container ul {
+    padding-left:26px;
+}
+.category-children-container li {
+    list-style: none;
+}
+
+#category-bar a{
+    color:#555;
+    font-weight:bold;
+    transition: all 0.2s linear 0s;
+    -o-transition: all 0.2s linear 0s;
+    -moz-transition: all 0.2s linear 0s;
+    -webkit-transition: all 0.2s linear 0s;
+}
+#category-bar a:hover{
+    color:#ff6b6b;
+}

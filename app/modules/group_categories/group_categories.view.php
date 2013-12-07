@@ -1,24 +1,42 @@
 <?php
 /**
  * Group categories module view
- * @author: Raysmond
+ * @author: songrenchu
  */
 ?>
-<div class="panel panel-default">
-    <div class="panel-heading"><?php echo $title; ?></div>
-    <div class="panel-body">
+<div id="category-bar">
+    <div id="category-parent-level-bar">
         <?php
-            foreach($categories as $category){
-                    if($category->pid!=0)
-                        continue;
-                    echo " • ".RHtmlHelper::linkAction('category',$category->name,'groups',$category->id)."<br/>";
-                    $subCategories = $category->children();
-                    foreach($subCategories as $cat){
-                        echo RHtmlHelper::linkAction('category',$cat->name,'groups',$cat->id)."  ";
+        foreach($categories as $category){
+            ?>
+            <a class="btn btn-sx parent-category" href="<?=RHtmlHelper::siteUrl('category/groups/'.$category->id)?>">
+                <?=RHtmlHelper::showImage('files/images/category/'.$category->id.'.png','', ['style'=>'width:24px;height:24px;'])?>&nbsp;
+                <?=$category->name?>
+            </a>
+            <?php
+        }
+        ?>
+        <a class="btn btn-sx parent-category" href="javascript:$('#category-children-level-bar').slideToggle();">
+            <?=RHtmlHelper::showImage('files/images/category/more.png', '', ['style'=>'width:24px;height:24px;'])?>&nbsp;
+            更多...
+        </a>
+    </div>
+    <div id="category-children-level-bar" style="display:none;">
+        <?php
+        foreach($categories as $category){
+            $subCategory = $category->children();
+        ?>
+            <div class="category-children-container">
+                <ul>
+                <?php
+                    foreach ($subCategory as $cat) {
+                        echo '<li>'.RHtmlHelper::linkAction('category',$cat->name,'groups',$cat->id, ['class' => 'btn btn-sm children-category']).'</li>';
                     }
-                    echo '<br/>';
-
-            }
+                ?>
+                </ul>
+            </div>
+        <?php
+        }
         ?>
     </div>
 </div>

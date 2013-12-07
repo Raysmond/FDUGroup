@@ -31,7 +31,9 @@ $this->module('main_nav',array('id'=>'main_nav','name'=>'Main navigation'));
 ?>
 
 <div id="main-wrapper" class="container">
-
+    <?php
+        $this->module("group_categories",array('name'=>"Categories"));
+    ?>
     <div class="row row-offcanvas row-offcanvas-right">
         <div class="col-xs-12 col-sm-9">
             <p class="pull-right visible-xs">
@@ -55,7 +57,6 @@ $this->module('main_nav',array('id'=>'main_nav','name'=>'Main navigation'));
 
             <?php
             $this->module("help_nav");
-            $this->module("group_categories",array('name'=>"Categories"));
             $this->module("friend_groups",array('id'=>'friend_groups','name'=>"Friend Groups"));
             $this->module("group_users",array('id'=>'group_users','name'=>"Group Users"));
             $this->module("ads",array('id'=>'ads','name'=>"Ads"));

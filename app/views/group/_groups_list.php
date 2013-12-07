@@ -46,7 +46,7 @@ foreach ($groups as $group) {
             if (Rays::app()->isUserLogin()) {
                 if (!GroupUser::isUserInGroup(Rays::app()->getLoginUser()->id,$group->id)) {
                     ?>
-                    <div class="action action-right">
+                    <div class="action">
                         <?php $url = RHtmlHelper::siteUrl('group/join'); ?>
                         <a href="javascript: joinGroup('<?=$url?>','<?=$group->id?>')" title="Join the group"><span class="glyphicon glyphicon-plus"></span></a>
                     </div>

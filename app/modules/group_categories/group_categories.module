@@ -10,8 +10,7 @@ class group_categories_module extends RModule{
     public function module_content()
     {
         $categories = new Category();
-        $categories->pid = '0';
-        $categories = $categories->find();
+        $categories = $categories->find(0,0,[],[],['pid' => 0]);
         return $this->render('group_categories',array('title'=>$this->getName(),'categories'=>$categories));
     }
 }
