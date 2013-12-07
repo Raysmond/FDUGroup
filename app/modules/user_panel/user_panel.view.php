@@ -47,7 +47,7 @@
 
                 <div class="user-introduction"><?= RHtmlHelper::decode($user->intro) ?></div>
                 <div class="user-info">
-                    <div class="user-gender user-gender-<?=User::getGenderName($user->gender)?>"></div>
+                    <div title="gender: <?=User::getGenderName($user->gender)?>" class="user-gender user-gender-<?=User::getGenderName($user->gender)?>"></div>
                     <?= ($user->region ? '<span class="spliter">|</span>'.$user->region:''); ?>
                     <?php if ($user->weibo != '') { ?>
                         <?php if ($user->region != '') { ?><span class="spliter">|</span><?php } ?>
