@@ -29,7 +29,7 @@ class CategoryController extends BaseController
 
         $groups = new Group();
         $groups->categoryId = $categoryId;
-        $groups = $groups->find(($page-1)*$pageSize, $pageSize);
+        $groups = $groups->find(($page-1)*$pageSize, $pageSize, ['key' => $groups->columns['id'], 'order' => 'desc']);
 
         $this->addCss("/public/css/group.css");
         $this->addJs("/public/js/masonry.pkgd.min.js");

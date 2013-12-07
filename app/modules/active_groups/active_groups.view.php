@@ -8,7 +8,7 @@
                 <li>
                     <div class="popular-group-picture">
                         <a href="<?=RHtmlHelper::siteUrl('group/detail/'.$group->id)?>">
-                            <?= RHtmlHelper::showImage(RImageHelper::styleSrc($group->picture, Group::getPicOptions()), $group->name); ?>
+                            <?= RHtmlHelper::showImage(RImageHelper::styleSrc($group->picture?:Group::$defaults['picture'], Group::getPicOptions()), $group->name); ?>
                         </a>
                     </div>
                     <div class="popular-group-title">
