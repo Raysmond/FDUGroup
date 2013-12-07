@@ -5,7 +5,7 @@ $(document).ready(function() {
     });
     $('#account-dropdown').append('<b class="caret"></b>');
 
-    $(".posts-list .topic-item .topic-content img").css("maxWidth","538px").css("height","auto");
+    $(".posts-list .topic-item .topic-content img").css("maxWidth","560px").css("height","auto");
 
 });
 

@@ -64,13 +64,13 @@ a:active {
     margin-top: -10px;
 }
 
-.topic-meta a {
+.topic-meta a,.post-meta a {
     color:#ff6b6b;
 }
 
 
-.topic-meta a:hover{
-    color:#f65e5e;
+.topic-meta a:hover,.post-meta a:hover{
+    color: #FC8B8B;
 }
 
 .waterfall .item-heading a {

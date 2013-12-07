@@ -38,7 +38,7 @@
 }
 
 .posts-list .topic-item .topic-content .inner img{
-   max-width: 538px;
+   max-width: 560px;
 }
 
 .posts-list .topic-item .topic-picture{
@@ -49,7 +49,7 @@
     border-radius: 5px;
 }
 
-.posts-list .topic-item .topic-meta{
+.posts-list .topic-item .topic-meta,.post-meta{
     color: gray;
 }
 
