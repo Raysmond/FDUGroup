@@ -22,7 +22,7 @@ class GroupController extends BaseController
         $page = $this->getPage("page");
         $pageSize = $this->getPageSize("pagesize",5);
 
-        $searchStr = $this->getHttpRequest()->getParam("searchstr",'');
+        $searchStr = Rays::getParam("searchstr",'');
 
         $group = new Group();
         $like = array();
@@ -37,7 +37,7 @@ class GroupController extends BaseController
         $data = array('groups' => $groups);
         if ($searchStr != '') $data['searchstr'] = $searchStr;
 
-        if($this->getHttpRequest()->getIsAjaxRequest()){
+        if(Rays::isAjax()){
             if (!count($groups)) {
                 echo 'nomore';
             } else {
@@ -64,8 +64,8 @@ class GroupController extends BaseController
         $this->layout = 'user';
         $this->addCss('/public/css/group.css');
         $this->addJs('/public/js/masonry.pkgd.min.js');
-        $userGroup = GroupUser::userGroups(($page - 1) * $pageSize, $pageSize, Rays::app()->getLoginUser()->id);
-        if($this->getHttpRequest()->getIsAjaxRequest()){
+        $userGroup = GroupUser::userGroups(($page - 1) * $pageSize, $pageSize, Rays::user()->id);
+        if(Rays::isAjax()){
             if (!count($userGroup)) {
                 echo 'nomore';
             } else {
@@ -110,7 +110,7 @@ class GroupController extends BaseController
         $data['hasJoined'] = false;
         $data['isManager'] = false;
         if(Rays::app()->isUserLogin()){
-            $uid = Rays::app()->getLoginUser()->id;
+            $uid = Rays::user()->id;
             $data['hasJoined'] = GroupUser::isUserInGroup($uid,$group->id);
             $data['isManager'] = $group->creator==$uid;
         }
@@ -129,14 +129,14 @@ class GroupController extends BaseController
         $category = new Category();
         $categories = $category->find();
         $data = array('categories' => $categories);
-        if ($this->getHttpRequest()->isPostRequest()) {
+        if (Rays::isPost()) {
             $form = $_POST;
             $rules = array(
                 array('field' => 'group-name', 'label' => 'Group name', 'rules' => 'trim|required|min_length[5]|max_length[50]'),
                 array('field' => 'category', 'label' => 'Category', 'rules' => 'required'),
                 array('field' => 'intro', 'label' => 'Group Introduction', 'rules' => 'trim|required|min_length[10]')
             );
-            $user = Rays::app()->getLoginUser();
+            $user = Rays::user();
             $validation = new RFormValidationHelper($rules);
             if ($validation->run()) {
                 $group = new Group();
@@ -180,7 +180,7 @@ class GroupController extends BaseController
 
         $data = array('categories' => $categories, 'groupId' => $groupId);
 
-        if ($this->getHttpRequest()->isPostRequest()) {
+        if (Rays::isPost()) {
             $rules = array(
                 array('field' => 'group-name', 'label' => 'Group name', 'rules' => 'trim|required|min_length[5]|max_length[50]'),
                 array('field' => 'category', 'label' => 'Category', 'rules' => 'required'),
@@ -233,8 +233,8 @@ class GroupController extends BaseController
 
 
     public function actionJoin($groupId) {  //by songrenchu: need censorship by group creator
-        $userId = Rays::app()->getLoginUser()->id;
-        $userName = Rays::app()->getLoginUser()->name;
+        $userId = Rays::user()->id;
+        $userName = Rays::user()->name;
 
         $joinRequest = false;
         $text = '';
@@ -261,7 +261,7 @@ class GroupController extends BaseController
             $text = 'Group does not exist!';
         }
 
-        if($this->getHttpRequest()->getIsAjaxRequest()){
+        if(Rays::isAjax()){
             echo json_encode(['result'=>$joinRequest,'text'=>$text]);
             exit;
         }
@@ -275,7 +275,7 @@ class GroupController extends BaseController
         $censor = new Censor();
         $censor->id = (int)$censorId;
         if ($censor->load() !== null) {
-            if ($censor->firstId == Rays::app()->getLoginUser()->id) {
+            if ($censor->firstId == Rays::user()->id) {
                 $groupUser = new GroupUser();
                 $groupUser->groupId = $censor->secondId;
                 $groupUser->userId = $censor->firstId;
@@ -367,7 +367,7 @@ class GroupController extends BaseController
 
         $groupUser = new GroupUser();
         $groupUser->groupId = $groupId;
-        $groupUser->userId = Rays::app()->getLoginUser()->id;
+        $groupUser->userId = Rays::user()->id;
 
         $group = new Group();
         $group->load($groupId);
@@ -383,7 +383,7 @@ class GroupController extends BaseController
             $this->flash("message", "You have exited the group successfully.");
         }
 
-        $this->redirectAction('group', 'view', Rays::app()->getLoginUser()->id);
+        $this->redirectAction('group', 'view', Rays::user()->id);
 
     }
 
@@ -416,7 +416,7 @@ class GroupController extends BaseController
             $group = new Group();
             $group->load($groupId);
             if (isset($group->id) && $group->id != '') {
-                $userId = Rays::app()->getLoginUser()->id;
+                $userId = Rays::user()->id;
                 if ($group->creator == $userId) {
 
                     // Execute delete group transaction
@@ -454,7 +454,7 @@ class GroupController extends BaseController
         $this->layout = 'admin';
         $data = array();
 
-        if($this->getHttpRequest()->isPostRequest()){
+        if(Rays::isPost()){
             if(isset($_POST['checked_groups'])){
                 $groups = $_POST['checked_groups'];
                 foreach($groups as $group){
@@ -466,7 +466,7 @@ class GroupController extends BaseController
             }
         }
 
-        $filterStr = $this->getHttpRequest()->getParam('search',null);
+        $filterStr = Rays::getParam('search',null);
 
         $like = array();
         if($filterStr!=null){
@@ -514,12 +514,12 @@ class GroupController extends BaseController
         $data = array();
         $data['group'] = $group;
 
-        $user = Rays::app()->getLoginUser();
+        $user = Rays::user();
         $friends = new Friend();
         $friends = $friends->getFriendsToInvite($user->id, $groupId);
         $data['friends'] = $friends;
 
-        if ($this->getHttpRequest()->isPostRequest()) {
+        if (Rays::isPost()) {
             if (isset($_POST['select_friends'])) {
                 Group::inviteFriends($groupId,$user,$_POST['select_friends'],$_POST['invitation']);
                 $this->flash('message', 'Send invitation successfully.');
@@ -537,10 +537,10 @@ class GroupController extends BaseController
      */
     public function actionRecommend()
     {
-        if ($this->getHttpRequest()->getIsAjaxRequest()) {
-            $action = $this->getHttpRequest()->getParam('action', null);
+        if (Rays::isAjax()) {
+            $action = Rays::getParam('action', null);
             if ($action) {
-                $name = $this->getHttpRequest()->getParam('name', null);
+                $name = Rays::getParam('name', null);
                 $like = array();
                 if (isset($name) && $name != '') {
                     $names = explode(' ', $name);
@@ -582,7 +582,7 @@ class GroupController extends BaseController
             }
         }
 
-        if ($this->getHttpRequest()->isPostRequest()) {
+        if (Rays::isPost()) {
             if (isset($_POST['selected_recommend_groups']) && isset($_POST['selected_recommend_users'])) {
                 $groups = $_POST['selected_recommend_groups'];
                 $users = $_POST['selected_recommend_users'];
