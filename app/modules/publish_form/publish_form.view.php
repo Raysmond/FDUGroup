@@ -52,14 +52,14 @@
 <!---->
 <!--        <div class="actions">-->
 <!--            <div class="actions-item">-->
-<!--                --><?//=RFormHelper::input(array('type'=>'submit','class'=>'btn btn-lg btn-primary','value'=>'Publish a post'))?>
+<!--                --><?php //=RFormHelper::input(array('type'=>'submit','class'=>'btn btn-lg btn-primary','value'=>'Publish a post'))?>
 <!--            </div>-->
 <!--            <div class="actions-item">-->
-<!--                --><?//=RHtmlHelper::linkAction('group','New group','build',null,array('btn btn-sm btn-info'))?>
+<!--                --><?php //=RHtmlHelper::linkAction('group','New group','build',null,array('btn btn-sm btn-info'))?>
 <!--            </div>-->
 <!--        </div>-->
 <!---->
-<!--        --><?//=RFormHelper::endForm()?>
+<!--        --><?php //=RFormHelper::endForm()?>
 
     </div>
 </div>
