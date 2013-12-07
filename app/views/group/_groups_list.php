@@ -2,6 +2,10 @@
 foreach ($groups as $group) {
     ?>
     <div class="item col-lg-4">
+        <!-- Group name -->
+        <div class='item-heading'>
+            <?= RHtmlHelper::linkAction('group', $group->name, 'detail', $group->id); ?>
+        </div>
 
         <!-- Group picture -->
         <?php if ($group->picture) { ?>
@@ -11,11 +15,6 @@ foreach ($groups as $group) {
                 </a>
             </div>
         <?php } ?>
-
-        <!-- Group name -->
-        <div class='item-heading'>
-            <?= RHtmlHelper::linkAction('group', $group->name, 'detail', $group->id); ?>
-        </div>
 
         <!-- Group intro -->
         <div class="item-body">
@@ -34,7 +33,9 @@ foreach ($groups as $group) {
         <div class="actions">
 
             <div class="action">
-                <span class="glyphicon glyphicon-user"></span> <?= $group->memberCount ?>
+                <a href="javascript:void(0);" title="Members of this group">
+                    <span class="glyphicon glyphicon-user"></span> <?= $group->memberCount ?>
+                </a>
             </div>
 
             <div class="action action-like">
@@ -45,7 +46,7 @@ foreach ($groups as $group) {
             if (Rays::app()->isUserLogin()) {
                 if (!GroupUser::isUserInGroup(Rays::app()->getLoginUser()->id,$group->id)) {
                     ?>
-                    <div class="action">
+                    <div class="action action-right">
                         <?php $url = RHtmlHelper::siteUrl('group/join'); ?>
                         <a href="javascript: joinGroup('<?=$url?>','<?=$group->id?>')" title="Join the group"><span class="glyphicon glyphicon-plus"></span></a>
                     </div>
@@ -55,8 +56,8 @@ foreach ($groups as $group) {
 
             if (isset($exitGroup)) {
                 ?>
-                <div class="action">
-                    <a href="<?= RHtmlHelper::siteUrl("group/exit/" . $group->id) ?>"
+                <div class="action action-right">
+                    <a title="Exit this group" href="<?= RHtmlHelper::siteUrl("group/exit/" . $group->id) ?>"
                        onclick='javascript:return confirm("Do you really want to exit this group?")'><span
                             class="glyphicon glyphicon-remove"></span></a>
                 </div>
