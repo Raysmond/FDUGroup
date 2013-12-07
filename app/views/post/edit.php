@@ -30,9 +30,30 @@
         }
         ?>
         <?=RFormHelper::openForm($url, array('id' => 'viewFrom'))?>
-        <?php if(isset($group)){
-            echo 'In group: '.RHtmlHelper::linkAction('post',$group->name,'list',$group->id)."<br/><br/>";
-        } ?>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label" style="padding-left: 0;">Group</label>
+            <div class="col-sm-10">
+                <?php
+                $values = array();
+                foreach($groups as $item){
+                    $values[] = ['value'=>$item->id,'text'=>$item->name];
+                }
+                $selected_value = $values[0]['value'];
+                if(isset($newForm['group'])){
+                    $selected_value = $newForm['group'];
+                }
+                else if(isset($groupId)){
+                    $selected_value = $groupId;
+                }
+
+                echo RFormHelper::select('group',$values,array($selected_value),array('class'=>'form-control'));
+                ?>
+            </div>
+        </div>
+
+        <br/><br/>
+
         <?=RFormHelper::input(array(
             'id' => 'title',
             'name' => 'title',

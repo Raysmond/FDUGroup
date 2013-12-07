@@ -12,8 +12,8 @@ if ($lastSearchStr != '')
     $lastSearchStr = urlencode($lastSearchStr);
 ?>
 <div class="panel panel-default find-user">
-    <div class="panel-heading" style="font-weight: bold;">
-        Find Users
+    <div class="panel-heading">
+        <h1 class="panel-title">Find Users</h1>
     </div>
     <div class="panel-body">
         <div class="navbar-right search-bar">

@@ -66,10 +66,16 @@ class PostController extends BaseController
     public function actionNew($groupId = null)
     {
         $data = array("type" => "new", "groupId" => $groupId);
+        $data['groups'] = GroupUser::userGroups(0, 0, Rays::user()->id);
+
+        $data['groupId'] = null;
         if ($groupId != null) {
-            $group = new Group();
-            $group->load($groupId);
-            $data['group'] = $group;
+            foreach($data['groups'] as $item){
+                if($item->id == $groupId){
+                    $data['groupId'] = $groupId;
+                    break;
+                }
+            }
         }
 
         if (Rays::isPost()) {
@@ -95,6 +101,7 @@ class PostController extends BaseController
             }
         }
 
+        $this->layout = 'user';
         $this->setHeaderTitle("New topic");
         $this->render("edit", $data, false);
     }
@@ -125,6 +132,8 @@ class PostController extends BaseController
         $group = new Group();
         $group->load($topic->groupId);
         $data = array("type" => "edit", "topic" => $topic, 'group' => $group);
+
+        $this->layout = 'user';
         $this->setHeaderTitle("Edit post: " . $topic->title);
         $this->render('edit', $data, false);
     }
