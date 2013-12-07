@@ -5,7 +5,7 @@
  */
 ?>
 <div class="panel panel-default">
-    <div class="panel-heading"><h3 class="panel-title"><?php echo $title; ?></h3></div>
+    <div class="panel-heading"><?php echo $title; ?></div>
     <div class="panel-body">
         <?php
             foreach($categories as $category){

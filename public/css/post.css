@@ -18,13 +18,23 @@
     border-radius: 6px;
     padding: 0;
     width: 86.33333333333334%;
-    box-shadow: 0px 1px 3px 0px #a1a1a1;
-    border-radius: 2px;
-    overflow: hidden;
+    box-shadow: 0px 1px 3px 0px #d5d5d5;
+    /*overflow: hidden;*/
+}
+
+.posts-list .topic-item .topic-content span.arrow{
+    background: url(../images/arrow.png) -10px 0 no-repeat;
+    width: 32px;
+    height: 32px;
+    position: absolute;
+    left: -20px;
+    top: 10px;
+    display: block;
 }
 
 .posts-list .topic-item .topic-content .inner{
     padding: 10px 15px;
+    overflow: hidden;
 }
 
 .posts-list .topic-item .topic-content .inner img{
@@ -33,6 +43,7 @@
 
 .posts-list .topic-item .topic-picture{
     width: 13.666666666666664%;
+    padding-left: 10px;
 }
 .posts-list .topic-item .topic-picture img{
     border-radius: 5px;
@@ -57,13 +68,3 @@
     cursor: pointer;
     text-decoration: none;
 }
-/* 这里想做三角形，不知道怎么实现了，参考人人代码
-.posts-list .i {
-    position:relative;
-    width:24px;
-    height:24px;
-    top:15px;
-    left:-4px;
-    background:url(http://s.xnimg.cn/apps/profile2/res/timeline/bg_dot_left3.png) no-repeat;
-    _background:url(http://s.xnimg.cn/apps/profile2/res/timeline/bg_dot_left_ie6.png) no-repeat;
-}*/
