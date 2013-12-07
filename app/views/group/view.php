@@ -1,6 +1,6 @@
 <div class=" panel panel-default">
     <div class="panel-heading">
-        <div style="float: right;">
+        <div class="heading-actions">
             <?php echo RHtmlHelper::linkAction('group','Create my group','build',null,array('class'=>'btn btn-success btn-xs')); ?>
         </div>
 

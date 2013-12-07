@@ -1,5 +1,8 @@
 <div class="panel panel-default post">
     <div class="panel-heading">
+        <div class="heading-actions">
+            <?= RHtmlHelper::linkAction('post', 'Edit', 'edit', $topic->id, array('class' => 'btn btn-xs btn-info')) ?>
+        </div>
         <h1 class="panel-title"><?= $topic->title ?></h1>
     </div>
 
@@ -18,9 +21,6 @@
         </div>
         <br/><br/>
 
-        <div>
-            Actions: <?= RHtmlHelper::linkAction('post', 'Edit', 'edit', $topic->id, array('class' => 'btn btn-xs btn-info')) ?>
-        </div>
         <div style="width: 100%; text-align: center;">
             <?php $this->module('rating_plus', array('id' => 'rating_plus', 'entityType' => Topic::$entityType, 'entityId' => $topic->id)); ?>
         </div>
@@ -28,7 +28,7 @@
         <hr/>
 
         <div>
-            <h2>Comments</h2>
+            <h2 class="s-title">Comments</h2>
             <?php
             foreach ($commentTree as $commentItem) {
                 ?>
@@ -69,8 +69,6 @@
             <?php
             }
             ?>
-
-
             <hr/>
             <div id="reply">
                 <?= RFormHelper::openForm("post/comment/$topic->id", array('id' => 'viewFrom')) ?>
