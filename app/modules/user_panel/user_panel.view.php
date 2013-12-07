@@ -46,11 +46,11 @@
                 </h2>
 
                 <div class="user-introduction"><?= RHtmlHelper::decode($user->intro) ?></div>
-                <div>
-                    <div class="user-gender-<?=User::getGenderName($user->gender)?>"></div>
-                    <?= $user->region ?>
+                <div class="user-info">
+                    <div class="user-gender user-gender-<?=User::getGenderName($user->gender)?>"></div>
+                    <?= ($user->region ? '<span class="spliter">|</span>'.$user->region:''); ?>
                     <?php if ($user->weibo != '') { ?>
-                        <?php if ($user->region != '') { ?>|<?php } ?>
+                        <?php if ($user->region != '') { ?><span class="spliter">|</span><?php } ?>
                         Micro-Blog: <?= RHtmlHelper::link($user->weibo, $user->weibo, $user->weibo) ?>
                     <?php } ?>
                 </div>

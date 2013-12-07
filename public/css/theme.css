@@ -113,7 +113,7 @@ a:active {
 
 
 .topic-meta a:hover,.post-meta a:hover, .group-meta a:hover{
-    color: #FC8B8B;
+    color: #ffc1c1;
 }
 
 .waterfall .item-heading a {
@@ -338,4 +338,48 @@ a:active {
     white-space: nowrap;
     line-height:14px;
     margin-bottom:8px;
+}
+
+.user-profile .user-info {
+    color:#999;
+}
+
+.user-gender {
+    margin-top:3px;
+}
+
+.user-gender-Male {
+    width:13px;
+    height:13px;
+    background: url('../images/bg_line.png') 0 -5px;
+    float:left;
+}
+
+.user-gender-Female {
+    width:13px;
+    height:13px;
+    background: url('../images/bg_line.png') -24px -5px;
+    float:left;
+}
+
+.user-gender-Unknown {
+    width:13px;
+    height:13px;
+    background: url('../images/bg_line.png') -150px -5px;
+    float:left;
+}
+
+span.spliter {
+    font-size:10px;
+    padding-left:5px;
+    padding-right:5px;
+    color:#ccc;
+}
+
+.user-info a {
+    color:#f65e5e;
+}
+
+.user-info a:hover {
+    color: #ffc1c1;
 }
