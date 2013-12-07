@@ -2,6 +2,16 @@ body {
     color:#555;
 }
 
+h1.panel-title{
+    font-weight: bold;
+    font-size: 20px;
+}
+h2.s-title{
+    font-weight: bold;
+    font-size: 18px;
+    margin: 10px 0;
+}
+
 a {
     color:#000;
     text-decoration: none;
@@ -54,22 +64,25 @@ a:active {
     background: none;
 }
 
+
 #main-navigation .navbar-nav > li > a:hover{
     color: #f04d4d;
 }
+
 #account-dropdown .username {
     margin-right: 40px;
 }
+
 #account-dropdown img{
     margin-top: -10px;
 }
 
-.topic-meta a,.post-meta a {
+.topic-meta a,.post-meta a, .group-meta a {
     color:#ff6b6b;
 }
 
 
-.topic-meta a:hover,.post-meta a:hover{
+.topic-meta a:hover,.post-meta a:hover, .group-meta a:hover{
     color: #FC8B8B;
 }
 
@@ -109,29 +122,58 @@ a:active {
     margin: -3px 0 -5px 0;
 }
 
-#sidebar .panel {
+.panel-default {
     box-shadow: 0px 1px 3px 0px #d5d5d5;
     border-radius: 2px;
     overflow: hidden;
 }
 
-#sidebar .panel-heading {
+.panel-default>.panel-heading {
     color:#555;
     padding: 15px;
     border-bottom: 1px #eee solid;
     background-color: #fff;
-}
-
-#sidebar .panel-heading {
     height: 59px;
     font-size: 13px;
     padding-top:19px;
     font-weight: bold;
 }
 
-#sidebar .panel-body {
+
+.panel-default>.panel-body {
     color:#555;
     padding: 15px;
     font-size: 13px;
     margin: -1px 0 -5px 0;
+}
+.panel-default>.panel-body>.row{
+    margin-left: 0;
+    margin-right: 0;
+}
+
+#content .panel-default>.panel-body>.row{
+    margin-left: 0;
+    margin-right: 0;
+}
+
+/* Pagination */
+.pagination>li>a, .pagination>li>span{
+    margin: 0 2px;
+    border-radius: 3px;
+    border: none;
+    font-weight: bold;
+    background-color: #efefef;
+}
+
+.pagination>.disabled>span, .pagination>.disabled>a, .pagination>.disabled>a:hover, .pagination>.disabled>a:focus {
+    color: #333;
+    cursor: not-allowed;
+    background-color: #efefef;
+    border: none;
+}
+
+.pagination>.active>a, .pagination>.active>span, .pagination>.active>a:hover, .pagination>.active>span:hover, .pagination>.active>a:focus, .pagination>.active>span:focus {
+    background: #ff6b6b;
+    color: #fff;
+    border: 0;
 }
