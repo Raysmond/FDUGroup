@@ -27,7 +27,9 @@
 
             </div>
 
+
             <div class="col-lg-10 topic-content">
+                <span class="arrow"></span>
                 <div class="inner">
                     <div class="topic-title"><?= RHtmlHelper::linkAction('post', $topic['top_title'], 'view', $topic['top_id']) ?></div>
 
