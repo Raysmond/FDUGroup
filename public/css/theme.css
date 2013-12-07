@@ -17,8 +17,42 @@ a:active {
     text-decoration: none;
 }
 
-a:link {
-    color:#000;
-    text-decoration: none;
+#logo{
+    padding: 5px;
+}
+#logo img{
+    height: 40px;
 }
 
+#main-navigation{
+
+}
+#main-navigation .navbar{
+    background-color: #2c3036;
+    border-bottom: 5px solid #ddd;
+    padding: 5px 0;
+}
+
+#main-navigation .navbar-nav{
+    padding: 10px 0;
+}
+
+#main-navigation .navbar-nav > li > a {
+    padding: 5px 15px;
+    font-size: 14px;
+    border-right: 1px #666 dashed;
+}
+#main-navigation .navbar-inverse .navbar-nav>.active>a, #main-navigation .navbar-inverse .navbar-nav>.active>a:focus {
+    color: #f04d4d;
+    background: none;
+}
+
+#main-navigation .navbar-nav > li > a:hover{
+    color: #f04d4d;
+}
+#account-dropdown .username {
+    margin-right: 40px;
+}
+#account-dropdown img{
+    margin-top: -10px;
+}

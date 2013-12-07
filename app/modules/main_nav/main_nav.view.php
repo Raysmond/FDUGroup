@@ -7,7 +7,9 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <?= RHtmlHelper::linkAction("",$appName,"",null,array('class'=>'navbar-brand')); ?>
+                <a id="logo" href="<?=Rays::baseUrl()?>" class="navbar-brand">
+                    <?=RHtmlHelper::showImage("public/images/logo.png")?>
+                </a>
             </div>
             <div class="collapse navbar-collapse">
                 <ul class="nav navbar-nav">
@@ -18,6 +20,7 @@
                         <?= RHtmlHelper::linkAction("group","Find Groups","find"); ?>
                     </li>
                 </ul>
+
 
                 <ul class="nav navbar-nav navbar-right">
                     <?php
@@ -60,6 +63,11 @@
                         </li>
                     <?php } ?>
                 </ul>
+
+                <form class="navbar-form navbar-right" role="search" method="post" action="<?=RHtmlHelper::siteUrl("group/find")?>">
+                     <input type="text" class="form-control" placeholder="Search">
+                </form>
+
             </div><!-- /.nav-collapse -->
         </div><!-- /.container -->
     </div><!-- /.navbar -->
