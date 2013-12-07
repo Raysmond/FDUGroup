@@ -3,6 +3,7 @@
     <?=RHtmlHelper::decode($data)?>
     </textarea>
 
+    <?php if(!isset($customInitialJs)): ?>
     <script>
         $(document).ready(function() {
             //var editor = CKEDITOR.replace( "<?=$id?>" );
@@ -17,5 +18,9 @@
             });
         });
     </script>
+    <?php endif; ?>
+    <?php if(isset($customInitialJs)){
+        Rays::js($customInitialJs);
+    } ?>
 
 <?php endif; ?>

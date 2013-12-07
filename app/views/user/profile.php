@@ -1,5 +1,10 @@
 <div id="profile" class="panel panel-default">
-    <div class="panel-heading"><?=$user->name?></div>
+    <div class="panel-heading">
+        <div class="heading-actions">
+            <?=RHtmlHelper::linkAction('user',"Edit profile",'profile/edit',null,array('class'=>'btn btn-xs btn-info'))?>
+        </div>
+        <h1 class="panel-title"><?=$user->name?></h1>
+    </div>
     <div class="panel-body">
         <div class="col-lg-8">
             <ul class="list-group">
@@ -48,9 +53,6 @@
         </div>
 
         <div class="col-lg-4">
-            <div style="float: right;">
-                <?=RHtmlHelper::linkAction('user',"Edit profile",'profile/edit',null,array('class'=>'btn btn-xs btn-info'))?>
-            </div>
             <div style="margin-top: 30px;">
                 <?php
                 $pic = (isset($user->picture) && $user->picture != '') ? $user->picture : "public/images/default_pic.png";

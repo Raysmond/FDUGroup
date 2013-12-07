@@ -1,12 +1,12 @@
-<div class=" panel panel-default">
-    <div class="panel-heading">
-        <div class="heading-actions">
-            <?php echo RHtmlHelper::linkAction('group','Create my group','build',null,array('class'=>'btn btn-success btn-xs')); ?>
-        </div>
-
-        <b>My Groups</b>
-    </div>
-    <div class="panel-body panel-my-group">
+<div>
+<!--    <div class="panel-heading">-->
+<!--        <div class="heading-actions">-->
+<!--            --><?php //echo RHtmlHelper::linkAction('group','Create my group','build',null,array('class'=>'btn btn-success btn-xs')); ?>
+<!--        </div>-->
+<!---->
+<!--        <b>My Groups</b>-->
+<!--    </div>-->
+    <div class="panel-my-group">
 <?php
 /**
  * show my groups

@@ -13,6 +13,7 @@ class ckeditor_module extends RModule{
     public $editorType = self::BASIC;
     public $editorId = 'rays_editor_1';
     public $editorClass = 'ckeditor';
+    public $customInitialJs;
 
     public $data = '';
 
@@ -20,6 +21,7 @@ class ckeditor_module extends RModule{
 
     private $_showEditor = true;
     private $_attributes = array();
+
 
     public function init($params = array()){
         parent::init($params);
@@ -53,6 +55,10 @@ class ckeditor_module extends RModule{
             $this->data = $params['data'];
         }
 
+        if(isset($params['customInitialJs'])){
+            $this->customInitialJs = $params['customInitialJs'];
+        }
+
         if(isset($params['attributes'])&&is_array($params['attributes'])){
             $this->_attributes = $params['attributes'];
             if(isset($this->_attributes['class'])){
@@ -79,8 +85,11 @@ class ckeditor_module extends RModule{
             'show'=>$this->_showEditor,
             'attributes'=>$this->_attributes,
             'uploadUrl'=>$this->getUploadUrl(),
-            'data'=>$this->data
+            'data'=>$this->data,
         );
+        if($this->customInitialJs){
+            $data['customInitialJs'] = $this->customInitialJs;
+        }
         return $this->render('ckeditor',$data);
     }
 

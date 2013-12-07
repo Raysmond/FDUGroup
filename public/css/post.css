@@ -67,4 +67,6 @@
 .posts-list .topic-item .footer .actions>a{
     cursor: pointer;
     text-decoration: none;
+    margin-right: 5px;
+    margin-left: 5px;
 }
