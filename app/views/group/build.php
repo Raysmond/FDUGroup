@@ -1,5 +1,5 @@
-<div class="row panel panel-default">
-    <div class="panel-heading"><b>Latest posts</b></div>
+<div class="panel panel-default">
+    <div class="panel-heading"><h1 class="panel-title">Create a group</h1></div>
     <div class="panel-body">
 <?php
 if(isset($validation_errors)){
@@ -51,9 +51,9 @@ echo '<br/>';
 echo RFormHelper::label('Group picture','group_picture');
 echo RFormHelper::input(array('type'=>'file','name'=>'group_picture','accept'=>'image/gif, image/jpeg,image/png'));
 
-echo '<br/><br/>';
+echo '<br/>';
 echo RFormHelper::input(
-    array('class'=>'btn btn-lg btn-primary btn-block','type'=>'submit','value'=>'Build now'));
+    array('class'=>'btn btn-lg btn-primary','type'=>'submit','value'=>'Build now'));
 
 echo RFormHelper::endForm();
 ?>

@@ -6,12 +6,15 @@
 ?>
 <div class="panel panel-default">
     <div class="panel-heading">
-        My Friends (<?=$friNumber?>)
-        <div class="navbar-right">
-            <a class="btn btn-xs btn-success" title="Find users" href="<?=RHtmlHelper::siteUrl('user/find')?>">
+        <div class="heading-actions">
+            <a class="btn btn-xs btn-info" title="Find users" href="<?=RHtmlHelper::siteUrl('user/find')?>">
                 <span class="glyphicon glyphicon-search">&nbsp;</span>Find Users
             </a>
         </div>
+
+        <h1 class="panel-title">
+            My Friends (<?=$friNumber?>)
+        </h1>
     </div>
     <div class="panel-body">
         <div class="user-list">

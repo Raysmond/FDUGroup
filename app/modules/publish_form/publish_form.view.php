@@ -10,7 +10,35 @@
         <input type="hidden" id="publish_form_path" name="publish_form_path" value="<?=$path?>" />
         <input type="hidden" id="publish_form_id" name="publish_form_path" value="post-content" />
 
-        <a href=""><span class="glyphicon glyphicon-list-alt"></span> New group</a>
+        <div class="home-actions">
+            <div class="home-actions-item">
+                <a href="<?=RHtmlHelper::siteUrl('group/build')?>" class="">
+                    <?=RHtmlHelper::showImage('public/images/group.png','',array('width'=>'48px'))?>
+                     New group</a>
+            </div>
+
+            <div class="home-actions-item">
+                <a href="<?=RHtmlHelper::siteUrl('post/new')?>" class="">
+                    <?=RHtmlHelper::showImage('public/images/post.png','',array('width'=>'48px'))?>
+                     New post</a>
+
+            </div>
+
+            <div class="home-actions-item">
+                <a href="<?=RHtmlHelper::siteUrl('user/find')?>" class="">
+                    <?=RHtmlHelper::showImage('public/images/friend.png','',array('width'=>'48px'))?>
+                     Find friends</a>
+            </div>
+
+            <div class="home-actions-item">
+                <a href="<?=RHtmlHelper::siteUrl('message/send')?>" class="">
+                    <?=RHtmlHelper::showImage('public/images/message.png','',array('width'=>'48px'))?>
+                    New message</a>
+            </div>
+
+        </div>
+
+
 <!--        --><?//=RFormHelper::openForm('post/new',array('class'=>'quick-publish-form')) ?>
         <?php
 //        Rays::app()->getController()->module('ckeditor',

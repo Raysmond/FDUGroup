@@ -4,8 +4,10 @@
  */
 ?>
 <div class="panel panel-default">
-    <div class="panel-heading" style="font-weight: bold;">
-        <?php echo $count; ?> messages <?php echo ($type=='all'?"":$type); ?>
+    <div class="panel-heading">
+        <h1 class="panel-title">
+            <?php echo $count; ?> messages <?php echo ($type=='all'?"":$type); ?>
+        </h1>
     </div>
     <div class="panel-body">
 

@@ -103,3 +103,22 @@ body.user-home .content-wrapper{
     float: right;
     margin-top: 5px;
 }
+
+.home-actions{
+
+}
+
+.home-actions .home-actions-item{
+    float: left;
+    width: 150px;
+    text-align: center;
+}
+
+.home-actions .home-actions-item a{
+    color: #666;
+}
+
+
+.home-actions .home-actions-item img{
+    width: 48px;
+}
