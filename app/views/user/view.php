@@ -32,10 +32,10 @@
                 </div>
                 <div class="navbar-left">
                     <?php
-                    if ($canAdd) {
+                    if (isset($canAdd)&&$canAdd) {
                         echo RHtmlHelper::linkAction('friend', '+ Add friend', 'add', $user->id, array('class' => 'btn btn-xs btn-success'));
                     }
-                    if ($canCancel) {
+                    if (isset($canCancel)&&$canCancel) {
                         echo RHtmlHelper::linkAction('friend', '- Cancel friend', 'cancel', $user->id, array('class' => 'btn btn-xs btn-success'));
                     }
                     echo '<div class="clearfix"></div>';

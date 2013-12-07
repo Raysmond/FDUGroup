@@ -73,6 +73,13 @@ class Message extends Data{
         $this->load($_id);
     }
 
+    public static function sendMessage($typeName,$senderId,$receiverId,$title,$content,$sendTime=null,$status=1)
+    {
+        $message = new Message();
+        $message->sendMsg($typeName,$senderId,$receiverId,$title,$content,$sendTime,$status);
+        return $message;
+    }
+
     public function markRead($msgId=''){
         $this->markStatus($msgId,self::$STATUS_READ);
 

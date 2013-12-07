@@ -1,24 +1,49 @@
 <?php
-class FriendController extends RController {
+class FriendController extends BaseController {
     public $access = array(
         Role::AUTHENTICATED => array('add', 'confirm', 'decline')
     );
 
+    public $user;
+
+    public function beforeAction($action)
+    {
+        $params = $this->getActionParams();
+        $result = true;
+        switch ($action) {
+            case "add":
+            case "confirm":
+            case "decline":
+            case "cancel":
+                $result = false;
+                $user = new User();
+                if (isset($params) && isset($params[0]) && is_numeric($params[0]) && $user->load($params[0]) !== null) {
+                    $result = true;
+                    $this->user = $user;
+                }
+                break;
+        }
+        if(!$result){
+            $this->page404();
+            return false;
+        }
+        return true;
+    }
+
     /* Add friend request */
     public function actionAdd($userId = null) {
-        /* TODO */
-        $currentUserId = Rays::app()->getLoginUser()->id;
-        $currentUserName = Rays::app()->getLoginUser()->name;
-        if ($currentUserId !== $userId) {
-            $content = RHtmlHelper::linkAction('user',$currentUserName,'view',$currentUserId)." wants to be friends with you.<br/>" .
-                RHtmlHelper::linkAction('friend','Confirm','confirm',$currentUserId,array('class'=>'btn btn-xs btn-success')).'&nbsp;&nbsp;'.
-                RHtmlHelper::linkAction('friend','Decline','decline',$currentUserId,array('class'=>'btn btn-xs btn-danger'));
-            $message = new Message();
-            $message->sendMsg("system", $currentUserId, $userId, "Friend request", $content, '');
+        // the user whose id = $userId
+        // loaded in beforeAction() method
+        $user = $this->user;
+
+        $uid = Rays::user()->id;
+        if ($uid !== $userId) {
+            $content = $this->renderPartial('_add_friend_msg', array('user'=>Rays::user()),true);
+            Message::sendMessage("system", $uid, $userId, "Friend request", $content);
 
             //add friend censor item
             $censor = new Censor();
-            $censor->addFriendApplication($currentUserId, $userId);
+            $censor->addFriendApplication($uid, $userId);
             $this->flash('message', 'Adding friend request has been sent.');
             $this->redirectAction('user', 'view', $userId);
         }
@@ -26,16 +51,16 @@ class FriendController extends RController {
 
     /* Confirm friend request */
     public function actionConfirm($userId = null) {
-        $currentUserId = Rays::app()->getLoginUser()->id;
-        $currentUserName = Rays::app()->getLoginUser()->name;
+        $uid = Rays::user()->id;
+        $userName = Rays::user()->name;
 
         $friend = new Friend();
-        $friend->uid = $currentUserId;
+        $friend->uid = $uid;
         $friend->fid = $userId;
 
         //only request exist can friendship be built
         $censor = new Censor();
-        $cid = $censor->addFriendExist($userId, $currentUserId);
+        $cid = $censor->addFriendExist($userId, $uid);
 
         if ($cid === null) {
             $this->flash('warning','Request already processed');
@@ -46,13 +71,13 @@ class FriendController extends RController {
 
                 $friend = new Friend();
                 $friend->uid = $userId;
-                $friend->fid = $currentUserId;
+                $friend->fid = $uid;
                 $friend->insert();
 
-                $content = RHtmlHelper::linkAction('user',$currentUserName,'view',$currentUserId)." has accepted your friend request.";
+                $content = RHtmlHelper::linkAction('user',$userName,'view',$uid)." has accepted your friend request.";
 
                 $message = new Message();
-                $message->sendMsg("system", $currentUserId, $userId, "Friend confirmed", $content, '');
+                $message->sendMsg("system", $uid, $userId, "Friend confirmed", $content, '');
                 $this->flash('message','Friends confirmed.');
             }
             else{
@@ -65,21 +90,21 @@ class FriendController extends RController {
 
     /* Decline friend request */
     public function actionDecline($userId = null) {
-        $currentUserId = Rays::app()->getLoginUser()->id;
-        $currentUserName = Rays::app()->getLoginUser()->name;
+        $uid = Rays::user()->id;
+        $userName = Rays::user()->name;
 
         //only request exist can friendship be declined
         $censor = new Censor();
-        $cid = $censor->addFriendExist($userId, $currentUserId);
+        $cid = $censor->addFriendExist($userId, $uid);
 
         if ($cid === null) {
             $this->flash('warning','Request already processed');
         } else {
             $censor->failCensor($cid);
 
-            $content = RHtmlHelper::linkAction('user',$currentUserName,'view',$currentUserId)." has declined your friend request.";
+            $content = RHtmlHelper::linkAction('user',$userName,'view',$uid)." has declined your friend request.";
             $message = new Message();
-            $message->sendMsg("system", $currentUserId, $userId, "Friend request declined", $content, '');
+            $message->sendMsg("system", $uid, $userId, "Friend request declined", $content, '');
             $this->flash('message','Friend request declined.');
         }
         $this->redirectAction('message', 'view', null);
@@ -87,25 +112,24 @@ class FriendController extends RController {
 
     /* Cancel friend relationship */
     public function actionCancel($userId = null) {
-        $currentUserId = Rays::app()->getLoginUser()->id;
-        $currentUserName = Rays::app()->getLoginUser()->name;
+        $uid = Rays::user()->id;
 
         $friend = new Friend();
-        $friend->delete(['uid' => $currentUserId, 'fid' => $userId]);
+        $friend->delete(['uid' => $uid, 'fid' => $userId]);
 
         $friend = new Friend();
-        $friend->delete(['uid' => $userId, 'fid' => $currentUserId]);
+        $friend->delete(['uid' => $userId, 'fid' => $uid]);
 
         $this->redirectAction('user', 'view', $userId);
     }
 
     public function actionMyFriend() {
         $this->layout = 'user';
-        $user = Rays::app()->getLoginUser();
+        $user = Rays::user();
 
         $friends = new Friend();
-        $curPage = $this->getHttpRequest()->getQuery('page', 1);
-        $pageSize = (isset($_GET['pagesize'])&&is_numeric($_GET['pagesize']))?$_GET['pagesize']:36;
+        $curPage = $this->getPage("page");
+        $pageSize = $this->getPageSize("pagesize",36);
 
         list($friends, $count) = $friends->getFriends($user->id, $pageSize, [], ($curPage - 1) * $pageSize);
         $data['count'] = $count;
