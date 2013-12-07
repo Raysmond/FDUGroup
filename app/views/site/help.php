@@ -141,7 +141,13 @@
         <div class="page-header">
             <h2>AdSense</h2>
         </div>
-        <p>你可以在网站上投放广告，推广您的产品.请联系我们！</p>
+        <p>你可以在网站上投放广告。在这之前请先申请成为VIP用户</p>
+        <img src="../files/images/site/applyvip.jpg" class="img-responsive" alt="Responsive image">
+        <p>申请VIP成功后，在个人中心的右侧导航栏中出现Advertisement栏目。点击进入后可以进行广告发布申请。</p>
+        <img src="../files/images/site/publishads.jpg" class="img-responsive" alt="Responsive image">
+        <p>我们引入虚拟营收机制。用户发布的广告每被点击一次，用户获得1 Group Coin。</p>
+        <p>用户账户中的Group Coins可以支付广告投放费用。广告的展示顺序与用户支付的Group Coin数量和投放时间有关，采用公式 支付金额 + 发布时间的Unix纪元/10000 计算。</p>
+        <p>通过审核的广告将在所有用户的个人中心右下角展示。未通过审核的广告所支付费用不退回。请阅读本网站<a href="#publish">About Publish</a>部分以便广告通过审核。</p>
         <img src="../files/images/site/ads.jpg" class="img-responsive" alt="Responsive image">
     </div>
 
