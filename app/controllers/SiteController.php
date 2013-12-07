@@ -19,22 +19,14 @@ class SiteController extends BaseController
         $this->userModel = new User();
     }
 
-    public function beforeAction($action)
-    {
-        //$this->addJs("/public/js/customJs.js");
-        //$this->addCss("/public/css/customCss.css");
-        return parent::beforeAction($action);
-    }
-
     /**
      * Home page
      * @param null $params
      */
     public function actionIndex($params = null)
     {
-        $users = $this->userModel->find();
         $this->setHeaderTitle("Welcome to FDUGroup");
-        $this->render("index", $users, false);
+        $this->render("index", array(), false);
     }
 
     /**

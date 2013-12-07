@@ -1,21 +1,56 @@
 <?php
 
-class PostController extends BaseController {
+class PostController extends BaseController
+{
     public $access = array(
-        Role::AUTHENTICATED=>array('new','list','edit','delete','comment'),
-        Role::ADMINISTRATOR=>array('admin','active')
+        Role::AUTHENTICATED => array('new', 'list', 'edit', 'delete', 'comment'),
+        Role::ADMINISTRATOR => array('admin', 'active')
     );
+
+    public $post = null;
+    public $group = null;
+
+    public function beforeAction($action)
+    {
+        $params = $this->getActionParams();
+        $result = true;
+        switch ($action) {
+            case "list":
+                $group = new Group();
+                if (!$params || !isset($params[0]) || !is_numeric($params[0]) || $group->load($params[0]) === null) {
+                    $result = false;
+                } else {
+                    $this->group = $group;
+                    $result = true;
+                }
+                break;
+            case "edit":
+            case "view":
+            case "comment":
+            case "delete":
+                $topic = new Topic();
+                if (!$params || !isset($params[0]) || !is_numeric($params[0]) || $topic->load($params[0]) === null) {
+                    $result = false;
+                } else {
+                    $this->post = $topic;
+                    $result = true;
+                }
+                break;
+
+        }
+        if (!$result) {
+            $this->page404();
+            return false;
+        }
+        return $result;
+    }
 
     /* List all topics belonging to a given group */
     /* TODO List all topics with pagination */
-    public function actionList($groupId = null) {
-        $group = new Group();
-        $group->id = $groupId;
-
-        if(!is_numeric($groupId) || $group->load()===null){
-            $this->page404();
-            return;
-        }
+    public function actionList($groupId = null)
+    {
+        // group loaded in beforeAction() method
+        $group = $this->group;
 
         $topic = new Topic();
         $topic->groupId = $groupId;
@@ -28,15 +63,16 @@ class PostController extends BaseController {
     }
 
     /* Add new topic */
-    public function actionNew($groupId = null) {
+    public function actionNew($groupId = null)
+    {
         $data = array("type" => "new", "groupId" => $groupId);
-        if($groupId!=null){
+        if ($groupId != null) {
             $group = new Group();
             $group->load($groupId);
             $data['group'] = $group;
         }
 
-        if ($this->getHttpRequest()->isPostRequest()) {
+        if (Rays::isPost()) {
             $validation = new RFormValidationHelper(array(
                 array("field" => "title", "label" => "Title", "rules" => "trim|required"),
                 array("field" => "post-content", "label" => "Content", "rules" => "trim|required"),
@@ -45,7 +81,7 @@ class PostController extends BaseController {
             if ($validation->run()) {
                 $topic = new Topic();
                 $topic->groupId = $groupId;
-                $topic->userId = Rays::app()->getLoginUser()->id;
+                $topic->userId = Rays::user()->id;
                 $topic->title = $_POST["title"];
                 $topic->content = RHtmlHelper::encode($_POST['post-content']);
                 $topic->createdTime = date('Y-m-d H:i:s');
@@ -53,8 +89,7 @@ class PostController extends BaseController {
                 $topic->commentCount = 0;
                 $tid = $topic->insert();
                 $this->redirectAction('post', 'view', $tid);
-            }
-            else{
+            } else {
                 $data['newPostForm'] = $_POST;
                 $data['validation_errors'] = $validation->getErrors();
             }
@@ -65,15 +100,12 @@ class PostController extends BaseController {
     }
 
     /* Edit topic */
-    public function actionEdit($topicId) {
-        $topic = new Topic();
+    public function actionEdit($topicId)
+    {
+        // topic loaded in beforeAction() method
+        $topic = $this->post;
 
-        if(!is_numeric($topicId) || $topic->load($topicId) === null){
-            $this->page404();
-            return;
-        }
-
-        if ($this->getHttpRequest()->isPostRequest()) {
+        if (Rays::isPost()) {
             $validation = new RFormValidationHelper(array(
                 array("field" => "title", "label" => "Title", "rules" => "trim|required"),
                 array("field" => "post-content", "label" => "Content", "rules" => "trim|required"),
@@ -84,35 +116,31 @@ class PostController extends BaseController {
 
             if ($validation->run()) {
                 $topic->update();
-                $this->flash("message","Post ".$topic->title." was updated successfully.");
-                $this->redirectAction('post','view', $topic->id);
-            }
-            else{
+                $this->flash("message", "Post " . $topic->title . " was updated successfully.");
+                $this->redirectAction('post', 'view', $topic->id);
+            } else {
                 $data['validation_errors'] = $validation->getErrors();
             }
         }
         $group = new Group();
         $group->load($topic->groupId);
-        $data = array("type" => "edit", "topic" => $topic,'group'=>$group);
-        $this->setHeaderTitle("Edit post: ".$topic->title);
+        $data = array("type" => "edit", "topic" => $topic, 'group' => $group);
+        $this->setHeaderTitle("Edit post: " . $topic->title);
         $this->render('edit', $data, false);
     }
 
     /* View topic */
-    public function actionView($topicId = null) {
-        $topic = new Topic();
-
-        if(!is_numeric($topicId) || $topic->load($topicId) === null){
-            $this->page404();
-            return;
-        }
+    public function actionView($topicId = null)
+    {
+        // topic loaded in beforeAction() method
+        $topic = $this->post;
 
         $counter = $topic->increaseCounter();
         $topic->user->load();
         $topic->group->load();
         $commentTree = $topic->getComments();
 
-        foreach($commentTree as $commentItem){
+        foreach ($commentTree as $commentItem) {
             $commentItem['root']->user = new User();
             $commentItem['root']->user->load($commentItem['root']->userId);
             foreach ($commentItem['reply'] as $reply) {
@@ -121,10 +149,10 @@ class PostController extends BaseController {
             }
         }
 
-        $data = array("topic" => $topic, "commentTree" => $commentTree,'counter'=>$counter);
+        $data = array("topic" => $topic, "commentTree" => $commentTree, 'counter' => $counter);
 
-        $replyTo = $this->getHttpRequest()->getParam('reply',null);
-        if($replyTo && is_numeric($replyTo)){
+        $replyTo = Rays::getParam('reply', null);
+        if ($replyTo && is_numeric($replyTo)) {
             $comment = new Comment();
             $comment->load($replyTo);
             $comment->user->load();
@@ -137,19 +165,16 @@ class PostController extends BaseController {
     }
 
     /* Add comment */
-    public function actionComment($topicId) {
-        $topic = new Topic();
+    public function actionComment($topicId)
+    {
+        // topic loaded in beforeAction() method
+        $topic = $this->post;
 
-        if(!$topicId || !is_numeric($topicId) || $topic->load($topicId) === null){
-            $this->page404();
-            return;
-        }
-        if ($this->getHttpRequest()->isPostRequest()) {
+        if (Rays::isPost()) {
             $validation = new RFormValidationHelper(array(
-                array('field'=>'content','label'=>'Content','rules'=>'trim|required')));
-            if(!$validation->run())
-            {
-                $this->flash("error","Comment content cannot be empty!");
+                array('field' => 'content', 'label' => 'Content', 'rules' => 'trim|required')));
+            if (!$validation->run()) {
+                $this->flash("error", "Comment content cannot be empty!");
                 $this->redirectAction('post', 'view', $topicId);
             }
             $form = $_POST;
@@ -158,7 +183,7 @@ class PostController extends BaseController {
             $topic->lastCommentTime = date('Y-m-d H:i:s');
             $topic->update();
 
-            $user = Rays::app()->getLoginUser();
+            $user = Rays::user();
 
             $comment = new Comment();
             $comment->topicId = $topicId;
@@ -180,25 +205,21 @@ class PostController extends BaseController {
                     'user',
                     $user->id,
                     $exactComment->userId,
-                     'New reply',
-                    $user->name . ' has replied to your comment ' . RHtmlHelper::linkAction('post', $topic->title, 'view', $topic->id.'?reply='.$cid),
+                    'New reply',
+                    $user->name . ' has replied to your comment ' . RHtmlHelper::linkAction('post', $topic->title, 'view', $topic->id . '?reply=' . $cid),
                     date('Y-m-d H:i:s')
                 );
-            }
-            //send message to topic author
-           else if ($topic->userId !== $user->id) {
+            } //send message to topic author
+            else if ($topic->userId !== $user->id) {
                 $msg = new Message();
                 $msg->sendMsg(
                     'user',
                     $user->id,
                     $topic->userId, 'New Comment',
-                    $user->name . ' has replied to your topic ' . RHtmlHelper::linkAction('post', $topic->title, 'view', $topic->id.'?reply='.$cid),
+                    $user->name . ' has replied to your topic ' . RHtmlHelper::linkAction('post', $topic->title, 'view', $topic->id . '?reply=' . $cid),
                     date('Y-m-d H:i:s')
                 );
             }
-
-
-
         }
         $this->redirectAction('post', 'view', $topicId);
     }
@@ -230,35 +251,31 @@ class PostController extends BaseController {
 
     public function actionDelete($topicId)
     {
-        $topic = new Topic();
+        // topic loaded in beforeAction() method
+        $topic = $this->post;
 
-        if (!is_numeric($topicId) || $topic->load($topicId) === null) {
-            $this->page404();
-            return;
-        }
-        else{
-            $topic->delete();
-            $this->flash("message", "Post " . $topic->title . " was deleted.");
-            if(Rays::referrerUri()){
-                $this->redirect(Rays::referrerUri());
-            }
+        $topic->delete();
+        $this->flash("message", "Post " . $topic->title . " was deleted.");
+        if (Rays::referrerUri()) {
+            $this->redirect(Rays::referrerUri());
         }
     }
 
     /**
      * Topics administration
      */
-    public function actionAdmin(){
+    public function actionAdmin()
+    {
         $this->layout = 'admin';
         $data = array();
 
         // delete request
-        if($this->getHttpRequest()->isPostRequest()){
-            if(isset($_POST['checked_topics'])){
+        if (Rays::isPost()) {
+            if (isset($_POST['checked_topics'])) {
                 $checkedTopics = $_POST['checked_topics'];
-                foreach($checkedTopics as $item){
-                    if(!is_numeric($item)) return;
-                    else{
+                foreach ($checkedTopics as $item) {
+                    if (!is_numeric($item)) return;
+                    else {
                         $topic = new Topic();
                         $topic->id = $item;
                         $topic->delete();
@@ -282,8 +299,7 @@ class PostController extends BaseController {
         $pager = $pager->showPager();
         $data['pager'] = $pager;
 
-        $this->render('admin',$data,false);
+        $this->render('admin', $data, false);
     }
-}
 
-?>
+}

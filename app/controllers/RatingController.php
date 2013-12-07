@@ -16,15 +16,15 @@ class RatingController extends BaseController
 
     public function actionPlus()
     {
-        if ($this->getHttpRequest()->getIsAjaxRequest()) {
+        if (Rays::isAjax()) {
             $result = ["result"=>false];
             if (isset($_POST['plusId']) && isset($_POST['plusType'])) {
                 if (is_numeric($_POST['plusId'])) {
                     $plusId = $_POST['plusId'];
                     $userId = 0;
-                    if (Rays::app()->isUserLogin())
-                        $userId = Rays::app()->getLoginUser()->id;
-                    $host = $this->getHttpRequest()->getUserHostAddress();
+                    if (Rays::isLogin())
+                        $userId = Rays::user()->id;
+                    $host = Rays::httpRequest()->getUserHostAddress();
 
                     switch ($_POST['plusType']) {
                         case Topic::$entityType:

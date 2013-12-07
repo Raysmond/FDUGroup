@@ -6,9 +6,8 @@
 ?>
 <div class="panel panel-wrapper">
 
-    <h2>
-        <?= $group->name ?>&nbsp;&nbsp;
-    </h2>
+    <h2> <?= $group->name ?></h2>
+    
     <ul class="nav nav-tabs">
         <?php
         if (!$hasJoined)
@@ -19,7 +18,7 @@
             echo '<li>'.RHtmlHelper::linkAction('group', 'Manager: Delete group', 'delete', $group->id,
                 array('class'=>'red','onclick' => "return confirm('Are you sure to delete this group? (All related data will be deleted at the same time)')")).'</li>';
         }
-        else echo '<li>'.RHtmlHelper::linkAction('group', '- Exit group', 'exit', $group->id).'</li>';
+        else echo '<li>'.RHtmlHelper::linkAction('group', '- Exit group', 'exit', $group->id,array('class'=>'red')).'</li>';
         ?>
 
     </ul>

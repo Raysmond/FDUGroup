@@ -149,15 +149,18 @@ class UserController extends BaseController
             $this->page404();
             return;
         }
-        if (isset($userId) && Rays::user()->roleId != Role::ADMINISTRATOR_ID&&Rays::user()->id!=$userId) {
+        if (isset($userId) && Rays::user()->roleId != Role::ADMINISTRATOR_ID && Rays::user()->id!=$userId) {
             $this->flash("error", "You don't have the right to change the user information!");
             $this->redirectAction('user', 'view', $userId);
         }
         $user = new User();
 
-        //$user->load(($userId==null)?Rays::user()->id:$userId);
-        // for now , the user can only edit his own profile
-        $user->load(Rays::user()->id);
+        if($user->load(($userId==null)?Rays::user()->id:$userId)===null){
+            $this->flash("message","No such user");
+            $this->page404();
+            return;
+        }
+
         $data = array('user' => $user);
         if (Rays::isPost()) {
             $config = array(
@@ -199,7 +202,7 @@ class UserController extends BaseController
                         RImageHelper::updateStyle($user->picture, User::getPicOptions());
                     }
                 }
-                $this->redirect($this->getHttpRequest()->getUrlReferrer());
+                $this->redirect(Rays::referrerUri());
                 return;
             } else {
                 $errors = $validation->getErrors();
@@ -264,7 +267,7 @@ class UserController extends BaseController
             }
         }
 
-        $filterStr = $this->getHttpRequest()->getParam('search', null);
+        $filterStr = Rays::getParam('search', null);
 
         $like = array();
         if ($filterStr != null) {

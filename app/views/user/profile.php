@@ -1,5 +1,5 @@
 <div id="profile" class="panel panel-default">
-    <div class="panel-heading" style="font-weight: bold;"><?=$user->name?></div>
+    <div class="panel-heading"><?=$user->name?></div>
     <div class="panel-body">
         <div class="col-lg-8">
             <ul class="list-group">
@@ -49,7 +49,7 @@
 
         <div class="col-lg-4">
             <div style="float: right;">
-                <?=RHtmlHelper::linkAction('user',"Edit profile",'profile/edit',$user->id,array('class'=>'btn btn-xs btn-info'))?>
+                <?=RHtmlHelper::linkAction('user',"Edit profile",'profile/edit',null,array('class'=>'btn btn-xs btn-info'))?>
             </div>
             <div style="margin-top: 30px;">
                 <?php

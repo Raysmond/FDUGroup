@@ -16,14 +16,14 @@ class MessageController extends BaseController
     // to be implemented
     public function actionDetail($msgId = '')
     {
-        if ($msgId == '') {
+        $message = new Message();
+
+        if ($msgId == '' || $message->load($msgId) === null) {
             $this->page404();
             return false;
         }
-        $message = new Message();
-        $message->load($msgId);
 
-        $loginId = Rays::app()->getLoginUser()->id;
+        $loginId = Rays::user()->id;
         if ($message->receiverId != $loginId && $message->senderId != $loginId) {
             $this->flash("error", "Sorry. You don't have the right to read the message.");
             $this->redirectAction('message', 'view', 'all');
@@ -82,7 +82,7 @@ class MessageController extends BaseController
                     if (isset($_POST['sender'])) { //mainly for group and system message
                         $senderId = $_POST['sender'];
                     } else {
-                        $senderId = Rays::app()->getLoginUser()->id;
+                        $senderId = Rays::user()->id;
                     }
 
                     $title = isset($_POST['title']) ? trim($_POST['title']) : "";
@@ -113,10 +113,10 @@ class MessageController extends BaseController
 
     public function actionRead($msgId)
     {
-        $referrer = $this->getHttpRequest()->getUrlReferrer();
+        $referrer = Rays::referrerUri();
         $message = new Message();
         $message = $message->load($msgId);
-        if (Rays::app()->getLoginUser()->id != $message->receiverId) {
+        if (Rays::user()->id != $message->receiverId) {
             $this->flash("error", "Sorry. You don't have the right to mark the message read.");
         }
         $message->markRead($msgId);
@@ -133,7 +133,7 @@ class MessageController extends BaseController
     {
         $this->setHeaderTitle("My Messages");
         $messages = new Message();
-        $userId = Rays::app()->getLoginUser()->id;
+        $userId = Rays::user()->id;
 
         $curPage = $this->getPage('page');
         $pageSize = $this->getPageSize("pagesize",5);
@@ -191,11 +191,11 @@ class MessageController extends BaseController
         if (isset($msgId) && is_numeric($msgId)) {
             $msg = new Message();
             $msg = $msg->load($msgId);
-            if ($msg != null && $msg->receiverId == Rays::app()->getLoginUser()->id) {
+            if ($msg != null && $msg->receiverId == Rays::user()->id) {
                 $msg->markTrash($msgId);
             }
         }
-        $this->redirect($this->getHttpRequest()->getUrlReferrer());
+        $this->redirect(Rays::referrerUri());
     }
 
     public function actionDelete($msgId)
@@ -203,12 +203,12 @@ class MessageController extends BaseController
         if (isset($msgId) && is_numeric($msgId)) {
             $msg = new Message();
             $msg = $msg->load($msgId);
-            $user = Rays::app()->getLoginUser();
+            $user = Rays::user();
             if ($msg != null && ($msg->receiverId == $user->id || $user->isAdmin())) {
                 $msg->delete();
             }
         }
-        $this->redirect($this->getHttpRequest()->getUrlReferrer());
+        $this->redirect(Rays::referrerUri());
     }
 
     public function actionSendAdmin()
