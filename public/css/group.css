@@ -43,7 +43,7 @@
     float: left;
     padding: 10px;
     height: 40px;
-    min-width: 68px;
+    width: 33%;
     text-align: center;
     border-right: 1px #eee solid;
 }

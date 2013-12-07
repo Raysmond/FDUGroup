@@ -25,19 +25,23 @@ class CategoryController extends BaseController
             return;
         }
         $page = $this->getHttpRequest()->getParam("page",1);
-        $pageSize = 12;
+        $pageSize = 5;
 
         $groups = new Group();
         $groups->categoryId = $categoryId;
         $groups = $groups->find(($page-1)*$pageSize, $pageSize);
 
-        if($this->getHttpRequest()->getIsAjaxRequest()){
-            $this->renderPartial("_groups_list", array('groups'=>$groups), false);
+        $this->addCss("/public/css/group.css");
+        $this->addJs("/public/js/masonry.pkgd.min.js");
+        if(Rays::isAjax()){
+            if (!count($groups)) {
+                echo 'nomore';
+            } else {
+                $this->renderPartial("_groups_list", array("groups"=>$groups),false);
+            }
             exit;
         }
 
-        $this->addCss("/public/css/group.css");
-        $this->addJs("/public/js/masonry.pkgd.min.js");
         $this->render('groups', array('category' => $category, 'groups' => $groups), false);
 
     }

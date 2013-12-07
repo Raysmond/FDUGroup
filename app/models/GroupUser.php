@@ -41,7 +41,7 @@ class GroupUser extends Data
         $result = array();
         $groupUser = new GroupUser();
         $groupUser->userId = $userId;
-        $userGroups = $groupUser->find($start, $limit);
+        $userGroups = $groupUser->find($start, $limit, ['key' => $groupUser->columns['groupId'], 'order' => 'desc']);
         foreach($userGroups as $userGroup){
             $group = new Group();
             $group->id = $userGroup->groupId;

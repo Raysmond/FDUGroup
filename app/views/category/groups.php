@@ -1,18 +1,24 @@
-<?php
-echo '<div id="category-groups" class="row">';
-if (!count($groups)) {
-    echo '<div>&nbsp;&nbsp;No groups in the category!</div>';
-}
-?>
-<div id="waterfall-groups" class="waterfall">
+<div id="category-groups" class="row">
     <?php
-    $this->renderPartial("_groups_list", array('groups' => $groups), false);
+    if (!count($groups)) {
+        echo '<div>&nbsp;&nbsp;No groups in the category!</div>';
+    }
     ?>
-</div>
+    <div id="waterfall-groups" class="waterfall">
+        <?php
+        $this->renderPartial("_groups_list", array('groups' => $groups), false);
+        ?>
+    </div>
 
-<div class="clearfix"></div>
-<a id="load-more-groups" href="javascript:loadMoreGroups()" class="btn btn-lg btn-primary btn-block">Load more
-    groups</a>
+    <div class="clearfix"></div>
+    <div class="load-more-groups-processing" id="loading-groups">
+        <div class="horizon-center">
+            <img class="loading-24-24" src="<?= RHtmlHelper::siteUrl('/public/images/loading.gif') ?>"/> loading...
+        </div>
+    </div>
+    <a id="load-more-groups" href="javascript:loadMoreGroups()" class="btn btn-lg btn-primary btn-block">Load more
+        groups
+    </a>
 </div>
 
 <script>
@@ -20,7 +26,11 @@ if (!count($groups)) {
     var curPage = 1;
     var loadCount = 0;
     var isLoading = false;
+    var nomore = false;
     $(document).ready(function () {
+        $('#loading-groups').hide(0);
+        $('#load-more-groups').hide(0);
+
         $container.masonry({
             columnWidth: 0,
             itemSelector: '.item'
@@ -29,7 +39,7 @@ if (!count($groups)) {
         $(window).scroll(function () {
             var height = $("#load-more-groups").position().top;
             var curHeight = $(window).scrollTop() + $(window).height();
-            if (loadCount < 4 && !isLoading && curHeight >= height) {
+            if (!isLoading && curHeight >= height && !nomore) {
                 loadMoreGroups();
             }
         });
@@ -38,11 +48,13 @@ if (!count($groups)) {
 
     function loadMoreGroups() {
         isLoading = true;
+        $('#loading-groups').show(0);
         $.ajax({
             url: "<?=RHtmlHelper::siteUrl('category/groups/'.$category->id) ?>",
             type: "post",
             data: {page: ++curPage},
             success: function (data) {
+                $('#loading-groups').hide(0);
                 if (data == '') {
                     $("#category-groups").append("<span style='color: red;'>&nbsp;&nbsp;&nbsp;No more groups</span>");
                     $("#load-more-groups").hide();
