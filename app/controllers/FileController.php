@@ -12,7 +12,7 @@ class FileController extends RController{
 
     public function actionUploadImage(){
         $fileTag = 'upload';
-        $user = Rays::app()->getLoginUser();
+        $user = Rays::user();
         if(isset($_FILES[$fileTag])){
             $path = Rays::app()->getBaseDir() . "/files/userfiles/u_".$user->id."/";
             if(!file_exists($path)){

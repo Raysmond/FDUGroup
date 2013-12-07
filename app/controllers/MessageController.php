@@ -9,19 +9,45 @@ class MessageController extends BaseController
     public $layout = 'user';
     public $defaultAction = 'index';
     public $access = array(
-        Role::AUTHENTICATED => array('detail', 'send', 'read', 'view','delete','trash'),
+        Role::AUTHENTICATED => array('detail', 'send', 'read', 'view', 'delete', 'trash'),
         Role::ADMINISTRATOR => array('sendAdmin'),
     );
+
+    private $_message = null;
+
+    public function filteredMessage(){
+        return isset($this->_message)?$this->_message : null;
+    }
+
+    public function beforeAction($action)
+    {
+        $params = $this->getActionParams();
+        $result = true;
+        switch ($action) {
+            case "detail":
+            case "delete":
+            case "trash":
+            case "read":
+                $msg = new Message();
+                $result = false;
+                if (isset($params) && isset($params[0]) && is_numeric($params[0]) && $msg->load($params[0]) !== null) {
+                    $result = true;
+                    $this->_message = $msg;
+                }
+                break;
+        }
+        if (!$result) {
+            $this->page404();
+            return false;
+        }
+        return true;
+    }
 
     // to be implemented
     public function actionDetail($msgId = '')
     {
-        $message = new Message();
-
-        if ($msgId == '' || $message->load($msgId) === null) {
-            $this->page404();
-            return false;
-        }
+        // message filtered in beforeAction() method
+        $message = $this->filteredMessage();
 
         $loginId = Rays::user()->id;
         if ($message->receiverId != $loginId && $message->senderId != $loginId) {
@@ -37,10 +63,10 @@ class MessageController extends BaseController
 
     // to be implemented
     // permissions should be considered
-    public function actionSend($type=null)
+    public function actionSend($type = null)
     {
         $types = array('system', 'user', 'private', 'group');
-        if(!$type){
+        if (!$type) {
             $type = 'private';
         }
         if (!in_array($type, $types)) {
@@ -113,9 +139,10 @@ class MessageController extends BaseController
 
     public function actionRead($msgId)
     {
+        // message filtered in beforeAction() method
+        $message = $this->filteredMessage();
+
         $referrer = Rays::referrerUri();
-        $message = new Message();
-        $message = $message->load($msgId);
         if (Rays::user()->id != $message->receiverId) {
             $this->flash("error", "Sorry. You don't have the right to mark the message read.");
         }
@@ -136,27 +163,27 @@ class MessageController extends BaseController
         $userId = Rays::user()->id;
 
         $curPage = $this->getPage('page');
-        $pageSize = $this->getPageSize("pagesize",5);
+        $pageSize = $this->getPageSize("pagesize", 5);
 
         $count = new Message();
         $count->receiverId = $userId;
-        switch($msgType){
+        switch ($msgType) {
             case "all":
                 $allCount = $count->count();
                 $count->status = Message::$STATUS_TRASH;
                 $trashCount = $count->count();
-                $count = $allCount-$trashCount;
-                $messages = $messages->getUserMsgs($userId,($curPage-1)*$pageSize,$pageSize);
+                $count = $allCount - $trashCount;
+                $messages = $messages->getUserMsgs($userId, ($curPage - 1) * $pageSize, $pageSize);
                 break;
             case "read":
                 $count->status = Message::$STATUS_READ;
                 $count = $count->count();
-                $messages = $messages->getReadMsgs($userId,($curPage-1)*$pageSize,$pageSize);
+                $messages = $messages->getReadMsgs($userId, ($curPage - 1) * $pageSize, $pageSize);
                 break;
             case "unread":
                 $count->status = Message::$STATUS_UNREAD;
                 $count = $count->count();
-                $messages = $messages->getUnReadMsgs($userId,($curPage-1)*$pageSize,$pageSize);
+                $messages = $messages->getUnReadMsgs($userId, ($curPage - 1) * $pageSize, $pageSize);
                 break;
             //case "send":
             //    $messages = $messages->getUserSentMsgs($userId);
@@ -170,43 +197,41 @@ class MessageController extends BaseController
                 $this->page404();
                 return;
         }
-        if($messages==null) $messages = array();
-        $data =  array(
+        if ($messages == null) $messages = array();
+        $data = array(
             'msgs' => $messages,
             'type' => $msgType,
-            'count'=>$count,
+            'count' => $count,
         );
 
-        if($count>($curPage*$pageSize)){
-            $url = RHtmlHelper::siteUrl('message/view/'.$msgType);
+        if ($count > ($curPage * $pageSize)) {
+            $url = RHtmlHelper::siteUrl('message/view/' . $msgType);
             $pager = new RPagerHelper('page', $count, $pageSize, $url, $curPage);
             $data['pager'] = $pager->showPager();
         }
 
-        $this->render('view',$data, false);
+        $this->render('view', $data, false);
     }
 
     public function actionTrash($msgId)
     {
-        if (isset($msgId) && is_numeric($msgId)) {
-            $msg = new Message();
-            $msg = $msg->load($msgId);
-            if ($msg != null && $msg->receiverId == Rays::user()->id) {
-                $msg->markTrash($msgId);
-            }
+        // message filtered in beforeAction() method
+        $message = $this->filteredMessage();
+        if ($message->receiverId == Rays::user()->id) {
+            $message->markTrash($msgId);
         }
+
         $this->redirect(Rays::referrerUri());
     }
 
     public function actionDelete($msgId)
     {
-        if (isset($msgId) && is_numeric($msgId)) {
-            $msg = new Message();
-            $msg = $msg->load($msgId);
-            $user = Rays::user();
-            if ($msg != null && ($msg->receiverId == $user->id || $user->isAdmin())) {
-                $msg->delete();
-            }
+        // message filtered in beforeAction() method
+        $message = $this->filteredMessage();
+
+        $user = Rays::user();
+        if (($message->receiverId == $user->id || $user->isAdmin())) {
+            $message->delete();
         }
         $this->redirect(Rays::referrerUri());
     }
