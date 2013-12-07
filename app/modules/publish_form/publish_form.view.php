@@ -39,7 +39,7 @@
         </div>
 
 
-<!--        --><?//=RFormHelper::openForm('post/new',array('class'=>'quick-publish-form')) ?>
+<!--        --><?php //=RFormHelper::openForm('post/new',array('class'=>'quick-publish-form')) ?>
         <?php
 //        Rays::app()->getController()->module('ckeditor',
 //            array('editorId'=>'post-content',
