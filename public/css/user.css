@@ -95,3 +95,11 @@ body.user-home .content-wrapper{
 .user-home-navigation .nav-pills>li .badge{
     float: right;
 }
+
+.quick-publish-form{
+}
+
+.quick-publish-form .actions{
+    float: right;
+    margin-top: 5px;
+}

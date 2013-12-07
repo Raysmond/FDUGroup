@@ -48,6 +48,7 @@ $baseUrl = Rays::app()->getBaseUrl();
 
             <div class="content-wrapper">
                 <div id="content">
+                    <?php $this->module("publish_form"); ?>
                     <?php if(isset($content)) echo $content; ?>
                 </div>
             </div>

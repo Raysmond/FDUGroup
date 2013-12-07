@@ -1,7 +1,9 @@
 <div class="panel panel-default post">
     <div class="panel-heading">
         <div class="heading-actions">
-            <?= RHtmlHelper::linkAction('post', 'Edit', 'edit', $topic->id, array('class' => 'btn btn-xs btn-info')) ?>
+            <?php
+                if($canEdit) echo RHtmlHelper::linkAction('post', 'Edit', 'edit', $topic->id, array('class' => 'btn btn-xs btn-info'));
+            ?>
         </div>
         <h1 class="panel-title"><?= $topic->title ?></h1>
     </div>

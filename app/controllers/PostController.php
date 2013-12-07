@@ -159,6 +159,8 @@ class PostController extends BaseController
             $data['parent'] = $comment;
         }
 
+        $data['canEdit'] = (Rays::isLogin() && (Rays::user()->id==$topic->user->id || Rays::user()->isAdmin()));
+
         $this->setHeaderTitle($topic->title);
         $this->render("view", $data, false);
 

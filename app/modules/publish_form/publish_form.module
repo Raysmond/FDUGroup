@@ -1,0 +1,25 @@
+<?php
+/**
+ * Publish form module
+ * @author: Raysmond
+ */
+
+class publish_form_module extends RModule
+{
+    public $access = array('user/home');
+
+    public function __construct($params = array())
+    {
+
+    }
+
+    public function module_content()
+    {
+        $data = array(
+            'path'=>$this->getModulePath().'/../ckeditor',
+            'initJs'=>$this->getModulePath()."/ckeditor_quick.js"
+        );
+
+        return $this->render('publish_form', $data);
+    }
+}
