@@ -48,7 +48,7 @@ class rating_plus_module extends RModule
 
         $html = '';
         if ($this->checkEntity()) {
-            $html .= '<a '
+            $html .= '<a title="Love this" '
                 . 'onclick="javascript:plusEntity(\''
                 . $actionUrl . '\',\'' . $this->entityType . '\',\'' . $this->entityId . '\')" '
                 . 'class="rating-plus-button '.$this->buttonClass.'">'

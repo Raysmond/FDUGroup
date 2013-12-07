@@ -3,7 +3,7 @@ body {
     font-family: 'Arial','Verdana',sans-serif;
     font-size: 13px;
     line-height: 1.6;
-    background: #efefef;
+    background: #ececec;
 }
 
 .col-sm-3{
@@ -11,7 +11,7 @@ body {
 }
 .col-sm-9{
     width: 72%;
-    padding-right: 5px;
+    padding-right: 0;
 }
 
 

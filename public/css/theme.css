@@ -1,3 +1,7 @@
+body {
+    color:#555;
+}
+
 a {
     color:#000;
     text-decoration: none;
@@ -6,9 +10,12 @@ a {
     -moz-transition: all 0.2s linear 0s;
     -webkit-transition: all 0.2s linear 0s;
 }
+.actions a{
+    color:#555;
+}
 
 a:hover {
-    color:#f65e5e;
+    color:#ff6b6b;
     text-decoration: none;
 }
 
@@ -17,8 +24,20 @@ a:active {
     text-decoration: none;
 }
 
-a:link {
-    color:#000;
-    text-decoration: none;
+.topic-meta a {
+    color:#ff6b6b;
 }
 
+
+.topic-meta a:hover{
+    color:#f65e5e;
+}
+
+.waterfall .item-heading a {
+    font-size: 18px;
+
+}
+
+.panel {
+    margin-bottom:13px;
+}
