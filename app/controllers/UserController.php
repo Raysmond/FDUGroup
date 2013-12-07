@@ -211,6 +211,8 @@ class UserController extends BaseController
 
             }
         }
+
+        $this->layout = 'user';
         $this->setHeaderTitle("Edit profile - " . $user->name);
         $this->render('edit', $data, false);
     }

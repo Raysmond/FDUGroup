@@ -62,7 +62,6 @@
 
 
         echo "<br/>";
-        echo "<br/>";
 
         echo RFormHelper::input(array('type'=>'hidden','value'=>$type,'name'=>'type'),$type);
         echo RFormHelper::input(array('type'=>'submit','value'=>'Send','class'=>'btn btn-lg btn-primary'));

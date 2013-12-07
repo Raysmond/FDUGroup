@@ -9,7 +9,7 @@
 ?>
 
 <div class="panel panel-default">
-    <div class="panel-heading"><b>FDUGroup help</b></div>
+    <div class="panel-heading">FDUGroup help</div>
     <div class="panel-body">
 
     <ul class="nav nav-pills nav-stacked">

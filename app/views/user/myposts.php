@@ -12,6 +12,7 @@
                     <?= RHtmlHelper::showImage(RImageHelper::styleSrc($user->picture, User::getPicOptions()), $user->name, array('width' => '64px')) ?>
                 </div>
                 <div class="col-lg-10 topic-content">
+                    <span class="arrow"></span>
                     <div class="inner">
                         <div class="topic-title">
                             <?= RHtmlHelper::linkAction('post', $post->title, 'view', $post->id) ?>

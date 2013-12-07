@@ -99,6 +99,15 @@ a:active {
     color: #f04d4d;
 }
 
+#main-navigation .navbar .open .dropdown-menu > li > a:hover,
+#main-navigation .navbar .open .dropdown-menu > li > a:focus,
+#main-navigation .navbar .open .dropdown-menu > .active > a,
+#main-navigation .navbar .open .dropdown-menu > .active > a:hover,
+#main-navigation .navbar .open .dropdown-menu > .active > a:focus {
+    color: #fff !important;
+    background-color: #d5d5d5 !important;
+}
+
 #account-dropdown .username {
     margin-right: 40px;
 }
