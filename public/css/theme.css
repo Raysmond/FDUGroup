@@ -328,3 +328,10 @@ a:active {
     float:left;
     padding-left:10px;
 }
+
+.user-profile .user-introduction{
+    color:#808080;
+    white-space: nowrap;
+    line-height:14px;
+    margin-bottom:8px;
+}

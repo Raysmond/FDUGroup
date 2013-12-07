@@ -4,8 +4,8 @@
  * User: songrenchu
  */
 ?>
-<div id="profile" class="row panel panel-default">
-    <div class="panel-heading" style="font-weight: bold;">VIP application</div>
+<div id="profile" class=" panel panel-default">
+    <div class="panel-heading"><h1 class="panel-title">VIP application</h1></div>
     <div class="panel-body">
 <?php
 if(isset($validation_errors)){
@@ -30,9 +30,8 @@ echo RFormHelper::textarea(
     ),$form);
 
 echo "<br/>";
-echo "<br/>";
 
-echo RFormHelper::input(array('type'=>'submit','value'=>'Send','class'=>'btn btn-lg btn-primary btn-block'));
+echo RFormHelper::input(array('type'=>'submit','value'=>'Send','class'=>'btn btn-lg btn-primary'));
 
 echo RFormHelper::endForm();
 ?>

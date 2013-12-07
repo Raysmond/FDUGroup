@@ -45,8 +45,10 @@
                     <div class="badge-user-panel"><span class="badge badge-<?= Role::getRoleNameById($user->roleId); ?>"><?= Role::getBadgeById($user->roleId); ?></span></div>
                 </h2>
 
-                <div><?= RHtmlHelper::decode($user->intro) ?></div>
-                <div><?= $user->region ?>
+                <div class="user-introduction"><?= RHtmlHelper::decode($user->intro) ?></div>
+                <div>
+                    <div class="user-gender-<?=User::getGenderName($user->gender)?>"></div>
+                    <?= $user->region ?>
                     <?php if ($user->weibo != '') { ?>
                         <?php if ($user->region != '') { ?>|<?php } ?>
                         Micro-Blog: <?= RHtmlHelper::link($user->weibo, $user->weibo, $user->weibo) ?>
