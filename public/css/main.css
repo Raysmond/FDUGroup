@@ -139,15 +139,6 @@ footer {
     }
 }
 
-
-.badge-administrator {
-    background-color: #428bca;
-}
-
-.badge-vip {
-    background-color: #FFC200;
-}
-
 table,th,tr,td{
     border: 1px solid #cccccc;
     margin: 0;

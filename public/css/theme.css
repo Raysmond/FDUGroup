@@ -275,3 +275,11 @@ a:active {
 #category-bar a.active {
     color:#f65e5e;
 }
+
+.badge-administrator {
+    background-color: #428bca;
+}
+
+.badge-vip {
+    background-color: #FFC200;
+}
