@@ -264,9 +264,7 @@ abstract class RModel {
             if ($member != $primary_key) {
                 $args[] = $this->$member;
             }
-        } 
-        print($sql);
-        print_r($args);
+        }
         $stmt->execute($args);
         $primary_key = $model::$primary_key;
         if (!isset($this->$primary_key)) {

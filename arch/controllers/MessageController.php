@@ -77,7 +77,6 @@ class MessageController extends BaseController
                     $this->flash("error", "No such user.");
                 } else {
                     $receiver = $receiver[0];
-                    $message = new Message();
                     $senderId = 0;
                     if (isset($_POST['sender'])) { //mainly for group and system message
                         $senderId = $_POST['sender'];
@@ -87,7 +86,7 @@ class MessageController extends BaseController
 
                     $title = isset($_POST['title']) ? trim($_POST['title']) : "";
                     $msgContent = RHtmlHelper::encode($_POST['msg-content']);
-                    $message->sendMsg($_POST['type'], $senderId, $receiver->id, $title, $msgContent, null, 1);
+                    $message = Message::sendMsg($_POST['type'], $senderId, $receiver->id, $title, $msgContent, null, 1);
 
                     if (isset($message->id) && $message->id != '') {
                         $this->flash("message", "Send message successfully.");

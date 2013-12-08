@@ -49,22 +49,21 @@ class Message extends RModel {
         return $this;
     }*/
 
-    public function sendMsg($typeName,$senderId,$receiverId,$title,$content,$sendTime=null,$status=1)
+    public static function sendMsg($typeName,$senderId,$receiverId,$title,$content,$sendTime=null,$status=1)
     {
-        $this->typeId = new MessageType();
-        $this->typeId->typeName = $typeName;
-        $this->typeId = $this->typeId->find()[0]->typeId;
-        $this->senderId = $senderId;
-        $this->receiverId = $receiverId;
-        $this->title = $title;
-        $this->content = $content;
-        $this->sendTime = $sendTime;
-        $this->status = $status;
-        if(!isset($this->sendTime)||$this->sendTime==''){
-            $this->sendTime = date('Y-m-d H:i:s');;
+        $message = new Message();
+        $message->typeId = MessageType::find("name", $typeName)->first()->id;
+        $message->senderId = $senderId;
+        $message->receiverId = $receiverId;
+        $message->title = $title;
+        $message->content = $content;
+        $message->sendTime = $sendTime;
+        $message->status = $status;
+        if (!isset($message->sendTime) || $message->sendTime == '') {
+            $message->sendTime = date('Y-m-d H:i:s');;
         }
-        $_id = $this->insert();
-        $this->load($_id);
+        $message->save();
+        return $message;
     }
 
     public function markRead($msgId=''){
