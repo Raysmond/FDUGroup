@@ -322,15 +322,26 @@ class PostController extends BaseController
     /**
      * Find posts
      */
-    public function actionFind()
+    public function actionFind($categoryId=null)
     {
+        $data = [];
+
         $categories = new Category();
-        $categories->pid = 0;
-        $categories = $categories->find();
+        $data['categories'] = $categories->find(0,0,array(),array(),["pid"=>'0']);
+
+        $category = new Category();
+        if(isset($categoryId) &&(!is_numeric($categoryId) || $category->load($categoryId) === null)){
+            $this->page404();
+            return;
+        }else{
+            $data['category'] = $category;
+
+
+        }
 
 
         $this->setHeaderTitle("Find posts");
         $this->addCss("/public/css/post.css");
-        $this->render('find',[],false);
+        $this->render('find',$data,false);
     }
 }
