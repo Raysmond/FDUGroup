@@ -57,6 +57,8 @@
         </div>
 
 
+        <hr>
+        
         <!-- Latest posts -->
         <div class="row group-posts">
             <div class="col-sm-6">
@@ -68,42 +70,10 @@
             </div>
 
             <div class="clearfix"></div>
-
             <div>
-                <?php if (count($latestPosts) > 0): ?>
-                    <table class="table table-hover table-condensed">
-                        <thead>
-                        <tr>
-                            <th>Title</th>
-                            <th>Author</th>
-                            <th>Replies</th>
-                            <th>Time</th>
-                            <th>Last comment</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <?php
-                        foreach ($latestPosts as $topic) {
-                            ?>
-                            <tr>
-                            <td><b><?= RHtmlHelper::linkAction('post', $topic->title, 'view', $topic->id) ?></b></td>
-                            <td><?= RHtmlHelper::linkAction('user', $topic->user->name, 'view', $topic->user->id) ?></td>
-                            <td><?= $topic->commentCount ?></td>
-                            <td><?= $topic->createdTime ?></td>
-                            <td><?= $topic->lastCommentTime ?></td></tr><?php
-                        }
-                        ?>
-                        </tbody>
-                    </table>
-
-                    <ul class="pager">
-                        <li class="next"><a href="<?= RHtmlHelper::siteUrl('post/list/' . $group->id) ?>">More
-                                topics &rarr;</a>
-                        </li>
-                    </ul>
-
-                <?php endif; ?>
-                <?= (count($latestPosts) == 0) ? "No posts." : "" ?>
+                <?php
+                $this->renderPartial("_common._posts_table", array('posts'=>$latestPosts,'showAuthor'=>true),false);
+                ?>
             </div>
 
         </div>

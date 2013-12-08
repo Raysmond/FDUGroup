@@ -132,9 +132,9 @@ Rays::css("/public/css/post.css");
                             echo '</div>';
                         }
                     } else if ($part == 'posts') {         //User published Topics
-                            $this->renderPartial("_posts_table",array('posts'=>$postTopics,'showGroup'=>true),false);
+                            $this->renderPartial("_common._posts_table",array('posts'=>$postTopics,'showGroup'=>true),false);
                         } else if ($part == 'likes') {
-                                $this->renderPartial("_posts_table",array('posts'=>$likeTopics,'showAuthor'=>true,'showGroup'=>true),false);
+                                $this->renderPartial("_common._posts_table",array('posts'=>$likeTopics,'showAuthor'=>true,'showGroup'=>true),false);
                             }
                     ?>
             </div>

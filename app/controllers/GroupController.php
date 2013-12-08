@@ -129,6 +129,7 @@ class GroupController extends BaseController
         $data['isManager'] = $isLogin && $group->creator==$uid;
 
         $this->setHeaderTitle($group->name);
+        $this->addCss("/public/css/post.css");
         $this->render('detail', $data, false);
     }
 

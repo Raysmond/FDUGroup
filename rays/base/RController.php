@@ -147,12 +147,19 @@ class RController
 
     /**
      * Get view file
-     * @param $viewName
+     * @param $viewName if no '.' is in the the $viewName string, then the method will get view file under
+     *  the directory of current controller Id within the base view directory, otherwise, the method will
+     *  get the view file from the base view directory
      * @return string the file name of the view or false if the file not exists
      */
     public function getViewFile($viewName)
     {
-        $viewFile = Rays::app()->viewPath . "/" . $this->getId() . "/" . $viewName . ".php";
+        $viewFile = Rays::app()->viewPath . "/";
+        if(strpos($viewName, ".")>0)
+            $viewFile .= str_replace("." , "/" , $viewName) . ".php";
+        else
+            $viewFile .=  $this->getId() . "/" . $viewName . ".php";
+
         if (file_exists($viewFile))
             return $viewFile;
         else
