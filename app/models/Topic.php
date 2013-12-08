@@ -221,4 +221,52 @@ class Topic extends Data
         $result = Data::db_query($sql);
         return $result;
     }
+
+
+    public static function getDayTopViewPosts($start=0,$limit=0){
+        $topics = new Topic();
+        $user = new User();
+        $group = new Group();
+        $counter = new Counter();
+        $ratingStats = new RatingStatistic();
+        $entityType = Topic::$entityType;
+
+        $sql = "SELECT "
+            ."user.{$user->columns['id']},"
+            ."user.{$user->columns['name']},"
+            ."user.{$user->columns['picture']},"
+            ."topic.{$topics->columns['id']},"
+            ."topic.{$topics->columns['title']},"
+            ."topic.{$topics->columns['content']},"
+            ."topic.{$topics->columns['createdTime']},"
+            ."topic.{$topics->columns['commentCount']},"
+            ."groups.{$group->columns['id']},"
+            ."groups.{$group->columns['name']},"
+            ."counter.{$counter->columns['dayCount']},"
+            ."rating.{$ratingStats->columns['value']} AS plusCount "
+            ." FROM {$topics->table} AS topic "
+            ."LEFT JOIN {$counter->table} AS counter ON counter.{$counter->columns['entityId']}=topic.{$topics->columns['id']} AND counter.{$counter->columns['entityTypeId']}={$entityType} "
+            ."LEFT JOIN {$user->table} AS user on topic.{$topics->columns['userId']}=user.{$user->columns['id']} "
+            ."LEFT JOIN {$group->table} AS groups on groups.{$group->columns['id']}=topic.{$topics->columns['groupId']} "
+            ."LEFT JOIN {$ratingStats->table} AS rating on rating.{$ratingStats->columns['entityType']}={$entityType} "
+            ."AND rating.{$ratingStats->columns['entityId']}=topic.{$topics->columns['id']} "
+            ."AND rating.{$ratingStats->columns['tag']}='plus' "
+            ."AND rating.{$ratingStats->columns['type']}='count'";
+
+        $where = "WHERE 1=1 ";
+//        $beginTime = date('Y-m-d: 00:00:00');
+
+//        $where .=" AND topic.{$topics->columns['createdTime']}>'{$beginTime}' ";
+        $where .=" AND counter.{$counter->columns['dayCount']} > 0 ";
+
+        $sql.=$where;
+
+        $sql.="ORDER BY counter.{$counter->columns['dayCount']} DESC ";
+
+        if($start!=0||$limit!=0){
+            $sql .= "LIMIT {$start},{$limit} ";
+        }
+
+        return Data::db_query($sql);
+    }
 }

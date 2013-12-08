@@ -163,3 +163,25 @@ ul.posts-category li>a{
     border-bottom: 1px dashed #ddd;
 }
 
+
+/* Top posts */
+ul.top-posts-list{
+    padding-left: 0;
+}
+ul.top-posts-list>li{
+    list-style: none;
+    border-bottom: 1px #ccc dashed;
+    padding: 5px;
+}
+ul.top-posts-list>li>a{
+    color: #ff6b6b;
+}
+ul.top-posts-list>li>a:hover{
+    color: #ffc1c1;
+}
+ul.top-posts-list span.counter{
+    float: right;
+    width: 30px;
+    text-align: center;
+    padding-left: 10px;
+}

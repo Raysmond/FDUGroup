@@ -1,0 +1,15 @@
+<?php
+/**
+ * Top post module
+ * @author:Raysmond
+ */
+
+class hot_posts_module extends RModule{
+    public $access = array("post/find","post/find?*","post/find/*");
+
+    public function module_content()
+    {
+        $this->addJs("/public/js/jquery.dotdotdot.min.js");
+        return $this->render("hot_posts",['posts'=>Topic::getDayTopViewPosts(0,10)]);
+    }
+}

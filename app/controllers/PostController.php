@@ -144,9 +144,11 @@ class PostController extends BaseController
                 $data['validation_errors'] = $validation->getErrors();
             }
         }
+
         $group = new Group();
         $group->load($topic->groupId);
-        $data = array("type" => "edit", "topic" => $topic, 'group' => $group);
+        $data = array("type" => "edit", "topic" => $topic, 'group' => $group,'groupId'=>$group->id);
+        $data['groups'] = GroupUser::userGroups(Rays::user()->id);
 
         $this->layout = 'user';
         $this->addCss('/public/css/post.css');
