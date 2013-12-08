@@ -27,7 +27,7 @@
 
         <li <?= ($currentUrl == 'friend/myfriend') ? 'class="active"' : "" ?>>
             <a href="<?=RHtmlHelper::siteUrl('friend/myfriend')?>">
-                <span class="glyphicon glyphicon-user"></span> &nbsp; My friends
+                <span class="glyphicon glyphicon-heart"></span> &nbsp; My friends
             </a>
         </li>
 
