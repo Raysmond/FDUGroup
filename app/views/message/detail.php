@@ -27,7 +27,7 @@
     echo "<br/>";
     echo '<p>'.RHtmlHelper::decode($message->content).'</p>';
 
-    if($message->status==1&&$message->receiverId==Rays::app()->getLoginUser()->id):
+    if($message->status==Message::$STATUS_UNREAD&&$message->receiverId==Rays::app()->getLoginUser()->id):
         echo RHtmlHelper::linkAction('message',"Mark read",'read',$message->id,array('class'=>'btn btn-sm btn-success'));
     endif;
     ?>

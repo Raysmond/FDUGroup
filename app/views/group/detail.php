@@ -64,7 +64,7 @@
             <div class="col-sm-6">
                 <h2 class="s-title">Latest Posts</h2>
             </div>
-            <div class="col-sm-3" style="float:right;text-align: right;">
+            <div class="col-sm-3" style="float:right;text-align: right;padding-right:0;">
                 <?php if ($hasJoined) echo RHtmlHelper::linkAction('post', "Add new post", 'new', $group->id,
                     array('class' => 'btn btn-xs btn-success', 'style' => 'margin: 10px 0;')) ?>
             </div>

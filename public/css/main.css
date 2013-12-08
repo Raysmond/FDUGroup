@@ -249,6 +249,7 @@ blockquote
 }
 .group-content .group-intro{
     margin: 10px 0;
+    text-align:justify;
 }
 .recommend-content{
     padding-top: 10px;

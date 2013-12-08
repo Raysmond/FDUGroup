@@ -51,6 +51,18 @@ a {
 .message-unread .panel-heading a {
     color:#428bca;
 }
+.message-send {
+    font-size: 18px;
+    padding-left:5px;
+    margin-top:5px;
+}
+
+.message-send a {
+    color:#ff6b6b;
+}
+.message-send a:hover {
+    color:#ffc1c1;
+}
 
 a:hover, .home-actions .home-actions-item a:hover, .message-unread .panel-heading a:hover {
     color:#ff6b6b;

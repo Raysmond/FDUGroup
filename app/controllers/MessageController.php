@@ -56,6 +56,7 @@ class MessageController extends BaseController
             return;
         }
 
+        $message->markRead($msgId);
         $message->type->load();
 
         $this->render('detail', array('message' => $message), false);

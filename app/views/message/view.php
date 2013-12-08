@@ -10,8 +10,11 @@
         </h1>
     </div>
     <div class="panel-body">
-        <div class="navbar-left">
-            <?=RHtmlHelper::linkAction('message','+ Send a message','send',null,array('class'=>'btn btn-sm btn-info'))?>
+        <div class="navbar-left message-send">
+            <a href="<?=RHtmlHelper::siteUrl('message/send')?>" title="send">
+                <span class="glyphicon glyphicon-envelope"></span>
+                Send Message
+            </a>
         </div>
 
         <div class="navbar-right">
@@ -52,8 +55,8 @@
                         echo "From: 系统消息";
                     }
                     else{
-                        //print_r($msg);
-                        $msg->sender->load();
+                        if ($msg->sender !== null)
+                            $msg->sender->load();
                         if($msg->sender instanceof User){
                             echo "From: ".RHtmlHelper::linkAction('user',$msg->sender->name,'view',$msg->sender->id);
                         }
