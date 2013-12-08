@@ -6,7 +6,7 @@
 
 class publish_form_module extends RModule
 {
-    public $access = array('user/home','user/myposts','group/view','group/build','post/new','post/edit','user/applyVIP','user/profile','user/profile/edit','user/edit','friend/myfriend','user/find','message/*','ads/*');
+    public $access = array('user/home','user/myposts','group/view','group/build','post/new', 'post/new/*', 'post/edit','user/applyVIP','user/profile','user/profile/edit','user/edit','friend/myfriend','user/find','message/*','ads/*');
 
     public function __construct($params = array())
     {

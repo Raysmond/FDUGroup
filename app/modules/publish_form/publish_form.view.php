@@ -6,7 +6,7 @@
  */
 ?>
 <div class="panel panel-default">
-    <div class="panel-body">
+    <div class="panel-body" style="margin-bottom: 0;">
         <input type="hidden" id="publish_form_path" name="publish_form_path" value="<?=$path?>" />
         <input type="hidden" id="publish_form_id" name="publish_form_path" value="post-content" />
 
@@ -20,7 +20,7 @@
             <div class="home-actions-item">
                 <a href="<?=RHtmlHelper::siteUrl('post/new')?>" class="">
                     <?=RHtmlHelper::showImage('public/images/post.png','',array('width'=>'48px'))?>
-                     New post</a>
+                     New topic</a>
 
             </div>
 
