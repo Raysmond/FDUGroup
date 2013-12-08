@@ -149,9 +149,22 @@ class _RModelQueryer {
         $stmt->execute($this->_args());
     }
 
+    private function _substitute($constraint)
+    {
+        /* Substitute [member]s */
+        $model = $this->model;
+        $search = array();
+        $replace = array();
+        foreach ($model::$mapping as $member => $db_member) {
+            $search[] = "[$member]";
+            $replace[] = $db_member;
+        }
+        return str_replace($search, $replace, $constraint);
+    }
+
     /**
      * Add a custom where clause
-     * @param string $constraint Custom where clause to add
+     * @param string $constraint Custom where clause to add, use "[name]" to indicate a member field
      * @param string $args Arguments to pass to the clause
      * @return This object
      */
@@ -163,7 +176,7 @@ class _RModelQueryer {
         else {
             $this->query_where .= " AND ";
         }
-        $this->query_where .= $constraint;
+        $this->query_where .= $this->_substitute($constraint);
         if (is_array($args)) {
             $this->args_where = array_merge($this->args_where, $args);
         }
@@ -182,8 +195,7 @@ class _RModelQueryer {
             if ($constraint != "") {
                 $constraint .= " AND ";
             }
-            $db_member = $model::$mapping[$constraints[$i]];
-            $constraint .= "$db_member = ?";
+            $constraint .= "[{$constraints[$i]}] = ?";
             $args[] = $constraints[$i + 1];
         }
         return $this->where($constraint, $args);
@@ -213,9 +225,7 @@ class _RModelQueryer {
      */
     public function like($memberName, $memberValue)
     {
-        $model = $this->model;
-        $db_name = $model::$mapping[$memberName];
-        return $this->where("$db_name LIKE ?", "%$memberValue%");
+        return $this->where("[$memberName] LIKE ?", "%$memberValue%");
     }
 
     /**
@@ -232,6 +242,7 @@ class _RModelQueryer {
         else {
             $this->query_order .= ", ";
         }
+        $expression = $this->_substitute($expression);
         $this->query_order .= "($expression) $order";
         return $this;
     }
@@ -244,7 +255,7 @@ class _RModelQueryer {
     public function order_asc($memberName)
     {
         $model = $this->model;
-        return $this->order("ASC", $model::$mapping[$memberName]);
+        return $this->order("ASC", "[$memberName]");
     }
 
     /**
@@ -255,7 +266,7 @@ class _RModelQueryer {
     public function order_desc($memberName)
     {
         $model = $this->model;
-        return $this->order("DESC", $model::$mapping[$memberName]);
+        return $this->order("DESC", "[$memberName]");
     }
 
     /**
