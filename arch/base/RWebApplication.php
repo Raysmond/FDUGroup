@@ -168,9 +168,7 @@ class RWebApplication extends RBaseApplication
         if ($this->isUserLogin() && !isset($this->user)) {
             $id = $this->getHttpSession()->get("user");
             $user = User::get($id);
-            $user->role = new Role();
-            $user->role->roleId = $user->roleId;
-            $user->role->load();
+            $user->role = Role::get($user->roleId);
             return $user;
         } else return null;
     }
