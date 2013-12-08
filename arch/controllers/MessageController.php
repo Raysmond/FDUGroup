@@ -183,11 +183,12 @@ class MessageController extends BaseController
     public function actionDelete($msgId)
     {
         if (isset($msgId) && is_numeric($msgId)) {
-            $msg = new Message();
-            $msg = $msg->load($msgId);
             $user = Rays::app()->getLoginUser();
-            if ($msg != null && ($msg->receiverId == $user->id || $user->isAdmin())) {
-                $msg->delete();
+            if ($user->isAdmin()) {
+                Message::find("id", $msgId)->delete();
+            }
+            else {
+                Message::find(array("id", $msgId, "receiverId", $user->id))->delete();
             }
         }
         $this->redirect($this->getHttpRequest()->getUrlReferrer());
