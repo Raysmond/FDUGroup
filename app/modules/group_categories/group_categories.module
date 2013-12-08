@@ -4,26 +4,26 @@
  * @author: Raysmond
  */
 
-class group_categories_module extends RModule{
-    public $access = array('category/groups/*','group/find','group/find?*','group/find/*','category/new');
+class group_categories_module extends RModule
+{
+    public $access = array('category/groups/*', 'group/find', 'group/find?*', 'group/find/*', 'category/new');
 
     public function module_content()
     {
-        $categories = new Category();
-        $categories = $categories->find(0,0,[],[],['pid' => 0]);
-        $data = [
-            'title'=>$this->getName(),
-            'categories'=>$categories,
+        $data = array(
+            'categories' => (new Category())->find(0, 0, [], [], ['pid' => 0]),
             'cid' => [],
-        ];
+        );
+
         $cid = Rays::router()->getParams()[0];
         if (isset($cid) && $cid !== null) {
-            $data['cid'] []= $cid;$category= (new Category())->load($cid);
+            $data['cid'] [] = $cid;
+            $category = (new Category())->load($cid);
             if ($category->pid != 0) {
-                $data['cid'] []= $category->pid;
+                $data['cid'] [] = $category->pid;
             }
         }
 
-        return $this->render('group_categories',$data);
+        return $this->render('group_categories', $data);
     }
 }
