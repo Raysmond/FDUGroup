@@ -1,0 +1,102 @@
+<?php
+/**
+ * CKEditor module file
+ * @author: Raysmond
+ */
+
+class ckeditor_module extends RModule{
+
+    const BASIC = 'basic';
+    const ADVANCED = 'advanced';
+    const FULL = 'full';
+
+    public $editorType = self::BASIC;
+    public $editorId = 'rays_editor_1';
+    public $editorClass = 'ckeditor';
+    public $customInitialJs;
+
+    public $data = '';
+
+    public $uploadUrl = 'file/uploadImage';
+
+    private $_showEditor = true;
+    private $_attributes = array();
+
+
+    public function init($params = array()){
+        parent::init($params);
+
+        if(isset($params['editorId'])){
+            $this->editorId = trim($params['editorId']);
+        }
+
+        if(isset($params['editorType'])){
+            $this->editorType = trim($params['editorType']);
+        }
+
+        if(isset($params['showEditor'])){
+            if($params['showEditor']===false){
+                $this->_showEditor = false;
+            }
+            else{
+                $this->_showEditor = true;
+            }
+        }
+
+        if(isset($params['editorClass'])){
+            $this->editorClass = $params['editorClass'];
+        }
+
+        if(isset($params['uploadUrl'])){
+            $this->uploadUrl = $params['uploadUrl'];
+        }
+
+        if(isset($params['data'])){
+            $this->data = $params['data'];
+        }
+
+        if(isset($params['customInitialJs'])){
+            $this->customInitialJs = $params['customInitialJs'];
+        }
+
+        if(isset($params['attributes'])&&is_array($params['attributes'])){
+            $this->_attributes = $params['attributes'];
+            if(isset($this->_attributes['class'])){
+                unset($this->_attributes['class']);
+            }
+            if(isset($this->_attributes['id'])){
+                unset($this->_attributes['id']);
+            }
+        }
+    }
+
+    public function setAttributes($attr = array()){
+        $this->_attributes = $attr;
+    }
+
+    public function module_content(){
+        $this->addJs($this->getModulePath().'/ckeditor.js');
+        //$this->addJs($this->getModulePath().'/ckfinder/ckfinder.js');
+        $data = array(
+            'id'=>$this->editorId,
+            'class'=>$this->editorClass,
+            'type'=>$this->editorType,
+            'path'=>$this->getModulePath(),
+            'show'=>$this->_showEditor,
+            'attributes'=>$this->_attributes,
+            'uploadUrl'=>$this->getUploadUrl(),
+            'data'=>$this->data,
+        );
+        if($this->customInitialJs){
+            $data['customInitialJs'] = $this->customInitialJs;
+        }
+        return $this->render('ckeditor',$data);
+    }
+
+    public function getUploadUrl(){
+        if(strpos($this->uploadUrl,'//')>0)
+            return $this->uploadUrl;
+        else
+            return RHtmlHelper::siteUrl($this->uploadUrl);
+    }
+}

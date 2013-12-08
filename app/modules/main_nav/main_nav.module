@@ -1,0 +1,30 @@
+<?php
+/**
+ * Main navigation module
+ * @author: Raysmond
+ */
+
+
+class main_nav_module extends RModule
+{
+
+    public function module_content()
+    {
+        $baseUrl = Rays::app()->getBaseUrl();
+        $appName = RHtmlHelper::encode(Rays::app()->name);
+        $currentUrl = Rays::app()->getHttpRequest()->getRequestUriInfo();
+        $user = Rays::app()->getLoginUser();
+        $isAdmin = false;
+        if ($user != null && $user->roleId == Role::ADMINISTRATOR_ID) $isAdmin = true;
+
+        $data = array(
+            'baseUrl' => $baseUrl,
+            'curUrl' => $currentUrl,
+            'user' => $user,
+            'appName' => $appName,
+            'isAdmin' => $isAdmin
+        );
+
+        return $this->render('main_nav', $data);
+    }
+}
