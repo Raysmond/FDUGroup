@@ -81,9 +81,9 @@ class UserController extends BaseController
         $postTopics = [];
         $likeTopics = [];
         switch ($part) {
-            case 'joins': $userGroup = (new GroupUser())->userGroups($userId);break;
+            case 'joins': $userGroup = (new GroupUser())->getGroups($userId);break;
             case 'posts': $postTopics = (new Topic())->getUserTopics($userId);break;
-            case 'likes': break;//$userGroup = (new GroupUser())->userGroups()
+            case 'likes': break;
             case 'profile': break;
             default: return;
         }

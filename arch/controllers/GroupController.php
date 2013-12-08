@@ -54,16 +54,18 @@ class GroupController extends BaseController
         $this->render("find", $data, false);
     }
 
-    /*
-     * View my groups
+    /**
+     * View groups of given user
+     * @param string $userId User id, will use current user if null
      */
     public function actionView($userId = null)
     {
-        $userGroup = new GroupUser();
-        if($userId == null) $userId = Rays::app()->getLoginUser()->id;
-        $userGroup = $userGroup->userGroups($userId);
+        if($userId == null) {
+            $userId = Rays::app()->getLoginUser()->id;
+        }
+        $groups = GroupUser::getGroups($userId);
         $this->setHeaderTitle("My Groups");
-        $this->render("view", $userGroup, false);
+        $this->render("view", $groups, false);
     }
 
     /**
@@ -108,14 +110,12 @@ class GroupController extends BaseController
         if(Rays::app()->isUserLogin()){
             $userId = Rays::app()->getLoginUser()->id;
             // whether the user has joined the group
-            $g_u = new GroupUser();
-            $g_u->userId = $userId;
-            $g_u->groupId = $group->id;
-            if(count($g_u->find())>0)
+            $g_u = GroupUser::find(array("userId", $userId, "groupId", $group->id))->first();
+            if ($g_u != null)
                 $data['hasJoined'] = true;
 
             // whether the login user is the manager of the group
-            if($group->creator==$userId)
+            if ($group->creator==$userId)
                 $data['isManager'] = true;
         }
 
@@ -253,9 +253,8 @@ class GroupController extends BaseController
                 $groupUser->joinTime = date('Y-m-d H:i:s');
                 $groupUser->status = 1;
 
-                $gu = new GroupUser();
-                if(!$gu->isUserInGroup($groupUser->userId,$groupUser->groupId)){
-                    $groupUser->insert();
+                if(!GroupUser::isUserInGroup($groupUser->userId, $groupUser->groupId)) {
+                    $groupUser->save();
                     $group = Group::get($groupUser->groupId);
                     $group->memberCount++;
                     $group->save();
@@ -280,9 +279,8 @@ class GroupController extends BaseController
             $groupUser->joinTime = date('Y-m-d H:i:s');
             $groupUser->status = 1;
 
-            $gu = new GroupUser();
-            if(!$gu->isUserInGroup($groupUser->userId,$groupUser->groupId)){
-                $groupUser->insert();
+            if (!GroupUser::isUserInGroup($groupUser->userId,$groupUser->groupId)) {
+                $groupUser->save();
                 $gruop = Group::get($groupUser->groupId);
                 $group->memberCount++;
                 $group->save();
@@ -314,8 +312,7 @@ class GroupController extends BaseController
             $groupUser->joinTime = date('Y-m-d H:i:s');
             $groupUser->status = 1;
 
-            $gu = new GroupUser();
-            if(!$gu->isUserInGroup($groupUser->userId,$groupUser->groupId)){
+            if(!GroupUser::isUserInGroup($groupUser->userId, $groupUser->groupId)) {
                 $this->flash("message", "The request is processed.");
                 $group = Group::get($groupUser->groupId);
 
@@ -335,11 +332,7 @@ class GroupController extends BaseController
 
     public function actionExit($groupId = null)
     {
-
-        $groupUser = new GroupUser();
-        $groupUser->groupId = $groupId;
-        $groupUser->userId = Rays::app()->getLoginUser()->id;
-
+        $groupUser = GroupUser::find(array("groupId", $groupId, "userId", Rays::app()->getLoginUser()->id))->first();
         $group = Group::get($groupId);
 
         // group creator cannot exit the group

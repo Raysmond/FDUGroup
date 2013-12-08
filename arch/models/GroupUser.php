@@ -1,58 +1,37 @@
 <?php
 /**
- * Class GroupUser
+ * Data model for user-group relation
  * @author: Raysmond
  */
 
-class GroupUser extends Data
+class GroupUser extends RModel
 {
-    public $users;
     public $groupId, $userId, $joinTime, $status, $comment;
 
-    public function __construct()
-    {
-        $option = array(
-            "key" => "groupId",
-            "table" => "group_has_users",
-            "columns" => array(
-                "groupId" => "gro_id",
-                "userId" => "u_id",
-                "joinTime" => "join_time",
-                "status" => "status",
-                "comment" => "join_comment"
-            )
-        );
-        parent::init($option);
-    }
+    public static $primary_key = "groupId";
+    public static $table = "group_has_users";
+    public static $mapping = array(
+        "groupId" => "gro_id",
+        "userId" => "u_id",
+        "joinTime" => "join_time",
+        "status" => "status",
+        "comment" => "join_comment"
+    );
 
-
-    public function groupUsers($groupId = null)
+    public static function getGroups($userId)
     {
-        if ($groupId != null) {
-            $this->groupId = $groupId;
-        }
-        else return null;
-        return $this->find();
-    }
-
-    public function userGroups($userId = null)
-    {
-        if($userId == null) return null;
         $result = array();
-        $this->userId = $userId;
-        $userGroups = $this->find();
-        foreach ($userGroups as $userGroup) {
-            $group = Group::get($userGroup->groupId);
+        $groups = GroupUser::find("userId", $userId)->all();
+        foreach ($groups as $u) {
+            $group = Group::get($u->groupId);
             array_push($result, $group);
         }
         return $result;
     }
 
-    public function isUserInGroup($userId, $groupId){
-        $allUsers = $this->groupUsers($groupId);
-        foreach($allUsers as $user){
-            if($user->userId == $userId) return true;
-        }
+    public static function isUserInGroup($userId, $groupId){
+        if (GroupUser::find(array("groupId", $groupId, "userId", $userId))->first() != null)
+            return true;
         return false;
     }
 }
