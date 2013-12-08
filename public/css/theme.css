@@ -624,3 +624,7 @@ span.spliter {
     text-transform: uppercase;
     color: #bbb;
 }
+
+.page-post-find .topic-content {
+    border: 1px solid #eee;
+}
