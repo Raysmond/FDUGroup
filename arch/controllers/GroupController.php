@@ -84,13 +84,10 @@ class GroupController extends BaseController
         }
 
         $counter = $group->increaseCounter();
-        /* TODO: Auto join */
-        $group->category = new Category();
-        $group->category->id = $group->categoryId;
-        $group->category->load();
         $group->groupCreator = new User();
         $group->groupCreator->id = $group->creator;
         $group->groupCreator->load();
+        $group->category = Category::get($group->categoryId);
 
         $data = array();
         $data['group'] = $group;
@@ -132,8 +129,7 @@ class GroupController extends BaseController
     public function actionBuild()
     {
         $this->setHeaderTitle("Build my group");
-        $category = new Category();
-        $categories = $category->find();
+        $categories = Category::find()->all();
         $data = array('categories' => $categories);
         if ($this->getHttpRequest()->isPostRequest()) {
             $form = $_POST;
@@ -178,8 +174,7 @@ class GroupController extends BaseController
 
         $group = Group::get($groupId);
 
-        $category = new Category();
-        $categories = $category->find();
+        $categories = Category::find()->all();
 
         $data = array('categories' => $categories, 'groupId' => $groupId);
 

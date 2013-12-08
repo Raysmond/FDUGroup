@@ -1,7 +1,7 @@
 <?php
 /**
- * Class Category
- * @author: Raysmond
+ * Category data model
+ * @author: Raysmond, Xiangyan Sun
  */
 
 class Category extends Tree
@@ -10,21 +10,13 @@ class Category extends Tree
 
     const DEFAULT_CATEGORY_ID = 48;
 
-    public function __construct()
-    {
-        $option = array(
-            "key" => "id",
-            "pkey" => "pid",
-            "table" => "category",
-            "columns" => array(
-                "id" => "cat_id",
-                "name" => "cat_name",
-                "pid" => "cat_pid"
-            )
-        );
-
-        parent::init($option);
-    }
+    public static $primary_key = "id";
+    public static $table = "category";
+    public static $mapping = array(
+        "id" => "cat_id",
+        "name" => "cat_name",
+        "pid" => "cat_pid"
+    );
 
     public function delete($assignment=array()){
         if(!isset($this->id)||$this->id=='')

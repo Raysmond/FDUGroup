@@ -1,7 +1,7 @@
 <?php
 /**
- * Class Group
- * @author: Raysmond
+ * Group data model
+ * @author: Raysmond, Xiangyan Sun
  */
 
 class Group extends RModel
