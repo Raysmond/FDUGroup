@@ -204,7 +204,7 @@ class MessageController extends BaseController
             'count' => $count,
         );
 
-        if ($count > ($curPage * $pageSize)) {
+        if ($count > $pageSize) {
             $url = RHtmlHelper::siteUrl('message/view/' . $msgType);
             $pager = new RPagerHelper('page', $count, $pageSize, $url, $curPage);
             $data['pager'] = $pager->showPager();

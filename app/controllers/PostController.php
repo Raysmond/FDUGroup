@@ -331,7 +331,7 @@ class PostController extends BaseController
             $this->page404();
             return;
         } else {
-            $data['category'] = $category;
+            $data['category'] = $category->id?$category:null;
             $data['subs'] = $category->children();
         }
 

@@ -1,10 +1,8 @@
 <div class="panel panel-default">
     <div class="panel-heading">
-        <?php
-        if (isset($category)) {
-            echo '<h1 class="panel-title">' . $category->name . '</h1>';
-        }
-        ?>
+        <h1 class="panel-title">
+            <?=isset($category)?$category->name:"Find posts" ?>
+        </h1>
     </div>
 
     <div class="panel-body">

@@ -23,7 +23,7 @@
                     }
                     ?>
                     <li <?= ($curUrl=='group/find'?'class="active"':''); ?>>
-                        <?= RHtmlHelper::linkAction("group","Find Groups","find"); ?>
+                        <?= RHtmlHelper::linkAction("group","Find groups","find"); ?>
                     </li>
                     <li <?= ($curUrl=='post/find'?'class="active"':''); ?>>
                         <?= RHtmlHelper::linkAction("post","Find posts","find"); ?>
