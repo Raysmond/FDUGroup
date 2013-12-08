@@ -119,7 +119,7 @@ class _RModelQueryer {
      * @param string $args Arguments to pass to the clause
      * @return This object
      */
-    public function where($constraint, $args)
+    public function where($constraint, $args = array())
     {
         if ($this->query_where == "") {
             $this->query_where = "WHERE ";
@@ -226,6 +226,11 @@ abstract class RModel {
         if ($memberName == null)
             return new _RModelQueryer(get_called_class());
         return (new _RModelQueryer(get_called_class()))->find($memberName, $memberValue);
+    }
+
+    public static function where($constraint, $args = array())
+    {
+        return (new _RModelQueryer(get_called_class()))->where($constraint, $args);
     }
 
     /**
