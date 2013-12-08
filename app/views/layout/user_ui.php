@@ -10,6 +10,7 @@ $baseUrl = Rays::app()->getBaseUrl();
     <meta name="language" content="en"/>
     <meta name="description" content=""/>
 
+    <link rel="shortcut icon" href="<?=$baseUrl ?>/public/images/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" type="text/css" href="<?php echo $baseUrl; ?>/public/bootstrap-3.0/css/bootstrap.min.css"/>
     <link rel="stylesheet" type="text/css" href="<?php echo $baseUrl; ?>/public/css/non-responsive.css"/>
     <link rel="stylesheet" type="text/css" href="<?php echo $baseUrl; ?>/public/css/main.css"/>
@@ -25,7 +26,7 @@ $baseUrl = Rays::app()->getBaseUrl();
     <script type="text/javascript" src="<?php echo $baseUrl; ?>/public/js/main.js"></script>
 </head>
 
-<body class="index page-<?=Rays::router()->getController().'-'.Rays::router()->getAction()?>">
+<body class=" page-<?=Rays::router()->getController().'-'.Rays::router()->getAction()?>">
 <?php
 $this->module('main_nav',array('id'=>'main_nav','name'=>'Main navigation'));
 ?>
@@ -38,7 +39,7 @@ $this->module('main_nav',array('id'=>'main_nav','name'=>'Main navigation'));
     </div>
 
     <div class="content-wrapper">
-        <div id="content">
+        <div id="content" style="position:relative;">
             <?php if(isset($content)) echo $content; ?>
         </div>
     </div>

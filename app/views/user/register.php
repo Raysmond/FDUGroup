@@ -1,6 +1,6 @@
-<div class="row">
-    <div class="col-lg-3"></div>
-    <div class="col-lg-6">
+<?php
+    Rays::css("/public/css/form.css");
+?>
         <div class="panel panel-default user-login-register-panel">
             <div class="panel-heading"><b>Register</b></div>
             <div class="panel-body">
@@ -15,7 +15,7 @@
                 echo RFormHelper::openForm('user/register',
                     array('id'=>'registerForm', 'class'=>'form-signin registerForm'));
 
-                echo RFormHelper::label("User name",'username');
+                //echo RFormHelper::label("User name",'username');
                 echo RFormHelper::input(
                     array('id'=>'username',
                         'name'=>'username',
@@ -23,14 +23,14 @@
                         'placeholder'=>'User name',
                     ),$form);
 
-                echo RFormHelper::label("Email",'email');
+                //echo RFormHelper::label("Email",'email');
                 echo RFormHelper::input(
                     array('id'=>'email',
                         'name'=>'email',
                         'class'=>'form-control',
                         'placeholder'=>'email@host.com'),$form);
 
-                echo RFormHelper::label("Password",'password');
+               // echo RFormHelper::label("Password",'password');
                 echo RFormHelper::input(
                     array('id'=>'password',
                         'name'=>'password',
@@ -38,7 +38,7 @@
                         'class'=>'form-control',
                         'placeholder'=>'Password'),$form);
 
-                echo RFormHelper::label("Password confirm",'password-confirm');
+               // echo RFormHelper::label("Password confirm",'password-confirm');
                 echo RFormHelper::input(array(
                     'id'=>'password-confirm',
                     'name'=>'password-confirm',
@@ -46,7 +46,6 @@
                     'class'=>'form-control',
                     'placeholder'=>'Password confirm'),$form);
 
-                echo "<br/>";
 
                 echo RFormHelper::input(
                     array('class'=>'btn btn-primary','type'=>'submit','value'=>'Register'));
@@ -54,7 +53,6 @@
             ?>
             </div>
         </div>
-    </div>
-</div>
+
 
 

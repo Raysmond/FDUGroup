@@ -502,7 +502,8 @@ span.spliter {
 }
 
 .user-login-register-panel {
-    width: 418px;
+    width: 350px;
+    float:right;
 }
 
 .user-login-register-footer {
@@ -512,7 +513,6 @@ span.spliter {
 
 .page-user-login #content, .page-user-register #content {
     /*min-height: 470px;*/
-    margin-left: 400px;
     padding-top:30px;
 }
 
