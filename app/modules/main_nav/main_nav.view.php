@@ -13,9 +13,15 @@
             </div>
             <div class="collapse navbar-collapse">
                 <ul class="nav navbar-nav">
-                    <li <?= (Rays::app()->getHttpRequest()->urlMatch(array('user/home','user','user/'), $curUrl)) ? 'class="active"' : "" ?>>
-                        <?= RHtmlHelper::linkAction("user","Home","home"); ?>
-                    </li>
+                    <?php
+                    if(Rays::isLogin()){
+                        ?>
+                        <li <?= (Rays::app()->getHttpRequest()->urlMatch(array('user/home','user','user/'), $curUrl)) ? 'class="active"' : "" ?>>
+                            <?= RHtmlHelper::linkAction("user","Home","home"); ?>
+                        </li>
+                    <?php
+                    }
+                    ?>
                     <li <?= ($curUrl=='group/find'?'class="active"':''); ?>>
                         <?= RHtmlHelper::linkAction("group","Find Groups","find"); ?>
                     </li>

@@ -118,3 +118,12 @@
 .posts-table td{
     font-size: 12px;
 }
+
+ul.posts-category li{
+    list-style: none;
+    float: left;
+}
+
+ul.posts-category li>a{
+    width: 80px;
+}
