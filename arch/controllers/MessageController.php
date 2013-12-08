@@ -132,45 +132,32 @@ class MessageController extends BaseController
     public function actionView($msgType = 'all')
     {
         $this->setHeaderTitle("My Messages");
-        $messages = new Message();
         $userId = Rays::app()->getLoginUser()->id;
 
         $curPage = $this->getHttpRequest()->getQuery('page',1);
         $pageSize = (isset($_GET['pagesize'])&&is_numeric($_GET['pagesize']))?$_GET['pagesize'] : 5;
 
-        $count = new Message();
-        $count->receiverId = $userId;
-        switch($msgType){
+        /* TODO: Maybe move these model-related things into Message model directly */
+        $query = Message::find("receiverId", $userId);
+        switch($msgType) {
             case "all":
-                $allCount = $count->count();
-                $count->status = Message::$STATUS_TRASH;
-                $trashCount = $count->count();
-                $count = $allCount-$trashCount;
-                $messages = $messages->getUserMsgs($userId,($curPage-1)*$pageSize,$pageSize);
+                $query = $query->where(Message::$mapping['status']." != ? ", array(Message::$STATUS_TRASH));
                 break;
             case "read":
-                $count->status = Message::$STATUS_READ;
-                $count = $count->count();
-                $messages = $messages->getReadMsgs($userId,($curPage-1)*$pageSize,$pageSize);
+                $query = $query->find("status", Message::$STATUS_READ);
                 break;
             case "unread":
-                $count->status = Message::$STATUS_UNREAD;
-                $count = $count->count();
-                $messages = $messages->getUnReadMsgs($userId,($curPage-1)*$pageSize,$pageSize);
+                $query = $query->find("status", Message::$STATUS_UNREAD);
                 break;
-            //case "send":
-            //    $messages = $messages->getUserSentMsgs($userId);
-            //    break;
             case "trash":
-                $count->status = Message::$STATUS_TRASH;
-                $count = $count->count();
-                $messages = $messages->getTrashMsgs($userId);
+                $query = $query->find("status", Message::$STATUS_TRASH);
                 break;
             default:
                 Rays::app()->page404();
                 return;
         }
-        if($messages==null) $messages = array();
+        $count = $query->count();
+        $messages = $query->order_desc("id")->range(($curPage - 1) * $pageSize, $pageSize);
         $url = RHtmlHelper::siteUrl('message/view/'.$msgType);
         $pager = new RPagerHelper('page',$count,$pageSize,$url,$curPage);
         $data =  array(

@@ -1,38 +1,32 @@
 <?php
 /**
- * Message Model class file.
- * @author: Raysmond
+ * Data model for indivudal messages
+ * @author: Raysmond, Xiangyan Sun
  */
 
-class Message extends Data{
+class Message extends RModel {
     public $type;
     public $sender;
-    public $id,$typeId,$senderId,$receiverId,$title,$content,$sendTime,$status;
+    public $id, $typeId, $senderId, $receiverId, $title, $content, $sendTime, $status;
 
     public static $STATUS_UNREAD = 1;
     public static $STATUS_READ = 2;
     public static $STATUS_TRASH = 3;
 
-    public function __construct()
-    {
-        $options = array(
-            'key'=>'id',
-            'table'=>'messages',
-            'columns'=>array(
-                'id'=>'msg_id',
-                'typeId'=>'msg_type_id',
-                'senderId'=>'msg_sender_id',
-                'receiverId'=>'msg_receiver_id',
-                'title'=>'msg_title',
-                'content'=>'msg_content',
-                'sendTime'=>'msg_send_time',
-                'status'=>'msg_status',
-            )
-        );
-        parent::init($options);
-    }
+    public static $table = "messages";
+    public static $primary_key = "id";
+    public static $mapping = array(
+        'id'=>'msg_id',
+        'typeId'=>'msg_type_id',
+        'senderId'=>'msg_sender_id',
+        'receiverId'=>'msg_receiver_id',
+        'title'=>'msg_title',
+        'content'=>'msg_content',
+        'sendTime'=>'msg_send_time',
+        'status'=>'msg_status',
+    );
 
-    public function load($id=null)
+    /*public function load($id=null)
     {
         $result = parent::load($id);
         if($result==null) return null;
@@ -53,7 +47,7 @@ class Message extends Data{
             $this->sender = 'system';
         }
         return $this;
-    }
+    }*/
 
     public function sendMsg($typeName,$senderId,$receiverId,$title,$content,$sendTime=null,$status=1)
     {
@@ -98,63 +92,8 @@ class Message extends Data{
         }
     }
 
-    public function getUnReadMsgs($receiverId,$page=0,$pageSize=0)
+    public static function countUnreadMsgs($receiverId)
     {
-        if(!isset($receiverId)||$receiverId==''){
-            return null;
-        }
-        $msgs = new Message();
-        $msgs->status = self::$STATUS_UNREAD;
-        $msgs->receiverId = $receiverId;
-        return $msgs->find($page,$pageSize,array('key'=>'msg_id','order'=>'desc'));
+        return Message::find(array("receiverId", $receiverId, "status", Message::$STATUS_UNREAD))->count();
     }
-
-    public function getReadMsgs($receiverId,$page=0,$pageSize=0)
-    {
-        if(!isset($receiverId)||$receiverId==''){
-            return null;
-        }
-        $msgs = new Message();
-        $msgs->status = self::$STATUS_READ;
-        $msgs->receiverId = $receiverId;
-        return $msgs->find($page,$pageSize,array('key'=>'msg_id','order'=>'desc'));
-    }
-
-    public function getUserMsgs($receiverId,$page=0,$pageSize=0)
-    {
-        if(!isset($receiverId)||$receiverId==''){
-            return null;
-        }
-        $msgs = new Message();
-        $msgs->receiverId = $receiverId;
-        return $msgs->find($page,$pageSize,array('key'=>'msg_status,msg_id','order'=>'desc'),array(),
-            array('status'=>array(self::$STATUS_READ,self::$STATUS_UNREAD)));
-    }
-
-    public function getUserSentMsgs($userId)
-    {
-        if(!isset($userId)||$userId==''){
-            return null;
-        }
-        $msgs = new Message();
-
-        $msgs->senderId = $userId;
-        return $msgs->find(0,0,array('key'=>'msg_id','order'=>'desc'));
-    }
-
-    public function getTrashMsgs($userId){
-        if(!isset($userId)||$userId==''){
-            return null;
-        }
-        $msg = new Message();
-        $msg->receiverId = $userId;
-        $msg->status = self::$STATUS_TRASH;
-        return $msg->find(0,0,array('key'=>'msg_id','order'=>'desc'));
-    }
-
-    public function countUnreadMsgs($receiverId)
-    {
-        return count($this->getUnReadMsgs($receiverId));
-    }
-
 }

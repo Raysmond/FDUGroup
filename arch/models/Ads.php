@@ -1,7 +1,7 @@
 <?php
 /**
  * Data model for advertisements
- * User: songrenchu, Xiangyan Sun
+ * @author songrenchu, Xiangyan Sun
  */
 class Ads extends RModel {
     public $publisher;

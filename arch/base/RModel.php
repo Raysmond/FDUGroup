@@ -141,11 +141,11 @@ class _RModelQueryer {
             if ($constraint != "") {
                 $constraint .= " AND ";
             }
-            $member = $constraints[$i];
-            $constraint .= "$model::$mapping[$member] == ?";
+            $db_member = $model::$mapping[$constraints[$i]];
+            $constraint .= "$db_member = ?";
             $args[] = $constraints[$i + 1];
         }
-        return where($constraint, $args);
+        return $this->where($constraint, $args);
     }
 
     /**
@@ -157,10 +157,10 @@ class _RModelQueryer {
     public function find($memberName, $memberValue = null)
     {
         if ($memberValue == null) {
-            return _find($memberName);
+            return $this->_find($memberName);
         }
         else {
-            return _find(array($memberName, $memberValue));
+            return $this->_find(array($memberName, $memberValue));
         }
     }
 
