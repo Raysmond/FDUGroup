@@ -74,7 +74,7 @@
                 </ul>
 
                 <form class="navbar-form navbar-right" role="search" method="post" action="<?=RHtmlHelper::siteUrl("group/find")?>">
-                     <input type="text" name="searchstr" value="<?=(isset($_POST['searchstr'])?$_POST['searchstr']:"")?>" class="form-control" placeholder="Search groups">
+                     <input type="text" id="searchstr" name="searchstr" value="<?=(isset($_POST['searchstr'])?$_POST['searchstr']:"")?>" class="form-control" placeholder="Search groups">
                 </form>
 
             </div><!-- /.nav-collapse -->

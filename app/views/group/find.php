@@ -50,7 +50,7 @@
                     $.ajax({
                         url: "<?=RHtmlHelper::siteUrl('group/find') ?>",
                         type: "post",
-                        data: {page: ++curPage, searchstr: $("#search-str").val()},
+                        data: {page: ++curPage, searchstr: $("#searchstr").val()},
                         success: function (data) {
                             $('#loading-groups').hide(0);
                             //$('#load-more-groups').show(0);
