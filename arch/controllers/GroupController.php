@@ -220,9 +220,8 @@ class GroupController extends BaseController
         $currentUserId = Rays::app()->getLoginUser()->id;
         $currentUserName = Rays::app()->getLoginUser()->name;
 
-        $group = new Group();
-        $group->id = $groupId;
-        if ($group->load() !== null) {
+        $group = Group::get($groupId);
+        if ($group !== null) {
             //join group sensor item
             $censor = new Censor();
             $censor = $censor->joinGroupApplication($currentUserId, $group->id);
@@ -233,8 +232,7 @@ class GroupController extends BaseController
                 RHtmlHelper::link("Accept", "Accept", Rays::app()->getBaseUrl() . "/group/accept/{$censor->id}",array('class'=>'btn btn-xs btn-success'))."&nbsp;&nbsp;".
                 RHtmlHelper::link("Decline", "Decline", Rays::app()->getBaseUrl() . "/group/decline/{$censor->id}",array('class'=>'btn btn-xs btn-danger'));
 
-            $message = new Message();
-            $message->sendMsg("group", $groupId, $group->creator, "Join group request", $content, '');
+            Message::sendMsg("group", $groupId, $group->creator, "Join group request", $content, '');
 
             $this->flash('message', 'Joining group request has been sent.');
         }
@@ -258,10 +256,9 @@ class GroupController extends BaseController
                 $gu = new GroupUser();
                 if(!$gu->isUserInGroup($groupUser->userId,$groupUser->groupId)){
                     $groupUser->insert();
-                    $group = new Group();
-                    $group->load($groupUser->groupId);
+                    $group = Group::get($groupUser->groupId);
                     $group->memberCount++;
-                    $group->update();
+                    $group->save();
                     $this->flash("message", "Join group successfully.");
                 }else{
                     $this->flash("warning","You're already a member of this group.");
@@ -286,10 +283,9 @@ class GroupController extends BaseController
             $gu = new GroupUser();
             if(!$gu->isUserInGroup($groupUser->userId,$groupUser->groupId)){
                 $groupUser->insert();
-                $group = new Group();
-                $group->load($groupUser->groupId);
+                $gruop = Group::get($groupUser->groupId);
                 $group->memberCount++;
-                $group->update();
+                $group->save();
 
                 $this->flash("message", "The request is processed.");
 
@@ -321,10 +317,9 @@ class GroupController extends BaseController
             $gu = new GroupUser();
             if(!$gu->isUserInGroup($groupUser->userId,$groupUser->groupId)){
                 $this->flash("message", "The request is processed.");
-                $group = new Group();
-                $group->load($groupUser->groupId);
+                $group = Group::get($groupUser->groupId);
 
-                $title = "Join group request accepted";
+                $title = "Join group request declined";
                 $content = 'Group creator have declined your request of joining in group ' . RHtmlHelper::linkAction('group', $group->name, 'detail', $group->id);
                 $content = RHtmlHelper::encode($content);
                 $message = new Message();
@@ -345,16 +340,15 @@ class GroupController extends BaseController
         $groupUser->groupId = $groupId;
         $groupUser->userId = Rays::app()->getLoginUser()->id;
 
-        $group = new Group();
-        $group->load($groupId);
+        $group = Group::get($groupId);
 
         // group creator cannot exit the group
-        if($group->creator==$groupUser->userId){
+        if ($group->creator == $groupUser->userId){
             $this->flash("error", "You cannot exit group ".RHtmlHelper::linkAction('group',$group->name,'detail',$group->id)." , because you're the group creator!");
         }
         else{
             $group->memberCount--;
-            $group->update();
+            $group->save();
             $groupUser->delete();
             $this->flash("message", "You have exited the group successfully.");
         }
