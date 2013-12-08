@@ -119,11 +119,17 @@
     font-size: 12px;
 }
 
+.posts-category-wrapper{
+    margin-bottom: 20px;
+}
+ul.posts-category{
+    padding-left: 0;
+}
 ul.posts-category li{
     list-style: none;
     float: left;
 }
 
 ul.posts-category li>a{
-    width: 80px;
+    width: 90px;
 }

@@ -1,0 +1,15 @@
+<?php
+
+class posts_category_module extends RModule{
+
+    public $access = array("post/find","post/find/*");
+
+    public function module_content()
+    {
+        $data = array();
+        $categories = new Category();
+        $data['categories'] = $categories->find(0,0,array(),array(),["pid"=>'0']);
+
+        return $this->render("posts_category",$data);
+    }
+}

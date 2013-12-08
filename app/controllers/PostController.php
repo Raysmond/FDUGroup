@@ -326,19 +326,34 @@ class PostController extends BaseController
     {
         $data = [];
 
-        $categories = new Category();
-        $data['categories'] = $categories->find(0,0,array(),array(),["pid"=>'0']);
-
         $category = new Category();
         if(isset($categoryId) &&(!is_numeric($categoryId) || $category->load($categoryId) === null)){
             $this->page404();
             return;
         }else{
             $data['category'] = $category;
-
-
+            $data['subs'] = $category->children();
         }
 
+        $page = $this->getPage("page");
+        $pageSize = $this->getPageSize("pagesize",5);
+
+        $count = 0;
+        $cat = new Category();
+        if($categoryId===null){
+            $count = $cat->getActivePostsCount();
+            $data['posts'] = $cat->getActivePosts(null,($page-1)*$pageSize,$pageSize);
+        }
+        else{
+            $count = $cat->getActivePostsCount($categoryId);
+            $data['posts'] = $cat->getActivePosts($categoryId,($page-1)*$pageSize,$pageSize);
+        }
+
+        if($count>$pageSize){
+            $url = RHtmlHelper::siteUrl("post/find".($categoryId!=null?("/".$categoryId):""));
+            $pager = new RPagerHelper("page",$count,$pageSize,$url,$page);
+            $data['pager'] = $pager->showPager();
+        }
 
         $this->setHeaderTitle("Find posts");
         $this->addCss("/public/css/post.css");
