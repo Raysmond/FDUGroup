@@ -34,6 +34,7 @@ $this->module('main_nav',array('id'=>'main_nav','name'=>'Main navigation'));
 <div id="main-wrapper" class="container">
     <?php
         $this->module("group_categories",array('name'=>"Categories"));
+        $this->module("posts_category");
     ?>
     <div class="row row-offcanvas row-offcanvas-right">
         <div class="col-xs-12 col-sm-9">

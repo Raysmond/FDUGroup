@@ -9,7 +9,8 @@
         <?php
         foreach($categories as $category){
             ?>
-            <a class="btn btn-sx parent-category <?=in_array($category->id, $cid) ? 'active':''?>" href="<?=RHtmlHelper::siteUrl('category/groups/'.$category->id)?>">
+            <a class="btn btn-sx parent-category
+            <?=in_array($category->id, $cid) ? 'active':''?>" href="<?=RHtmlHelper::siteUrl('category/groups/'.$category->id)?>">
                 <?=RHtmlHelper::showImage('files/images/category/'.$category->id.'.png','', ['style'=>'width:24px;height:24px;'])?>&nbsp;
                 <?=$category->name?>
             </a>
