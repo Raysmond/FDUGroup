@@ -1,8 +1,7 @@
 <?php
 /**
- * Author: Guo Junshi
- * Date: 13-10-14
- * Time: 上午11:41
+ * Group Controller
+ * @author: Guo Junshi, Xiangyan Sun
  */
 
 class GroupController extends BaseController
@@ -28,21 +27,16 @@ class GroupController extends BaseController
         if ($this->getHttpRequest()->isPostRequest()) $searchStr = ($_POST['searchstr']);
         else if(isset($_GET['search'])) $searchStr = $_GET['search'];
 
-        $group = new Group();
-        $group->name = trim($searchStr);
-        $like = array();
-        if (isset($group->name) && $group->name != '') {
-            $names = explode(' ', $group->name);
-            foreach ($names as $val) {
-                array_push($like, array('key' => 'name', 'value' => $val));
+        $query = Group::find();
+        $s = trim($searchStr);
+        if (isset($s) && $s != '') {
+            $s = explode(' ', $s);
+            foreach ($s as $key) {
+                $query = $query->like("name", $key);
             }
-            $group = new Group();
         }
-
-        $groups = $group->find(0, 0, array('key'=>'gro_id',"order"=>"desc"), $like);
-        $groupSum = count($groups);
-
-        $groups = $group->find($pageSize * ($page - 1), $pageSize, array('key'=>'gro_id',"order"=>"desc"), $like);
+        $groupCount = $query->count();
+        $groups = $query->order_desc("id")->range($pageSize * ($page - 1), $pageSize);
 
         $data = array('group' => $groups);
         if ($searchStr != '') $data['searchstr'] = $searchStr;
@@ -53,7 +47,7 @@ class GroupController extends BaseController
         else
             $url = RHtmlHelper::siteUrl('group/find');
 
-        $pager = new RPagerHelper('page',$groupSum,$pageSize, $url,$page);
+        $pager = new RPagerHelper('page',$groupCount,$pageSize, $url,$page);
         $data['pager'] = $pager->showPager();
 
         $this->setHeaderTitle("Find Group");

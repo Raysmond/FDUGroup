@@ -4,7 +4,7 @@
  * @author: Raysmond
  */
 
-class Group extends Data
+class Group extends RModel
 {
     public $groupCreator;
     public $category;
@@ -26,26 +26,20 @@ class Group extends Data
 
     public static $defaults = array('picture'=>'public/images/default_pic.png');
 
-    public function __construct()
-    {
-        $option = array(
-            "key" => "id",
-            "table" => "groups",
-            "columns" => array(
-                "id" => "gro_id",
-                "creator" => "gro_creator",
-                "categoryId" => "cat_id",
-                "name" => "gro_name",
-                "memberCount" => "gro_member_count",
-                "createdTime" => "gro_created_time",
-                "intro" => "gro_intro",
-                "picture"=>'gro_picture'
-            )
-        );
-        parent::init($option);
-    }
+    public static $primary_key = "id";
+    public static $table = "groups";
+    public static $mapping = array(
+        "id" => "gro_id",
+        "creator" => "gro_creator",
+        "categoryId" => "cat_id",
+        "name" => "gro_name",
+        "memberCount" => "gro_member_count",
+        "createdTime" => "gro_created_time",
+        "intro" => "gro_intro",
+        "picture"=>'gro_picture'
+    );
 
-    public function load($id = null)
+    /*public function load($id = null)
     {
         $result = parent::load($id);
         if ($result !== null) {
@@ -58,8 +52,7 @@ class Group extends Data
         } else {
             return null;
         }
-
-    }
+    }*/
 
     public function groupUsers($limit=0, $orderby='', $order='ASC'){
         $groupusers = new GroupUser();

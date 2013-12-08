@@ -128,7 +128,12 @@ class _RModelQueryer {
             $this->query_where .= " AND ";
         }
         $this->query_where .= $constraint;
-        $this->args_where = array_merge($this->args_where, $args);
+        if (is_array($args)) {
+            $this->args_where = array_merge($this->args_where, $args);
+        }
+        else {
+            $this->args_where[] = $args;
+        }
         return $this;
     }
 
@@ -162,6 +167,19 @@ class _RModelQueryer {
         else {
             return $this->_find(array($memberName, $memberValue));
         }
+    }
+
+    /**
+     * Add a like matching constraint
+     * @param string $memberName Member to be matched
+     * @param string $memberValue Value to be matched
+     * @return This object
+     */
+    public function like($memberName, $memberValue)
+    {
+        $model = $this->model;
+        $db_name = $model::$mapping[$memberName];
+        return $this->where("$db_name LIKE ?", "%$memberValue%");
     }
 
     /**
