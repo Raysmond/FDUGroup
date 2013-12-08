@@ -14,31 +14,26 @@ class UserController extends BaseController
 
     public function actionLogin()
     {
-        $this->layout = 'user_ui';
-        $data = array();
         if (Rays::isLogin()) {
             $this->redirectAction('user', 'home');
         }
+
+        $this->layout = 'user_ui';
+        $data = array();
 
         if (Rays::isPost()) {
             $user = new User();
             $login = $user->login($_POST);
             if ($login === true) {
                 $this->getSession()->set("user", $user->id);
-                $returnURL = $_POST['returnURL'];
-                if (!empty($returnURL)) {
-                    $this->redirect($returnURL);
-                }
-                $this->redirectAction('user', 'home');
+                $this->redirect(isset($_POST['returnURL']) ? $_POST['returnURL'] : RHtmlHelper::siteUrl("user/home"));
             } else {
                 $data['loginForm'] = $_POST;
                 if (isset($login['verify_error'])) {
                     $this->flash('error', $login['verify_error']);
                 }
-                if (isset($login['validation_errors'])) {
-                    $data['validation_errors'] = $login['validation_errors'];
+                $data['validation_errors'] = isset($login['validation_errors'])?$login['validation_errors']:null;
                 }
-            }
         }
         $this->setHeaderTitle("Login");
         $this->addCss('/public/css/form.css');
