@@ -145,8 +145,7 @@ class GroupController extends BaseController
             $user = Rays::app()->getLoginUser();
             $validation = new RFormValidationHelper($rules);
             if ($validation->run()) {
-                $group = new Group();
-                $group = $group->buildGroup($_POST['group-name'], $_POST['category'], RHtmlHelper::encode($_POST['intro']), $user->id);
+                $group = Group::buildGroup($_POST['group-name'], $_POST['category'], RHtmlHelper::encode($_POST['intro']), $user->id);
 
                 // upload group picture
                 $file = $_FILES['group_picture'];
@@ -177,8 +176,7 @@ class GroupController extends BaseController
     {
         $this->setHeaderTitle("Edit my group");
 
-        $oldGroup = new Group();
-        $oldGroup->load($groupId);
+        $group = Group::get($groupId);
 
         $category = new Category();
         $categories = $category->find();
@@ -194,14 +192,11 @@ class GroupController extends BaseController
 
             $validation = new RFormValidationHelper($rules);
             if ($validation->run()) {
-                // success
-                $group = new Group();
-                $group->id = $groupId;
-                $group->load();
+                // succeed
                 $group->name = $_POST['group-name'];
                 $group->categoryId = $_POST['category'];
                 $group->intro = RHtmlHelper::encode($_POST['intro']);
-                $group->update();
+                $group->save();
 
                 // upload group picture
                 $file = $_FILES['group_picture'];
@@ -220,7 +215,7 @@ class GroupController extends BaseController
                 $data['validation_errors'] = $validation->getErrors();
             }
         } else {
-            $data['oldGroup'] = $oldGroup;
+            $data['group'] = $group;
         }
         $this->render('edit', $data, false);
     }

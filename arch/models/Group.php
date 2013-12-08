@@ -75,17 +75,14 @@ class Group extends RModel
     }
 
     public function buildGroup($groupName,$categoryId,$introduction,$creatorId,$picture=''){
-        $this->setDefaults();
-        $this->name = $groupName;
-        $this->categoryId = $categoryId;
-        $this->intro = $introduction;
-        $this->creator = $creatorId;
-        if($picture!='')
-            $this->picture = $picture;
-        $id = $this->insert();
         $group = new Group();
-        $group->id = $id;
-        $group->load();
+        $group->setDefaults();
+        $group->name = $groupName;
+        $group->categoryId = $categoryId;
+        $group->intro = $introduction;
+        $group->creator = $creatorId;
+        $group->picture = $picture;
+        $group->save();
 
         $groupUser = new GroupUser();
         $groupUser->groupId = $group->id;
