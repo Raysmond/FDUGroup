@@ -20,8 +20,7 @@ class MessageController extends BaseController
             Rays::app()->page404();
             return false;
         }
-        $message = new Message();
-        $message->load($msgId);
+        $message = Message::get($msgId);
 
         $loginId = Rays::app()->getLoginUser()->id;
         if ($message->receiverId != $loginId && $message->senderId != $loginId) {
@@ -30,7 +29,8 @@ class MessageController extends BaseController
             return;
         }
 
-        $message->type->load();
+        /* TODO: Auto join */
+        $message->type = MessageType::get($message->typeId);
 
         $this->render('detail', array('message' => $message), false);
     }
