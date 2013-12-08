@@ -2,13 +2,17 @@
 
 class posts_category_module extends RModule{
 
-    public $access = array("post/find","post/find/*");
+    public $access = array("post/find","post/find/*","post/find?*");
 
     public function module_content()
     {
         $data = array();
         $categories = new Category();
-        $data['categories'] = $categories->find(0,0,array(),array(),["pid"=>'0']);
+        $categories = $categories->find(0,0,array(),array(),["pid"=>'0']);
+
+        $id = Rays::router()->getParams()[0];
+
+        $data = ['categories'=>$categories,'id'=>$id];
 
         return $this->render("posts_category",$data);
     }
