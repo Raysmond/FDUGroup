@@ -77,15 +77,19 @@ class GroupController extends BaseController
             return;
         }
 
-        $group = new Group();
-        $result = $group->load($groupId);
-        if($result==null){
+        $group = Group::get($groupId);
+        if ($group == null) {
             Rays::app()->page404();
             return;
         }
 
         $counter = $group->increaseCounter();
+        /* TODO: Auto join */
+        $group->category = new Category();
+        $group->category->id = $group->categoryId;
         $group->category->load();
+        $group->groupCreator = new User();
+        $group->groupCreator->id = $group->creator;
         $group->groupCreator->load();
 
         $data = array();
