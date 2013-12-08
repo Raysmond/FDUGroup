@@ -10,12 +10,14 @@
 
     <div class="panel-body">
         <div class="post-meta">
-            Post by:
+            <span class="glyphicon glyphicon-user"></span>
             <?= RHtmlHelper::linkAction('user', $topic->user->name, 'view', $topic->user->id) ?>
-            &nbsp;&nbsp;Post in
-            group: <?= RHtmlHelper::linkAction('group', $topic->group->name, 'detail', $topic->group->id) ?>
-            &nbsp;&nbsp;<?= $counter->totalCount ?> reads
-            &nbsp;&nbsp;<?= $topic->createdTime ?>
+            &nbsp;&nbsp;<span class="glyphicon glyphicon-th-large"></span>
+            <?= RHtmlHelper::linkAction('group', $topic->group->name, 'detail', $topic->group->id) ?>
+            &nbsp;&nbsp;
+            <span class="glyphicon glyphicon-search"></span> <?= $counter->totalCount ?>
+            &nbsp;&nbsp;
+            <span class="glyphicon glyphicon-time"></span> <?= $topic->createdTime ?>
         </div>
 
         <div class="post-content">
@@ -23,7 +25,7 @@
         </div>
         <br/><br/>
 
-        <div style="width: 100%; text-align: center;">
+        <div style="width: 100%; text-align: center; font-size: 20px;">
             <?php $this->module('rating_plus', array('id' => 'rating_plus', 'entityType' => Topic::$entityType, 'entityId' => $topic->id)); ?>
         </div>
 
@@ -31,17 +33,18 @@
 
         <div>
             <h2 class="s-title">Comments</h2>
+            <div class="comments-list">
             <?php
             foreach ($commentTree as $commentItem) {
                 ?>
                 <div id="comment-item-<?= $commentItem['root']->id ?>" class="row comment-item">
                     <!-- user picture -->
-                    <div class="col-lg-1">
+                    <div class="col-lg-2 user-picture">
                         <?= RHtmlHelper::showImage($commentItem['root']->user->picture, $commentItem['root']->user->name, array('width' => '64px;')) ?>
                     </div>
 
                     <!-- comment content -->
-                    <div class="col-lg-11">
+                    <div class="col-lg-10 comment-content">
                         <div><?= RHtmlHelper::linkAction('user', $commentItem['root']->user->name, 'view', $commentItem['root']->user->id) ?>
                             &nbsp;&nbsp;<?= $commentItem['root']->createdTime ?></div>
                         <div><?= RHtmlHelper::decode($commentItem['root']->content) ?></div>
@@ -71,6 +74,7 @@
             <?php
             }
             ?>
+            </div>
             <hr/>
             <div id="reply">
                 <?= RFormHelper::openForm("post/comment/$topic->id", array('id' => 'viewFrom')) ?>

@@ -59,6 +59,7 @@ class PostController extends BaseController
         $data = array("topics" => $topics, "group" => $group);
 
         $this->setHeaderTitle("Hello");
+        $this->addCss('/public/css/post.css');
         $this->render("list", $data, false);
     }
 
@@ -102,6 +103,7 @@ class PostController extends BaseController
         }
 
         $this->layout = 'user';
+        $this->addCss('/public/css/post.css');
         $this->setHeaderTitle("New topic");
         $this->render("edit", $data, false);
     }
@@ -134,6 +136,7 @@ class PostController extends BaseController
         $data = array("type" => "edit", "topic" => $topic, 'group' => $group);
 
         $this->layout = 'user';
+        $this->addCss('/public/css/post.css');
         $this->setHeaderTitle("Edit post: " . $topic->title);
         $this->render('edit', $data, false);
     }
@@ -171,6 +174,7 @@ class PostController extends BaseController
         $data['canEdit'] = (Rays::isLogin() && (Rays::user()->id==$topic->user->id || Rays::user()->isAdmin()));
 
         $this->setHeaderTitle($topic->title);
+        $this->addCss('/public/css/post.css');
         $this->render("view", $data, false);
 
     }
@@ -256,6 +260,7 @@ class PostController extends BaseController
         }
         $topics = $topic->getActiveTopics($beginTime, 10);
         $data['topics'] = $topics;
+        $this->addCss('/public/css/post.css');
         $this->render('active', $data, false);
     }
 

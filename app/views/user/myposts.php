@@ -1,3 +1,4 @@
+<?php if(!empty($posts)): ?>
 <div class="posts-list">
     <div id="latest-topics-list">
         <?php
@@ -72,6 +73,15 @@
             <hr>
         <?php } ?>
 
-        <?= $pager ?>
+        <?= (isset($pager))?$pager:"" ?>
     </div>
 </div>
+<?php endif; ?>
+
+<?php if(empty($posts)): ?>
+    <div class="panel panel-default">
+        <div class="panel-body">
+            You have no posts.
+        </div>
+    </div>
+<?php endif; ?>

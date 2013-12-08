@@ -70,3 +70,16 @@
     margin-right: 5px;
     margin-left: 5px;
 }
+
+
+/* Comment */
+.comments-list .comment-item .user-picture{
+    width: 13.666666666666664%;
+}
+.comments-list .comment-item .user-picture img{
+    border-radius: 5px;
+}
+.comments-list .comment-item .comment-content{
+    width: 86.33333333333334%;
+    padding-left: 0;
+}
