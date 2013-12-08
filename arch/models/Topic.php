@@ -25,6 +25,10 @@ class Topic extends RModel
         "lastCommentTime" => "top_last_comment_time",
         "commentCount" => "top_comment_count"
     );
+    public static $relation = array(
+        "group" => array("groupId", "Group", "id"),
+        "user" => array("userId", "User", "id")
+    );
 
     public function increaseCounter(){
         if(isset($this->id)&&$this->id!=''){
@@ -193,28 +197,5 @@ class Topic extends RModel
             }
             parent::delete();
         }
-    }
-
-    public function getActiveTopics($beginTime=null,$limit=0){
-        $user = new User();
-        $group = new Group();
-        $sql = "SELECT "
-            ."topic.{$this->columns['id']} AS topic_id "
-            .",topic.{$this->columns['userId']} AS user_id "
-            .",topic.{$this->columns['groupId']} AS group_id "
-            .",topic.{$this->columns['title']} AS topic_title "
-            .",topic.{$this->columns['content']} AS topic_content "
-            .",topic.{$this->columns['createdTime']} AS topic_created_time "
-            .",topic.{$this->columns['commentCount']} AS topic_comment_count "
-            .",user.{$user->columns['picture']} AS user_picture "
-            .",user.{$user->columns['name']} AS user_name "
-            .",groups.{$group->columns['name']} AS group_name "
-            ."FROM {$this->table} AS topic "
-            ."LEFT JOIN {$user->table} AS user ON user.{$user->columns['id']}=topic.{$this->columns['userId']} "
-            ."LEFT JOIN {$group->table} AS groups ON groups.{$group->columns['id']}=topic.{$this->columns['groupId']} "
-            .($beginTime===null?"":"WHERE topic.{$this->columns['createdTime']}>'{$beginTime}' ")
-            ."ORDER BY topic.{$this->columns['commentCount']} DESC ".($limit!=0?"LIMIT ".$limit:"");
-        $result = Data::db_query($sql);
-        return $result;
     }
 }

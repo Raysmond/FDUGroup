@@ -189,7 +189,6 @@ class PostController extends BaseController {
     {
         $this->layout = 'admin';
         $data = array();
-        $topic = new Topic();
         $beginTime = null;
         $date = date('Y-m-d');
         switch ($time) {
@@ -204,7 +203,11 @@ class PostController extends BaseController {
                 $beginTime = date("Y-m-01 00:00:00", strtotime($date));
             default:
         }
-        $topics = $topic->getActiveTopics($beginTime, 10);
+        $query = Topic::find()->join("user")->join("group")->order_desc("commentCount");
+        if ($beginTime != null) {
+            $query = $query->where("[createdTime] > ?", $beginTime);
+        }
+        $topics = $query->range(0, 10);
         $data['topics'] = $topics;
         $this->render('active', $data, false);
     }
