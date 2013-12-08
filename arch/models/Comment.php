@@ -1,31 +1,24 @@
 <?php
 /**
- * Class Comment
- * @author: Raysmond
+ * Comment data model
+ * @author: Raysmond, Xiangyan Sun
  */
 
-class Comment extends Tree
+class Comment extends RModel
 {
     public $user, $topic;
     public $id, $pid, $topicId, $userId, $createdTime, $content;
 
-    public function __construct()
-    {
-        $option = array(
-            "key" => "id",
-            "pkey" => "pid",
-            "table" => "comment",
-            "columns" => array(
-                "id" => "com_id",
-                "pid" => "com_pid",
-                "topicId" => "top_id",
-                "userId" => "u_id",
-                "createdTime" => "com_created_time",
-                "content" => "com_content"
-            )
-        );
-        parent::init($option);
-    }
+    public static $primary_key = "id";
+    public static $table = "comment";
+    public static $mapping = array(
+        "id" => "com_id",
+        "pid" => "com_pid",
+        "topicId" => "top_id",
+        "userId" => "u_id",
+        "createdTime" => "com_created_time",
+        "content" => "com_content"
+    );
 
     public function load($id = null)
     {

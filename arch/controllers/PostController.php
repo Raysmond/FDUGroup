@@ -109,8 +109,8 @@ class PostController extends BaseController {
         }
 
         $counter = $topic->increaseCounter();
-        $topic->user->load();
-        $topic->group->load();
+        $topic->user = User::get($topic->userId);
+        $topic->group = User::get($topic->groupId);
 
         $commentTree = $topic->getComments();
 
