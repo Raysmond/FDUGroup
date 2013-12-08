@@ -46,17 +46,30 @@ class PostController extends BaseController
     }
 
     /* List all topics belonging to a given group */
-    /* TODO List all topics with pagination */
     public function actionList($groupId = null)
     {
         // group loaded in beforeAction() method
         $group = $this->group;
 
+        $page = $this->getPage("page");
+        $pageSize = $this->getPageSize("pagesize", 2);
+
         $topic = new Topic();
         $topic->groupId = $groupId;
-        $topics = $topic->find();
+        $count = $topic->count();
+        $topics = $topic->find(($page - 1) * $pageSize, $pageSize);
+        foreach ($topics as $item) {
+            $item->user = new User();
+            $item->user->load($item->userId);
+        }
 
         $data = array("topics" => $topics, "group" => $group);
+        //if ($count > $pageSize) {
+        $pager = new RPagerHelper("page", $count, $pageSize, RHtmlHelper::siteUrl("post/list/" . $groupId), $page);
+        $data['pager'] = $pager->showPager();
+        //}
+
+        $data['canPost'] = Rays::isLogin() && GroupUser::isUserInGroup(Rays::user()->id,$groupId);
 
         $this->setHeaderTitle("Hello");
         $this->addCss('/public/css/post.css');
@@ -71,8 +84,8 @@ class PostController extends BaseController
 
         $data['groupId'] = null;
         if ($groupId != null) {
-            foreach($data['groups'] as $item){
-                if($item->id == $groupId){
+            foreach ($data['groups'] as $item) {
+                if ($item->id == $groupId) {
                     $data['groupId'] = $groupId;
                     break;
                 }
@@ -171,7 +184,7 @@ class PostController extends BaseController
             $data['parent'] = $comment;
         }
 
-        $data['canEdit'] = (Rays::isLogin() && (Rays::user()->id==$topic->user->id || Rays::user()->isAdmin()));
+        $data['canEdit'] = (Rays::isLogin() && (Rays::user()->id == $topic->user->id || Rays::user()->isAdmin()));
 
         $this->setHeaderTitle($topic->title);
         $this->addCss('/public/css/post.css');
@@ -303,7 +316,7 @@ class PostController extends BaseController
         $pager = new RPagerHelper('page', $count, $pageSize, RHtmlHelper::siteUrl('post/admin'), $curPage);
 
         $this->layout = 'admin';
-        $this->render('admin', ['pager'=>$pager->showPager(),'topics'=>$topics,'count'=>$count], false);
+        $this->render('admin', ['pager' => $pager->showPager(), 'topics' => $topics, 'count' => $count], false);
     }
 
 }

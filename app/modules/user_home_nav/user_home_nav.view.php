@@ -13,7 +13,7 @@
             </a>
         </li>
 
-        <li <?= ($currentUrl == 'group/view') ? 'class="active"' : "" ?>>
+        <li <?= ($currentUrl == 'group/mygroups') ? 'class="active"' : "" ?>>
             <a href="<?=RHtmlHelper::siteUrl('group/mygroups')?>">
                 <span class="glyphicon glyphicon-th-large"></span> &nbsp; My groups
             </a>

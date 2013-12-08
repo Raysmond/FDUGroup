@@ -73,7 +73,16 @@
             <div>
                 <?php
                 $this->renderPartial("_common._posts_table", array('posts'=>$latestPosts,'showAuthor'=>true),false);
+                if(!empty($latestPosts)){
+                    ?>
+                    <ul class="pager">
+                        <li class="next"><a href="<?= RHtmlHelper::siteUrl('post/list/' . $group->id) ?>">More topics &rarr;</a>
+                        </li>
+                    </ul>
+                <?php
+                }
                 ?>
+
             </div>
 
         </div>
