@@ -35,7 +35,7 @@ class _RModelQueryer {
         $rs = $stmt->fetchAll();
         $ret = array();
         foreach ($rs as $row) {
-            $obj = new $this->model();
+            $obj = new $model();
             foreach ($model::$mapping as $member => $db_member) {
                 $obj->$member = $row[$db_member];
             }
@@ -85,19 +85,39 @@ class _RModelQueryer {
         $stmt->execute($this->_args());
     }
 
+    /**
+     * Add a custom where clause
+     * @param string $constraint Custom where clause to add
+     * @param string $args Arguments to pass to the clause
+     * @return This object
+     */
+    public function where($constraint, $args)
+    {
+        if ($this->query_where == "") {
+            $this->query_where = "WHERE ";
+        }
+        else {
+            $this->query_where .= " AND ";
+        }
+        $this->query_where .= $constraint;
+        $this->args_where = array_merge($this->args_where, $args);
+        return $this;
+    }
+
     private function _find($constraints)
     {
-        foreach ($constraints as $member => $value) {
-            if ($this->query_where == "") {
-                $this->query_where = "WHERE ";
+        $model = $this->model;
+        $constraint = "";
+        $args = array();
+        for ($i = 0; $i < count($constraints); $i += 2) {
+            if ($constraint != "") {
+                $constraint .= " AND ";
             }
-            else {
-                $this->query_where .= " AND ";
-            }
-            $this->query_where .= "$this->model::$mapping[$member] == ?";
-            $this->args_where[] = $value;
+            $member = $constraints[$i];
+            $constraint .= "$model::$mapping[$member] == ?";
+            $args[] = $constraints[$i + 1];
         }
-        return $this;
+        return where($constraint, $args);
     }
 
     /**
