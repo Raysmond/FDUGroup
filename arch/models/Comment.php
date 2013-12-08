@@ -20,19 +20,15 @@ class Comment extends Tree
         "createdTime" => "com_created_time",
         "content" => "com_content"
     );
-
-    public function load($id = null)
-    {
-        $result = parent::load($id);
-        if($result===null) return null;
-        $this->user = new User();
-        $this->user->id = $this->userId;
-        $this->topic = new Topic();
-        $this->topic->id = $this->topicId;
-        return $this;
-    }
+    public static $relation = array(
+        "user" => array("userId", "User", "id"),
+        "topic" => array("topicId", "Topic", "id")
+    );
 
     public function findAll($start,$pageSize,$order=array()){
+        return Comment::find()->join("user")->join("topic")->range($start, $pageSize);
+
+
         $user = new User();
         $topic = new Topic();
         $sql = "SELECT "

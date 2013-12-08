@@ -11,7 +11,7 @@
  */
 class _RModelQueryer {
     private $model;
-    private $query_where, $query_order;
+    private $query_where = "", $query_order = "", $query_join = array();
     private $args_where;
 
     public function __construct($model)
@@ -27,17 +27,68 @@ class _RModelQueryer {
         return $this->args_where;
     }
 
+    private function _select_fields()
+    {
+        $model = $this->model;
+        $fields = "";
+        /* Add fields from self */
+        foreach ($model::$mapping as $member => $db_member) {
+            $fields .= Rays::app()->getDBPrefix().$model::$table.".{$model::$mapping[$member]},";
+        }
+        /* Add fields from joined members */
+        foreach ($this->query_join as $rel_member) {
+            list($key, $m, $mkey) = $model::$relation[$rel_member];
+            foreach ($m::$mapping as $member => $db_member) {
+                $fields .= Rays::app()->getDBPrefix().$m::$table.".{$m::$mapping[$member]},";
+            }
+        }
+        return rtrim($fields, ",");
+    }
+
+    private function _join_clause()
+    {
+        $model = $this->model;
+        $clause = "";
+        foreach ($this->query_join as $member) {
+            list($key, $m, $mkey) = $model::$relation[$member];
+            $modeltable = Rays::app()->getDBPrefix().$model::$table;
+            $mtable = Rays::app()->getDBPrefix().$m::$table;
+            $clause = "$clause LEFT JOIN $mtable ON $modeltable.{$model::$mapping[$key]} = $mtable.{$m::$mapping[$mkey]}";
+        }
+        return $clause;
+    }
+
     private function _select($suffix = "")
     {
         $model = $this->model;
-        $stmt = RModel::getConnection()->prepare("SELECT * FROM ".Rays::app()->getDBPrefix().$model::$table." $this->query_where $this->query_order $suffix");
+        $fields = $this->_select_fields();
+        $join = $this->_join_clause();
+        $sql = "SELECT $fields FROM ".Rays::app()->getDBPrefix().$model::$table." $this->query_where $join $this->query_order $suffix";
+
+        $stmt = RModel::getConnection()->prepare($sql);
         $stmt->execute($this->_args());
+
+        /* Fetch result and construct objects */
         $rs = $stmt->fetchAll();
         $ret = array();
         foreach ($rs as $row) {
+            /* Construct self object */
+            /* NOTE:
+             * We use indices here because we EXPLICITLY specified the fields.
+             * To make things correct we MUST iterate all fields using same order here and in _select_fields()
+             */
             $obj = new $model();
+            $i = 0;
             foreach ($model::$mapping as $member => $db_member) {
-                $obj->$member = $row[$db_member];
+                $obj->$member = $row[$i++];
+            }
+            /* Construct joined member objects */
+            foreach ($this->query_join as $rel_member) {
+                list($key, $m, $mkey) = $model::$relation[$rel_member];
+                $obj->$rel_member = new $m();
+                foreach ($m::$mapping as $member => $db_member) {
+                    $obj->$rel_member->$member = $row[$i++];
+                }
             }
             $ret[] = $obj;
         }
@@ -206,6 +257,17 @@ class _RModelQueryer {
         $model = $this->model;
         return $this->order("DESC", $model::$mapping[$memberName]);
     }
+
+    /**
+     * Add a relation join pre-defined by data model
+     * @param string $memberName Member for joining, must be defined in $relation array
+     * @return This object
+     */
+    public function join($memberName)
+    {
+        $this->query_join[] = $memberName;
+        return $this;
+    }
 }
 
 abstract class RModel {
@@ -224,6 +286,11 @@ abstract class RModel {
         return self::$connection;
     }
 
+    /**
+     * Find the object using primary key
+     * @param int $id Value of the primary key of the object
+     * @return The object or null if not found
+     */
     public static function get($id)
     {
         $model = get_called_class();
