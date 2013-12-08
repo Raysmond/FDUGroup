@@ -64,19 +64,25 @@ class RatingPlus
         $plus->tag = self::TAG;
 
         $topicList = $plus->find();
-        $topicIdList = array_map(function($value) {
+        $topicIdList = array_map(function ($value) {
             return $value->entityId;
         }, $topicList);
 
         $likeTopics = new Topic();
-        if(count($topicList)>0){
-            $likeTopics = $likeTopics->find(0,0,
+        if (count($topicList) > 0) {
+            $likeTopics = $likeTopics->find(0, 0,
                 ['key' => $likeTopics->columns['id'], 'order' => 'desc'],
                 null,
                 ['id' => $topicIdList]
             );
-        }
-        else{
+
+            foreach($likeTopics as $item){
+                $item->user = new User();
+                $item->user->load($item->userId);
+                $item->group = new Group();
+                $item->group->load($item->groupId);
+            }
+        } else {
             $likeTopics = array();
         }
 

@@ -4,6 +4,10 @@
  * @author: Raysmond
  */
 ?>
+
+<?php
+Rays::css("/public/css/post.css");
+?>
 <div class="panel panel-default">
     <div class="panel-body">
 
@@ -127,48 +131,10 @@
                             }
                             echo '</div>';
                         }
-                    } else
-                        if ($part == 'posts') {         //User published Topics
-                            if (!count($postTopics)) {
-                                echo "<p>This guy has not posted any topics!</p>";
-                            } else {
-                                ?>
-                                <table class="table table-hover table-condensed">
-                                    <thead><tr><th>Title</th><th>Replies</th><th>Time</th><th>Last comment</th></tr></thead>
-                                    <tbody><?php
-
-                                    foreach ($postTopics as $topic) {
-                                        ?><tr><td><b><?=RHtmlHelper::linkAction('post', $topic->title, 'view', $topic->id)?></b></td>
-                                        <td><?=$topic->commentCount?></td>
-                                        <td><?=$topic->createdTime?></td>
-                                        <td><?=$topic->lastCommentTime?></td></tr><?php
-                                    }
-
-                                    ?></tbody>
-                                </table>
-                            <?php
-                            }
-                        } else
-                            if ($part == 'likes') {
-                                if (!count($likeTopics)) {
-                                    echo "<p>This guy has not posted any topics!</p>";
-                                } else {
-                                    ?>
-                                    <table class="table table-hover table-condensed">
-                                        <thead><tr><th>Title</th><th>Replies</th><th>Time</th><th>Last comment</th></tr></thead>
-                                        <tbody><?php
-
-                                        foreach ($likeTopics as $topic) {
-                                            ?><tr><td><b><?=RHtmlHelper::linkAction('post', $topic->title, 'view', $topic->id)?></b></td>
-                                            <td><?=$topic->commentCount?></td>
-                                            <td><?=$topic->createdTime?></td>
-                                            <td><?=$topic->lastCommentTime?></td></tr><?php
-                                        }
-
-                                        ?></tbody>
-                                    </table>
-                                <?php
-                                }
+                    } else if ($part == 'posts') {         //User published Topics
+                            $this->renderPartial("_posts_table",array('posts'=>$postTopics,'showGroup'=>true),false);
+                        } else if ($part == 'likes') {
+                                $this->renderPartial("_posts_table",array('posts'=>$likeTopics,'showAuthor'=>true,'showGroup'=>true),false);
                             }
                     ?>
             </div>

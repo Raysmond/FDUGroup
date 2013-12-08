@@ -103,3 +103,18 @@
 .comments-list .comment-item .comment-content .comment-actions{
     float: right;
 }
+
+/* Post table */
+.posts-table{
+
+}
+
+.posts-table, .posts-table th,.posts-table tr,.posts-table td {
+    border: 0;
+    margin: 0;
+    padding: 0;
+}
+
+.posts-table td{
+    font-size: 12px;
+}

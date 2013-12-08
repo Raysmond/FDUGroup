@@ -67,7 +67,14 @@ class Topic extends Data
     public static function getUserTopics($uid, $start = 0, $limit = 0) {
         $topics = new Topic();
         $topics->userId = $uid;
-        return $topics->find($start, $limit, ['key' => $topics->columns['id'], 'order' => 'desc']);
+        $topics = $topics->find($start, $limit, ['key' => $topics->columns['id'], 'order' => 'desc']);
+
+        foreach($topics as $item){
+            $item->group = new Group();
+            $item->group->load($item->groupId);
+        }
+
+        return $topics;
     }
 
     public function getUserFriendsTopics($uid,$limit=0,$endTime=null){
