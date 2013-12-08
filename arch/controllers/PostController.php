@@ -8,28 +8,18 @@ class PostController extends BaseController {
 
     /* List all topics belonging to a given group */
     public function actionList($groupId = null) {
-        $group = new Group();
-        $group->id = $groupId;
-        $group->load();
-
-        $topic = new Topic();
-        $topic->groupId = $groupId;
-        $topics = $topic->find();
+        $group = Group::get($groupId);
+        $topics = Topic::find("groupId", $groupId)->all();
 
         $data = array("topics" => $topics, "group" => $group);
 
-        $this->setHeaderTitle("Hello");
+        $this->setHeaderTitle($group->name);
         $this->render("list", $data, false);
     }
 
     /* Add new topic */
     public function actionNew($groupId = null) {
         $data = array("type" => "new", "groupId" => $groupId);
-        if($groupId!=null){
-            $group = new Group();
-            $group->load($groupId);
-            $data['group'] = $group;
-        }
 
         if ($this->getHttpRequest()->isPostRequest()) {
             $form = $_POST;
@@ -49,8 +39,8 @@ class PostController extends BaseController {
                 $topic->createdTime = date('Y-m-d H:i:s');
                 $topic->lastCommentTime = date('Y-m-d H:i:s');
                 $topic->commentCount = 0;
-                $tid = $topic->insert();
-                $this->redirectAction('post', 'view', $tid);
+                $topic->save();
+                $this->redirectAction('post', 'view', $topic->id);
             }
             else{
                 $data['newPostForm'] = $_POST;
@@ -58,18 +48,17 @@ class PostController extends BaseController {
             }
         }
 
+        $group = Group::get($groupId);
+        $data['group'] = $group;
         $this->setHeaderTitle("New topic");
         $this->render("edit", $data, false);
     }
 
     /* Edit topic */
     public function actionEdit($topicId) {
-        $topic = new Topic();
-        $topic->load($topicId);
+        $topic = Topic::get($topicId);
 
         if ($this->getHttpRequest()->isPostRequest()) {
-
-
             $validation = new RFormValidationHelper(array(
                 array("field" => "title", "label" => "Title", "rules" => "trim|required"),
                 array("field" => "post-content", "label" => "Content", "rules" => "trim|required"),
@@ -79,7 +68,7 @@ class PostController extends BaseController {
             $topic->content = RHtmlHelper::encode($form['post-content']);
 
             if ($validation->run()) {
-                $topic->update();
+                $topic->save();
                 $this->flash("message","Post ".$topic->title." was updated successfully.");
                 $this->redirectAction('post','view',$topic->id);
             }
@@ -87,9 +76,8 @@ class PostController extends BaseController {
                 $data['validation_errors'] = $validation->getErrors();
             }
         }
-        $group = new Group();
-        $group->load($topic->groupId);
-        $data = array("type" => "edit", "topic" => $topic,'group'=>$group);
+        $group = Group::get($topic->groupId);
+        $data = array("type" => "edit", "topic" => $topic,'group' => $group);
         $this->setHeaderTitle("Edit post: ".$topic->title);
         $this->render('edit', $data, false);
     }
@@ -101,9 +89,8 @@ class PostController extends BaseController {
             return;
         }
 
-        $topic = new Topic();
-        $result = $topic->load($topicId);
-        if($result===null){
+        $topic = Topic::get($topicId);
+        if ($topic == null) {
             Rays::app()->page404();
             return;
         }
@@ -114,12 +101,11 @@ class PostController extends BaseController {
 
         $commentTree = $topic->getComments();
 
+        /* TODO: Join */
         foreach($commentTree as $commentItem){
-            $commentItem['root']->user = new User();
-            $commentItem['root']->user->load($commentItem['root']->userId);
+            $commentItem['root']->user = User::get($commentItem['root']->userId);
             foreach ($commentItem['reply'] as $reply) {
-                $reply->user = new User();
-                $reply->user->load($reply->userId);
+                $reply->user = User::get($reply->userId);
             }
         }
         $this->setHeaderTitle($topic->title);
@@ -127,9 +113,8 @@ class PostController extends BaseController {
 
         $replyTo = $this->getHttpRequest()->getParam('reply',null);
         if($replyTo&&is_numeric($replyTo)){
-            $comment = new Comment();
-            $comment->load($replyTo);
-            $comment->user->load();
+            $comment = Comment::get($replyTo);
+            $comment->user = User::get($comment->userId);
             $data['parent'] = $comment;
         }
         $this->render("view", $data, false);
@@ -152,13 +137,11 @@ class PostController extends BaseController {
             }
             $form = $_POST;
 
-            $topic = new Topic();
-            $topic->load($topicId);
-
+            $topic = Topic::get($topicId);
             $topic->commentCount++;
             date_default_timezone_set(Rays::app()->getTimeZone());
             $topic->lastCommentTime = date('Y-m-d H:i:s');
-            $topic->update();
+            $topic->save();
 
             $comment = new Comment();
             $comment->topicId = $topicId;
@@ -168,15 +151,15 @@ class PostController extends BaseController {
             if (isset($form['replyTo'])) {
                 $comment->pid = (int)$form['replyTo'];
             }
-            $cid = $comment->insert();
-            //if ($comment->pid !== 0)
-            //    $cid = $comment->pid;
+            else {
+                $comment->pid = 0;
+            }
+            $comment->save();
+            $cid = $comment->id;
 
             if (isset($form['replyTo'])) {
-                $exactComment = new Comment();
-                $exactComment->load($form['exactReplyTo']);
-                $msg = new Message();
-                $msg->sendMsg(
+                $exactComment = Comment::get($form['exactReplyTo']);
+                Message::sendMsg(
                     'user',
                     Rays::app()->getLoginUser()->id,
                     $exactComment->userId,
@@ -187,8 +170,7 @@ class PostController extends BaseController {
             }
             //send message to topic author
            else if ($topic->userId !== Rays::app()->getLoginUser()->id) {
-                $msg = new Message();
-                $msg->sendMsg(
+                Message::sendMsg(
                     'user',
                     Rays::app()->getLoginUser()->id,
                     $topic->userId, 'New Comment',
@@ -235,8 +217,7 @@ class PostController extends BaseController {
             Rays::app()->page404();
             return;
         }
-        $topic = new Topic();
-        $topic->load($topicId);
+        $topic = Topic::get($topicId);
         if (isset($topic->id) && $topic->id != '') {
             $topic->delete();
             $this->flash("message", "Post " . $topic->title . " was deleted.");

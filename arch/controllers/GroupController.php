@@ -86,24 +86,19 @@ class GroupController extends BaseController
         }
 
         $counter = $group->increaseCounter();
-        $group->groupCreator = new User();
-        $group->groupCreator->id = $group->creator;
-        $group->groupCreator->load();
+        $group->groupCreator = User::get($group->creator);
         $group->category = Category::get($group->categoryId);
 
         $data = array();
         $data['group'] = $group;
         $data['counter'] = $counter->totalCount;
 
-        $posts = new Topic();
-        $posts->groupId = $groupId;
         // get latest 20 posts in the group
-        $posts = $posts->find(0,20,array('key'=>'top_created_time','value'=>'desc'));
+        $posts = Topic::find("groupId", $groupId)->order_desc("createdTime")->range(0, 20);
         $data['latestPosts'] = $posts;
-        // not good enough
-        foreach($posts as $post){
-            $post->user = new User();
-            $post->user->load($post->userId);
+        // TODO: User join
+        foreach ($posts as $post) {
+            $post->user = User::get($post->userId);
         }
         $data['hasJoined'] = false;
         $data['isManager'] = false;

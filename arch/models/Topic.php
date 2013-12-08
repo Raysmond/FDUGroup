@@ -1,9 +1,9 @@
 <?php
 /**
- * Class Topic
- * @author: Raysmond
+ * Topic data model
+ * @author: Raysmond, Xiangyan Sun
  */
-class Topic extends Data
+class Topic extends RModel
 {
     public $group;
     public $user;
@@ -13,36 +13,18 @@ class Topic extends Data
 
     public static $entityType = 1;
 
-    public function __construct()
-    {
-        $option = array(
-            "key" => "id",
-            "table" => "topic",
-            "columns" => array(
-                "id" => "top_id",
-                "groupId" => "gro_id",
-                "userId" => "u_id",
-                "title" => "top_title",
-                "createdTime" => "top_created_time",
-                "content" => "top_content",
-                "lastCommentTime" => "top_last_comment_time",
-                "commentCount" => "top_comment_count"
-            )
-        );
-
-        parent::init($option);
-    }
-
-    public function load($id = null)
-    {
-        $result = parent::load($id);
-        if($result===null) return null;
-        $this->user = new User();
-        $this->user->id = $this->userId;
-        $this->group = new Group();
-        $this->group->id = $this->groupId;
-        return $this;
-    }
+    public static $primary_key = "id";
+    public static $table = "topic";
+    public static $mapping = array(
+        "id" => "top_id",
+        "groupId" => "gro_id",
+        "userId" => "u_id",
+        "title" => "top_title",
+        "createdTime" => "top_created_time",
+        "content" => "top_content",
+        "lastCommentTime" => "top_last_comment_time",
+        "commentCount" => "top_comment_count"
+    );
 
     public function increaseCounter(){
         if(isset($this->id)&&$this->id!=''){
@@ -54,11 +36,9 @@ class Topic extends Data
 
     public function getComments()
     {
-        $comment = new Comment();
-        $comment->topicId = $this->id;
-        $this->comments = $comment->find(0, 0, [], [], ['pid' => '0']);
+        $comments = Comment::find(array("topicId", $this->id, "pid", 0))->all();
         $result = [];
-        foreach ($this->comments as $c) {
+        foreach ($comments as $c) {
             $result[] = ['root' => $c, 'reply' => $c->children()];
         }
         return $result;

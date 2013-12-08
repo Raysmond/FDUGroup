@@ -4,12 +4,13 @@
  * @author: Raysmond, Xiangyan Sun
  */
 
-class Comment extends RModel
+class Comment extends Tree
 {
     public $user, $topic;
     public $id, $pid, $topicId, $userId, $createdTime, $content;
 
     public static $primary_key = "id";
+    public static $parent_key = "pid";
     public static $table = "comment";
     public static $mapping = array(
         "id" => "com_id",
