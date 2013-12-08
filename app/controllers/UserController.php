@@ -63,21 +63,42 @@ class UserController extends BaseController
             $data['canAdd'] = ($friend->uid !== $friend->fid && count($friend->find()) == 0);
             $data['canCancel'] = ($friend->uid !== $friend->fid && !$data['canAdd']);
         }
-
+        $page = $this->getPage("page");
+        $pageSize = $this->getPageSize("pageSize",20);
+        $count = 0;
         switch ($part) {
             case 'joins':
-                $data['userGroup'] = GroupUser::userGroups($userId);
+                $pageSize = $this->getPageSize("pageSize",5);
+                $data['userGroup'] = GroupUser::userGroups($userId, ($page-1) * $pageSize, $pageSize);
+                $count = User::countGroups($userId);
                 break;
             case 'posts':
-                $data['postTopics'] = Topic::getUserTopics($userId);
+                $data['postTopics'] = Topic::getUserTopics($userId, ($page-1) * $pageSize, $pageSize);
+                $count = User::countPosts($userId);
                 break;
             case 'likes':
-                $data['likeTopics'] = RatingPlus::getUserPlusTopics($userId);
+                $data['likeTopics'] = RatingPlus::getUserPlusTopics($userId, ($page-1) * $pageSize, $pageSize);
+                $count = RatingPlus::countUserPostsPlus($userId);
                 break;
             case 'profile':
                 break;
             default:
                 return;
+        }
+
+        if(Rays::isAjax()){
+            echo empty($data['userGroup'])? 'nomore' : $this->renderPartial("_common._groups_list", ["groups"=>$data['userGroup']],true);
+            exit;
+        }
+
+        if($part=="posts" || $part=="likes"){
+            $pager = new RPagerHelper("page",$count,$pageSize,RHtmlHelper::siteUrl("user/view/".$userId."/".$part),$page);
+            $data['pager'] = $pager->showPager();
+        }
+
+        if($part=="joins"){
+            $this->addCss('/public/css/group.css');
+            $this->addJs('/public/js/masonry.pkgd.min.js');
         }
 
         $this->setHeaderTitle($user->name);

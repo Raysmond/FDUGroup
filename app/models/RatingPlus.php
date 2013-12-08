@@ -49,12 +49,19 @@ class RatingPlus
         return false;
     }
 
-    /**
-     * Get user like topics
-     * @param $userId user id
-     * @return array|Topic topic array
-     */
-    public static function getUserPlusTopics($userId)
+    public static function countUserPostsPlus($userId)
+    {
+        $plus = new Rating();
+        $plus->entityType = Topic::$entityType;
+        $plus->userId = $userId;
+        $plus->valueType = self::VALUE_TYPE;
+        $plus->value = self::VALUE;
+        $plus->tag = self::TAG;
+
+        return $plus->count();
+    }
+
+    public static function getUserPlusTopics($userId,$start=0,$limit=0)
     {
         $plus = new Rating();
         $plus->entityType = Topic::$entityType;
@@ -70,7 +77,7 @@ class RatingPlus
 
         $likeTopics = new Topic();
         if (count($topicList) > 0) {
-            $likeTopics = $likeTopics->find(0, 0,
+            $likeTopics = $likeTopics->find($start, $limit,
                 ['key' => $likeTopics->columns['id'], 'order' => 'desc'],
                 null,
                 ['id' => $topicIdList]
