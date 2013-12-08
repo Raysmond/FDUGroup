@@ -52,10 +52,8 @@ class GroupController extends BaseController
     {
         $page = $this->getPage("page");
         $pageSize = $this->getPageSize("pagesize",5);
-
         $searchStr = Rays::getParam("searchstr",'');
 
-        $group = new Group();
         $like = array();
         if ($name = trim($searchStr)) {
             $names = preg_split("/[\s]+/", $name);
@@ -63,17 +61,11 @@ class GroupController extends BaseController
                 array_push($like, array('key' => 'name', 'value' => $val));
         }
 
-        $groups = $group->find($pageSize * ($page - 1), $pageSize, array('key'=>$group->columns['id'],"order"=>"desc"), $like);
-
-        $data = array('groups' => $groups);
-        if ($searchStr != '') $data['searchstr'] = $searchStr;
+        $group = new Group();
+        $groups = $group->find($pageSize * ($page - 1), $pageSize, ['key'=>$group->columns['id'],"order"=>"desc"], $like);
 
         if(Rays::isAjax()){
-            if (!count($groups)) {
-                echo 'nomore';
-            } else {
-                $this->renderPartial("_groups_list", array("groups"=>$groups),false);
-            }
+            echo empty($groups)? 'nomore': $this->renderPartial("_groups_list", ["groups"=>$groups], true);
             exit;
         }
 
@@ -81,7 +73,7 @@ class GroupController extends BaseController
 
         $this->addJs("/public/js/masonry.pkgd.min.js");
         $this->addCss("/public/css/group.css");
-        $this->render("find", $data, false);
+        $this->render("find", ['groups'=>$groups, 'searchstr'=>$searchStr], false);
     }
 
     /*
@@ -91,14 +83,10 @@ class GroupController extends BaseController
     {
         $page = $this->getPage("page");
         $pageSize = $this->getPageSize("pagesize",5);
+        $groups = GroupUser::userGroups(($page - 1) * $pageSize, $pageSize, Rays::user()->id);
 
-        $userGroup = GroupUser::userGroups(($page - 1) * $pageSize, $pageSize, Rays::user()->id);
         if(Rays::isAjax()){
-            if (!count($userGroup)) {
-                echo 'nomore';
-            } else {
-                $this->renderPartial("_groups_list", array("groups"=>$userGroup, 'exitGroup' => true),false);
-            }
+            echo empty($groups)? 'nomore' : $this->renderPartial("_groups_list", ["groups"=>$groups, 'exitGroup' => true],true);
             exit;
         }
 
@@ -106,7 +94,7 @@ class GroupController extends BaseController
         $this->addCss('/public/css/group.css');
         $this->addJs('/public/js/masonry.pkgd.min.js');
         $this->setHeaderTitle("My Groups");
-        $this->render("my_groups", ['groups' => $userGroup, 'exitGroup' => true], false);
+        $this->render("my_groups", ['groups' => $groups, 'exitGroup' => true], false);
     }
 
     /**
@@ -117,39 +105,35 @@ class GroupController extends BaseController
     {
         // group loaded in beforeAction() method
         $group = $this->filteredGroup();
-
-        $counter = $group->increaseCounter();
         $group->category->load();
         $group->groupCreator->load();
 
-        $data = array();
-        $data['group'] = $group;
-        $data['counter'] = $counter->totalCount;
+        $counter = $group->increaseCounter();
 
         $posts = new Topic();
         $posts->groupId = $groupId;
         // get latest 20 posts in the group
         $posts = $posts->find(0,20,array('key'=>'top_created_time','value'=>'desc'));
-        $data['latestPosts'] = $posts;
+
         // not good enough
         foreach($posts as $post){
             $post->user = new User();
             $post->user->load($post->userId);
         }
-        $data['hasJoined'] = false;
-        $data['isManager'] = false;
-        if(Rays::app()->isUserLogin()){
-            $uid = Rays::user()->id;
-            $data['hasJoined'] = GroupUser::isUserInGroup($uid,$group->id);
-            $data['isManager'] = $group->creator==$uid;
-        }
+
+        $data = ['group'=>$group, 'counter'=>$counter->totalCount, 'latestPosts'=>$posts];
+
+        $uid = Rays::user()->id;
+        $isLogin = Rays::isLogin();
+        $data['hasJoined'] = $isLogin && GroupUser::isUserInGroup($uid,$group->id);
+        $data['isManager'] = $isLogin && $group->creator==$uid;
 
         $this->setHeaderTitle($group->name);
         $this->render('detail', $data, false);
     }
 
     /**
-     * Build a new group
+     * Create a new group
      */
     public function actionBuild()
     {
@@ -293,7 +277,7 @@ class GroupController extends BaseController
         }
         else{
             $this->flash(($joinRequest?"message":"warning"),$text);
-            $this->redirect($this->getHttpRequest()->getUrlReferrer());
+            $this->redirect(Rays::referrerUri());
         }
     }
 

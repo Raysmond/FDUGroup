@@ -64,7 +64,7 @@
         $('#loading-groups').show(0);
         //$('#load-more-groups').hide(0);
         $.ajax({
-            url: "<?=RHtmlHelper::siteUrl('group/view') ?>",
+            url: "<?=RHtmlHelper::siteUrl('group/mygroups') ?>",
             type: "post",
             data:{page: ++curPage},
             success: function(data){
