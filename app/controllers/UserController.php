@@ -130,6 +130,10 @@ class UserController extends BaseController
      */
     public function actionRegister()
     {
+        if(Rays::isLogin()){
+            $this->actionHome();
+            return;
+        }
         $this->layout = 'user_ui';
         $this->setHeaderTitle("Register");
         $form = '';
