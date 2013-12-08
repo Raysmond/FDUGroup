@@ -173,11 +173,9 @@ class MessageController extends BaseController
     public function actionTrash($msgId)
     {
         if (isset($msgId) && is_numeric($msgId)) {
-            $msg = new Message();
-            $msg = $msg->load($msgId);
-            if ($msg != null && $msg->receiverId == Rays::app()->getLoginUser()->id) {
-                $msg->markTrash($msgId);
-            }
+            $message = Message::find(array("id", $msgId, "receiverId", Rays::app()->getLoginUser()->id))->first();
+            $message->status = Message::$STATUS_TRASH;
+            $message->save();
         }
         $this->redirect($this->getHttpRequest()->getUrlReferrer());
     }

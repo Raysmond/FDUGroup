@@ -239,28 +239,39 @@ abstract class RModel {
      */
     public function save()
     {
+        $model = get_called_class();
         /* Build SQL statement */
         $columns = "";
         $values = "";
         $delim = "";
-        $primary_key = self::$primary_key;
-	    foreach (self::$mapping as $member => $column) {
+        $primary_key = $model::$primary_key;
+        if (isset($this->$primary_key)) {
+            $primary_key = "";
+        }
+	    foreach ($model::$mapping as $member => $column) {
             if ($member != $primary_key) {
                 $columns = "$columns$delim$column";
                 $values = "$values$delim?";
                 $delim = ", ";
             }
         }
-        $sql = "INSERT OR UPDATE INTO ".Rays::app()->getDBPrefix().self::$table." ($columns) VALUES ($values)";
+        $sql = "REPLACE INTO ".Rays::app()->getDBPrefix().$model::$table." ($columns) VALUES ($values)";
 
         /* Now prepare SQL statement */
         $stmt = RModel::getConnection()->prepare($sql);
-        $i = 1;
-        foreach (self::$mapping as $member => $column) {
-            $stmt->bindParam($i++, $member);
+        $args = array();
+        foreach ($model::$mapping as $member => $column) {
+            if ($member != $primary_key) {
+                $args[] = $this->$member;
+            }
+        } 
+        print($sql);
+        print_r($args);
+        $stmt->execute($args);
+        $primary_key = $model::$primary_key;
+        if (!isset($this->$primary_key)) {
+            $this->$primary_key = RModel::getConnection()->lastInsertId();
         }
-        $stmt->execute();
-        $this->$primary_key = $stmt->lastInsertId();
         return $this->$primary_key;
     }
 
@@ -269,8 +280,9 @@ abstract class RModel {
      */
     public function delete()
     {
-        $primary_key = self::$primary_key;
-        $sql = "DELETE FROM ".Rays::app()->getDBPrefix().self::$table." WHERE {self::$mapping[$primary_key]} == $this->$primary_key";
+        $model = get_called_class();
+        $primary_key = $model::$primary_key;
+        $sql = "DELETE FROM ".Rays::app()->getDBPrefix().$model::$table." WHERE {$model::$mapping[$primary_key]} == $this->$primary_key";
         RModel::getConnection()->exec($sql);
     }
 }
