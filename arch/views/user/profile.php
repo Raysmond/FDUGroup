@@ -5,7 +5,7 @@
             <ul class="list-group">
             <?php
             $skip = array('id', 'status', 'picture', 'privacy', 'permission', 'password', 'credits', 'name');
-            foreach ($user->columns as $objCol => $dbCol) {
+            foreach (User::$mapping as $objCol => $dbCol) {
                 if (in_array($objCol, $skip)) continue;
                 echo '<li class="list-group-item">';
                 switch ($objCol) {

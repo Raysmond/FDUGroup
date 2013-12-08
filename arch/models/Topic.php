@@ -73,12 +73,6 @@ class Topic extends RModel
         return $result;
     }
 
-    public function getUserTopics($uid, $start = 0, $limit = 0) {
-        $topics = new Topic();
-        $topics->userId = $uid;
-        return $topics->find($start, $limit, ['key' => $this->columns['id'], 'order' => 'desc']);
-    }
-
     public function getUserFriendsTopics($uid,$limit=0,$endTime=null){
         $friends = new Friend();
         $friends->uid = $uid;
@@ -100,19 +94,19 @@ class Topic extends RModel
             ."user.".User::$mapping['id'].","
             ."user.".User::$mapping['name'].","
             ."user.".User::$mapping['picture'].","
-            ."topic.{$topics->columns['id']},"
-            ."topic.{$topics->columns['title']},"
-            ."topic.{$topics->columns['content']},"
-            ."topic.{$topics->columns['createdTime']},"
-            ."topic.{$topics->columns['commentCount']},"
+            ."topic.".Topic::$mapping['id'].","
+            ."topic.".Topic::$mapping['title'].","
+            ."topic.".Topic::$mapping['content'].","
+            ."topic.".Topic::$mapping['createdTime'].","
+            ."topic.".Topic::$mapping['commentCount'].","
             ."groups.{$group::$mapping['id']},"
             ."groups.{$group::$mapping['name']},"
             ."rating.{$ratingStats->columns['value']} AS plusCount"
-            ." FROM {$topics->table} AS topic "
-            ."LEFT JOIN ".Rays::app()->getDBPrefix().User::$table." AS user on topic.{$topics->columns['userId']}=user.".User::$mapping['id']." "
-            ."LEFT JOIN ".Rays::app()->getDBPrefix().Group::$table." AS groups on groups.{$group::$mapping['id']}=topic.{$topics->columns['groupId']} "
+            ." FROM ".Rays::app()->getDBPrefix().Topic::$table." AS topic "
+            ."LEFT JOIN ".Rays::app()->getDBPrefix().User::$table." AS user on topic.".Topic::$mapping['userId']."=user.".User::$mapping['id']." "
+            ."LEFT JOIN ".Rays::app()->getDBPrefix().Group::$table." AS groups on groups.{$group::$mapping['id']}=topic.".Topic::$mapping['groupId']." "
             ."LEFT JOIN {$ratingStats->table} AS rating on rating.{$ratingStats->columns['entityType']}={$entityType} "
-            ."AND rating.{$ratingStats->columns['entityId']}=topic.{$topics->columns['id']} "
+            ."AND rating.{$ratingStats->columns['entityId']}=topic.".Topic::$mapping['id']." "
             ."AND rating.{$ratingStats->columns['tag']}='plus' "
             ."AND rating.{$ratingStats->columns['type']}='count'";
 
@@ -134,18 +128,18 @@ class Topic extends RModel
 
 
         if($endTime!=null){
-            $where .="AND topic.{$topics->columns['createdTime']}<'{$endTime}' ";
+            $where .="AND topic.".Topic::$mapping['createdTime']."<'{$endTime}' ";
         }
 
         $sql.=$where;
 
-        $sql.="ORDER BY topic.{$topics->columns['id']} DESC ";
+        $sql.="ORDER BY topic.".Topic::$mapping['id']." DESC ";
 
         if($limit!=0){
             $sql.="LIMIT ".$limit." ";
         }
 
-        return self::db_query($sql);
+        return Data::db_query($sql);
     }
 
     public function adminFindAll($start,$pageSize,$order=array()){

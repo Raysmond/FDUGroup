@@ -23,10 +23,9 @@ class UserController extends BaseController
         }
 
         if ($this->getHttpRequest()->isPostRequest()) {
-            $user = new User();
-            $login = $user->login($_POST);
-            if ($login == true) {
-                $this->getSession()->set("user", $user->id);
+            $login = User::login($_POST);
+            if ($login instanceof User) {
+                $this->getSession()->set("user", $login->id);
                 $this->redirectAction('user', 'home');
             } else {
                 $data['loginForm'] = $_POST;
@@ -69,11 +68,8 @@ class UserController extends BaseController
         $canCancel = false;
         $currentUser = Rays::app()->getLoginUser();
         if ($currentUser != null) {
-            $friend = new Friend();
-            $friend->uid = $currentUser->id;
-            $friend->fid = $user->id;
-            $canAdd = ($friend->uid !== $friend->fid && count($friend->find()) == 0);
-            $canCancel = ($friend->uid !== $friend->fid && !$canAdd);
+            $canAdd = ($currentUser->id !== $user->id && Friend::find(array("uid", $currentUser->id, "fid", $user->id))->first() == null);
+            $canCancel = ($currentUser->id !== $user->id && !$canAdd);
             $canEdit = ($currentUser->id == $user->id);
         }
         $this->setHeaderTitle($user->name);
@@ -81,8 +77,8 @@ class UserController extends BaseController
         $postTopics = [];
         $likeTopics = [];
         switch ($part) {
-            case 'joins': $userGroup = (new GroupUser())->getGroups($userId);break;
-            case 'posts': $postTopics = (new Topic())->getUserTopics($userId);break;
+            case 'joins': $userGroup = GroupUser::getGroups($userId); break;
+            case 'posts': $postTopics = Topic::find("userId", $userId)->order_desc("id")->all(); break;
             case 'likes': break;
             case 'profile': break;
             default: return;
@@ -219,10 +215,9 @@ class UserController extends BaseController
         $pageSize = (isset($_GET['pagesize'])&&is_numeric($_GET['pagesize']))?$_GET['pagesize'] : 5;
 
         $userId = Rays::app()->getLoginUser()->id;
-        $posts = new Topic();
-        $posts->userId = $userId;
-        $count = $posts->count();
-        $posts = $posts->find(($curPage-1)*$pageSize,$pageSize,['key'=>$posts->columns['id'],'order'=>'desc']);
+        $query = Topic::find("userId", $userId);
+        $count = $query->count();
+        $posts = $query->order_desc("id")->range(($curPage - 1) * $pageSize, $pageSize);
         $data['posts'] = $posts;
         $data['count'] = $count;
 

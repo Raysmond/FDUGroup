@@ -126,18 +126,17 @@ class User extends RModel
         $this->load($id);
     }
 
-    public function login($postForm){
+    /* TODO: Should not pass postForm here */
+    public static function login($postForm) {
         $validation = new RFormValidationHelper(array(
             array('field' => 'username', 'label' => 'User name', 'rules' => 'trim|required'),
             array('field' => 'password', 'label' => 'password', 'rules' => 'trim|required')
         ));
 
         if ($validation->run()) {
-            $login = $this->verifyLogin($postForm['username'], $postForm['password']);
+            $login = User::verifyLogin($postForm['username'], $postForm['password']);
             if ($login instanceof User) {
-                $this->id = $login->id;
-                $this->name = $login->name;
-                return true;
+                return $login;
             } else {
                 return array('verify_error'=>$login);
             }
@@ -150,16 +149,14 @@ class User extends RModel
      * Verify login information
      * @param $username
      * @param $password
-     * @return string
+     * @return string or User objetct
      */
-    public function verifyLogin($username, $password)
+    public static function verifyLogin($username, $password)
     {
-        $this->name = $username;
-        $user = $this->find();
-        if (count($user) == 0)
+        $user = User::find("name", $username)->first();
+        if ($user == null)
             return "No such user name.";
-        $user = $user[0];
-        if($user->status==self::STATUS_BLOCKED){
+        if ($user->status == self::STATUS_BLOCKED) {
             return "User with name ".$user->name." has been blocked!";
         }
         if ($user->password == md5($password)) {

@@ -70,13 +70,10 @@ class MessageController extends BaseController
             $validation = new RFormValidationHelper($config);
 
             if ($validation->run()) {
-                $receiver = new User();
-                $receiver->name = $_POST['receiver'];
-                $receiver = $receiver->find();
-                if (empty($receiver)) {
+                $receiver = User::find("name", $_POST['receiver'])->first();
+                if ($receiver == null) {
                     $this->flash("error", "No such user.");
                 } else {
-                    $receiver = $receiver[0];
                     $senderId = 0;
                     if (isset($_POST['sender'])) { //mainly for group and system message
                         $senderId = $_POST['sender'];

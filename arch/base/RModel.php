@@ -53,7 +53,8 @@ class _RModelQueryer {
         $model = $this->model;
         $stmt = RModel::getConnection()->prepare("SELECT COUNT(*) FROM ".Rays::app()->getDBPrefix().$model::$table." $this->query_where");
         $stmt->execute($this->_args());
-        return $stmt->rowCount();
+        $row = $stmt->fetch();
+        return $row[0];
     }
 
     /**
