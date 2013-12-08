@@ -2,7 +2,7 @@
     <div class="panel-heading">
         <div class="heading-actions">
             <?php
-                if($canEdit) echo RHtmlHelper::linkAction('post', 'Edit', 'edit', $topic->id, array('class' => 'btn btn-xs btn-info'));
+            if ($canEdit) echo RHtmlHelper::linkAction('post', 'Edit', 'edit', $topic->id, array('class' => 'btn btn-xs btn-info'));
             ?>
         </div>
         <h1 class="panel-title"><?= $topic->title ?></h1>
@@ -25,57 +25,19 @@
         </div>
         <br/><br/>
 
-        <div style="width: 100%; text-align: center; font-size: 20px;">
-            <?php $this->module('rating_plus', array('id' => 'rating_plus', 'entityType' => Topic::$entityType, 'entityId' => $topic->id)); ?>
+        <div class="post-rating-plus">
+            <?php $this->module('rating_plus', array('entityType' => Topic::$entityType, 'entityId' => $topic->id)); ?>
         </div>
 
         <hr/>
 
-        <div>
+        <div id="comments">
             <h2 class="s-title">Comments</h2>
-            <div class="comments-list">
-            <?php
-            foreach ($commentTree as $commentItem) {
-                ?>
-                <div id="comment-item-<?= $commentItem['root']->id ?>" class="row comment-item">
-                    <!-- user picture -->
-                    <div class="col-lg-2 user-picture">
-                        <?= RHtmlHelper::showImage($commentItem['root']->user->picture, $commentItem['root']->user->name, array('width' => '64px;')) ?>
-                    </div>
 
-                    <!-- comment content -->
-                    <div class="col-lg-10 comment-content">
-                        <div><?= RHtmlHelper::linkAction('user', $commentItem['root']->user->name, 'view', $commentItem['root']->user->id) ?>
-                            &nbsp;&nbsp;<?= $commentItem['root']->createdTime ?></div>
-                        <div><?= RHtmlHelper::decode($commentItem['root']->content) ?></div>
+            <?php $this->renderPartial("_comment_list", array('commentTree' => $commentTree), false); ?>
 
-                        <div style="float: right;">
-                            <?= RHtmlHelper::linkAction('post', 'Reply', 'view',
-                                $commentItem['root']->topicId . '?reply=' . $commentItem['root']->id . '#reply',
-                                array('class' => 'btn btn-xs btn-info')) ?>
-                        </div>
-
-                        <div class="comment-reply-list" style="margin-top: 10px;padding-left: 20px;">
-                            <?php
-                            foreach ($commentItem['reply'] as $reply) {
-                                ?>
-                                <div class="comment-reply-item" style="margin-top: 10px;"><?= RHtmlHelper::linkAction('user', $reply->user->name, 'view', $reply->user->id) ?>
-                                    &nbsp;&nbsp;<?= $reply->createdTime ?></div>
-                                <div><?= RHtmlHelper::decode($reply->content) ?></div>
-                            <?php
-                            }
-                            ?>
-                        </div>
-
-                    </div>
-                    <br/><br/>
-                </div>
-                <hr>
-            <?php
-            }
-            ?>
-            </div>
             <hr/>
+
             <div id="reply">
                 <?= RFormHelper::openForm("post/comment/$topic->id", array('id' => 'viewFrom')) ?>
                 <?=
