@@ -27,10 +27,26 @@ class _RModelQueryer {
         return $this->args_where;
     }
 
+    private function _auto_join_clause()
+    {
+        $model = $this->model;
+        $clause = "";
+        if (isset($model::$connection)) {
+            foreach ($model::$connection as $member => $type) {
+                $m = $type::$model;
+                $modeltable = Rays::app()->getDBPrefix().$model::$table;
+                $mtable = Rays::app()->getDBPrefix().$m::$table;
+                $clause = "$clause LEFT JOIN $mtable ON $mtable.$m::$primary_key = $modeltable.$model::$mapping[$member]";
+            }
+        }
+        return $clause;
+    }
+
     private function _select($suffix = "")
     {
         $model = $this->model;
-        $stmt = RModel::getConnection()->prepare("SELECT * FROM ".Rays::app()->getDBPrefix().$model::$table." $this->query_where $this->query_order $suffix");
+        $join = $this->_auto_join_clause();
+        $stmt = RModel::getConnection()->prepare("SELECT * FROM ".Rays::app()->getDBPrefix().$model::$table." $this->query_where $this->query_order $join $suffix");
         $stmt->execute($this->_args());
         $rs = $stmt->fetchAll();
         $ret = array();
