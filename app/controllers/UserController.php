@@ -14,6 +14,7 @@ class UserController extends BaseController
 
     public function actionLogin()
     {
+        $this->layout = 'user_ui';
         $data = array();
         if (Rays::isLogin()) {
             $this->redirectAction('user', 'home');
@@ -104,6 +105,7 @@ class UserController extends BaseController
      */
     public function actionRegister()
     {
+        $this->layout = 'user_ui';
         $this->setHeaderTitle("Register");
         $form = '';
         if (Rays::isPost()) {

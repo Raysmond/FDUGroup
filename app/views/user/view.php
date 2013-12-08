@@ -12,41 +12,18 @@ Rays::css("/public/css/post.css");
     <div class="panel-body">
 
         <div class="user-profile-tiny">
-            <div class="col-lg-2">
-                <?php if(!isset($user->picture)||$user->picture=='') $user->picture=User::$defaults['picture'];
-                $thumbnail = RImageHelper::styleSrc($user->picture,$user::getPicOptions());
+            <?=$this->module('user_panel',array('userId'=>$user->id, 'viewUser' => true));?>
+            <div class="navbar-right">
+                <?php
+                if (isset($canAdd)&&$canAdd) {
+                    echo RHtmlHelper::linkAction('friend', '+ Add friend', 'add', $user->id, array('class' => 'btn btn-xs btn-info'));
+                }
+                if (isset($canCancel)&&$canCancel) {
+                    echo RHtmlHelper::linkAction('friend', '- Cancel friend', 'cancel', $user->id, array('class' => 'btn btn-xs btn-danger'));
+                }
+                echo '<div class="clearfix"></div>';
                 ?>
-                <a href="<?=RHtmlHelper::siteUrl('user/view/'.$user->id)?>" >
-                    <?php
-                    echo RHtmlHelper::showImage($thumbnail,$user->name, array('class'=>'img-thumbnail','width'=>'120px'))
-                    ?>
-                </a>
             </div>
-            <div class="col-lg-10">
-                <h2>
-                    <?=RHtmlHelper::linkAction('user',$user->name,'view',$user->id)?>&nbsp;
-                    <span class="badge badge-<?=Role::getRoleNameById($user->roleId);?>"><?=Role::getBadgeById($user->roleId);?></span>
-                </h2>
-                <div><?=RHtmlHelper::decode($user->intro)?></div>
-                <div><?=$user->region?>
-                    <?php if ($user->weibo!='') { ?>
-                        <?php if ($user->region!='') { ?>|<?php } ?>
-                        Micro-Blog: <?=RHtmlHelper::link($user->weibo,$user->weibo,$user->weibo)?>
-                    <?php } ?>
-                </div>
-                <div class="navbar-left">
-                    <?php
-                    if (isset($canAdd)&&$canAdd) {
-                        echo RHtmlHelper::linkAction('friend', '+ Add friend', 'add', $user->id, array('class' => 'btn btn-xs btn-success'));
-                    }
-                    if (isset($canCancel)&&$canCancel) {
-                        echo RHtmlHelper::linkAction('friend', '- Cancel friend', 'cancel', $user->id, array('class' => 'btn btn-xs btn-success'));
-                    }
-                    echo '<div class="clearfix"></div>';
-                    ?>
-                </div>
-            </div>
-
         </div>
 
         <div class="clearfix"></div>

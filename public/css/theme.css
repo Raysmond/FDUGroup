@@ -44,7 +44,9 @@ a {
 .popular-group-title a {
     color:#777;
 }
-
+.user-login-register-footer a {
+    color:#fff;
+}
 a:hover, .home-actions .home-actions-item a:hover {
     color:#ff6b6b;
     text-decoration: none;
@@ -78,6 +80,10 @@ a:active {
     background-color: #2c3036;
     border-bottom: 5px solid #ddd;
     padding: 5px 0;
+}
+
+.page-user-login #main-navigation .navbar, .page-user-register #main-navigation .navbar {
+    border-bottom: 0;
 }
 
 #main-navigation .navbar-nav{
@@ -391,4 +397,131 @@ span.spliter {
 
 .user-info a:hover {
     color: #ffc1c1;
+}
+
+.user-home-navigation li.active{
+    font-weight:bold;
+}
+
+
+.user-panel {
+    padding: 10px 30px;
+    margin-top:0;
+    background: #fff;
+
+}
+
+.user-panel .user-picture{
+    float: left;
+    margin: 0 15px 0 10px;
+}
+
+.user-panel .user-profile{
+    padding-top: 25px;
+}
+
+.index .user-panel .user-profile{
+    padding-top: 0;
+}
+
+.user-panel .user-profile h2>a{
+    color: #000;
+    text-decoration: none;
+}
+.user-panel .user-profile h2>a:hover{
+    opacity: 0.6;
+}
+
+.user-panel .user-statistics{
+    float: right;
+    margin: 30px 10px 0 0;
+    padding: 10px 0;
+    border: 1px #eee solid;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
+    -webkit-box-shadow: 0 1px 1px rgba(0,0,0,.08), inset 0 1px 0 rgba(255,255,255,.8);
+    -moz-box-shadow: 0 1px 1px rgba(0,0,0,.08), inset 0 1px 0 rgba(255,255,255,.8);
+    box-shadow: 0 1px 1px rgba(0,0,0,.08), inset 0 1px 0 rgba(255,255,255,.8);
+}
+
+.index .user-panel .user-statistics{
+    float: right;
+    margin: 0;
+    padding: 10px 0;
+}
+
+.index .user-profile h2 {
+    font-size:28px;
+}
+
+.user-info {
+    padding-left:145px;
+}
+
+.user-introduction {
+    padding-left:145px;
+}
+
+.index .user-info {
+    padding-left:105px;
+}
+
+.index .user-introduction {
+    padding-left:105px;
+}
+
+.user-panel .user-statistics .stat-item{
+    float: left;
+    padding: 0 15px 0 14px;
+    text-align: center;
+    border-right: 1px #eee solid;
+    width: 70px;
+    margin-right: -1px;
+}
+.user-panel .user-statistics .stat-item .number{
+    font-size: 20px;
+    font-weight: bold;
+}
+.user-panel .user-statistics .stat-item .text
+{
+    color: #999;
+    font-weight: bold;
+    text-align: center;
+    line-height: 15px;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.site-background {
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: -1;
+    overflow: hidden;
+    width:100%;
+    height:100%;
+}
+
+.user-login-register-panel {
+    width: 418px;
+}
+
+.user-login-register-footer {
+    color: white;
+    font-weight:bold;
+}
+
+.page-user-login #content, .page-user-register #content {
+    /*min-height: 470px;*/
+    margin-left: 400px;
+    padding-top:30px;
+}
+
+.page-user-login #footer, .page-user-register #footer {
+    position:absolute;
+    bottom: 0;
+}
+
+.user-login-register-panel .panel-body {
+    margin-left: 5px;
+    margin-right: 10px;
 }

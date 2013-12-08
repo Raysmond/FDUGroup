@@ -31,42 +31,20 @@ $this->module('main_nav',array('id'=>'main_nav','name'=>'Main navigation'));
 ?>
 
 <div id="main-wrapper" class="container">
-    <?php
-        $this->module("group_categories",array('name'=>"Categories"));
-    ?>
-    <div class="row row-offcanvas row-offcanvas-right">
-        <div class="col-xs-12 col-sm-9">
-            <p class="pull-right visible-xs">
-                <button type="button" class="btn btn-primary btn-xs" data-toggle="offcanvas">Toggle nav</button>
-            </p>
-            <div id="messages">
-                <?php
-                    echo RHtmlHelper::showFlashMessages();
-                ?>
-            </div>
+    <div id="messages">
+        <?php
+        echo RHtmlHelper::showFlashMessages();
+        ?>
+    </div>
 
-            <div class="content-wrapper">
-                <div id="content">
-                    <?php if(isset($content)) echo $content; ?>
-                </div>
-            </div>
+    <div class="content-wrapper">
+        <div id="content">
+            <?php if(isset($content)) echo $content; ?>
+        </div>
+    </div>
 
-        </div><!--/span-->
-
-        <div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar" role="navigation">
-
-            <?php
-            $this->module("help_nav");
-            $this->module("active_groups");
-            $this->module("friend_groups",array('id'=>'friend_groups','name'=>"Friend Groups"));
-            $this->module("group_users",array('id'=>'group_users','name'=>"Group Users"));
-            $this->module("ads",array('id'=>'ads','name'=>"Ads"));
-
-            ?>
-        </div><!--/span-->
-    </div><!--/row-->
-    <hr>
-    <div id="footer" class="row">
+    <div id="footer" class="container user-login-register-footer">
+        <hr>
         <div class="copyright col-lg-5"><?php echo RHtmlHelper::encode(Rays::getCopyright()); ?></div>
 
         <div class="footer-links col-lg-7">
@@ -77,7 +55,9 @@ $this->module('main_nav',array('id'=>'main_nav','name'=>'Main navigation'));
             </ul>
         </div>
     </div>
-
+    <div class="site-background">
+        <?=RHtmlHelper::showImage('/public/images/background-'.rand(1,3).'.jpg', '',['style' => 'width: 1366px; height: 939px; top: -312.5px;'])?>
+    </div>
 </div><!--/.container-->
 
 <!-- Placed at the end of the document so the pages load faster -->

@@ -7,7 +7,7 @@
 <div class="row">
     <div class="col-lg-3"></div>
     <div class="col-lg-6">
-        <div class="panel panel-default">
+        <div class="panel panel-default user-login-register-panel">
             <div class="panel-heading"><b>Sign in</b></div>
             <div class="panel-body">
                 <?php

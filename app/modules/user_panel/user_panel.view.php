@@ -7,7 +7,7 @@
                 ?>
                 <a href="<?= RHtmlHelper::siteUrl('user/view/' . $user->id) ?>">
                     <?php
-                    echo RHtmlHelper::showImage($thumbnail, $user->name, array('class' => 'img-thumbnail', 'width' => '120px'))
+                    echo RHtmlHelper::showImage($thumbnail, $user->name, array('class' => 'img-thumbnail', 'width' => isset($viewUser)?'80px':'120px'))
                     ?>
                 </a>
             </div>
@@ -60,4 +60,3 @@
 
     <?php endif; ?>
 </div>
-<hr>

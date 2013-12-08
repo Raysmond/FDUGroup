@@ -123,10 +123,9 @@ class GroupController extends BaseController
 
         $data = ['group'=>$group, 'counter'=>$counter->totalCount, 'latestPosts'=>$posts];
 
-        $uid = Rays::user()->id;
         $isLogin = Rays::isLogin();
-        $data['hasJoined'] = $isLogin && GroupUser::isUserInGroup($uid,$group->id);
-        $data['isManager'] = $isLogin && $group->creator==$uid;
+        $data['hasJoined'] = $isLogin && GroupUser::isUserInGroup(Rays::user()->id,$group->id);
+        $data['isManager'] = $isLogin && $group->creator==Rays::user()->id;
 
         $this->setHeaderTitle($group->name);
         $this->addCss("/public/css/post.css");

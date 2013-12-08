@@ -22,8 +22,8 @@ class BaseController extends RController
 
     public function afterAction()
     {
-        $time = microtime(true);
-        echo '<center style="color: gray;padding: 10px;">'."Page generated in ".(($time-Rays::$startTime)*1000) . " ms"."</center>";
+        //$time = microtime(true);
+        //echo '<center style="color: gray;padding: 10px;">'."Page generated in ".(($time-Rays::$startTime)*1000) . " ms"."</center>";
 
         $accessLog = new AccessLog();
         $accessLog->host = $this->getHttpRequest()->getUserHostAddress();
