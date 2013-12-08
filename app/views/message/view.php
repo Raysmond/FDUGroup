@@ -10,7 +10,6 @@
         </h1>
     </div>
     <div class="panel-body">
-
         <div class="navbar-left">
             <?=RHtmlHelper::linkAction('message','+ Send a message','send',null,array('class'=>'btn btn-sm btn-info'))?>
         </div>
@@ -25,27 +24,27 @@
 
         </div>
         <div class="clearfix" style="margin-bottom: 10px;"></div>
+        <div class="message-container">
         <?php
         foreach($msgs as $msg)
         {
         ?>
-        <div class="panel <?=($msg->status==Message::$STATUS_READ)?"panel-default":"panel-info"?>">
+        <div class="panel panel-info <?=($msg->status==Message::$STATUS_UNREAD)?"message-unread":""?>">
             <div class="panel-heading">
                 <div style="float:right;margin-top: -2px;">
                     <?php
                     if($msg->receiverId==Rays::app()->getLoginUser()->id){
-                        if($msg->status==Message::$STATUS_UNREAD) echo RHtmlHelper::linkAction('message',"Mark as read",'read',$msg->id,array('class'=>'btn btn-xs btn-success'));
+                        if($msg->status==Message::$STATUS_UNREAD) echo RHtmlHelper::linkAction('message',"",'read',$msg->id,array('title' => 'Mark as read', 'class'=>'glyphicon glyphicon-ok message-read'));
                         echo '&nbsp;&nbsp;';
-                        if($msg->status!=Message::$STATUS_TRASH) echo RHtmlHelper::linkAction('message',"Move to trash",'trash',$msg->id,array('class'=>'btn btn-xs btn-danger'));
-                        if($type=='trash') echo RHtmlHelper::linkAction('message',"Delete",'delete',$msg->id,array('class'=>'btn btn-xs btn-danger'));
+                        if($msg->status!=Message::$STATUS_TRASH) echo RHtmlHelper::linkAction('message',"",'trash',$msg->id,array('title'=> 'Mark as trash', 'class'=>'glyphicon glyphicon-trash message-trash'));
+                        if($type=='trash') echo RHtmlHelper::linkAction('message',"",'delete',$msg->id,array('title' => 'Delete', 'class'=>'glyphicon glyphicon-remove message-trash'));
                     }
                     ?>
                 </div>
-                <h3 class="panel-title">
                     <?php
                     $title =  (isset($msg->title)&&$msg->title!='')?$msg->title:"Untitled";
                     echo RHtmlHelper::linkAction('message',$title,'detail',$msg->id);
-                    echo '</h3>';
+
                     echo '</div><div class="panel-body">';
                     $msg->load();
                     echo '<div class="message-meta">';
@@ -70,6 +69,7 @@
                     echo '</div></div>';
                     }
                     ?>
+                    </div>
                     <div>
                         <?=(isset($pager)?$pager:"")?>
                     </div>

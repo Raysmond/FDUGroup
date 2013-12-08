@@ -4,6 +4,7 @@
  * @author: Raysmond
  */
 ?>
+<div class="message-container">
 <div class="panel panel-info">
     <div class="panel-heading">
         <h3 class="panel-title"><?php echo $message->title; ?></h3>
@@ -30,5 +31,6 @@
         echo RHtmlHelper::linkAction('message',"Mark read",'read',$message->id,array('class'=>'btn btn-sm btn-success'));
     endif;
     ?>
+</div>
 </div>
 </div>

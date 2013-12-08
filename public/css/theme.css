@@ -47,7 +47,12 @@ a {
 .user-login-register-footer a {
     color:#fff;
 }
-a:hover, .home-actions .home-actions-item a:hover {
+
+.message-unread .panel-heading a {
+    color:#428bca;
+}
+
+a:hover, .home-actions .home-actions-item a:hover, .message-unread .panel-heading a:hover {
     color:#ff6b6b;
     text-decoration: none;
 }
@@ -528,4 +533,23 @@ span.spliter {
 
 .page-user-view .waterfall .item {
     border: 1px solid #ececec;
+}
+
+.message-container .panel-info {
+    border: 1px solid #ececec;
+}
+.message-container .panel-heading {
+    background-color: #eee;
+}
+.message-unread .panel-heading {
+    background-color: #d9edf7;
+}
+
+.message-unread .panel-heading a.message-trash {
+    color:#d9534f;
+    margin-left:10px;
+}
+
+.message-unread .panel-heading a.message-trash:hover {
+    color:#ff6b6b;
 }
