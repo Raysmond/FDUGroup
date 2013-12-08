@@ -107,7 +107,7 @@ class Group extends RModel
             return $upload->error;
         } else {
             $this->picture = "public/images/groups/" . $upload->file_name;
-            $this->update();
+            $this->save();
             return true;
         }
     }

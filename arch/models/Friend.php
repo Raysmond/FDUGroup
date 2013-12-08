@@ -1,37 +1,34 @@
 <?php
-class Friend extends Data {
+class Friend extends RModel
+{
     public $id, $uid, $fid;
 
-    public function __construct() {
-        $option = array(
-            "key" => "uid",
-            "key2" => "fid",
-            "table" => "friends",
-            "columns" => array (
-                "id" => "f_id",
-                "uid" => "f_uid",
-                "fid" => "f_fid"
-            )
-        );
-        parent::init($option);
-    }
+    public static $primary_key = "id";
+    public static $table = "friends";
+    public static $mapping = array(
+        "id" => "f_id",
+        "uid" => "f_uid",
+        "fid" => "f_fid"
+    );
 
-    public function getFriends($uid = '', $friendLimit = '', $exceptFriendIds=array(), $friendStart = 0)
+    public function getFriends($uid = '', $friendLimit = '', $excludeIds = array(), $friendStart = 0)
     {
-        if ($uid != '')
-            $this->uid = $uid;
-        $friends = $this->find($friendStart, $friendLimit,array('key'=>$this->columns['id'],'value'=>'desc'));
-        $friNumber = $this->count();
+        $query = Friend::find();
+        if ($uid != '') {
+            $query->find("uid", $uid);
+        }
+        $friendsCount = $query->count();
+        $friends = $query->order_desc("id")->range($friendStart, $friendLimit);
         $result = array();
         foreach ($friends as $friend) {
-            if(!in_array($friend->fid,$exceptFriendIds)){
+            if (!in_array($friend->fid, $excludeIds)) {
                 $user = new User();
                 $user->id = $friend->fid;
                 $user->load();
-                array_push($result, $user);
+                $result[] = $user;
             }
         }
-        return [$result, $friNumber];
+        return [$result, $friendsCount];
     }
 
     public function getFriendsToInvite($uid,$groupId, $limit=0){
