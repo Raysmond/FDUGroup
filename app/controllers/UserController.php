@@ -67,6 +67,7 @@ class UserController extends BaseController
         $count = 0;
         switch ($part) {
             case 'joins':
+                $pageSize = $this->getPageSize("pageSize",5);
                 $data['userGroup'] = GroupUser::userGroups($userId, ($page-1) * $pageSize, $pageSize);
                 $count = User::countGroups($userId);
                 break;
@@ -84,9 +85,19 @@ class UserController extends BaseController
                 return;
         }
 
-        if($part=="joins" || $part=="posts" || $part=="likes"){
+        if(Rays::isAjax()){
+            echo empty($data['userGroup'])? 'nomore' : $this->renderPartial("_common._groups_list", ["groups"=>$data['userGroup']],true);
+            exit;
+        }
+
+        if($part=="posts" || $part=="likes"){
             $pager = new RPagerHelper("page",$count,$pageSize,RHtmlHelper::siteUrl("user/view/".$userId."/".$part),$page);
             $data['pager'] = $pager->showPager();
+        }
+
+        if($part=="joins"){
+            $this->addCss('/public/css/group.css');
+            $this->addJs('/public/js/masonry.pkgd.min.js');
         }
 
         $this->setHeaderTitle($user->name);

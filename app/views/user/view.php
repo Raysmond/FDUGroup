@@ -103,33 +103,76 @@ Rays::css("/public/css/post.css");
                         if (empty($userGroup)) {
                             echo "<p>This guy has not joined any groups!</p>";
                         } else {
-                            echo '<div class="row">';
-                            foreach ($userGroup as $group) {
+                            ?>
+                            <div class="panel-my-group">
+                                <div id="waterfall-groups" class="waterfall" style="margin: 0 -10px 0 -10px;">
+                                    <?php
+                                    $this->renderPartial("_common._groups_list",array('groups'=>$userGroup),false);
+                                    ?>
+                                </div>
+                                <div class="clearfix"></div>
+                                <div class="load-more-groups-processing" id="loading-groups">
+                                    <div class="horizon-center">
+                                        <img class="loading-24-24" src="<?=RHtmlHelper::siteUrl('/public/images/loading.gif')?>" /> loading...
+                                    </div>
+                                </div>
+                                <a id="load-more-groups" href="javascript:loadMoreGroups()" class="btn btn-lg btn-primary btn-block">Load more groups</a>
+                            </div>
 
-                                echo '<div class="col-6 col-sm-6 col-lg-4" style="height: 190px;">';
-                                echo "<div class='panel panel-default' style='height: 170px;'>";
-                                echo "<div class='panel-heading'>";
-                                if (isset($group->picture) && $group->picture != '') {
-                                    //echo RHtmlHelper::showImage($group->picture,$group->name,array('style'=>'height:32px;'));
+                            <script>
+                                var $container = $('#waterfall-groups');
+                                var curPage = 1;
+                                var loadCount = 0;
+                                var isLoading = false;
+                                var nomore = false;
+
+                                $(document).ready(function(){
+                                    $('#loading-groups').hide(0);
+                                    $('#load-more-groups').hide(0);
+                                    $container.masonry({
+                                        columnWidth: 0,
+                                        itemSelector: '.item'
+                                    });
+
+                                    $(window).scroll(function(){
+                                        var height = $("#load-more-groups").position().top;
+                                        var curHeight = $(window).scrollTop() + $(window).height();
+                                        if(!isLoading&&curHeight>=height && !nomore){
+                                            loadMoreGroups();
+                                        }
+                                    });
+                                });
+
+
+                                function loadMoreGroups(){
+                                    isLoading = true;
+                                    $('#loading-groups').show(0);
+                                    //$('#load-more-groups').hide(0);
+                                    $.ajax({
+                                        url: "<?=RHtmlHelper::siteUrl('user/view/'.$user->id) ?>",
+                                        type: "post",
+                                        data:{page: ++curPage},
+                                        success: function(data){
+                                            $('#loading-groups').hide(0);
+                                            //$('#load-more-groups').show(0);
+                                            if (data == 'nomore') {
+                                                nomore = true;
+                                                $('#loading-groups').hide(0);
+                                                //$('#load-more-groups').hide(0);
+                                                return;
+                                            }
+                                            var $blocks = jQuery(data).filter('div.item');
+                                            $("#waterfall-groups").append($blocks);
+                                            $("#waterfall-groups").masonry('appended',$blocks);
+                                            isLoading = false;
+                                            loadCount++;
+                                        }
+                                    });
                                 }
-                                echo RHtmlHelper::linkAction('group', $group->name, 'detail', $group->id);
-                                echo "</div>";
 
-                                echo "<div class='panel-body'>";
-                                echo $group->memberCount . " members";
-                                $content = strip_tags(RHtmlHelper::decode($group->intro));
-                                if (mb_strlen($content) > 70) {
-                                    echo '<p>' . mb_substr($content, 0, 70, "UTF-8") . '...</p>';
-                                } else echo '<p>' . ($content) . '</p>';
+                            </script>
 
-                                echo RHtmlHelper::linkAction('group', 'View details', 'detail', $group->id
-                                    , array('class' => 'btn btn-xs btn-info', 'style' => 'position:absolute;top:140px;right:30px;'));
-
-                                echo "</div></div>";
-                                echo "</div>";
-
-                            }
-                            echo '</div>';
+                    <?php
                         }
                     } else if ($part == 'posts') {         //User published Topics
                             $this->renderPartial("_common._posts_table",array('posts'=>$postTopics,'showGroup'=>true),false);
