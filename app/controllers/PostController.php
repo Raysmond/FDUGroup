@@ -358,6 +358,7 @@ class PostController extends BaseController
 
         $this->setHeaderTitle("Find posts");
         $this->addCss("/public/css/post.css");
+        $this->addCss("/public/css/group.css");
         $this->render('find', $data, false);
     }
 }

@@ -1,4 +1,4 @@
-<div class="row posts-category-wrapper">
+<div id="category-bar" class="row posts-category-wrapper">
 
     <ul class="posts-category">
         <?php
