@@ -66,31 +66,6 @@ class Message extends RModel {
         return $message;
     }
 
-    public function markRead($msgId=''){
-        $this->markStatus($msgId,self::$STATUS_READ);
-
-    }
-
-    public function markUnRead($msgId=''){
-        $this->markStatus($msgId,self::$STATUS_UNREAD);
-    }
-
-    public function markTrash($msgId=''){
-        $this->markStatus($msgId,self::$STATUS_TRASH);
-    }
-
-    public function markStatus($msgId, $status)
-    {
-        if (isset($msgId) && is_numeric($msgId)) {
-            $this->id = $msgId;
-            $result = $this->load();
-            if ($result != null) {
-                $this->status = $status;
-                $this->update();
-            }
-        }
-    }
-
     public static function countUnreadMsgs($receiverId)
     {
         return Message::find(array("receiverId", $receiverId, "status", Message::$STATUS_UNREAD))->count();

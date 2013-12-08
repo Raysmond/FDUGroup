@@ -112,14 +112,13 @@ class MessageController extends BaseController
 
     public function actionRead($msgId)
     {
-        $referrer = $this->getHttpRequest()->getUrlReferrer();
-        $message = new Message();
-        $message = $message->load($msgId);
+        $message = Message::get($msgId);
         if (Rays::app()->getLoginUser()->id != $message->receiverId) {
             $this->flash("error", "Sorry. You don't have the right to mark the message read.");
         }
-        $message->markRead($msgId);
-        $this->redirect($referrer);
+        $message->status = Message::$STATUS_READ;
+        $message->save();
+        $this->redirect($this->getHttpRequest()->getUrlReferrer());
     }
 
 
