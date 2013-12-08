@@ -61,6 +61,18 @@ class _RModelQueryer {
     }
 
     /**
+     * Do SQL query, return count of matching rows
+     * @return Count of matching rows
+     */
+    public function count()
+    {
+        $model = $this->model;
+        $stmt = RModel::getConnection()->prepare("SELECT COUNT(*) FROM ".Rays::app()->getDBPrefix().$model::$table." $this->query_where");
+        $stmt->execute($this->_args());
+        return $stmt->rowCount();
+    }
+
+    /**
      * Do SQL query, return first matching object
      * @return First object matching given query, if no objects are found, null is returned
      */
