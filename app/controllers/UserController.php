@@ -143,8 +143,7 @@ class UserController extends BaseController
             );
             $validation = new RFormValidationHelper($rules);
             if ($validation->run()) {
-                $user = new User();
-                $user->register($_POST['username'], md5($_POST['password']), $_POST['email']);
+                $user = User::register($_POST['username'], md5($_POST['password']), $_POST['email']);
                 $user->sendWelcomeMessage();
 
                 /*

@@ -42,6 +42,8 @@ class GroupUser extends RModel
 
     public static function isUserInGroup($userId, $groupId){
         if (GroupUser::find(array("groupId", $groupId, "userId", $userId))->first() != null)
+            return true;
+        return false;
     }
 
     public function delete($assignment = []) {

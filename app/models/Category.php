@@ -11,6 +11,7 @@ class Category extends Tree
     const DEFAULT_CATEGORY_ID = 48;
 
     public static $primary_key = "id";
+    public static $parent_key = "pid";
     public static $table = "category";
     public static $mapping = array(
         "id" => "cat_id",

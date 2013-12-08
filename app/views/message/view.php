@@ -32,14 +32,14 @@
         foreach($msgs as $msg)
         {
         ?>
-        <div class="panel panel-info <?=($msg->status==Message::$STATUS_UNREAD)?"message-unread":""?>">
+        <div class="panel panel-info <?=($msg->status==Message::STATUS_UNREAD)?"message-unread":""?>">
             <div class="panel-heading">
                 <div style="float:right;margin-top: -2px;">
                     <?php
                     if($msg->receiverId==Rays::app()->getLoginUser()->id){
-                        if($msg->status==Message::$STATUS_UNREAD) echo RHtmlHelper::linkAction('message',"",'read',$msg->id,array('title' => 'Mark as read', 'class'=>'glyphicon glyphicon-ok message-read'));
+                        if($msg->status==Message::STATUS_UNREAD) echo RHtmlHelper::linkAction('message',"",'read',$msg->id,array('title' => 'Mark as read', 'class'=>'glyphicon glyphicon-ok message-read'));
                         echo '&nbsp;&nbsp;';
-                        if($msg->status!=Message::$STATUS_TRASH) echo RHtmlHelper::linkAction('message',"",'trash',$msg->id,array('title'=> 'Mark as trash', 'class'=>'glyphicon glyphicon-trash message-trash'));
+                        if($msg->status!=Message::STATUS_TRASH) echo RHtmlHelper::linkAction('message',"",'trash',$msg->id,array('title'=> 'Mark as trash', 'class'=>'glyphicon glyphicon-trash message-trash'));
                         if($type=='trash') echo RHtmlHelper::linkAction('message',"",'delete',$msg->id,array('title' => 'Delete', 'class'=>'glyphicon glyphicon-remove message-trash'));
                     }
                     ?>
