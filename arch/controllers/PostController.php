@@ -255,19 +255,15 @@ class PostController extends BaseController {
         $curPage = $this->getHttpRequest()->getQuery('page', 1);
         $pageSize = 5;
 
-        $rows = new Topic();
-        $count = $rows->count();
+        $count = Topic::find()->count();;
         $data['count'] = $count;
-
-        $topics = new Topic();
-        $topics = $topics->adminFindAll(($curPage - 1) * $pageSize, $pageSize, array('key' => 'id', "order" => 'desc'));
-        $data['topics'] = $topics;
+        $data['topics'] = Topic::find()->join("user")->join("group")->order_desc("id")->range(($curPage - 1) * $pageSize, $pageSize);
 
         $pager = new RPagerHelper('page', $count, $pageSize, RHtmlHelper::siteUrl('post/admin'), $curPage);
         $pager = $pager->showPager();
         $data['pager'] = $pager;
 
-        $this->render('admin',$data,false);
+        $this->render('admin', $data, false);
     }
 }
 
