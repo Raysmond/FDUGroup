@@ -39,21 +39,30 @@
                 foreach($groups as $item){
                     $values[] = ['value'=>$item->id,'text'=>$item->name];
                 }
-                $selected_value = $values[0]['value'];
-                if(isset($newForm['group'])){
-                    $selected_value = $newForm['group'];
+                $canCreate = true;
+                if(!empty($values)){
+                    $selected_value = $values[0]['value'];
+                    if(isset($newForm['group'])){
+                        $selected_value = $newForm['group'];
+                    }
+                    else if(isset($groupId)){
+                        $selected_value = $groupId;
+                    }
+
+                    echo RFormHelper::select('group',$values,array($selected_value),array('class'=>'form-control'));
                 }
-                else if(isset($groupId)){
-                    $selected_value = $groupId;
+                else{
+                    $canCreate = false;
+                    echo 'You haven\'t joint any groups. Go to '.RHtmlHelper::linkAction('group','find','find').' some and join them!' ;
                 }
 
-                echo RFormHelper::select('group',$values,array($selected_value),array('class'=>'form-control'));
                 ?>
             </div>
         </div>
 
         <br/><br/>
 
+        <?php if($canCreate): ?>
         <?=RFormHelper::input(array(
             'id' => 'title',
             'name' => 'title',
@@ -83,6 +92,8 @@
 
         <br/>
         <?=RFormHelper::input(array('class' => 'btn btn-lg btn-primary', 'type' => 'submit', 'value' => $submitText))?>
+
+        <?php endif; ?>
         <?=RFormHelper::endForm()?>
     </div>
 

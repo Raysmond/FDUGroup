@@ -70,3 +70,36 @@
     margin-right: 5px;
     margin-left: 5px;
 }
+
+/* Post */
+
+.post .post-rating-plus{
+    width: 100%;
+    text-align: center;
+    font-size: 20px;
+}
+
+
+/* Comment */
+.comments-list .comment-item .user-picture{
+    width: 13.666666666666664%;
+}
+.comments-list .comment-item .user-picture img{
+    border-radius: 5px;
+}
+.comments-list .comment-item .comment-content{
+    width: 86.33333333333334%;
+    padding-left: 0;
+}
+
+.comments-list .comment-item .comment-reply-list{
+    margin-top: 10px;
+    padding-left: 20px;
+}
+.comments-list .comment-item .comment-reply-list .comment-reply-item{
+    margin-top: 10px;
+}
+
+.comments-list .comment-item .comment-content .comment-actions{
+    float: right;
+}

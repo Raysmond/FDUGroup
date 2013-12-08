@@ -7,6 +7,7 @@
  * @author: Raysmond
  */
 ?>
+<?php if(!empty($topics)): ?>
 <div class="posts-list">
     <?php
     $currentUserId = Rays::app()->isUserLogin()?Rays::app()->getLoginUser()->id:0;
@@ -107,4 +108,5 @@
     }
     ?>
 </div>
+<?php endif; ?>
 <!--END last-topics-list-->
