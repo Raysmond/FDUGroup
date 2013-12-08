@@ -13,6 +13,7 @@
                 echo RFormHelper::openForm('user/login',
                     array('id'=>'loginForm', 'class'=>'form-signin login-form'));
                 //echo RFormHelper::label("User name",'username');
+                echo RFormHelper::hidden('returnURL', Rays::referrerUri()?:"");
                 echo RFormHelper::input(
                     array('id'=>'username',
                         'name'=>'username',

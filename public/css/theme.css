@@ -525,3 +525,7 @@ span.spliter {
     margin-left: 5px;
     margin-right: 10px;
 }
+
+.page-user-view .waterfall .item {
+    border: 1px solid #ececec;
+}

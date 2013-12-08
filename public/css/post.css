@@ -127,3 +127,32 @@ ul.posts-category li{
 ul.posts-category li>a{
     width: 80px;
 }
+
+.post-list-td1 {
+    width: 50%;
+}
+.post-list-td2 {
+    width: 15%;
+}
+.post-list-td3 {
+    width: 10%;
+}
+.post-list-td4 {
+    width: 10%;
+}
+.post-list-td5 {
+    width: 15%;
+}
+
+.posts-table a {
+    color:#ff6b6b;
+}
+
+.posts-table a:hover {
+    color:#ffc1c1;
+}
+
+.posts-table tbody>tr>td {
+    border-top: 1px dashed #ddd;
+    border-bottom: 1px dashed #ddd;
+}

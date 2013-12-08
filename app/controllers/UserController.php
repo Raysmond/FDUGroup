@@ -25,6 +25,10 @@ class UserController extends BaseController
             $login = $user->login($_POST);
             if ($login === true) {
                 $this->getSession()->set("user", $user->id);
+                $returnURL = $_POST['returnURL'];
+                if (!empty($returnURL)) {
+                    $this->redirect($returnURL);
+                }
                 $this->redirectAction('user', 'home');
             } else {
                 $data['loginForm'] = $_POST;

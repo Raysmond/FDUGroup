@@ -1,6 +1,6 @@
 <?php
 class friend_users_module extends RModule {
-    public $access = array('<front>', 'user/*', 'message/*', 'ads/*', 'friend/myFriend', 'friend/myFriend?*');
+    public $access = array('<front>', 'user/*', 'group/mygroups', 'message/*', 'ads/*', 'friend/myFriend', 'friend/myFriend?*');
 
     public function module_content() {
     	$user = Rays::app()->getLoginUser();
