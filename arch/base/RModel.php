@@ -221,6 +221,12 @@ abstract class RModel {
         return self::$connection;
     }
 
+    public static function get($id)
+    {
+        $model = get_called_class();
+        return (new _RModelQueryer(get_called_class()))->find($model::$primary_key, $id)->first();
+    }
+
     public static function find($memberName = null, $memberValue = null)
     {
         if ($memberName == null)
