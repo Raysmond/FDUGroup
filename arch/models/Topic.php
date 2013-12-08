@@ -117,9 +117,9 @@ class Topic extends Data
         $entityType = Topic::$entityType;
 
         $sql = "SELECT "
-            ."user.{$user->columns['id']},"
-            ."user.{$user->columns['name']},"
-            ."user.{$user->columns['picture']},"
+            ."user.".User::$mapping['id'].","
+            ."user.".User::$mapping['name'].","
+            ."user.".User::$mapping['picture'].","
             ."topic.{$topics->columns['id']},"
             ."topic.{$topics->columns['title']},"
             ."topic.{$topics->columns['content']},"
@@ -129,8 +129,8 @@ class Topic extends Data
             ."groups.{$group::$mapping['name']},"
             ."rating.{$ratingStats->columns['value']} AS plusCount"
             ." FROM {$topics->table} AS topic "
-            ."LEFT JOIN {$user->table} AS user on topic.{$topics->columns['userId']}=user.{$user->columns['id']} "
-            ."LEFT JOIN ".Rays::app()->getDBPrefix().$group::$table." AS groups on groups.{$group::$mapping['id']}=topic.{$topics->columns['groupId']} "
+            ."LEFT JOIN ".Rays::app()->getDBPrefix().User::$table." AS user on topic.{$topics->columns['userId']}=user.".User::$mapping['id']." "
+            ."LEFT JOIN ".Rays::app()->getDBPrefix().Group::$table." AS groups on groups.{$group::$mapping['id']}=topic.{$topics->columns['groupId']} "
             ."LEFT JOIN {$ratingStats->table} AS rating on rating.{$ratingStats->columns['entityType']}={$entityType} "
             ."AND rating.{$ratingStats->columns['entityId']}=topic.{$topics->columns['id']} "
             ."AND rating.{$ratingStats->columns['tag']}='plus' "
@@ -140,7 +140,7 @@ class Topic extends Data
         if(!empty($ids)){
             $len = count($ids);
             $count = 0;
-            $where .= "AND user.{$user->columns['id']} in (";
+            $where .= "AND user.".User::$mapping['id']." IN (";
             foreach($ids as $id){
                 $where.=$id;
                 if($count++<$len-1){

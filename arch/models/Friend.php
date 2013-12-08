@@ -22,10 +22,7 @@ class Friend extends RModel
         $result = array();
         foreach ($friends as $friend) {
             if (!in_array($friend->fid, $excludeIds)) {
-                $user = new User();
-                $user->id = $friend->fid;
-                $user->load();
-                $result[] = $user;
+                $result[] = User::get($friend->fid);
             }
         }
         return [$result, $friendsCount];

@@ -1,10 +1,11 @@
 <?php
 /**
- * Class User
+ * Data model for users
  * @author: Raysmond
  */
 
-class User extends Data{
+class User extends RModel
+{
     public static $roles = array('administrator','authenticated user','anonymous user', 'VIP user');
 
     public $id,$roleId,$name,$mail,$password,$region,$mobile,$qq,$weibo;
@@ -44,42 +45,27 @@ class User extends Data{
         'picture'=>'public/images/default_pic.png'
     );
 
-    public function __construct(){
-        $option = array(
-            "key" => "id",
-            "table" => "users",
-            "columns" => array(
-                "id" => "u_id",
-                'roleId'=>'u_role_id',
-                "name" => "u_name",
-                "mail" => "u_mail",
-                "password" => "u_password",
-                "region" => "u_region",
-                "mobile" => "u_mobile",
-                "qq" => "u_qq",
-                "weibo" => "u_weibo",
-                "registerTime"=>"u_register_time",
-                "status" => "u_status",
-                "picture" => "u_picture",
-                "intro" => "u_intro",
-                "homepage" =>"u_homepage",
-                "credits" => "u_credits",
-                "permission" => "u_permission",
-                "privacy" => "u_privacy",
-            ),
-
-        );
-        parent::init($option);
-    }
-
-    public function load($id=null)
-    {
-        $result = parent::load($id);
-        if($result==null) return null;
-        $this->role = new Role();
-        $this->role->roleId = $this->roleId;
-        return $this;
-    }
+    public static $primary_key = "id";
+    public static $table = "users";
+    public static $mapping = array(
+        "id" => "u_id",
+        'roleId'=>'u_role_id',
+        "name" => "u_name",
+        "mail" => "u_mail",
+        "password" => "u_password",
+        "region" => "u_region",
+        "mobile" => "u_mobile",
+        "qq" => "u_qq",
+        "weibo" => "u_weibo",
+        "registerTime"=>"u_register_time",
+        "status" => "u_status",
+        "picture" => "u_picture",
+        "intro" => "u_intro",
+        "homepage" =>"u_homepage",
+        "credits" => "u_credits",
+        "permission" => "u_permission",
+        "privacy" => "u_privacy",
+    );
 
     /**
      * Get user wallet, create a wallet for the user if no wallet is found
