@@ -1,5 +1,5 @@
 <?php
-$baseurl = Rays::app()->getBaseUrl();
+$baseUrl = Rays::app()->getBaseUrl();
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -9,10 +9,11 @@ $baseurl = Rays::app()->getBaseUrl();
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <meta name="language" content="en"/>
     <meta name="description" content=""/>
+    <link rel="shortcut icon" href="<?=$baseUrl ?>/public/images/favicon.ico" type="image/x-icon">
 
-    <link rel="stylesheet" type="text/css" href="<?php echo $baseurl; ?>/public/bootstrap-3.0/css/bootstrap.min.css"/>
-    <link rel="stylesheet" type="text/css" href="<?php echo $baseurl; ?>/public/css/main.css"/>
-    <link rel="stylesheet" type="text/css" href="<?php echo $baseurl; ?>/public/css/theme.css"/>
+    <link rel="stylesheet" type="text/css" href="<?=$baseUrl; ?>/public/bootstrap-3.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="<?=$baseUrl; ?>/public/css/main.css"/>
+    <link rel="stylesheet" type="text/css" href="<?=$baseUrl; ?>/public/css/theme.css"/>
     <?php
     // link custom css files
     echo RHtmlHelper::linkCssArray(Rays::app()->getClientManager()->css);
@@ -20,9 +21,9 @@ $baseurl = Rays::app()->getBaseUrl();
 
     <!-- Bootstrap core JavaScript
     ================================================== -->
-    <script type="text/javascript" src="<?php echo $baseurl; ?>/public/js/jquery.min.js"></script>
-    <script type="text/javascript" src="<?php echo $baseurl; ?>/public/bootstrap-3.0/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="<?php echo $baseurl; ?>/public/js/main.js"></script>
+    <script type="text/javascript" src="<?=$baseUrl; ?>/public/js/jquery.min.js"></script>
+    <script type="text/javascript" src="<?=$baseUrl; ?>/public/bootstrap-3.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="<?=$baseUrl; ?>/public/js/main.js"></script>
 
 </head>
 
@@ -41,7 +42,7 @@ $baseurl = Rays::app()->getBaseUrl();
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="<?php echo $baseurl."/admin"; ?>">Admin home</a>
+            <a class="navbar-brand" href="<?php echo $baseUrl."/admin"; ?>">Admin home</a>
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->

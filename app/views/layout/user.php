@@ -9,21 +9,22 @@ $baseUrl = Rays::app()->getBaseUrl();
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <meta name="language" content="en"/>
     <meta name="description" content=""/>
+    <link rel="shortcut icon" href="<?=$baseUrl ?>/public/images/favicon.ico" type="image/x-icon">
 
-    <link rel="stylesheet" type="text/css" href="<?php echo $baseUrl; ?>/public/bootstrap-3.0/css/bootstrap.min.css"/>
-    <link rel="stylesheet" type="text/css" href="<?php echo $baseUrl; ?>/public/css/non-responsive.css"/>
-    <link rel="stylesheet" type="text/css" href="<?php echo $baseUrl; ?>/public/css/main.css"/>
-    <link rel="stylesheet" type="text/css" href="<?php echo $baseUrl; ?>/public/css/user.css"/>
-    <link rel="stylesheet" type="text/css" href="<?php echo $baseUrl; ?>/public/css/theme.css"/>
+    <link rel="stylesheet" type="text/css" href="<?=$baseUrl?>/public/bootstrap-3.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="<?=$baseUrl?>/public/css/non-responsive.css"/>
+    <link rel="stylesheet" type="text/css" href="<?=$baseUrl?>/public/css/main.css"/>
+    <link rel="stylesheet" type="text/css" href="<?=$baseUrl?>/public/css/user.css"/>
+    <link rel="stylesheet" type="text/css" href="<?=$baseUrl?>/public/css/theme.css"/>
 
     <?php
         // link custom css files
         echo RHtmlHelper::linkCssArray(Rays::app()->getClientManager()->css);
     ?>
 
-    <script type="text/javascript" src="<?php echo $baseUrl; ?>/public/js/jquery.min.js"></script>
-    <script type="text/javascript" src="<?php echo $baseUrl; ?>/public/bootstrap-3.0/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="<?php echo $baseUrl; ?>/public/js/main.js"></script>
+    <script type="text/javascript" src="<?=$baseUrl?>/public/js/jquery.min.js"></script>
+    <script type="text/javascript" src="<?=$baseUrl?>/public/bootstrap-3.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="<?=$baseUrl?>/public/js/main.js"></script>
 </head>
 
 <body class="user-home">

@@ -58,7 +58,7 @@
 
 
         <hr>
-        
+
         <!-- Latest posts -->
         <div class="row group-posts">
             <div class="col-sm-6">
