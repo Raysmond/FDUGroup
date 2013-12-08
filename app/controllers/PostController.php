@@ -80,7 +80,7 @@ class PostController extends BaseController
     public function actionNew($groupId = null)
     {
         $data = array("type" => "new", "groupId" => $groupId);
-        $data['groups'] = GroupUser::userGroups(0, 0, Rays::user()->id);
+        $data['groups'] = GroupUser::userGroups(Rays::user()->id);
 
         $data['groupId'] = null;
         if ($groupId != null) {
@@ -319,4 +319,18 @@ class PostController extends BaseController
         $this->render('admin', ['pager' => $pager->showPager(), 'topics' => $topics, 'count' => $count], false);
     }
 
+    /**
+     * Find posts
+     */
+    public function actionFind()
+    {
+        $categories = new Category();
+        $categories->pid = 0;
+        $categories = $categories->find();
+
+
+        $this->setHeaderTitle("Find posts");
+        $this->addCss("/public/css/post.css");
+        $this->render('find',[],false);
+    }
 }

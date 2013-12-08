@@ -100,7 +100,7 @@ Rays::css("/public/css/post.css");
                     }
                     echo '</ul>';
                     } else if ($part == 'joins') {          //Groups joined by a User
-                        if ($userGroup == null) {
+                        if (empty($userGroup)) {
                             echo "<p>This guy has not joined any groups!</p>";
                         } else {
                             echo '<div class="row">';
@@ -137,6 +137,9 @@ Rays::css("/public/css/post.css");
                                 $this->renderPartial("_common._posts_table",array('posts'=>$likeTopics,'showAuthor'=>true,'showGroup'=>true),false);
                             }
                     ?>
+                    <div>
+                        <?=isset($pager)?$pager:"" ?>
+                    </div>
             </div>
         <?php
         }
