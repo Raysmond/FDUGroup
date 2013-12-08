@@ -173,25 +173,23 @@ class User extends RModel
         }
     }
 
-    public function blockUser($userId=''){
-        $this->setStatus($userId,self::STATUS_BLOCKED);
-    }
-
-    public function activeUser($userId=''){
-        $this->setStatus($userId,self::STATUS_ACTIVE);
-    }
-
-    private function setStatus($userId='',$status){
-        if($userId!='') $this->id = $userId;
-        if(isset($this->id)){
-            $this->load();
-            $this->status = $status;
-            $this->update();
+    public static function blockUser($userId) {
+        $user = User::get($userId);
+        if ($user != null) {
+            $user->status = User::STATUS_BLOCKED;
+            $user->save();
         }
     }
 
-    public function sendWelcomeMessage(){
-        $message = new Message();
+    public function activateUser($userId) {
+        $user = User::get($userId);
+        if ($user != null) {
+            $user->status = User::STATUS_ACTIVE;
+            $user->save();
+        }
+    }
+
+    public function sendWelcomeMessage() {
         $title = "Welcome " . $this->name;
         $content = 'Dear '.$this->name." : <br/>"
             ."Welcome to join the FDUGroup big family!"
@@ -199,7 +197,7 @@ class User extends RModel
             ."--- <b>FDUGroup team</b>"
             .'<br/>'
             .date('Y-m-d H:i:s');
-        $message->sendMsg('system', 0, $this->id, $title, RHtmlHelper::encode($content), null, 1);
+        Message::sendMsg('system', 0, $this->id, $title, RHtmlHelper::encode($content), null, 1);
     }
 
     public static function getPicOptions(){

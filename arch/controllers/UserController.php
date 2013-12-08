@@ -59,8 +59,8 @@ class UserController extends BaseController
      */
     public function actionView($userId, $part = 'joins')
     {
-        $user = new User();
-        if ($user->load($userId)==null) {
+        $user = User::get($userId);
+        if ($user == null) {
             Rays::app()->page404();
             return;
         }
@@ -156,11 +156,9 @@ class UserController extends BaseController
             $this->flash("error", "You don't have the right to change the user information!");
             $this->redirectAction('user', 'view', $userId);
         }
-        $user = new User();
 
-        //$user->load(($userId==null)?Rays::app()->getLoginUser()->id:$userId);
         // for now , the user can only edit his own profile
-        $user->load(Rays::app()->getLoginUser()->id);
+        $user = User::get(Rays::app()->getLoginUser()->id);
         $data = array('user' => $user);
         if ($this->getHttpRequest()->isPostRequest()) {
             $config = array(
@@ -249,13 +247,12 @@ class UserController extends BaseController
                 if (is_array($selected)) {
                     $operation = $_POST['operation_type'];
                     foreach ($selected as $id) {
-                        $user = new User();
                         switch ($operation) {
                             case "block":
-                                $user->blockUser($id);
+                                User::blockUser($id);
                                 break;
                             case "active":
-                                $user->activeUser($id);
+                                User::activateUser($id);
                                 break;
                         }
                     }
