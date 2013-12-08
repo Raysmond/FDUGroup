@@ -565,3 +565,62 @@ span.spliter {
 .message-unread .panel-heading a.message-trash:hover {
     color:#ff6b6b;
 }
+
+#back-top {
+    position: fixed;
+    bottom: 20px;
+    right: 50px;
+    z-index: 1499;
+    _position: absolute;
+    _top: expression(documentElement.scrollTop+body.scrollTop);
+    _margin-top: 500px;
+}
+
+#back-top a, #back-top-prev a {
+    width: 50px;
+    display: block;
+    text-align: center;
+    font: 11px/100% Arial,Helvetica,sans-serif;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: #bbb;
+    -webkit-transition: 1s;
+    -moz-transition: 1s;
+    transition: 1s;
+}
+
+#back-top span#button, #back-top-prev span#button-prev {
+    width: 50px;
+    height: 50px;
+    display: block;
+    margin-bottom: 7px;
+    background-color: #ddd;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-image: url("../images/up-arrow.png");
+    opacity: 0.8;
+    filter: alpha(opacity = 80);
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    border-radius: 8px;
+    -webkit-transition: 1s;
+    -moz-transition: 1s;
+    transition: 1s;
+}
+#back-top span#button:hover{
+    opacity: 1;
+    filter: alpha(opacity = 1);
+    background-color: #777777;
+}
+#back-top span#link:hover {
+    opacity: 1;
+    filter: alpha(opacity = 1);
+    color: #777777;
+}
+
+#back-top a, #back-top-prev a {
+    text-align: center;
+    font: 11px/100% Arial,Helvetica,sans-serif;
+    text-transform: uppercase;
+    color: #bbb;
+}

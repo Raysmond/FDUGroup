@@ -96,6 +96,28 @@ $baseUrl = Rays::app()->getBaseUrl();
 
 </div><!--/.container-->
 
+<p id="back-top" style="display: block;">
+    <a href="javascript:void(0)"><span title='Back to top' id="button"></span></a>
+</p>
+
+<script>
+    $(document).ready(function(){
+        $("#back-top").hide();
+        $(window).scroll(function(){
+            if ($(window).scrollTop() > 200) {
+                $("#back-top").fadeIn(300);
+            }
+            if ($(window).scrollTop() < 200) {
+                $("#back-top").fadeOut(300);
+            }
+        });
+    });
+
+    $("#back-top").click(function() {
+        $('body,html').animate({scrollTop:0},$(window).scrollTop() / 2);
+    });
+</script>
+
 <!-- Placed at the end of the document so the pages load faster -->
 <?php
 // link custom script files
