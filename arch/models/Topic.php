@@ -146,38 +146,6 @@ class Topic extends RModel
         return Data::db_query($sql);
     }
 
-    public function adminFindAll($start,$pageSize,$order=array()){
-        $user = new User();
-        $group = new Group();
-        $sql = "SELECT "
-            ."topic.{$this->columns['id']} AS topic_id "
-            .",topic.{$this->columns['userId']} AS user_id "
-            .",topic.{$this->columns['groupId']} AS group_id "
-            .",topic.{$this->columns['title']} AS topic_title "
-            .",topic.{$this->columns['createdTime']} AS topic_created_time "
-            .",topic.{$this->columns['commentCount']} AS topic_comment_count "
-            .",user.{$user->columns['name']} AS user_name "
-            .",user.{$user->columns['picture']} AS user_picture "
-            .",groups.{$group->columns['name']} AS group_name "
-            ."FROM {$this->table} AS topic "
-            ."LEFT JOIN {$user->table} AS user ON user.{$user->columns['id']}=topic.{$this->columns['userId']} "
-            ."LEFT JOIN {$group->table} AS groups ON groups.{$group->columns['id']}=topic.{$this->columns['groupId']} ";
-
-        if(!empty($order)){
-            if(isset($order['key'])&&isset($this->columns[$order['key']])){
-                if(isset($order['order'])&&strcasecmp($order['order'],'desc')==0){
-                    $sql.=" ORDER BY {$this->columns[$order['key']]} DESC ";
-                }
-                else{
-                    $sql.=" ORDER BY {$this->columns[$order['key']]} ASC ";
-                }
-            }
-        }
-        $sql.="LIMIT {$start},{$pageSize}";
-        $result = self::db_query($sql);
-        return $result;
-    }
-
     public function delete($assignment = array()){
         $counter = new Counter();
         $counter = $counter->loadCounter($this->id,self::$entityType);
