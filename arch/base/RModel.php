@@ -157,7 +157,7 @@ class _RModelQueryer {
         $replace = array();
         foreach ($model::$mapping as $member => $db_member) {
             $search[] = "[$member]";
-            $replace[] = $db_member;
+            $replace[] = Rays::app()->getDBPrefix().$model::$table . ".$db_member";
         }
         return str_replace($search, $replace, $constraint);
     }
