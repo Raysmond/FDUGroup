@@ -15,20 +15,13 @@ class PostController extends BaseController
         $page = $this->getPage("page");
         $pageSize = $this->getPageSize("pagesize", 2);
 
-        $topic = new Topic();
-        $topic->groupId = $groupId;
-        $count = $topic->count();
-        $topics = $topic->find(($page - 1) * $pageSize, $pageSize);
-        foreach ($topics as $item) {
-            $item->user = new User();
-            $item->user->load($item->userId);
-        }
+        $query = Topic::find("groupId", $groupId)->join("user")->order_desc("lastCommentTime");
+        $count = $query->count();
+        $topics = $query->range(($page - 1) * $pageSize, $pageSize);
 
         $data = array("topics" => $topics, "group" => $group);
-        //if ($count > $pageSize) {
         $pager = new RPagerHelper("page", $count, $pageSize, RHtmlHelper::siteUrl("post/list/" . $groupId), $page);
         $data['pager'] = $pager->showPager();
-        //}
 
         $data['canPost'] = Rays::isLogin() && GroupUser::isUserInGroup(Rays::user()->id,$groupId);
 
@@ -58,8 +51,8 @@ class PostController extends BaseController
                 $topic->createdTime = date('Y-m-d H:i:s');
                 $topic->lastCommentTime = date('Y-m-d H:i:s');
                 $topic->commentCount = 0;
-                $tid = $topic->insert();
-                $this->redirectAction('post', 'view', $tid);
+                $topic->save();
+                $this->redirectAction('post', 'view', $topic->id);
             } else {
                 $data['newPostForm'] = $_POST;
                 $data['validation_errors'] = $validation->getErrors();
@@ -87,7 +80,7 @@ class PostController extends BaseController
             $topic->content = RHtmlHelper::encode($_POST['post-content']);
 
             if ($validation->run()) {
-                $topic->update();
+                $topic->save();
                 $this->flash("message", "Post " . $topic->title . " was updated successfully.");
                 $this->redirectAction('post', 'view', $topic->id);
             } else {
@@ -95,8 +88,7 @@ class PostController extends BaseController
             }
         }
 
-        $group = new Group();
-        $group->load($topic->groupId);
+        $group = Group::get($topic->groupId);
         $data = array("type" => "edit", "topic" => $topic, 'group' => $group,'groupId'=>$group->id);
         $data['groups'] = GroupUser::getGroups(GroupUser::find("userId", Rays::user()->id)->join("group")->order_desc("groupId")->all());
 
@@ -109,19 +101,15 @@ class PostController extends BaseController
     /* View topic */
     public function actionView($topicId = null)
     {
-        $topic = Topic::get($topicId);
+        $topic = Topic::find($topicId)->join("group")->join("user")->first();
 
         $counter = $topic->increaseCounter();
-        $topic->user->load();
-        $topic->group->load();
         $commentTree = $topic->getComments();
 
         foreach ($commentTree as $commentItem) {
-            $commentItem['root']->user = new User();
-            $commentItem['root']->user->load($commentItem['root']->userId);
+            $commentItem['root']->user = User::get($commentItem['root']->userId);
             foreach ($commentItem['reply'] as $reply) {
-                $reply->user = new User();
-                $reply->user->load($reply->userId);
+                $reply->user = User::get($reply->userId);
             }
         }
 
@@ -129,9 +117,7 @@ class PostController extends BaseController
 
         $replyTo = Rays::getParam('reply', null);
         if ($replyTo && is_numeric($replyTo)) {
-            $comment = new Comment();
-            $comment->load($replyTo);
-            $comment->user->load();
+            $comment = Comment::find($replyTo)->join("user")->first();
             $data['parent'] = $comment;
         }
 
@@ -159,7 +145,7 @@ class PostController extends BaseController
 
             $topic->commentCount++;
             $topic->lastCommentTime = date('Y-m-d H:i:s');
-            $topic->update();
+            $topic->save();
 
             $user = Rays::user();
 
@@ -171,15 +157,15 @@ class PostController extends BaseController
             if (isset($form['replyTo'])) {
                 $comment->pid = (int)$form['replyTo'];
             }
-            $cid = $comment->insert();
-            //if ($comment->pid !== 0)
-            //    $cid = $comment->pid;
+            else {
+                $comment->pid = 0;
+            }
+            $comment->save();
+            $cid = $comment->id;
 
             if (isset($form['replyTo'])) {
-                $exactComment = new Comment();
-                $exactComment->load($form['exactReplyTo']);
-                $msg = new Message();
-                $msg->sendMsg(
+                $exactComment = Comment::get($form['exactReplyTo']);
+                Message::sendMessage(
                     'user',
                     $user->id,
                     $exactComment->userId,
@@ -189,8 +175,7 @@ class PostController extends BaseController
                 );
             } //send message to topic author
             else if ($topic->userId !== $user->id) {
-                $msg = new Message();
-                $msg->sendMsg(
+                Message::sendMessage(
                     'user',
                     $user->id,
                     $topic->userId, 'New Comment',
@@ -206,7 +191,6 @@ class PostController extends BaseController
     {
         $this->layout = 'admin';
         $data = array();
-        $topic = new Topic();
         $beginTime = null;
         $date = date('Y-m-d');
         switch ($time) {
@@ -221,12 +205,14 @@ class PostController extends BaseController
                 $beginTime = date("Y-m-01 00:00:00", strtotime($date));
             default:
         }
-        $topics = $topic->getActiveTopics($beginTime, 10);
+        $query = Topic::find()->join("user")->join("group")->order_desc("commentCount");
+        if ($beginTime != null) {
+            $query = $query->where("[createdTime] > ?", $beginTime);
+        }
+        $topics = $query->range(0, 10);
         $data['topics'] = $topics;
-        $this->addCss('/public/css/post.css');
         $this->render('active', $data, false);
     }
-
 
     public function actionDelete($topicId)
     {
@@ -240,15 +226,17 @@ class PostController extends BaseController
     /**
      * Topics administration
      */
-    public function actionAdmin()
-    {
+    public function actionAdmin() {
+        $this->layout = 'admin';
+        $data = array();
+
         // delete request
-        if (Rays::isPost()) {
-            if (isset($_POST['checked_topics'])) {
+        if($this->getHttpRequest()->isPostRequest()){
+            if(isset($_POST['checked_topics'])){
                 $checkedTopics = $_POST['checked_topics'];
-                foreach ($checkedTopics as $item) {
-                    if (!is_numeric($item)) return;
-                    else {
+                foreach($checkedTopics as $item){
+                    if(!is_numeric($item)) return;
+                    else{
                         $topic = new Topic();
                         $topic->id = $item;
                         $topic->delete();
@@ -260,12 +248,15 @@ class PostController extends BaseController
         $curPage = $this->getPage("page");
         $pageSize = $this->getPageSize("pagesize");
 
-        $count = (new Topic())->count();
-        $topics = (new Topic())->adminFindAll(($curPage - 1) * $pageSize, $pageSize, array('key' => 'id', "order" => 'desc'));
-        $pager = new RPagerHelper('page', $count, $pageSize, RHtmlHelper::siteUrl('post/admin'), $curPage);
+        $count = Topic::find()->count();;
+        $data['count'] = $count;
+        $data['topics'] = Topic::find()->join("user")->join("group")->order_desc("id")->range(($curPage - 1) * $pageSize, $pageSize);
 
-        $this->layout = 'admin';
-        $this->render('admin', ['pager' => $pager->showPager(), 'topics' => $topics, 'count' => $count], false);
+        $pager = new RPagerHelper('page', $count, $pageSize, RHtmlHelper::siteUrl('post/admin'), $curPage);
+        $pager = $pager->showPager();
+        $data['pager'] = $pager;
+
+        $this->render('admin', $data, false);
     }
 
     /**

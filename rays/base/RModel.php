@@ -203,6 +203,7 @@ class _RModelQueryer {
 
     /**
      * Add a simple matching constraint
+     * find(id) : (primary_key) == id
      * find(member, value) : (member) == value
      * find(constraints) : constraints is an array of 2 * N values which consists of N constraints
      * @return This object
@@ -210,7 +211,13 @@ class _RModelQueryer {
     public function find($memberName, $memberValue = null)
     {
         if ($memberValue == null) {
-            return $this->_find($memberName);
+            if (is_array($memberName)) {
+                return $this->_find($memberName);
+            }
+            else {
+                $model = $this->model;
+                return $this->_find(array($model::$primary_key, $memberName));
+            }
         }
         else {
             return $this->_find(array($memberName, $memberValue));

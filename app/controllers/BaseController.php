@@ -85,7 +85,7 @@ class BaseController extends RController
 
     const DEFAULT_PAGE_SIZE = 10;
 
-    public function getPageSize($key, $default = DEFAULT_PAGE_SIZE)
+    public function getPageSize($key, $default = BaseController::DEFAULT_PAGE_SIZE)
     {
         $size = Rays::getParam($key, $default);
         if (!is_numeric($size) || $size < 1) {
