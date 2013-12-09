@@ -11,7 +11,7 @@ class AccessLog extends RModel
     public $id, $userId, $host, $title, $path, $uri, $timestamp = null;
 
     public static $primary_key = "id";
-    
+
     public static $table = "accesslog";
 
     public static $mapping = array(
