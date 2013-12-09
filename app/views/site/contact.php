@@ -50,10 +50,10 @@
 
         <div class="clearfix"></div>
         <br/>
-        <h4 id="follow">Contact</h4>
+        <h4 id="follow">Mail us</h4>
         <p>
-            School of Computer Science, Zhangjiang Campus of Fudan University<br/>
-            825 Zhangheng Road, Pudong District, Shanghai, China<br/>
+            School of Computer Science, Fudan University<br/>
+            825 Zhangheng Road, Pudong District, Shanghai, China (201203)<br/>
         </p><br/>
         <h4>Follow us on Github </h4>
         <p>

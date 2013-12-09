@@ -4,8 +4,8 @@
 
         <ul class="nav nav-pills nav-stacked">
             <li><a href="#developer">Developers</a></li>
-            <li><a href="#contact">Contact</a></li>
-            <li><a href="#follow">Follow us</a></li>
+            <li><a href="#contact">Mail us</a></li>
+            <li><a href="#follow">Follow us on Github</a></li>
         </ul>
 
     </div>
