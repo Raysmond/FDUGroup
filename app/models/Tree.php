@@ -17,17 +17,4 @@ class Tree extends RModel
         $model = get_called_class();
         return $model::find($model::$parent_key, $this->{$model::$primary_key});
     }
-
-    /*public function toRoot()
-    {
-        $result = array();
-        $o = clone $this;
-        do {
-            $result[] = $o;
-            $o = $o->parent();
-            /*$o->($o->key) = $this->($this->pkey);
-            $o->load();* /
-        } while ($o);
-        return array_reverse($result);
-    }*/
 }
