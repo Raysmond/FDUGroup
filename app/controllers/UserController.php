@@ -73,7 +73,7 @@ class UserController extends BaseController
                 $count = User::countGroups($userId);
                 break;
             case 'posts':
-                $data['postTopics'] = Topic::getUserTopics($userId, ($page-1) * $pageSize, $pageSize);
+                $data['postTopics'] = Topic::find("userId",$userId)->join("group")->order_desc("id")->range(($page-1) * $pageSize, $pageSize);
                 $count = User::countPosts($userId);
                 break;
             case 'likes':

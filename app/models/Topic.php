@@ -52,17 +52,6 @@ class Topic extends RModel
         return $result;
     }
 
-    public static function getUserTopics($uid, $start = 0, $limit = 0) {
-        $topics = Topic::find("userId", $uid);
-        $topics = ($start != 0 || $limit != 0) ? $topics->range($start, $limit) : $topics->all();
-
-        foreach ($topics as $item) {
-            $item->group = Group::get($item->groupId);
-        }
-
-        return $topics;
-    }
-
     // TODO: use Model functions instead of SQL
     public function getUserFriendsTopics($uid,$limit=0,$endTime=null){
         $friends = new Friend();

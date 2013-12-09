@@ -41,12 +41,13 @@ class RatingPlus
                 $rating->entityId = $this->entityId;
                 $rating->entityType = $this->entityType;
                 $rating->userId = $this->userId;
-                $ratingId = $rating->save();
-                if ($ratingId !== null && is_numeric($ratingId)) {
-                    $this->_ratingId = $ratingId;
+                $rating->timestamp = date('Y-m-d H:i:s');
+                $rating->save();
+                if(isset($rating->id)&&$rating->id){
                     $this->updatePlusCounter();
                     return true;
                 }
+
             }
         }
         return false;
@@ -63,25 +64,23 @@ class RatingPlus
     public static function getUserPlusTopics($userId,$start=0,$limit=0)
     {
         $ratings = Rating::find("entityType",Topic::ENTITY_TYPE)->find("userId",$userId)->find("valueType",self::VALUE_TYPE)->find("value",self::VALUE)->find("tag",self::TAG)->all();
-        $ids = array_map(function ($value) {
-            return $value->entityId;
-        }, $ratings);
+        if($ratings==null || empty($ratings))
+            return array();
 
-        $likeTopics = new Topic();
-        if (count($ids) > 0) {
-            // todo use join
-            $likeTopics = array();
-            foreach($ids as $id){
-                $topic = Topic::get($id);
-                $topic->user = User::get($topic->userId);
-                $topic->group = Group::get($topic->groupId);
-                $likeTopics[] = $topic;
+        $query = Topic::find()->join("user")->join("group")->order_desc("id");
+        if($ratings!=null&&!empty($ratings)){
+            $where = "[id] in (";
+            $args = array();
+            for($count = count($ratings),$i = 0;$i<$count;$i++){
+                $where.="?".(($i<$count-1)?",":"");
+                $args[] = $ratings[$i]->entityId;
             }
-        } else {
-            $likeTopics = array();
+            unset($ratings);
+            $where.=")";
+            $query = $query->where($where,$args);
         }
 
-        return $likeTopics;
+        return $query->all();
     }
 
     /**
@@ -99,6 +98,7 @@ class RatingPlus
             $result->value = 1;
             $result->valueType = self::VALUE_TYPE;
             $result->tag = self::TAG;
+            $result->timestamp = date('Y-m-d H:i:s');
             $result->save();
         }
         else{
