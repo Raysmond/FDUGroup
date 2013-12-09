@@ -68,6 +68,9 @@ class User extends RModel
         "gender" => "u_gender",
         "privacy" => "u_privacy",
     );
+    public static $relation = array(
+        "role" => array("roleId", "Role", "id")
+    );
 
     public static function getGenderName($genderId)
     {
