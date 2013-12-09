@@ -143,23 +143,17 @@ class User extends RModel
     }
 
     public static function countPosts($userId){
-        $post = new Topic();
-        $post->userId = $userId;
-        return $post->count();
+        return Topic::find("userId",$userId)->count();
     }
 
     public static function countFriends($userId)
     {
-        $friends = new Friend();
-        $friends->uid = $userId;
-        return $friends->count();
+        return Friend::find("uid",$userId)->count();
     }
 
     public static function countGroups($userId)
     {
-        $group = new Group();
-        $group->creator = $userId;
-        return $group->count();
+        return GroupUser::find("userId",$userId)->count();
     }
 
     /* TODO: Should not pass postForm here */
