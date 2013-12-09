@@ -28,8 +28,8 @@ class PostController extends BaseController
             case "view":
             case "comment":
             case "delete":
-                $topic = new Topic();
-                if (!$params || !isset($params[0]) || !is_numeric($params[0]) || $topic->load($params[0]) === null) {
+                $topic = null;
+                if (!$params || !isset($params[0]) || !is_numeric($params[0]) || ($topic = Topic::get($params[0])) === null) {
                     $result = false;
                 } else {
                     $this->post = $topic;
@@ -163,16 +163,16 @@ class PostController extends BaseController
         $topic = $this->post;
 
         $counter = $topic->increaseCounter();
-        $topic->user->load();
-        $topic->group->load();
+        $topic->user = User::get($topic->userId);
+        $topic->group = Group::get($topic->groupId);
         $commentTree = $topic->getComments();
 
+        // TODO use join
         foreach ($commentTree as $commentItem) {
-            $commentItem['root']->user = new User();
-            $commentItem['root']->user->load($commentItem['root']->userId);
+            $commentItem['root']->user =  User::get($commentItem['root']->userId);
             foreach ($commentItem['reply'] as $reply) {
                 $reply->user = new User();
-                $reply->user->load($reply->userId);
+                $reply->user = User::get($reply->userId);
             }
         }
 
@@ -180,9 +180,8 @@ class PostController extends BaseController
 
         $replyTo = Rays::getParam('reply', null);
         if ($replyTo && is_numeric($replyTo)) {
-            $comment = new Comment();
-            $comment->load($replyTo);
-            $comment->user->load();
+            $comment = Comment::get($replyTo);
+            $comment->user = User::get($comment->userId);
             $data['parent'] = $comment;
         }
 
@@ -211,7 +210,7 @@ class PostController extends BaseController
 
             $topic->commentCount++;
             $topic->lastCommentTime = date('Y-m-d H:i:s');
-            $topic->update();
+            $topic->save();
 
             $user = Rays::user();
 
@@ -223,7 +222,10 @@ class PostController extends BaseController
             if (isset($form['replyTo'])) {
                 $comment->pid = (int)$form['replyTo'];
             }
-            $cid = $comment->insert();
+            else{
+                $comment->pid = '0';
+            }
+            $cid = $comment->save();
             //if ($comment->pid !== 0)
             //    $cid = $comment->pid;
 
@@ -241,8 +243,7 @@ class PostController extends BaseController
                 );
             } //send message to topic author
             else if ($topic->userId !== $user->id) {
-                $msg = new Message();
-                $msg->sendMsg(
+                Message::sendMessage(
                     'user',
                     $user->id,
                     $topic->userId, 'New Comment',
