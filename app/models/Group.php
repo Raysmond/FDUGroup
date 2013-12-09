@@ -61,7 +61,6 @@ class Group extends RModel
     public function setDefaults(){
         if(!isset($this->memberCount))
             $this->memberCount = 1;
-        date_default_timezone_set(Rays::app()->getTimeZone());
         $this->createdTime = date('Y-m-d H:i:s');
     }
 
@@ -78,7 +77,6 @@ class Group extends RModel
         $groupUser = new GroupUser();
         $groupUser->groupId = $group->id;
         $groupUser->userId = $group->creator;
-        date_default_timezone_set(Rays::app()->getTimeZone());
         $groupUser->joinTime = date('Y-m-d H:i:s');
         $groupUser->status = 1;
         $groupUser->save();

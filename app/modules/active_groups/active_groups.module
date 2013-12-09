@@ -14,21 +14,22 @@ class active_groups_module extends RModule {
     public function module_content() {
         $cid = Rays::router()->getParams()[0];
         $p = [];
+        $ids = [];
         if (isset($cid) && $cid !== null) {
             $p = ['categoryId' => [$cid]];
-            foreach ((new Category())->load($cid)->children() as $sCat) {
+            $ids[] = $cid;
+            $subCats = Category::get($cid)->children();
+            foreach ($subCats as $sCat) {
+                $ids[] = [$sCat->id];
                 $p['categoryId'][] = $sCat->id;
             }
         }
-        $groups = new Group();
-        $groups = $groups->find(0, 5, ['key' => $groups->columns['memberCount'], 'order' => 'desc'], [], $p);
-        if (!count($groups)) {
-            $groups = new Group();
-            $groups = $groups->find(0, 5, ['key' => $groups->columns['memberCount'], 'order' => 'desc']);
-        }
-        return $this->render('active_groups',
-            array(
-                'groups'=>$groups,
-            ));
+        $groups = array();
+        if (empty($ids))
+            $groups = Group::find()->order_desc("memberCount")->range(0,5);
+        else
+            $groups = Group::find()->order_desc("memberCount")->where("categoryId",$ids)->range(0,5);
+
+        return $this->render('active_groups',['groups'=>$groups]);
     }
 }
