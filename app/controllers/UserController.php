@@ -56,7 +56,7 @@ class UserController extends BaseController
         }
         $data = array('user' => $user, 'part' => $part);
         if (Rays::isLogin()) {
-            $currentUserId = Rays::user();
+            $currentUser = Rays::user();
             $friend = new Friend();
             $friend->uid = Rays::user()->id;
             $friend->fid = $user->id;

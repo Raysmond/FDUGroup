@@ -49,13 +49,11 @@ class Topic extends RModel
     }
 
     public static function getUserTopics($uid, $start = 0, $limit = 0) {
-        $topics = new Topic();
-        $topics->userId = $uid;
-        $topics = $topics->find($start, $limit, ['key' => $topics::$mapping['id'], 'order' => 'desc']);
+        $topics = Topic::find("userId", $uid);
+        $topics = ($start != 0 || $limit != 0) ? $topics->range($start, $limit) : $topics->all();
 
-        foreach($topics as $item){
-            $item->group = new Group();
-            $item->group->load($item->groupId);
+        foreach ($topics as $item) {
+            $item->group = Group::get($item->groupId);
         }
 
         return $topics;

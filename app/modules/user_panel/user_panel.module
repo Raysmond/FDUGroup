@@ -8,10 +8,7 @@ class user_panel_module extends RModule
     public function __construct($params = array())
     {
         if (isset($params['userId'])) {
-            $user = new User();
-            if ($user->load($params['userId']) !== null) {
-                $this->user = $user;
-            }
+            $this->user = User::get($params['userId']);
         }
 
         $this->params = $params;

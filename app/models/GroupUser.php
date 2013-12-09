@@ -20,28 +20,18 @@ class GroupUser extends RModel
 
     public static function userGroups($userId, $start = 0, $limit = 0)
     {
-//        $groupUser = new GroupUser();
-//        $groupUser->userId = $userId;
-//        $userGroups = $groupUser->find($start, $limit, ['key' => $groupUser->columns['groupId'], 'order' => 'desc']);
-//        foreach($userGroups as $userGroup){
-//            $group = new Group();
-//            $group->id = $userGroup->groupId;
-//            $group->load();
-//            array_push($result,$group);
-//        }
+        $groupUsers = GroupUser::find("userId",$userId);
 
-        $groupUsers = GroupUser::find("userId",$userId)->all();
+        $groupUsers = ($start!=0||$limit!=0)?$groupUsers->range($start,$limit):$groupUsers->all();
+
         if($groupUsers==null||empty($groupUsers)){
             return array();
         }
 
         $groups = array();
-        $ids = [];
         foreach($groupUsers as $item){
-            $ids[] = $item->groupId;
             $groups[] = Group::get($item->groupId);
         }
-        //$groups = Group::find()->order_desc("id")->where("id",$ids)->range($start,$limit);
         return $groups;
     }
 

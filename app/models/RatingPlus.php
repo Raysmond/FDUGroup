@@ -60,34 +60,22 @@ class RatingPlus
         return $rating->count();
     }
 
-    // todo
     public static function getUserPlusTopics($userId,$start=0,$limit=0)
     {
-        $plus = new Rating();
-        $plus->entityType = Topic::$entityType;
-        $plus->userId = $userId;
-        $plus->valueType = self::VALUE_TYPE;
-        $plus->value = self::VALUE;
-        $plus->tag = self::TAG;
-
-        $topicList = $plus->find();
-        $topicIdList = array_map(function ($value) {
+        $ratings = Rating::find("entityType",Topic::$entityType)->find("userId",$userId)->find("valueType",self::VALUE_TYPE)->find("value",self::VALUE)->find("tag",self::TAG)->all();
+        $ids = array_map(function ($value) {
             return $value->entityId;
-        }, $topicList);
+        }, $ratings);
 
         $likeTopics = new Topic();
-        if (count($topicList) > 0) {
-            $likeTopics = $likeTopics->find($start, $limit,
-                ['key' => $likeTopics->columns['id'], 'order' => 'desc'],
-                null,
-                ['id' => $topicIdList]
-            );
-
-            foreach($likeTopics as $item){
-                $item->user = new User();
-                $item->user->load($item->userId);
-                $item->group = new Group();
-                $item->group->load($item->groupId);
+        if (count($ids) > 0) {
+            // todo use join
+            $likeTopics = array();
+            foreach($ids as $id){
+                $topic = Topic::get($id);
+                $topic->user = User::get($topic->userId);
+                $topic->group = Group::get($topic->groupId);
+                $likeTopics[] = $topic;
             }
         } else {
             $likeTopics = array();
