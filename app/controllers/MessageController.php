@@ -112,7 +112,7 @@ class MessageController extends BaseController
         if (Rays::app()->getLoginUser()->id != $message->receiverId) {
             $this->flash("error", "Sorry. You don't have the right to mark the message read.");
         }
-        $message->status = Message::$STATUS_READ;
+        $message->status = Message::STATUS_READ;
         $message->save();
         $this->redirect($this->getHttpRequest()->getUrlReferrer());
     }
@@ -172,7 +172,7 @@ class MessageController extends BaseController
         $message = Message::get($msgId);
         $user = Rays::user();
         if (($message->receiverId == $user->id) || $user->isAdmin()) {
-            $message->status = Message::$STATUS_TRASH;
+            $message->status = Message::STATUS_TRASH;
             $message->save();
         }
         $this->redirect(Rays::referrerUri());
