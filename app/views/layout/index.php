@@ -59,6 +59,8 @@ $this->module('main_nav',array('id'=>'main_nav','name'=>'Main navigation'));
 
             <?php
             $this->module("help_nav");
+            $this->module("contact_nav");
+
             $this->module("active_groups");
             $this->module("hot_posts");
             $this->module("friend_groups",array('id'=>'friend_groups','name'=>"Friend Groups"));
