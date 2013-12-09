@@ -8,7 +8,7 @@ class Group extends RModel
 {
     public $groupCreator;
     public $category;
-    public $id, $creator, $categoryId, $name, $memberCount, $createdTime, $intro,$picture;
+    public $id, $creator, $categoryId, $name, $memberCount, $createdTime, $intro, $picture;
 
     const ENTITY_TYPE = 2;
     const PICTURE_PATH = '/files/images/groups/';
@@ -21,10 +21,10 @@ class Group extends RModel
         "memberCount" => "Member count",
         "createdTime" => "Create time",
         "intro" => "Introduction",
-        "picture"=>'Picture'
+        "picture" => 'Picture'
     );
 
-    public static $defaults = array('picture'=>'public/images/default_pic.png');
+    public static $defaults = array('picture' => 'public/images/default_pic.png');
 
     public static $primary_key = "id";
     public static $table = "groups";
@@ -36,25 +36,26 @@ class Group extends RModel
         "memberCount" => "gro_member_count",
         "createdTime" => "gro_created_time",
         "intro" => "gro_intro",
-        "picture"=>'gro_picture'
+        "picture" => 'gro_picture'
     );
 
-    public static function countTopics($groupId){
-        $topic = new Topic();
-        $topic->groupId = $groupId;
-        return $topic->count();
+    public static function countTopics($groupId)
+    {
+        return Topic::find("groupId", $groupId)->count();
     }
 
-    public static function getMembers($groupId,$start = 0, $limit=0, $orderBy="", $order='DESC'){
-        $query = GroupUser::find("groupId",$groupId);
-        if($orderBy!=""){
-            $query = ($order=="ASC" || $order=="asc")?  $query->order_asc($orderBy): $query->order_desc($orderBy);
+    public static function getMembers($groupId, $start = 0, $limit = 0, $orderBy = "", $order = 'DESC')
+    {
+        $query = GroupUser::find("groupId", $groupId);
+        if ($orderBy != "") {
+            $query = ($order == "ASC" || $order == "asc") ? $query->order_asc($orderBy) : $query->order_desc($orderBy);
         }
-        $groupUsers = $query->range($start,$limit);
+
+        $groupUsers = ($start != 0 || $limit != 0) ? $query->range($start, $limit) : $query->all();
 
         // todo get all members at a time
         $users = [];
-        foreach($groupUsers as $item){
+        foreach ($groupUsers as $item) {
             $users[] = User::get($item->userId);
         }
         unset($groupUsers);
@@ -62,13 +63,15 @@ class Group extends RModel
         return $users;
     }
 
-    public function setDefaults(){
-        if(!isset($this->memberCount))
+    public function setDefaults()
+    {
+        if (!isset($this->memberCount))
             $this->memberCount = 1;
         $this->createdTime = date('Y-m-d H:i:s');
     }
 
-    public function buildGroup($groupName,$categoryId,$introduction,$creatorId,$picture=''){
+    public function buildGroup($groupName, $categoryId, $introduction, $creatorId, $picture = '')
+    {
         $group = new Group();
         $group->setDefaults();
         $group->name = $groupName;
@@ -101,15 +104,16 @@ class Group extends RModel
         } else {
             $this->picture = "files/images/groups/" . $upload->file_name;
             $this->save();
-            RImageHelper::updateStyle($this->picture,static::getPicOptions());
+            RImageHelper::updateStyle($this->picture, static::getPicOptions());
             return true;
         }
     }
 
-    public function increaseCounter(){
-        if(isset($this->id)){
+    public function increaseCounter()
+    {
+        if (isset($this->id)) {
             $counter = new Counter();
-            $counter->increaseCounter($this->id,self::ENTITY_TYPE);
+            $counter->increaseCounter($this->id, self::ENTITY_TYPE);
             return $counter;
         }
         return null;
@@ -117,7 +121,7 @@ class Group extends RModel
 
     public function deleteGroup()
     {
-        if(isset($this->id)&&$this->id!=''){
+        if (isset($this->id) && $this->id != '') {
             $groupUsers = new GroupUser();
             $groupUsers->groupId = $this->id;
 
@@ -125,7 +129,7 @@ class Group extends RModel
             $topics->groupId = $this->id;
             $_topics = $topics->find();
             $comment = new Comment();
-            foreach($_topics as $topic){
+            foreach ($_topics as $topic) {
                 $sql = "delete from {$comment->table} where {$comment->columns['topicId']} = {$topic->id}";
                 Data::executeSQL($sql);
             }
@@ -141,17 +145,17 @@ class Group extends RModel
             $this->delete();
 
             $counter = new Counter();
-            $counter = $counter->loadCounter($this->id,self::ENTITY_TYPE);
-            if($counter!=null)
+            $counter = $counter->loadCounter($this->id, self::ENTITY_TYPE);
+            if ($counter != null)
                 $counter->delete();
 
             return true;
-        }
-        else
+        } else
             return false;
     }
 
-    public static function inviteFriends($groupId,$user,$invitees=array(),$invitationMsg){
+    public static function inviteFriends($groupId, $user, $invitees = array(), $invitationMsg)
+    {
         $group = new Group();
         $group->load($groupId);
         foreach ($invitees as $friendId) {
@@ -172,22 +176,23 @@ class Group extends RModel
         }
     }
 
-    public function findAll($start,$pageSize,$order=array(),$assignment=array(),$like=array()){
+    public function findAll($start, $pageSize, $order = array(), $assignment = array(), $like = array())
+    {
         $creator = new User();
         $category = new Category();
-        $sql = "SELECT ".
-            "groups.{$this->columns['id']} AS group_id ".
-            ",groups.{$this->columns['name']} AS group_name ".
-            ",groups.{$this->columns['creator']} AS group_creator_id ".
-            ",groups.{$this->columns['memberCount']} AS group_member_count ".
-            ",groups.{$this->columns['picture']} AS group_picture ".
-            ",groups.{$this->columns['createdTime']} AS group_created_time ".
-            ",groups.{$this->columns['categoryId']} AS group_category_id ".
-            ",group_creator.{$creator->columns['name']} AS creator_name ".
-            ",group_category.{$category->columns['name']} AS category_name ".
+        $sql = "SELECT " .
+            "groups.{$this->columns['id']} AS group_id " .
+            ",groups.{$this->columns['name']} AS group_name " .
+            ",groups.{$this->columns['creator']} AS group_creator_id " .
+            ",groups.{$this->columns['memberCount']} AS group_member_count " .
+            ",groups.{$this->columns['picture']} AS group_picture " .
+            ",groups.{$this->columns['createdTime']} AS group_created_time " .
+            ",groups.{$this->columns['categoryId']} AS group_category_id " .
+            ",group_creator.{$creator->columns['name']} AS creator_name " .
+            ",group_category.{$category->columns['name']} AS category_name " .
             "FROM {$this->table} AS groups ";
-        $sql.="LEFT JOIN {$creator->table} AS group_creator ON group_creator.{$creator->columns['id']}=groups.{$this->columns['creator']} ";
-        $sql.="LEFT JOIN {$category->table} AS group_category ON group_category.{$category->columns['id']}=groups.{$this->columns['categoryId']} ";
+        $sql .= "LEFT JOIN {$creator->table} AS group_creator ON group_creator.{$creator->columns['id']}=groups.{$this->columns['creator']} ";
+        $sql .= "LEFT JOIN {$category->table} AS group_category ON group_category.{$category->columns['id']}=groups.{$this->columns['categoryId']} ";
 
         $where = " where 1 = 1 ";
         foreach ($this->columns as $objCol => $dbCol) {
@@ -196,54 +201,47 @@ class Group extends RModel
             }
         }
 
-        if(!empty($assignment))
-        {
+        if (!empty($assignment)) {
             foreach ($assignment as $objCol => $value) {
-                if(is_array($value)){
+                if (is_array($value)) {
                     $where .= " and " . $this->columns[$objCol] . " in (";
                     $count_value = count($value);
                     $count_cur = 0;
-                    foreach($value as $val){
+                    foreach ($value as $val) {
                         $where .= $val;
-                        if($count_cur++<$count_value-1){
+                        if ($count_cur++ < $count_value - 1) {
                             $where .= ',';
-                        }
-                        else $where .= ')';
+                        } else $where .= ')';
                     }
-                }
-                else $where .= " and " . $this->columns[$objCol] ." = $value";
+                } else $where .= " and " . $this->columns[$objCol] . " = $value";
             }
         }
 
-        if(!empty($like))
-        {
-            $where.=" and (";
+        if (!empty($like)) {
+            $where .= " and (";
             $first = true;
-            foreach($like as $val)
-            {
-                if(isset($val['key'])&&isset($val['value'])&&isset($this->columns[$val['key']]))
-                {
-                    if(!$first) $where.=" or ";
-                    $where.= "  ".$this->columns[$val['key']]." like '%".$val['value']."%' ";
+            foreach ($like as $val) {
+                if (isset($val['key']) && isset($val['value']) && isset($this->columns[$val['key']])) {
+                    if (!$first) $where .= " or ";
+                    $where .= "  " . $this->columns[$val['key']] . " like '%" . $val['value'] . "%' ";
                     $first = false;
                 }
             }
-            $where.=" ) ";
+            $where .= " ) ";
         }
 
-        $sql.=$where;
+        $sql .= $where;
 
-        if(!empty($order)){
-            if(isset($order['key'])&&isset($this->columns[$order['key']])){
-                if(isset($order['order'])&&strcasecmp($order['order'],'desc')==0){
-                    $sql.=" ORDER BY {$this->columns[$order['key']]} DESC ";
-                }
-                else{
-                    $sql.=" ORDER BY {$this->columns[$order['key']]} ASC ";
+        if (!empty($order)) {
+            if (isset($order['key']) && isset($this->columns[$order['key']])) {
+                if (isset($order['order']) && strcasecmp($order['order'], 'desc') == 0) {
+                    $sql .= " ORDER BY {$this->columns[$order['key']]} DESC ";
+                } else {
+                    $sql .= " ORDER BY {$this->columns[$order['key']]} ASC ";
                 }
             }
         }
-        $sql.="LIMIT {$start},{$pageSize}";
+        $sql .= "LIMIT {$start},{$pageSize}";
         $result = self::db_query($sql);
         return $result;
     }
@@ -253,7 +251,8 @@ class Group extends RModel
      * @param $groups
      * @param $users
      */
-    public static function recommendGroups($groups,$users,$words = ''){
+    public static function recommendGroups($groups, $users, $words = '')
+    {
         foreach ($users as $userId) {
             $html = '<div class="row recommend-groups">';
             foreach ($groups as $groupId) {
@@ -271,18 +270,19 @@ class Group extends RModel
                 }
             }
             $html .= '</div>';
-            $html .= '<div class="recommend-content">'.RHtmlHelper::encode($words).'</div>';
+            $html .= '<div class="recommend-content">' . RHtmlHelper::encode($words) . '</div>';
             $msg = new Message();
             $msg->sendMsg('system', 0, $userId, 'Groups recommendation', $html, date('Y-m-d H:i:s'));
         }
     }
 
-    public static function getPicOptions(){
+    public static function getPicOptions()
+    {
         return array(
             'path' => 'files/images/styles',
-            'name'=>'groups',
-            'width'=>200,
-            'height'=>200
+            'name' => 'groups',
+            'width' => 200,
+            'height' => 200
         );
     }
 }
