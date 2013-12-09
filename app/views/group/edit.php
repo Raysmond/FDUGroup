@@ -5,9 +5,6 @@
         if (isset($validation_errors)) {
             RHtmlHelper::showValidationErrors($validation_errors);
         }
-        $group = null;
-        if (isset($oldGroup))
-            $group = $oldGroup;
         $form = array();
         if (isset($editForm))
             $form = $editForm;
@@ -21,12 +18,12 @@
                 'name' => 'group-name',
                 'class' => 'form-control',
                 'placeholder' => 'Group name',
-            ), isset($oldGroup) ? $oldGroup->name : $form);
+            ), isset($group) ? $group->name : $form);
 
         echo "<br/>";
         echo RFormHelper::label("Category:", 'category') . "&nbsp;&nbsp;";
 
-        $catId = isset($oldGroup) ? $oldGroup->categoryId : $form['category'];
+        $catId = isset($group) ? $group->categoryId : $form['category'];
         $index = 0;
         $cats = array();
         $count = 0;
@@ -45,22 +42,22 @@
         echo '<br/>';
 
         //echo RFormHelper::textarea(array('class'=>'ckeditor','name'=>'intro','cols'=>'100','rows'=>'15'),
-        //    isset($oldGroup)?RHtmlHelper::decode($oldGroup->intro):RHtmlHelper::decode($form));
+        //    isset($group)?RHtmlHelper::decode($group->intro):RHtmlHelper::decode($form));
 
         $formIntro = isset($form['intro']) ? $form['intro'] : '';
         $this->module('ckeditor',
             array('editorId' => 'intro',
                 'name' => 'intro',
-                'data' => (isset($oldGroup) ? $oldGroup->intro : $formIntro)
+                'data' => (isset($group) ? $group->intro : $formIntro)
             ));
 
         echo '<br/>';
 
-        if (isset($oldGroup)) {
-            $picture = $oldGroup->picture ? $oldGroup->picture : Group::$defaults['picture'];
+        if (isset($group)) {
+            $picture = $group->picture ? $group->picture : Group::$defaults['picture'];
             echo RHtmlHelper::showImage(
                 RImageHelper::styleSrc($picture, Group::getPicOptions()),
-                $oldGroup->name,
+                $group->name,
                 array('class' => 'img-thumbnail', 'width' => '120px')
             );
         }

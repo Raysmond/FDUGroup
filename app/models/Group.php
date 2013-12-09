@@ -187,8 +187,8 @@ class Group extends RModel
 
     public static function inviteFriends($groupId, $user, $invitees = array(), $invitationMsg)
     {
-        $group = new Group();
-        $group->load($groupId);
+        $group = Group::get($groupId);
+
         foreach ($invitees as $friendId) {
             $censor = new Censor();
             $censor->joinGroupApplication($friendId, $group->id);
@@ -202,7 +202,7 @@ class Group extends RModel
                 . '</br>'
                 . $invitationMsg;
             $content = RHtmlHelper::encode($content);
-            $msg->sendMsg('group', $user->id, $friendId, 'new group invitation', $content);
+            Message::sendMessage('group', $user->id, $friendId, 'new group invitation', $content);
 
         }
     }
@@ -217,8 +217,7 @@ class Group extends RModel
         foreach ($users as $userId) {
             $html = '<div class="row recommend-groups">';
             foreach ($groups as $groupId) {
-                $group = new Group();
-                $group = $group->load($groupId);
+                $group = Group::get($groupId);
                 if (null != $group) {
                     $censor = new Censor();
                     $censor = $censor->joinGroupApplication($userId, $group->id);
@@ -232,8 +231,7 @@ class Group extends RModel
             }
             $html .= '</div>';
             $html .= '<div class="recommend-content">' . RHtmlHelper::encode($words) . '</div>';
-            $msg = new Message();
-            $msg->sendMsg('system', 0, $userId, 'Groups recommendation', $html, date('Y-m-d H:i:s'));
+            Message::sendMessage('system', 0, $userId, 'Groups recommendation', $html, date('Y-m-d H:i:s'));
         }
     }
 

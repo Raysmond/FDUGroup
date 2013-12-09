@@ -21,12 +21,12 @@
                     <?php
                     foreach($friends as $friend){
                         echo '<div class="col-lg-2 friend-item" style="height: 90px;">';
-                        if(!isset($friend['friend_picture'])||$friend['friend_picture']=='') $friend['friend_picture'] = User::$defaults['picture'];
-                        $picture = RImageHelper::styleSrc($friend['friend_picture'],User::getPicOptions());
-                        echo RHtmlHelper::showImage($picture,$friend['friend_name'],array('width'=>'64px'));
+                        if(!isset($friend->user->picture)||$friend->user->picture=='') $friend->user->picture = User::$defaults['picture'];
+                        $picture = RImageHelper::styleSrc($friend->user->picture,User::getPicOptions());
+                        echo RHtmlHelper::showImage($picture,$friend->user->name,array('width'=>'64px'));
                         echo '<br/>';
-                        echo RFormHelper::input(array('type'=>'checkbox','name'=>'select_friends[]','value'=>$friend['friend_id'],'class'=>'btn btn-default'));
-                        echo RHtmlHelper::linkAction('user',$friend['friend_name'],'view',$friend['friend_id']);
+                        echo RFormHelper::input(array('type'=>'checkbox','name'=>'select_friends[]','value'=>$friend->user->id,'class'=>'btn btn-default'));
+                        echo RHtmlHelper::linkAction('user',$friend->user->name,'view',$friend->user->id);
                         echo '</div>';
                     }
                     ?>

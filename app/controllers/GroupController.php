@@ -127,7 +127,7 @@ class GroupController extends BaseController
                 }
 
                 $this->flash("message", "Group was built successfully.");
-                $this->redirectAction('group', 'view', $user->id);
+                $this->redirectAction('group', 'detail', $group->id);
             } else {
                 // validation failed
                 $data['validation_errors'] = $validation->getErrors();
