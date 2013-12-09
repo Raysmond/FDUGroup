@@ -8,7 +8,7 @@
 
 class RatingPlus
 {
-    public $entityType = null, $entityId = null, $userId = 0,$host;
+    public $entityType = null, $entityId = null, $userId = 0, $host;
     private $_rating = null;
     private $_ratingId = null;
 
@@ -29,10 +29,10 @@ class RatingPlus
     public function rate()
     {
         if ($this->check()) {
-            $rating = Rating::find("tag",self::TAG)->find("valueType",self::VALUE_TYPE)->find("value",self::VALUE);
-            $rating = $rating->find("entityId",$this->entityId)->find("entityType",$this->entityType)->find("userId",$this->userId);
+            $rating = Rating::find("tag", self::TAG)->find("valueType", self::VALUE_TYPE)->find("value", self::VALUE);
+            $rating = $rating->find("entityId", $this->entityId)->find("entityType", $this->entityType)->find("userId", $this->userId);
             $rating = $rating->first();
-            if($rating==null){
+            if ($rating == null) {
                 $rating = new Rating();
                 $rating->tag = self::TAG;
                 $rating->valueType = self::VALUE_TYPE;
@@ -43,7 +43,7 @@ class RatingPlus
                 $rating->userId = $this->userId;
                 $rating->timestamp = date('Y-m-d H:i:s');
                 $rating->save();
-                if(isset($rating->id)&&$rating->id){
+                if (isset($rating->id) && $rating->id) {
                     $this->updatePlusCounter();
                     return true;
                 }
@@ -55,42 +55,38 @@ class RatingPlus
 
     public static function countUserPostsPlus($userId)
     {
-        $rating = Rating::find("tag",self::TAG)->find("valueType",self::VALUE_TYPE)->find("value",self::VALUE);
-        $rating = $rating->find("entityType",Topic::ENTITY_TYPE)->find("userId",$userId);
-
-        return $rating->count();
+        return Rating::find(["entityType", Topic::ENTITY_TYPE, "userId", $userId, "valueType", self::VALUE_TYPE, "value", self::VALUE, "tag", self::TAG])->count();
     }
 
-    public static function getUserPlusTopics($userId,$start=0,$limit=0)
+    public static function getUserPlusTopics($userId, $start = 0, $limit = 0)
     {
-        $ratings = Rating::find("entityType",Topic::ENTITY_TYPE)->find("userId",$userId)->find("valueType",self::VALUE_TYPE)->find("value",self::VALUE)->find("tag",self::TAG)->all();
-        if($ratings==null || empty($ratings))
+        $ratings = Rating::find(["entityType", Topic::ENTITY_TYPE, "userId", $userId, "valueType", self::VALUE_TYPE, "value", self::VALUE, "tag", self::TAG])->all();
+        if ($ratings == null || empty($ratings))
             return array();
 
         $query = Topic::find()->join("user")->join("group")->order_desc("id");
-        if($ratings!=null&&!empty($ratings)){
+        if ($ratings != null && !empty($ratings)) {
             $where = "[id] in (";
             $args = array();
-            for($count = count($ratings),$i = 0;$i<$count;$i++){
-                $where.="?".(($i<$count-1)?",":"");
+            for ($count = count($ratings), $i = 0; $i < $count; $i++) {
+                $where .= "?" . (($i < $count - 1) ? "," : "");
                 $args[] = $ratings[$i]->entityId;
             }
             unset($ratings);
-            $where.=")";
-            $query = $query->where($where,$args);
+            $where .= ")";
+            $query = $query->where($where, $args);
         }
-
-        return $query->all();
+        return ($start != 0 || $limit != 0) ? $query->range($start, $limit) : $query->all();
     }
 
     /**
      * Plus counter for every plus rating
      */
-    private function updatePlusCounter(){
-        $result = RatingStatistic::find("type","count")->find("valueType",self::VALUE_TYPE)->find("tag",self::TAG);
-        $result = $result->find("entityType",$this->entityType)->find("entityId",$this->entityId)->first();
+    private function updatePlusCounter()
+    {
+        $result = RatingStatistic::find(["type", "count", "valueType", self::VALUE_TYPE, "tag", self::TAG, "entityType", $this->entityType, "entityId", $this->entityId])->first();
 
-        if($result==null){
+        if ($result == null) {
             $result = new RatingStatistic();
             $result->entityType = $this->entityType;
             $result->entityId = $this->entityId;
@@ -100,8 +96,7 @@ class RatingPlus
             $result->tag = self::TAG;
             $result->timestamp = date('Y-m-d H:i:s');
             $result->save();
-        }
-        else{
+        } else {
             $result->value++;
             $result->timestamp = date('Y-m-d H:i:s');
             $result->save();
@@ -109,11 +104,11 @@ class RatingPlus
         $this->_counter = $result;
     }
 
-    public function getCounter(){
-        if($this->_counter===null){
-              $result = RatingStatistic::find("type","count")->find("valueType",self::VALUE_TYPE)->find("tag",self::TAG);
-              $result = $result->find("entityType",$this->entityType)->find("entityId",$this->entityId)->first();
-              $this->_counter = $result;
+    public function getCounter()
+    {
+        if ($this->_counter === null) {
+            $result = RatingStatistic::find(["type", "count", "valueType", self::VALUE_TYPE, "tag", self::TAG, "entityType", $this->entityType, "entityId", $this->entityId])->first();
+            $this->_counter = $result;
         }
         return $this->_counter;
     }

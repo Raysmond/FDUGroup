@@ -64,7 +64,7 @@ class UserController extends BaseController
             $data['canCancel'] = ($currentUser->id !== $user->id && !$data['canAdd']);
         }
         $page = $this->getPage("page");
-        $pageSize = $this->getPageSize("pageSize",20);
+        $pageSize = $this->getPageSize("pageSize",10);
         $count = 0;
         switch ($part) {
             case 'joins':
