@@ -63,7 +63,7 @@ class _RModelQueryer {
         $model = $this->model;
         $fields = $this->_select_fields();
         $join = $this->_join_clause();
-        $sql = "SELECT $fields FROM ".Rays::app()->getDBPrefix().$model::$table." $this->query_where $join $this->query_order $suffix";
+        $sql = "SELECT $fields FROM ".Rays::app()->getDBPrefix().$model::$table." $join $this->query_where $this->query_order $suffix";
 
         $stmt = RModel::getConnection()->prepare($sql);
         $stmt->execute($this->_args());
