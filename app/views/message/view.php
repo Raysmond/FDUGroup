@@ -49,12 +49,12 @@
                     echo RHtmlHelper::linkAction('message',$title,'detail',$msg->id);
 
                     echo '</div><div class="panel-body">';
-                    $msg->load();
                     echo '<div class="message-meta">';
                     if($msg->sender=='system'){
                         echo "From: 系统消息";
                     }
                     else{
+                        /* TODO
                         if ($msg->sender !== null)
                             $msg->sender->load();
                         if($msg->sender instanceof User){
@@ -62,7 +62,7 @@
                         }
                         else if($msg->sender instanceof Group){
                             echo "From: ".RHtmlHelper::linkAction('group',$msg->sender->name,'detail',$msg->sender->id);
-                        }
+                        }*/
                     }
                     echo '&nbsp;&nbsp;Delivery time: '.$msg->sendTime;
                     echo '&nbsp;&nbsp;Status: '.($msg->status==1?"unread":"read");

@@ -1,10 +1,10 @@
 <?php
 /**
- * Class Group
- * @author: Raysmond
+ * Group data model
+ * @author: Raysmond, Xiangyan Sun
  */
 
-class Group extends Data
+class Group extends RModel
 {
     public $groupCreator;
     public $category;
@@ -26,40 +26,18 @@ class Group extends Data
 
     public static $defaults = array('picture'=>'public/images/default_pic.png');
 
-    public function __construct()
-    {
-        $option = array(
-            "key" => "id",
-            "table" => "groups",
-            "columns" => array(
-                "id" => "gro_id",
-                "creator" => "gro_creator",
-                "categoryId" => "cat_id",
-                "name" => "gro_name",
-                "memberCount" => "gro_member_count",
-                "createdTime" => "gro_created_time",
-                "intro" => "gro_intro",
-                "picture"=>'gro_picture'
-            )
-        );
-        parent::init($option);
-    }
-
-    public function load($id = null)
-    {
-        $result = parent::load($id);
-        if ($result !== null) {
-            $this->groupCreator = new User();
-            $this->groupCreator->id = $this->creator;
-            $this->groupUsers = array();
-            $this->category = new Category();
-            $this->category->id = $this->categoryId;
-            return $this;
-        } else {
-            return null;
-        }
-
-    }
+    public static $primary_key = "id";
+    public static $table = "groups";
+    public static $mapping = array(
+        "id" => "gro_id",
+        "creator" => "gro_creator",
+        "categoryId" => "cat_id",
+        "name" => "gro_name",
+        "memberCount" => "gro_member_count",
+        "createdTime" => "gro_created_time",
+        "intro" => "gro_intro",
+        "picture"=>'gro_picture'
+    );
 
     public static function countTopics($groupId){
         $topic = new Topic();
@@ -88,17 +66,14 @@ class Group extends Data
     }
 
     public function buildGroup($groupName,$categoryId,$introduction,$creatorId,$picture=''){
-        $this->setDefaults();
-        $this->name = $groupName;
-        $this->categoryId = $categoryId;
-        $this->intro = $introduction;
-        $this->creator = $creatorId;
-        if($picture!='')
-            $this->picture = $picture;
-        $id = $this->insert();
         $group = new Group();
-        $group->id = $id;
-        $group->load();
+        $group->setDefaults();
+        $group->name = $groupName;
+        $group->categoryId = $categoryId;
+        $group->intro = $introduction;
+        $group->creator = $creatorId;
+        $group->picture = $picture;
+        $group->save();
 
         $groupUser = new GroupUser();
         $groupUser->groupId = $group->id;
@@ -106,7 +81,7 @@ class Group extends Data
         date_default_timezone_set(Rays::app()->getTimeZone());
         $groupUser->joinTime = date('Y-m-d H:i:s');
         $groupUser->status = 1;
-        $groupUser->insert();
+        $groupUser->save();
 
         return $group;
     }
@@ -123,7 +98,7 @@ class Group extends Data
             return $upload->error;
         } else {
             $this->picture = "files/images/groups/" . $upload->file_name;
-            $this->update();
+            $this->save();
             RImageHelper::updateStyle($this->picture,static::getPicOptions());
             return true;
         }

@@ -22,12 +22,12 @@
             <?php
             foreach ($topics as $topic) {
                 echo '<tr>';
-                echo '<td>' . RFormHelper::input(array('type' => 'checkbox', 'name' => 'checked_topics[]', 'value' => $topic['topic_id'])) . '</td>';
-                echo '<td>' . RHtmlHelper::linkAction('user', $topic['user_name'], 'view', $topic['user_id']) . '</td>';
-                echo '<td>' . RHtmlHelper::linkAction('post', $topic['topic_title'], 'view', $topic['topic_id']) . '</td>';
-                echo '<td>' . RHtmlHelper::linkAction('group', $topic['group_name'], 'detail', $topic['group_id']) . '</td>';
-                echo '<td>' . $topic['topic_created_time'] . '</td>';
-                echo '<td>' . $topic['topic_comment_count'] . '</td>';
+                echo '<td>' . RFormHelper::input(array('type' => 'checkbox', 'name' => 'checked_topics[]', 'value' => $topic->id)) . '</td>';
+                echo '<td>' . RHtmlHelper::linkAction('user', $topic->user->name, 'view', $topic->user->id) . '</td>';
+                echo '<td>' . RHtmlHelper::linkAction('post', $topic->title, 'view', $topic->id) . '</td>';
+                echo '<td>' . RHtmlHelper::linkAction('group', $topic->group->name, 'detail', $topic->group->id) . '</td>';
+                echo '<td>' . $topic->createdTime . '</td>';
+                echo '<td>' . $topic->commentCount . '</td>';
                 echo '</tr>';
             }
             ?>

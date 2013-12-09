@@ -1,11 +1,11 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: songrenchu
+ * Data model for advertisements
+ * @author songrenchu, Xiangyan Sun
  */
-class Ads extends Data{
+class Ads extends RModel {
     public $publisher;
-    public $id,$userId,$pubTime,$title,$content,$status,$paidPrice;
+    public $id, $userId, $pubTime, $title, $content, $status, $paidPrice;
 
     const APPLYING = 1;
     const BLOCKED = 2;
@@ -15,23 +15,17 @@ class Ads extends Data{
 
     const ENTITY_ID = 3;
 
-    public function __construct()
-    {
-        $options = array(
-            'key'=>'id',
-            'table'=>'ads',
-            'columns'=>array(
-                'id'=>'ads_id',
-                'userId'=>'ads_user_id',
-                'pubTime'=>'ads_pub_time',
-                'title'=>'ads_title',
-                'content'=>'ads_content',
-                'status'=>'ads_status',
-                'paidPrice'=>'ads_paid_price',
-            )
-        );
-        parent::init($options);
-    }
+    public static $primary_key = 'id';
+    public static $table = 'ads';
+    public static $mapping = array(
+        'id'=>'ads_id',
+        'userId'=>'ads_user_id',
+        'pubTime'=>'ads_pub_time',
+        'title'=>'ads_title',
+        'content'=>'ads_content',
+        'status'=>'ads_status',
+        'paidPrice'=>'ads_paid_price',
+    );
 
     public function load($id=null)
     {
@@ -93,10 +87,8 @@ class Ads extends Data{
         return $ads->find(0, 0, ['key' => 'ads_id', 'order' => 'desc']);
     }
 
-    public function getPublishedAds() {     //get published advertisements, order by paid price, but the effectiveness of price deminish along with the elapse of time
-        $ads = new Ads();
-        $ads->status = Ads::APPROVED;
-        return $ads->find(0,0,['key' => '(' . $this->columns['pubTime'] . ' / 10000 + ' . $this->columns['paidPrice'] . ')' , 'order' => 'desc']);
+    public static function getPublishedAds() {     //get published advertisements, order by paid price, but the effectiveness of price deminish along with the elapse of timer
+        return self::find()->order("desc", "[pubTime] / 10000 + [paidPrice]")->all();
     }
 
     public function delete() {

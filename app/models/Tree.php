@@ -1,32 +1,24 @@
 <?php
+/**
+ * Base model for tree-like structures
+ * @author Xiangyan Sun
+ */
 
-class Tree extends Data
+class Tree extends RModel
 {
-    public $pkey;
-
-    public function init($options)
-    {
-        parent::init($options);
-        $this->pkey = $options["pkey"];
-    }
-
     public function parent()
     {
-        $o = clone $this;
-        $o->reset();
-        $o->{$o->key} = $this->{$this->pkey};
-        return $o->load();
+        $model = get_called_class();
+        return $model::get($model::$parent_key);
     }
 
     public function children()
     {
-        $o = clone $this;
-        $o->reset();
-        $o->{$o->pkey} = $this->{$this->key};
-        return $o->find();
+        $model = get_called_class();
+        return $model::find($model::$parent_key, $this->{$model::$primary_key});
     }
 
-    public function toRoot()
+    /*public function toRoot()
     {
         $result = array();
         $o = clone $this;
@@ -34,8 +26,8 @@ class Tree extends Data
             $result[] = $o;
             $o = $o->parent();
             /*$o->($o->key) = $this->($this->pkey);
-            $o->load();*/
+            $o->load();* /
         } while ($o);
         return array_reverse($result);
-    }
+    }*/
 }

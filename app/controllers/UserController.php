@@ -23,9 +23,9 @@ class UserController extends BaseController
 
         if (Rays::isPost()) {
             $user = new User();
-            $login = $user->login($_POST);
-            if ($login === true) {
-                $this->getSession()->set("user", $user->id);
+            $login = User::login($_POST);
+            if ($login instanceof User) {
+                $this->getSession()->set("user", $login->id);
                 $this->redirect(isset($_POST['returnURL']) ? $_POST['returnURL'] : RHtmlHelper::siteUrl("user/home"));
             } else {
                 $data['loginForm'] = $_POST;
@@ -49,18 +49,19 @@ class UserController extends BaseController
 
     public function actionView($userId, $part = 'joins')
     {
-        $user = new User();
-        if (!is_numeric($userId) || $user->load($userId) === null || $user->status==User::STATUS_BLOCKED) {
+        $user = User::get($userId);
+        if ($user == null) {
             $this->page404();
             return;
         }
         $data = array('user' => $user, 'part' => $part);
         if (Rays::isLogin()) {
+            $currentUserId = Rays::user();
             $friend = new Friend();
             $friend->uid = Rays::user()->id;
             $friend->fid = $user->id;
-            $data['canAdd'] = ($friend->uid !== $friend->fid && count($friend->find()) == 0);
-            $data['canCancel'] = ($friend->uid !== $friend->fid && !$data['canAdd']);
+            $data['canAdd'] = ($currentUser->id !== $user->id && Friend::find(array("uid", $currentUser->id, "fid", $user->id))->first() == null);
+            $data['canCancel'] = ($currentUser->id !== $user->id && !$data['canAdd']);
         }
         $page = $this->getPage("page");
         $pageSize = $this->getPageSize("pageSize",20);
@@ -179,9 +180,14 @@ class UserController extends BaseController
             $this->flash("error", "You don't have the right to change the user information!");
             $this->redirectAction('user', 'view', $userId);
         }
-        $user = new User();
 
-        if($user->load(($userId==null)?Rays::user()->id:$userId)===null){
+        if ($userId == null) {
+            $user = Rays::user();
+        }
+        else {
+            $user = User::get($userId);
+        }
+        if ($user === null) {
             $this->flash("message","No such user");
             $this->page404();
             return;
@@ -251,10 +257,9 @@ class UserController extends BaseController
         $pageSize = $this->getPageSize("pagesize",10);
 
         $userId = Rays::user()->id;
-        $posts = new Topic();
-        $posts->userId = $userId;
-        $count = $posts->count();
-        $posts = $posts->find(($curPage - 1) * $pageSize, $pageSize, ['key' => $posts->columns['id'], 'order' => 'desc']);
+        $query = Topic::find("userId", $userId);
+        $count = $query->count();
+        $posts = $query->order_desc("id")->range(($curPage - 1) * $pageSize, $pageSize);
         $data['posts'] = $posts;
         $data['count'] = $count;
 
@@ -281,13 +286,12 @@ class UserController extends BaseController
                 if (is_array($selected)) {
                     $operation = $_POST['operation_type'];
                     foreach ($selected as $id) {
-                        $user = new User();
                         switch ($operation) {
                             case "block":
-                                $user->blockUser($id);
+                                User::blockUser($id);
                                 break;
                             case "active":
-                                $user->activeUser($id);
+                                User::activateUser($id);
                                 break;
                         }
                     }

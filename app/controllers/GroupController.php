@@ -2,7 +2,7 @@
 /**
  * GroupController class
  *
- * @author: Junshi Guo, Raysmond, Renchu Song
+ * @author: Junshi Guo, Raysmond, Renchu Song, Xiangyan Sun
  */
 
 class GroupController extends BaseController
@@ -32,7 +32,7 @@ class GroupController extends BaseController
             case "invite":
                 $group = new Group();
                 $result = false;
-                if(isset($params[0]) && is_numeric($params[0]) && $group->load($params[0]) !== null){
+                if(isset($params[0]) && is_numeric($params[0]) && Group::get($params[0]) !== null){
                     $this->_group = $group;
                     $result = true;
                 }
@@ -54,30 +54,40 @@ class GroupController extends BaseController
         $pageSize = $this->getPageSize("pagesize",5);
         $searchStr = Rays::getParam("searchstr",'');
 
-        $like = array();
-        if ($name = trim($searchStr)) {
-            $names = preg_split("/[\s]+/", $name);
-            foreach ($names as $val)
-                array_push($like, array('key' => 'name', 'value' => $val));
+        $query = Group::find();
+        $s = trim($searchStr);
+        if (isset($s) && $s != '') {
+            $s = explode(' ', $s);
+            foreach ($s as $key) {
+                $query = $query->like("name", $key);
+            }
         }
-
-        $group = new Group();
-        $groups = $group->find($pageSize * ($page - 1), $pageSize, ['key'=>$group->columns['id'],"order"=>"desc"], $like);
+        $groupCount = $query->count();
+        $groups = $query->order_desc("id")->range($pageSize * ($page - 1), $pageSize);
 
         if(Rays::isAjax()){
             echo empty($groups)? 'nomore': $this->renderPartial("_groups_list", ["groups"=>$groups], true);
             exit;
         }
 
+//        $url = RHtmlHelper::siteUrl('group/find'.($searchStr!=''?('?search='.urlencode($searchStr)):""));
+//        $pager = new RPagerHelper('page',$groupCount,$pageSize, $url,$page);
+
+        $data = array(
+            'groups' => $groups,
+            'searchstr'=>($searchStr != ''?$searchStr : null),
+//            'pager'=>$pager->showPager()
+        );
+
         $this->setHeaderTitle("Find Group");
 
         $this->addJs("/public/js/masonry.pkgd.min.js");
         $this->addCss("/public/css/group.css");
-        $this->render("find", ['groups'=>$groups, 'searchstr'=>$searchStr], false);
+        $this->render("find", $data, false);
     }
 
-    /*
-     * View my groups
+    /**
+     * View groups of the login user
      */
     public function actionMyGroups()
     {
@@ -105,27 +115,23 @@ class GroupController extends BaseController
     {
         // group loaded in beforeAction() method
         $group = $this->filteredGroup();
-        $group->category->load();
-        $group->groupCreator->load();
+        $group->groupCreator = User::get($group->creator);
+        $group->category = Category::get($group->categoryId);
 
         $counter = $group->increaseCounter();
 
-        $posts = new Topic();
-        $posts->groupId = $groupId;
         // get latest 20 posts in the group
-        $posts = $posts->find(0,20,array('key'=>'top_created_time','value'=>'desc'));
-
-        // not good enough
-        foreach($posts as $post){
-            $post->user = new User();
-            $post->user->load($post->userId);
+        $posts = Topic::find("groupId", $groupId)->order_desc("createdTime")->range(0, 20);
+        // TODO: User join
+        foreach ($posts as $post) {
+            $post->user = User::get($post->userId);
         }
 
         $data = ['group'=>$group, 'counter'=>$counter->totalCount, 'latestPosts'=>$posts];
 
-        $isLogin = Rays::isLogin();
-        $data['hasJoined'] = $isLogin && GroupUser::isUserInGroup(Rays::user()->id,$group->id);
-        $data['isManager'] = $isLogin && $group->creator==Rays::user()->id;
+        $login = Rays::isLogin();
+        $data['hasJoined'] = $login && GroupUser::isUserInGroup(Rays::user()->id,$group->id);
+        $data['isManager'] = $login && $group->creator == Rays::user()->id;
 
         $this->setHeaderTitle($group->name);
         $this->addCss("/public/css/post.css");
@@ -137,11 +143,6 @@ class GroupController extends BaseController
      */
     public function actionBuild()
     {
-        $this->layout = 'user';
-        $this->setHeaderTitle("Build my group");
-
-        $data = array('categories' => (new Category())->find());
-
         if (Rays::isPost()) {
             $form = $_POST;
             $rules = array(
@@ -152,8 +153,7 @@ class GroupController extends BaseController
             $user = Rays::user();
             $validation = new RFormValidationHelper($rules);
             if ($validation->run()) {
-                $group = new Group();
-                $group = $group->buildGroup($_POST['group-name'], $_POST['category'], RHtmlHelper::encode($_POST['intro']), $user->id);
+                $group = Group::buildGroup($_POST['group-name'], $_POST['category'], RHtmlHelper::encode($_POST['intro']), $user->id);
 
                 // upload group picture
                 $file = $_FILES['group_picture'];
@@ -170,10 +170,11 @@ class GroupController extends BaseController
                 $data['validation_errors'] = $validation->getErrors();
                 $data['buildForm'] = $form;
             }
-        } else {
-            //
         }
-        $this->render('build', $data, false);
+
+        $this->layout = 'user';
+        $this->setHeaderTitle("Build my group");
+        $this->render('build', ['categories'=>Category::find()->all()], false);
     }
 
     /**
@@ -183,12 +184,7 @@ class GroupController extends BaseController
     public function actionEdit($groupId)
     {
         // group loaded in beforeAction() method
-        $oldGroup = $this->filteredGroup();
-
-        $category = new Category();
-        $categories = $category->find();
-
-        $data = array('categories' => $categories, 'groupId' => $groupId);
+        $group = $this->filteredGroup();
 
         if (Rays::isPost()) {
             $rules = array(
@@ -199,14 +195,11 @@ class GroupController extends BaseController
 
             $validation = new RFormValidationHelper($rules);
             if ($validation->run()) {
-                // success
-                $group = new Group();
-                $group->id = $groupId;
-                $group->load();
+                // succeed
                 $group->name = $_POST['group-name'];
                 $group->categoryId = $_POST['category'];
                 $group->intro = RHtmlHelper::encode($_POST['intro']);
-                $group->update();
+                $group->save();
 
                 // upload group picture
                 $file = $_FILES['group_picture'];
@@ -224,10 +217,10 @@ class GroupController extends BaseController
                 $data['editForm'] = $_POST;
                 $data['validation_errors'] = $validation->getErrors();
             }
-        } else {
-            $data['oldGroup'] = $oldGroup;
         }
+
         $this->setHeaderTitle("Edit my group");
+        $data = array('categories' => Category::find()->all(), 'groupId' => $groupId,'group'=>$group);
         $this->render('edit', $data, false);
     }
 
@@ -246,10 +239,11 @@ class GroupController extends BaseController
         $userId = Rays::user()->id;
         $userName = Rays::user()->name;
 
+        $group = Group::get($groupId);
+
         $joinRequest = false;
         $text = '';
-        $group = new Group();
-        if (is_numeric($groupId) && $group->load($groupId) !== null) {
+        if ($group !== null) {
             //join group sensor item
             $censor = new Censor();
             $censor = $censor->joinGroupApplication($userId, $group->id);
@@ -261,8 +255,7 @@ class GroupController extends BaseController
                 ."&nbsp;&nbsp;"
                 .RHtmlHelper::linkAction('group','Decline','decline', $censor->id,array('class'=>'btn btn-xs btn-danger'));
 
-            $message = new Message();
-            $message->sendMsg("group", $groupId, $group->creator, "Join group request", $content, '');
+            Message::sendMsg("group", $groupId, $group->creator, "Join group request", $content, '');
 
             $joinRequest = true;
             $text = 'Your join-group request has been send to the group manager!';
@@ -292,12 +285,12 @@ class GroupController extends BaseController
                 $groupUser->joinTime = date('Y-m-d H:i:s');
                 $groupUser->status = 1;
 
-                if(!GroupUser::isUserInGroup($groupUser->userId,$groupUser->groupId)){
-                    $groupUser->insert();
-                    $group = new Group();
-                    $group->load($groupUser->groupId);
+                if(!GroupUser::isUserInGroup($groupUser->userId, $groupUser->groupId)) {
+                    $groupUser->save();
+                    $group = Group::get($groupUser->groupId);
+
                     $group->memberCount++;
-                    $group->update();
+                    $group->save();
                     $this->flash("message", "Join group successfully.");
                 }else{
                     $this->flash("warning","You're already a member of this group.");
@@ -319,12 +312,11 @@ class GroupController extends BaseController
             $groupUser->joinTime = date('Y-m-d H:i:s');
             $groupUser->status = 1;
 
-            if(!GroupUser::isUserInGroup($groupUser->userId,$groupUser->groupId)){
-                $groupUser->insert();
-                $group = new Group();
-                $group->load($groupUser->groupId);
+            if (!GroupUser::isUserInGroup($groupUser->userId,$groupUser->groupId)) {
+                $groupUser->save();
+                $group = Group::get($groupUser->groupId);
                 $group->memberCount++;
-                $group->update();
+                $group->save();
 
                 $this->flash("message", "The request is processed.");
 
@@ -353,12 +345,11 @@ class GroupController extends BaseController
             $groupUser->joinTime = date('Y-m-d H:i:s');
             $groupUser->status = 1;
 
-            if(!GroupUser::isUserInGroup($groupUser->userId,$groupUser->groupId)){
+            if(!GroupUser::isUserInGroup($groupUser->userId, $groupUser->groupId)) {
                 $this->flash("message", "The request is processed.");
-                $group = new Group();
-                $group->load($groupUser->groupId);
+                $group = Group::get($groupUser->groupId);
 
-                $title = "Join group request accepted";
+                $title = "Join group request declined";
                 $content = 'Group creator have declined your request of joining in group ' . RHtmlHelper::linkAction('group', $group->name, 'detail', $group->id);
                 $content = RHtmlHelper::encode($content);
                 $message = new Message();
@@ -374,21 +365,21 @@ class GroupController extends BaseController
 
     public function actionExit($groupId = null)
     {
-
-        $groupUser = new GroupUser();
-        $groupUser->groupId = $groupId;
-        $groupUser->userId = Rays::user()->id;
-
         // group loaded in beforeAction() method
-        $group = $this->filteredGroup();
+        // $group = $this->filteredGroup();
 
-        // group creator cannot exit the group
-        if($group->creator==$groupUser->userId){
+        $groupUser = GroupUser::find(array("groupId", $groupId, "userId", Rays::user()->id))->first();
+        $group = Group::get($groupId);
+
+        if($group==null){
+            $this->flash("error","You are not the member of the group!");
+        }
+        else if ($group->creator == $groupUser->userId){ // group creator cannot exit the group
             $this->flash("error", "You cannot exit group ".RHtmlHelper::linkAction('group',$group->name,'detail',$group->id)." , because you're the group creator!");
         }
         else{
             $group->memberCount--;
-            $group->update();
+            $group->save();
             $groupUser->delete();
             $this->flash("message", "You have exited the group successfully.");
         }

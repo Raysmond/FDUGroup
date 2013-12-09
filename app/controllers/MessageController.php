@@ -40,6 +40,9 @@ class MessageController extends BaseController
             $this->page404();
             return false;
         }
+<<<<<<< HEAD:arch/controllers/MessageController.php
+        $message = Message::get($msgId);
+=======
         return true;
     }
 
@@ -48,6 +51,7 @@ class MessageController extends BaseController
     {
         // message filtered in beforeAction() method
         $message = $this->filteredMessage();
+>>>>>>> master:app/controllers/MessageController.php
 
         $loginId = Rays::user()->id;
         if ($message->receiverId != $loginId && $message->senderId != $loginId) {
@@ -56,8 +60,13 @@ class MessageController extends BaseController
             return;
         }
 
+<<<<<<< HEAD:arch/controllers/MessageController.php
+        /* TODO: Auto join */
+        $message->type = MessageType::get($message->typeId);
+=======
         $message->markRead($msgId);
         $message->type->load();
+>>>>>>> master:app/controllers/MessageController.php
 
         $this->render('detail', array('message' => $message), false);
     }
@@ -97,14 +106,10 @@ class MessageController extends BaseController
             $validation = new RFormValidationHelper($config);
 
             if ($validation->run()) {
-                $receiver = new User();
-                $receiver->name = $_POST['receiver'];
-                $receiver = $receiver->find();
-                if (empty($receiver)) {
+                $receiver = User::find("name", $_POST['receiver'])->first();
+                if ($receiver == null) {
                     $this->flash("error", "No such user.");
                 } else {
-                    $receiver = $receiver[0];
-                    $message = new Message();
                     $senderId = 0;
                     if (isset($_POST['sender'])) { //mainly for group and system message
                         $senderId = $_POST['sender'];
@@ -114,7 +119,7 @@ class MessageController extends BaseController
 
                     $title = isset($_POST['title']) ? trim($_POST['title']) : "";
                     $msgContent = RHtmlHelper::encode($_POST['msg-content']);
-                    $message->sendMsg($_POST['type'], $senderId, $receiver->id, $title, $msgContent, null, 1);
+                    $message = Message::sendMsg($_POST['type'], $senderId, $receiver->id, $title, $msgContent, null, 1);
 
                     if (isset($message->id) && $message->id != '') {
                         $this->flash("message", "Send message successfully.");
@@ -140,15 +145,21 @@ class MessageController extends BaseController
 
     public function actionRead($msgId)
     {
+<<<<<<< HEAD:arch/controllers/MessageController.php
+        $message = Message::get($msgId);
+        if (Rays::app()->getLoginUser()->id != $message->receiverId) {
+=======
         // message filtered in beforeAction() method
         $message = $this->filteredMessage();
 
         $referrer = Rays::referrerUri();
         if (Rays::user()->id != $message->receiverId) {
+>>>>>>> master:app/controllers/MessageController.php
             $this->flash("error", "Sorry. You don't have the right to mark the message read.");
         }
-        $message->markRead($msgId);
-        $this->redirect($referrer);
+        $message->status = Message::$STATUS_READ;
+        $message->save();
+        $this->redirect($this->getHttpRequest()->getUrlReferrer());
     }
 
 
@@ -160,12 +171,29 @@ class MessageController extends BaseController
     public function actionView($msgType = 'all')
     {
         $this->setHeaderTitle("My Messages");
+<<<<<<< HEAD:arch/controllers/MessageController.php
+        $userId = Rays::app()->getLoginUser()->id;
+=======
         $messages = new Message();
         $userId = Rays::user()->id;
+>>>>>>> master:app/controllers/MessageController.php
 
         $curPage = $this->getPage('page');
         $pageSize = $this->getPageSize("pagesize", 5);
 
+<<<<<<< HEAD:arch/controllers/MessageController.php
+        /* TODO: Maybe move these model-related things into Message model directly */
+        $query = Message::find("receiverId", $userId);
+        switch($msgType) {
+            case "all":
+                $query = $query->where(Message::$mapping['status']." != ? ", array(Message::$STATUS_TRASH));
+                break;
+            case "read":
+                $query = $query->find("status", Message::$STATUS_READ);
+                break;
+            case "unread":
+                $query = $query->find("status", Message::$STATUS_UNREAD);
+=======
         $count = new Message();
         $count->receiverId = $userId;
         switch ($msgType) {
@@ -185,21 +213,25 @@ class MessageController extends BaseController
                 $count->status = Message::$STATUS_UNREAD;
                 $count = $count->count();
                 $messages = $messages->getUnReadMsgs($userId, ($curPage - 1) * $pageSize, $pageSize);
+>>>>>>> master:app/controllers/MessageController.php
                 break;
-            //case "send":
-            //    $messages = $messages->getUserSentMsgs($userId);
-            //    break;
             case "trash":
-                $count->status = Message::$STATUS_TRASH;
-                $count = $count->count();
-                $messages = $messages->getTrashMsgs($userId);
+                $query = $query->find("status", Message::$STATUS_TRASH);
                 break;
             default:
                 $this->page404();
                 return;
         }
+<<<<<<< HEAD:arch/controllers/MessageController.php
+        $count = $query->count();
+        $messages = $query->order_desc("id")->range(($curPage - 1) * $pageSize, $pageSize);
+        $url = RHtmlHelper::siteUrl('message/view/'.$msgType);
+        $pager = new RPagerHelper('page',$count,$pageSize,$url,$curPage);
+        $data =  array(
+=======
         if ($messages == null) $messages = array();
         $data = array(
+>>>>>>> master:app/controllers/MessageController.php
             'msgs' => $messages,
             'type' => $msgType,
             'count' => $count,
@@ -216,10 +248,17 @@ class MessageController extends BaseController
 
     public function actionTrash($msgId)
     {
+<<<<<<< HEAD:arch/controllers/MessageController.php
+        if (isset($msgId) && is_numeric($msgId)) {
+            $message = Message::find(array("id", $msgId, "receiverId", Rays::app()->getLoginUser()->id))->first();
+            $message->status = Message::$STATUS_TRASH;
+            $message->save();
+=======
         // message filtered in beforeAction() method
         $message = $this->filteredMessage();
         if ($message->receiverId == Rays::user()->id) {
             $message->markTrash($msgId);
+>>>>>>> master:app/controllers/MessageController.php
         }
 
         $this->redirect(Rays::referrerUri());
@@ -227,12 +266,23 @@ class MessageController extends BaseController
 
     public function actionDelete($msgId)
     {
+<<<<<<< HEAD:arch/controllers/MessageController.php
+        if (isset($msgId) && is_numeric($msgId)) {
+            $user = Rays::app()->getLoginUser();
+            if ($user->isAdmin()) {
+                Message::find("id", $msgId)->delete();
+            }
+            else {
+                Message::find(array("id", $msgId, "receiverId", $user->id))->delete();
+            }
+=======
         // message filtered in beforeAction() method
         $message = $this->filteredMessage();
 
         $user = Rays::user();
         if (($message->receiverId == $user->id || $user->isAdmin())) {
             $message->delete();
+>>>>>>> master:app/controllers/MessageController.php
         }
         $this->redirect(Rays::referrerUri());
     }

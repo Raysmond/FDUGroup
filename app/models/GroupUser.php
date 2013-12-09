@@ -1,39 +1,22 @@
 <?php
 /**
- * Class GroupUser
+ * Data model for user-group relation
  * @author: Raysmond
  */
 
-class GroupUser extends Data
+class GroupUser extends RModel
 {
-    public $users;
     public $groupId, $userId, $joinTime, $status, $comment;
 
-    public function __construct()
-    {
-        $option = array(
-            "key" => "groupId",
-            "table" => "group_has_users",
-            "columns" => array(
-                "groupId" => "gro_id",
-                "userId" => "u_id",
-                "joinTime" => "join_time",
-                "status" => "status",
-                "comment" => "join_comment"
-            )
-        );
-        parent::init($option);
-    }
-
-
-    public function groupUsers($groupId = null)
-    {
-        if ($groupId != null) {
-            $this->groupId = $groupId;
-        }
-        else return null;
-        return $this->find();
-    }
+    public static $primary_key = "groupId";
+    public static $table = "group_has_users";
+    public static $mapping = array(
+        "groupId" => "gro_id",
+        "userId" => "u_id",
+        "joinTime" => "join_time",
+        "status" => "status",
+        "comment" => "join_comment"
+    );
 
     public static function userGroups($userId, $start = 0, $limit = 0)
     {
@@ -58,12 +41,10 @@ class GroupUser extends Data
     }
 
     public static function isUserInGroup($userId, $groupId){
-        $groupUser = new GroupUser();
-        $allUsers = $groupUser->groupUsers($groupId);
-        foreach($allUsers as $user){
-            if($user->userId == $userId) return true;
-        }
-        return false;
+        if (GroupUser::find(array("groupId", $groupId, "userId", $userId))->first() != null)
+            return true;
+        else
+            return false;
     }
 
     public function delete($assignment = []) {

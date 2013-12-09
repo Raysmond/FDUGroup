@@ -36,14 +36,10 @@ class CommentController extends BaseController
         $curPage = $this->getPage("page");
         $pageSize = $this->getPageSize('pagesize',5);
 
-        $rows = new Comment();
-        $count = $rows->count();
+        $count = Comment::find()->count();
         $data['count'] = $count;
 
-        $comment = new Comment();
-        $comment = $comment->findAll(($curPage - 1) * $pageSize, $pageSize,
-            array('key' => 'id', "order" => 'desc'));
-        $data['comments'] = $comment;
+        $data['comments'] = Comment::find()->join("user")->join("topic")->order_desc("id")->range(($curPage - 1) * $pageSize, $pageSize);
 
         $pager = new RPagerHelper('page', $count, $pageSize, RHtmlHelper::siteUrl('comment/admin'), $curPage);
         $data['pager'] = $pager->showPager();

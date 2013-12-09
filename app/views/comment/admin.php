@@ -22,15 +22,15 @@
         <?php
         foreach ($comments as $comment) {
             echo '<tr>';
-            echo '<td>' . RFormHelper::input(array('name' => 'checked_comments[]', 'type' => 'checkbox', 'value' => $comment['comment_id'])) . '</td>';
-            echo '<td>' . RHtmlHelper::linkAction('user', $comment['user_name'], 'view', $comment['comment_user_id']) . '</td>';
-            echo '<td>' . $comment['comment_created_time'] . '</td>';
-            if (mb_strlen($comment['comment_content']) > 140) {
-                $comment['comment_content'] = mb_substr($comment['comment_content'], 0, 140, 'UTF-8') . '...';
+            echo '<td>' . RFormHelper::input(array('name' => 'checked_comments[]', 'type' => 'checkbox', 'value' => $comment->id)) . '</td>';
+            echo '<td>' . RHtmlHelper::linkAction('user', $comment->user->name, 'view', $comment->user->id) . '</td>';
+            echo '<td>' . $comment->createdTime . '</td>';
+            if (mb_strlen($comment->content) > 140) {
+                $comment->content = mb_substr($comment->content, 0, 140, 'UTF-8') . '...';
             }
-            echo '<td>' . RHtmlHelper::linkAction('post', $comment['topic_title'], 'view', $comment['comment_topic_id']) . '</td>';
-            echo '<td>'. $comment['comment_content'] . '</td>';
-            echo '<td>'. RHtmlHelper::linkAction('post','View','view',$comment['comment_topic_id'].'#comment-item-'.$comment['comment_id']). '</td>';
+            echo '<td>' . RHtmlHelper::linkAction('post', $comment->topic->title, 'view', $comment->topic->id) . '</td>';
+            echo '<td>'. $comment->content . '</td>';
+            echo '<td>'. RHtmlHelper::linkAction('post','View','view',$comment->topic->id.'#comment-item-'.$comment->id). '</td>';
             echo '</tr>';
         }
         ?>
