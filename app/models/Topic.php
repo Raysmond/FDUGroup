@@ -51,7 +51,7 @@ class Topic extends RModel
     public static function getUserTopics($uid, $start = 0, $limit = 0) {
         $topics = new Topic();
         $topics->userId = $uid;
-        $topics = $topics->find($start, $limit, ['key' => $topics->columns['id'], 'order' => 'desc']);
+        $topics = $topics->find($start, $limit, ['key' => $topics::$mapping['id'], 'order' => 'desc']);
 
         foreach($topics as $item){
             $item->group = new Group();
@@ -78,6 +78,7 @@ class Topic extends RModel
         $ratingStats = new RatingStatistic();
         $entityType = Topic::$entityType;
 
+        $prefix = Rays::app()->getDBPrefix();
         $sql = "SELECT "
             ."user.".User::$mapping['id'].","
             ."user.".User::$mapping['name'].","
@@ -89,14 +90,14 @@ class Topic extends RModel
             ."topic.".Topic::$mapping['commentCount'].","
             ."groups.{$group::$mapping['id']},"
             ."groups.{$group::$mapping['name']},"
-            ."rating.{$ratingStats->columns['value']} AS plusCount"
-            ." FROM ".Rays::app()->getDBPrefix().Topic::$table." AS topic "
-            ."LEFT JOIN ".Rays::app()->getDBPrefix().User::$table." AS user on topic.".Topic::$mapping['userId']."=user.".User::$mapping['id']." "
-            ."LEFT JOIN ".Rays::app()->getDBPrefix().Group::$table." AS groups on groups.{$group::$mapping['id']}=topic.".Topic::$mapping['groupId']." "
-            ."LEFT JOIN {$ratingStats->table} AS rating on rating.{$ratingStats->columns['entityType']}={$entityType} "
-            ."AND rating.{$ratingStats->columns['entityId']}=topic.".Topic::$mapping['id']." "
-            ."AND rating.{$ratingStats->columns['tag']}='plus' "
-            ."AND rating.{$ratingStats->columns['type']}='count'";
+            ."rating.{$ratingStats::$mapping['value']} AS plusCount"
+            ." FROM ".$prefix.Topic::$table." AS topic "
+            ."LEFT JOIN ".$prefix.User::$table." AS user on topic.".Topic::$mapping['userId']."=user.".User::$mapping['id']." "
+            ."LEFT JOIN ".$prefix.Group::$table." AS groups on groups.{$group::$mapping['id']}=topic.".Topic::$mapping['groupId']." "
+            ."LEFT JOIN {$prefix}{$ratingStats::$table} AS rating on rating.{$ratingStats::$mapping['entityType']}={$entityType} "
+            ."AND rating.{$ratingStats::$mapping['entityId']}=topic.".Topic::$mapping['id']." "
+            ."AND rating.{$ratingStats::$mapping['tag']}='plus' "
+            ."AND rating.{$ratingStats::$mapping['type']}='count'";
 
         $where = " WHERE 1=1 ";
         if(!empty($ids)){
@@ -159,37 +160,38 @@ class Topic extends RModel
         $ratingStats = new RatingStatistic();
         $entityType = Topic::$entityType;
 
+        $prefix = Rays::app()->getDBPrefix();
         $sql = "SELECT "
-            ."user.{$user->columns['id']},"
-            ."user.{$user->columns['name']},"
-            ."user.{$user->columns['picture']},"
-            ."topic.{$topics->columns['id']},"
-            ."topic.{$topics->columns['title']},"
-            ."topic.{$topics->columns['content']},"
-            ."topic.{$topics->columns['createdTime']},"
-            ."topic.{$topics->columns['commentCount']},"
-            ."groups.{$group->columns['id']},"
-            ."groups.{$group->columns['name']},"
-            ."counter.{$counter->columns['dayCount']},"
-            ."rating.{$ratingStats->columns['value']} AS plusCount "
-            ." FROM {$topics->table} AS topic "
-            ."LEFT JOIN {$counter->table} AS counter ON counter.{$counter->columns['entityId']}=topic.{$topics->columns['id']} AND counter.{$counter->columns['entityTypeId']}={$entityType} "
-            ."LEFT JOIN {$user->table} AS user on topic.{$topics->columns['userId']}=user.{$user->columns['id']} "
-            ."LEFT JOIN {$group->table} AS groups on groups.{$group->columns['id']}=topic.{$topics->columns['groupId']} "
-            ."LEFT JOIN {$ratingStats->table} AS rating on rating.{$ratingStats->columns['entityType']}={$entityType} "
-            ."AND rating.{$ratingStats->columns['entityId']}=topic.{$topics->columns['id']} "
-            ."AND rating.{$ratingStats->columns['tag']}='plus' "
-            ."AND rating.{$ratingStats->columns['type']}='count'";
+            ."user.{$user::$mapping['id']},"
+            ."user.{$user::$mapping['name']},"
+            ."user.{$user::$mapping['picture']},"
+            ."topic.{$topics::$mapping['id']},"
+            ."topic.{$topics::$mapping['title']},"
+            ."topic.{$topics::$mapping['content']},"
+            ."topic.{$topics::$mapping['createdTime']},"
+            ."topic.{$topics::$mapping['commentCount']},"
+            ."groups.{$group::$mapping['id']},"
+            ."groups.{$group::$mapping['name']},"
+            ."counter.{$counter::$mapping['dayCount']},"
+            ."rating.{$ratingStats::$mapping['value']} AS plusCount "
+            ." FROM {$prefix}{$topics::$table} AS topic "
+            ."LEFT JOIN {$prefix}{$counter::$table} AS counter ON counter.{$counter::$mapping['entityId']}=topic.{$topics::$mapping['id']} AND counter.{$counter::$mapping['entityTypeId']}={$entityType} "
+            ."LEFT JOIN {$prefix}{$user::$table} AS user on topic.{$topics::$mapping['userId']}=user.{$user::$mapping['id']} "
+            ."LEFT JOIN {$prefix}{$group::$table} AS groups on groups.{$group::$mapping['id']}=topic.{$topics::$mapping['groupId']} "
+            ."LEFT JOIN {$prefix}{$ratingStats::$table} AS rating on rating.{$ratingStats::$mapping['entityType']}={$entityType} "
+            ."AND rating.{$ratingStats::$mapping['entityId']}=topic.{$topics::$mapping['id']} "
+            ."AND rating.{$ratingStats::$mapping['tag']}='plus' "
+            ."AND rating.{$ratingStats::$mapping['type']}='count'";
 
         $where = "WHERE 1=1 ";
 //        $beginTime = date('Y-m-d: 00:00:00');
 
-//        $where .=" AND topic.{$topics->columns['createdTime']}>'{$beginTime}' ";
-        $where .=" AND counter.{$counter->columns['dayCount']} > 0 ";
+//        $where .=" AND topic.{$topics::$mapping['createdTime']}>'{$beginTime}' ";
+        $where .=" AND counter.{$counter::$mapping['dayCount']} > 0 ";
 
         $sql.=$where;
 
-        $sql.="ORDER BY counter.{$counter->columns['dayCount']} DESC ";
+        $sql.="ORDER BY counter.{$counter::$mapping['dayCount']} DESC ";
 
         if($start!=0||$limit!=0){
             $sql .= "LIMIT {$start},{$limit} ";

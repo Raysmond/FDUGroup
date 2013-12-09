@@ -51,7 +51,7 @@ class Category extends Tree
             $this->id = $categoryId;
             if ($this->load() !== null) {
                 $subs = $this->children();
-                $whereSQL = "WHERE groups.{$group->columns['categoryId']} IN ({$categoryId},";
+                $whereSQL = "WHERE groups.{$group::$mapping['categoryId']} IN ({$categoryId},";
                 $total = count($subs);
                 $count = 0;
                 foreach ($subs as $item) {
@@ -64,29 +64,29 @@ class Category extends Tree
         }
         $ratingStats = new RatingStatistic();
         $entityType = Topic::$entityType;
-
+        $prefix = Rays::app()->getDBPrefix();
         $sql = "SELECT "
-            . "user.{$user->columns['id']},"
-            . "user.{$user->columns['name']},"
-            . "user.{$user->columns['picture']},"
-            . "topic.{$topic->columns['id']},"
-            . "topic.{$topic->columns['title']},"
-            . "topic.{$topic->columns['content']},"
-            . "topic.{$topic->columns['createdTime']},"
-            . "topic.{$topic->columns['commentCount']},"
-            . "groups.{$group->columns['id']},"
-            . "groups.{$group->columns['name']},"
-            . "rating.{$ratingStats->columns['value']} AS plusCount "
-            . "FROM {$topic->table} as topic "
-            . "LEFT JOIN {$user->table} as user ON user.{$user->columns['id']}=topic.{$topic->columns['userId']} "
-            . "LEFT JOIN {$group->table} as groups ON groups.{$group->columns['id']}=topic.{$topic->columns['groupId']} "
-            . "LEFT JOIN {$this->table} AS category ON  category.{$this->columns['id']}=groups.{$group->columns['categoryId']} "
-            . "LEFT JOIN {$ratingStats->table} AS rating on rating.{$ratingStats->columns['entityType']}={$entityType} "
-            . "AND rating.{$ratingStats->columns['entityId']}=topic.{$topic->columns['id']} "
-            . "AND rating.{$ratingStats->columns['tag']}='plus' "
-            . "AND rating.{$ratingStats->columns['type']}='count'"
+            . "user.{$user::$mapping['id']},"
+            . "user.{$user::$mapping['name']},"
+            . "user.{$user::$mapping['picture']},"
+            . "topic.{$topic::$mapping['id']},"
+            . "topic.{$topic::$mapping['title']},"
+            . "topic.{$topic::$mapping['content']},"
+            . "topic.{$topic::$mapping['createdTime']},"
+            . "topic.{$topic::$mapping['commentCount']},"
+            . "groups.{$group::$mapping['id']},"
+            . "groups.{$group::$mapping['name']},"
+            . "rating.{$ratingStats::$mapping['value']} AS plusCount "
+            . "FROM {$prefix}{$topic::$table} as topic "
+            . "LEFT JOIN {$prefix}{$user::$table} as user ON user.{$user::$mapping['id']}=topic.{$topic::$mapping['userId']} "
+            . "LEFT JOIN {$prefix}{$group::$table} as groups ON groups.{$group::$mapping['id']}=topic.{$topic::$mapping['groupId']} "
+            . "LEFT JOIN {$prefix}{$this::$table} AS category ON  category.{$this::$mapping['id']}=groups.{$group::$mapping['categoryId']} "
+            . "LEFT JOIN {$prefix}{$ratingStats::$table} AS rating on rating.{$ratingStats::$mapping['entityType']}={$entityType} "
+            . "AND rating.{$ratingStats::$mapping['entityId']}=topic.{$topic::$mapping['id']} "
+            . "AND rating.{$ratingStats::$mapping['tag']}='plus' "
+            . "AND rating.{$ratingStats::$mapping['type']}='count'"
             . $whereSQL
-            . "ORDER BY topic.{$topic->columns['id']} DESC "
+            . "ORDER BY topic.{$topic::$mapping['id']} DESC "
             . $limitSQL
             . "";
 
@@ -103,7 +103,7 @@ class Category extends Tree
             $this->id = $categoryId;
             if ($this->load() !== null) {
                 $subs = $this->children();
-                $whereSQL = "WHERE groups.{$group->columns['categoryId']} IN ({$categoryId},";
+                $whereSQL = "WHERE groups.{$group->mapping['categoryId']} IN ({$categoryId},";
                 $total = count($subs);
                 $count = 0;
                 foreach ($subs as $item) {
@@ -115,11 +115,12 @@ class Category extends Tree
             }
         }
 
+        $prefix = Rays::app()->getDBPrefix();
         $sql = "SELECT "
-            . "COUNT(topic.{$topic->columns['id']}) AS totalCount "
-            . "FROM {$topic->table} as topic "
-            . "LEFT JOIN {$group->table} as groups ON groups.{$group->columns['id']}=topic.{$topic->columns['groupId']} "
-            . "LEFT JOIN {$this->table} AS category ON  category.{$this->columns['id']}=groups.{$group->columns['categoryId']} "
+            . "COUNT(topic.{$topic::$mapping['id']}) AS totalCount "
+            . "FROM {$prefix}{$topic::$table} as topic "
+            . "LEFT JOIN {$prefix}{$group::$table} as groups ON groups.{$group::$mapping['id']}=topic.{$topic::$mapping['groupId']} "
+            . "LEFT JOIN {$prefix}{$this::$table} AS category ON  category.{$this::$mapping['id']}=groups.{$group::$mapping['categoryId']} "
             . $whereSQL
             . "";
 

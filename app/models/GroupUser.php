@@ -20,17 +20,27 @@ class GroupUser extends RModel
 
     public static function userGroups($userId, $start = 0, $limit = 0)
     {
-        $result = array();
-        $groupUser = new GroupUser();
-        $groupUser->userId = $userId;
-        $userGroups = $groupUser->find($start, $limit, ['key' => $groupUser->columns['groupId'], 'order' => 'desc']);
-        foreach($userGroups as $userGroup){
-            $group = new Group();
-            $group->id = $userGroup->groupId;
-            $group->load();
-            array_push($result,$group);
+//        $groupUser = new GroupUser();
+//        $groupUser->userId = $userId;
+//        $userGroups = $groupUser->find($start, $limit, ['key' => $groupUser->columns['groupId'], 'order' => 'desc']);
+//        foreach($userGroups as $userGroup){
+//            $group = new Group();
+//            $group->id = $userGroup->groupId;
+//            $group->load();
+//            array_push($result,$group);
+//        }
+
+        $groupUsers = GroupUser::find("userId",$userId)->all();
+        if($groupUsers==null||empty($groupUsers)){
+            return array();
         }
-        return $result;
+
+        $ids = [];
+        foreach($groupUsers as $item){
+            $ids[] = $item->groupId;
+        }
+        $groups = Group::find()->order_desc("id")->where("id",$ids)->range($start,$limit);
+        return $groups;
     }
 
     public static function removeUsers($groupId,$userIds=array()){

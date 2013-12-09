@@ -129,10 +129,8 @@ class RatingPlus
             $counter->type = 'count';
             $counter->valueType = self::VALUE_TYPE;
             $counter->tag = self::TAG;
-            $result = $counter->find();
-            if(count($result)!==0){
-                $this->_counter = $result[0];
-            }
+            $result = $counter->find()->first();
+            $this->_counter = $result;
         }
         return $this->_counter;
     }

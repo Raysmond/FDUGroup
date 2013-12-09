@@ -4,29 +4,25 @@
  * @author: Raysmond
  */
 
-class Counter extends Data{
+class Counter extends RModel{
     public $entityType;
     public $id,$entityId,$entityTypeId,$totalCount,$dayCount,$weekCount,$timestamp;
 
-    public function __construct(){
-        $option = array(
-            "key" => "id",
-            "table" => "counter",
-            "columns" => array(
-                "id" => "cid",
-                "entityId" => "entity_id",
-                "entityTypeId" => "entity_type_id",
-                "totalCount" => "totalcount",
-                "dayCount" => "daycount",
-                "weekCount" => "weekcount",
-                "timestamp" => "timestamp",
-            )
-        );
-        parent::init($option);
-    }
+    public static $table = "counter";
+
+    public static $mapping = array(
+        "id" => "cid",
+        "entityId" => "entity_id",
+        "entityTypeId" => "entity_type_id",
+        "totalCount" => "totalcount",
+        "dayCount" => "daycount",
+        "weekCount" => "weekcount",
+        "timestamp" => "timestamp",
+    );
+
 
     public function load($id = null){
-        $result = parent::load($id);
+        $result = parent::get($id);
         if($result===null) return null;
         $this->entityType = new EntityType();
         $this->entityType->typeId = $this->entityTypeId;
