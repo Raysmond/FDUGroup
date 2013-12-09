@@ -47,7 +47,7 @@
             foreach ($users as $user) {
                 echo '<tr>';
                 ?><td><?=RFormHelper::input(array('name'=>'checked_users[]', 'type'=>'checkbox','value'=>$user->id))?></td><?php
-                foreach ($user->columns as $objCol => $dbcol) {
+                foreach (User::$mapping as $objCol => $dbcol) {
                     if (in_array($objCol, $skips)) continue;
                     echo '<td>';
                     switch ($objCol) {

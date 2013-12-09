@@ -298,33 +298,28 @@ class UserController extends BaseController
             }
         }
 
-        $filterStr = Rays::getParam('search', null);
 
-        $like = array();
-        if ($filterStr != null) {
-            $data['filterStr'] = $filterStr;
-            if (($str = trim($filterStr)) != '') {
-                $names = explode(' ', $str);
-                foreach ($names as $val) {
-                    array_push($like, array('key' => 'name', 'value' => $val));
-                }
+        $searchStr = Rays::getParam('search', null);
+
+        $query = User::find();
+        if ($name = trim($searchStr)) {
+            $names = preg_split("/[\s]+/", $name);
+            foreach ($names as $key) {
+                $query = $query->like("name", $key);
             }
         }
+        $page = $this->getPage("page");
+        $pageSize = $this->getPageSize("pagesize", 10);
 
-        $user = new User();
-        $count = $user->count($like);
+        $count = $query->count();
+        $users = $query->order_desc("id")->order_desc("id")->range($pageSize * ($page - 1), $pageSize);
         $data['count'] = $count;
-
-        $curPage = $this->getPage("page");
-        $pageSize = $this->getPageSize("pagesize",10);
-        $users = new User();
-        $users = $users->find(($curPage - 1) * $pageSize, $pageSize, array('key' => $users->columns["id"], "order" => 'desc'), $like);
         $data['users'] = $users;
 
         $url = RHtmlHelper::siteUrl('user/admin');
-        if ($filterStr != null) $url .= '?search=' . urlencode(trim($filterStr));
+        if ($searchStr != null) $url .= '?search=' . urlencode(trim($searchStr));
 
-        $pager = new RPagerHelper('page', $count, $pageSize, $url, $curPage);
+        $pager = new RPagerHelper('page', $count, $pageSize, $url, $page);
         $data['pager'] = $pager->showPager();
 
         $this->render('admin', $data, false);
