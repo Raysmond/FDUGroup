@@ -415,36 +415,32 @@ class GroupController extends BaseController
             }
         }
 
-        $filterStr = Rays::getParam('search',null);
+        $searchStr = Rays::getParam('search',null);
 
-        $like = array();
-        if($filterStr!=null){
-            $data['filterStr'] = $filterStr;
-            if (($str = trim($filterStr))!='') {
-                $names = explode(' ', $str);
-                foreach ($names as $val) {
-                    array_push($like, array('key' => 'name', 'value' => $val));
-                }
+        $query = Group::find();
+        if ($name = trim($searchStr)) {
+            $names = preg_split("/[\s]+/", $name);
+            foreach ($names as $key) {
+                $query = $query->like("name", $key);
             }
         }
+        $page = $this->getPage("page");
+        $pageSize = $this->getPageSize("pagesize",5);
 
-        $rows = new Group();
-        $count = $rows->count($like);
+        $count = $query->count();
+        $groups = $query->join("category")->join("groupCreator")->order_desc("id")->range($pageSize * ($page - 1), $pageSize);
+
         $data['count'] = $count;
-
-        $curPage = $this->getPage("page");
-        $size = $this->getPageSize("pagesize",5);
-        $groups = new Group();
-        $data['groups'] = $groups->findAll(($curPage-1)*$size,$size,array('key'=>'id',"order"=>'desc'),array(),$like);;
+        $data['groups'] = $groups;
 
         $url = RHtmlHelper::siteUrl('group/admin');
-        if($filterStr!=null) $url .= '?search='.urlencode(trim($filterStr));
+        if ($searchStr != null) $url .= '?search='.urlencode(trim($searchStr));
 
         // pager
-        $pager = new RPagerHelper('page',$count,$size,$url,$curPage);
+        $pager = new RPagerHelper('page', $count, $pageSize, $url, $page);
         $data['pager'] = $pager->showPager();
 
-        $this->render('admin',$data,false);
+        $this->render('admin', $data, false);
     }
 
     public function actionInvite($groupId)

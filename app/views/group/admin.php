@@ -41,18 +41,18 @@
         // That's bad to load user names and category names for each group
         // Need to be fixed. It's better to add "join" support in the database models
 
-        foreach ($groups as $row) {
+        foreach ($groups as $group) {
             echo '<tr>';
-            echo '<td><input name="checked_groups[]" type="checkbox" value="'.$row['group_id'].'" /></td>';
-            echo '<td>'.$row['group_id'].'</td>';
-            echo '<td>'.RHtmlHelper::linkAction('user',$row['creator_name'],'view',$row['group_creator_id']).'</td>';
-            echo '<td>'.RHtmlHelper::linkAction('category',$row['category_name'],'groups',$row['group_category_id']).'</td>';
-            echo '<td>'.RHtmlHelper::linkAction('group', $row['group_name'], 'detail', $row['group_id']).'</td>';
-            echo '<td>'.$row['group_member_count'].'</td>';
-            echo '<td>'.$row['group_created_time'].'</td>';
-            if(isset($row['group_picture'])&&$row['group_picture']!=''){
-                $picture = RImageHelper::styleSrc($row['group_picture'],Group::getPicOptions());
-                echo '<td>'.RHtmlHelper::showImage($picture,$row['group_name'],array("style"=>'width:64px;')).'</td>';
+            echo '<td><input name="checked_groups[]" type="checkbox" value="$group->id" /></td>';
+            echo "<td>$group->id</td>";
+            echo '<td>'.RHtmlHelper::linkAction('user', $group->groupCreator->name, 'view', $group->groupCreator->id).'</td>';
+            echo '<td>'.RHtmlHelper::linkAction('category', $group->category->name, 'groups', $group->category->id).'</td>';
+            echo '<td>'.RHtmlHelper::linkAction('group', $group->name, 'detail', $group->id).'</td>';
+            echo "<td>$group->memberCount</td>";
+            echo "<td>$group->createdTime</td>";
+            if (isset($group->picture) && $group->picture != '') {
+                $picture = RImageHelper::styleSrc($group->picture, Group::getPicOptions());
+                echo '<td>'.RHtmlHelper::showImage($picture, $group->name, array("style"=>'width:64px;')).'</td>';
             }
             echo '</tr>';
         }
