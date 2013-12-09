@@ -49,7 +49,7 @@ class MessageController extends BaseController
 
         $data = array('type' => $type);
 
-        if ($this->getHttpRequest()->isPostRequest()) {
+        if (Rays::isPost()) {
             if (isset($_POST['new'])) {
                 if (isset($_POST['receiverName']))
                     $data['sendForm'] = array('receiver' => $_POST['receiverName']);
@@ -82,7 +82,7 @@ class MessageController extends BaseController
 
                     $title = isset($_POST['title']) ? trim($_POST['title']) : "";
                     $msgContent = RHtmlHelper::encode($_POST['msg-content']);
-                    $message = Message::sendMsg($_POST['type'], $senderId, $receiver->id, $title, $msgContent, null, 1);
+                    $message = Message::sendMessage($_POST['type'], $senderId, $receiver->id, $title, $msgContent, null, 1);
 
                     if (isset($message->id) && $message->id != '') {
                         $this->flash("message", "Send message successfully.");
@@ -109,12 +109,12 @@ class MessageController extends BaseController
     public function actionRead($msgId)
     {
         $message = Message::get($msgId);
-        if (Rays::app()->getLoginUser()->id != $message->receiverId) {
+        if (Rays::user()->id != $message->receiverId) {
             $this->flash("error", "Sorry. You don't have the right to mark the message read.");
         }
         $message->status = Message::STATUS_READ;
         $message->save();
-        $this->redirect($this->getHttpRequest()->getUrlReferrer());
+        $this->redirect(Rays::referrerUri());
     }
 
 

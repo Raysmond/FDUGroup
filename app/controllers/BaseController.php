@@ -31,7 +31,8 @@ class BaseController extends RController
         $accessLog->userId = Rays::isLogin()? Rays::user()->id : 0;;
         $accessLog->title = $this->getHeaderTitle();
         $accessLog->uri = Rays::referrerUri();
-        $accessLog->insert();
+        $accessLog->timestamp = date('Y-m-d H:i:s');
+        $accessLog->save();
     }
 
     /**
@@ -68,7 +69,7 @@ class BaseController extends RController
                 if ($level === null) continue;
                 $sysLog->severity = $level;
                 $sysLog->type = $log['type'];
-                $sysLog->insert();
+                $sysLog->save();
                 unset($sysLog);
             }
         }

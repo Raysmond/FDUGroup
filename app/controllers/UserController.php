@@ -417,24 +417,18 @@ class UserController extends BaseController
             if ((int)$_GET['op'] === 0) {
                 $censor->passCensor( (int)$_GET['censorId']);
 
-                $user = new User();
-                $user->id = $censor->firstId;
-                $user->load();
+                $user = User::get($censor->firstId);
                 $user->roleId = Role::VIP_ID;
-                $user->update();
+                $user->save();
 
                 $content = "Congratulations, " . RHtmlHelper::linkAction('user',$user->name,'view',$user->id). "!<br/> Your VIP application is accepted by Administrator.";
-                $message = new Message();
-                $message->sendMsg("system", 0, $user->id, "VIP application accepted", $content, '');
+                Message::sendMessage("system", 0, $user->id, "VIP application accepted", RHtmlHelper::encode($content), '');
             } else {
                 $censor->failCensor( (int)$_GET['censorId']);
 
-                $user = new User();
-                $user->id = $censor->firstId;
-                $user->load();
+                $user = User::get($censor->firstId);
                 $content = "Sorry, " . RHtmlHelper::linkAction('user',$user->name,'view',$user->id). "!<br/> Your VIP application is declined by Administrator.";
-                $message = new Message();
-                $message->sendMsg("system", 0, $user->id, "VIP application declined", $content, '');
+                Message::sendMessage("system", 0, $user->id, "VIP application declined", RHtmlHelper::encode($content), '');
             }
             $this->redirectAction('user','processVIP');
         }
@@ -454,9 +448,7 @@ class UserController extends BaseController
 
         $users = [];
         foreach ($applications as $apply) {
-            $user = new User();
-            $user->id = $apply->firstId;
-            $user->load();
+            $user = User::get($apply->firstId);
             $users[] = $user;
         }
 
