@@ -61,7 +61,7 @@ class _RModelQueryer {
     private function _select($suffix = "")
     {
         $model = $this->model;
-        $modeltable = $model::$table;
+        $modeltable = Rays::app()->getDBPrefix().$model::$table;
         $fields = $this->_select_fields();
         $join = $this->_join_clause();
         $sql = "SELECT $fields FROM $modeltable $join $this->query_where $this->query_order $suffix";
