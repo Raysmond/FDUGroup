@@ -9,6 +9,8 @@ class Topic extends RModel
     public $user;
     public $comments = array();
 
+    public $rating;
+
     public $id, $groupId, $userId, $title, $createdTime, $content, $lastCommentTime, $commentCount;
 
     const ENTITY_TYPE = 1;
@@ -29,8 +31,7 @@ class Topic extends RModel
     public static $relation = array(
         "group" => array("groupId", "Group", "id"),
         "user" => array("userId", "User", "id"),
-        "rating" => array("id","RatingStatistic","entityId","on"=>"RatingStatistic.entityType=1")
-
+        "rating" => array("id","RatingStatistic","entityId","on"=>"RatingStatistic.entityType=1"),
     );
 
     public function increaseCounter(){

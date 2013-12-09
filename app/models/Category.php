@@ -57,11 +57,10 @@ class Category extends Tree
             $where .= ") ";
         }
 
-        $query =  Topic::find()->join("user")->join("group");
+        $query =  Topic::find()->join("user")->join("group")->join("rating");
         if($where!="") $query = $query->where($where);
 
         $groups = ($start!=0||$limit!=0) ? $query->range($start,$limit) : $query->all();
-
         return $groups;
     }
 

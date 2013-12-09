@@ -39,12 +39,13 @@ class PostController extends BaseController
         if (Rays::isPost()) {
             $validation = new RFormValidationHelper(array(
                 array("field" => "title", "label" => "Title", "rules" => "trim|required"),
+                array("field" => "group", "label" => "Group", "rules" => "trim|required|number"),
                 array("field" => "post-content", "label" => "Content", "rules" => "trim|required"),
             ));
 
             if ($validation->run()) {
                 $topic = new Topic();
-                $topic->groupId = $groupId;
+                $topic->groupId = $_POST['group'];
                 $topic->userId = Rays::user()->id;
                 $topic->title = $_POST["title"];
                 $topic->content = RHtmlHelper::encode($_POST['post-content']);
