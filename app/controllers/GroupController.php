@@ -30,9 +30,8 @@ class GroupController extends BaseController
             case "exit":
             case "delete":
             case "invite":
-                $group = new Group();
                 $result = false;
-                if(isset($params[0]) && is_numeric($params[0]) && Group::get($params[0]) !== null){
+                if(isset($params[0]) && is_numeric($params[0]) && ($group = Group::get($params[0])) !== null){
                     $this->_group = $group;
                     $result = true;
                 }
