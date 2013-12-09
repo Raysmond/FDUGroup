@@ -1,16 +1,29 @@
 <?php
 /**
  * RBaseApplication class file
+ *
  * @author: Raysmond
  */
 
 class RBaseApplication
 {
 
+    /**
+     * The name of the application
+     * @var string
+     */
     public $name = "My Application";
 
+    /**
+     * The charset of the front-end view
+     * @var string
+     */
     public $charset = "UTF-8";
 
+    /**
+     * The time zone
+     * @var string
+     */
     public $timeZone = 'PRC';
 
     /**
@@ -40,10 +53,37 @@ class RBaseApplication
      */
     private $_baseUrl;
 
+    /**
+     * The database config array
+     * for example:
+     * 'db' => array(
+     *   'host' => '127.0.0.1',
+     *   'user' => 'fdugroup',
+     *   'password' => 'fdugroup',
+     *   'db_name' => 'fdugroup',
+     *   'table_prefix' => 'group_',
+     *   'charset' => 'utf8',
+     *   ),
+     * @var array
+     */
     private $_db;
 
+    /**
+     * The whole config array
+     * @var array
+     */
     private $_config = array();
 
+    /**
+     * Cache config array
+     * for example:
+     * 'cache' => array(
+     *   'cache_dir' => '/cache',
+     *   'cache_prefix' => "cache_",
+     *   'cache_time' => 1800, //seconds
+     *   )
+     * @var array
+     */
     private $_cache = array();
 
     public function __construct($config = null)
@@ -109,11 +149,19 @@ class RBaseApplication
         return $this->_baseUrl;
     }
 
+    /**
+     * Set the base URL of the application site
+     * @param $value
+     */
     public function setBaseUrl($value)
     {
         $this->_baseUrl =  $value;
     }
 
+    /**
+     * Get application base path
+     * @return string
+     */
     public function getAppPath()
     {
         if($this->_appPath===''){

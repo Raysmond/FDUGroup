@@ -2,8 +2,8 @@
 /**
  * RAction class file.
  * The base class for an action. An action can run called by a controller.
+ *
  * @author: Raysmond
- * @date: 13-11-29
  */
 
 abstract class RAction
