@@ -13,37 +13,6 @@ class GroupController extends BaseController
         Role::ADMINISTRATOR => array('findAdmin','buildAdmin','admin','recommend'),
     );
 
-    public $_group;
-
-    public function filteredGroup(){
-        return isset($this->_group)?$this->_group : null;
-    }
-
-    public function beforeAction($action){
-        $params = $this->getActionParams();
-        $result = true;
-        switch($action){
-            case "detail":
-            case "edit":
-            case "members":
-            case "exit":
-            case "delete":
-            case "invite":
-                $group = new Group();
-                $result = false;
-                if(isset($params[0]) && is_numeric($params[0]) && $group->load($params[0]) !== null){
-                    $this->_group = $group;
-                    $result = true;
-                }
-                break;
-        }
-        if(!$result){
-            $this->page404();
-            return false;
-        }
-        return true;
-    }
-
     /*
      * Find groups/show all groups
      */
@@ -253,7 +222,7 @@ class GroupController extends BaseController
                 ."&nbsp;&nbsp;"
                 .RHtmlHelper::linkAction('group','Decline','decline', $censor->id,array('class'=>'btn btn-xs btn-danger'));
 
-            Message::sendMsg("group", $groupId, $group->creator, "Join group request", $content, '');
+            Message::sendMessage("group", $groupId, $group->creator, "Join group request", $content, '');
 
             $joinRequest = true;
             $text = 'Your join-group request has been send to the group manager!';
@@ -311,7 +280,7 @@ class GroupController extends BaseController
 
             if (!GroupUser::isUserInGroup($groupUser->userId,$groupUser->groupId)) {
                 $groupUser->save();
-                $gruop = Group::get($groupUser->groupId);
+                $group = Group::get($groupUser->groupId);
                 $group->memberCount++;
                 $group->save();
 
@@ -405,8 +374,7 @@ class GroupController extends BaseController
      */
     public function actionDelete($groupId)
     {
-        // group loaded in beforeAction() method
-        $group = $this->filteredGroup();
+        $group = Group::get($groupId);
 
         $userId = Rays::user()->id;
         if ($group->creator == $userId) {
@@ -480,9 +448,9 @@ class GroupController extends BaseController
         $this->render('admin',$data,false);
     }
 
-    public function actionInvite($groupId){
-        // group loaded in beforeAction() method
-        $group = $this->filteredGroup();
+    public function actionInvite($groupId)
+    {
+        $group = Group::get($groupId);
 
         $data = array();
         $data['group'] = $group;
