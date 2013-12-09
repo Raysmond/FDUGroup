@@ -69,7 +69,7 @@ class UserController extends BaseController
         switch ($part) {
             case 'joins':
                 $pageSize = $this->getPageSize("pageSize",5);
-                $data['userGroup'] = GroupUser::getGroups(GroupUser::find("userId", Rays::user()->id)->join("group")->order_desc("groupId")->range(($page-1) * $pageSize, $pageSize));
+                $data['userGroup'] = GroupUser::getGroups(GroupUser::find("userId", $userId)->join("group")->order_desc("groupId")->range(($page-1) * $pageSize, $pageSize));
                 $count = User::countGroups($userId);
                 break;
             case 'posts':
@@ -479,31 +479,22 @@ class UserController extends BaseController
         $searchStr = '';
         if (Rays::isPost()) $searchStr = ($_POST['searchstr']);
         else if(isset($_GET['search'])) $searchStr = $_GET['search'];
-        $vector = explode(' ', trim($searchStr));
-        $like = [];
-        foreach ($vector as $value)
-            if ($value = trim($value)){
-                $like[] = ['key' => 'name', 'value' => $value];
+
+        $query = User::find();
+        if ($name = trim($searchStr)) {
+            $names = preg_split("/[\s]+/", $name);
+            foreach ($names as $key) {
+                $query = $query->like("name", $key);
             }
-        $user = new User();
-        $user->status = User::STATUS_ACTIVE;
-        $userNumber = $user->count($like);
-        $user = $user->find(($page - 1)*$pageSize, $pageSize, ['key' => $user->columns['id'], 'order' => 'desc'], $like);
-
-        $data = array('users' => $user);
-        if ($searchStr != '') $data['searchstr'] = $searchStr;
-
-        if($searchStr!='')
-            $url = RHtmlHelper::siteUrl('user/find?search='.urlencode($searchStr));
-        else
-            $url = RHtmlHelper::siteUrl('user/find');
-
-        if (count($user)) {
-            $pager = new RPagerHelper('page',$userNumber,$pageSize, $url,$page);
-            $data['pager'] = $pager->showPager();
         }
 
+        $count = $query->count();
+        $users = $query->range(($page-1)*$pageSize,$pageSize);
+
+        $url = RHtmlHelper::siteUrl('user/find'.($searchStr!='')?'?search='.urlencode($searchStr):"");
+        $pager = new RPagerHelper('page',$count,$pageSize, $url,$page);
+
         $this->setHeaderTitle("Find User");
-        $this->render("find", $data, false);
+        $this->render("find", ['users' => $users,'searchstr'=>$searchStr,'pager'=>$pager->showPager()], false);
     }
 }

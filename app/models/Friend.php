@@ -33,7 +33,7 @@ class Friend extends RModel
         return [$result, $friendsCount];
     }
 
-    
+
     public function getFriendsToInvite($uid, $groupId, $start = 0, $limit = 0)
     {
         $groupUsers = GroupUser::find("groupId", $groupId)->all();
@@ -45,11 +45,11 @@ class Friend extends RModel
                 $where .= "?" . ($i < $count - 1 ? "," : "");
                 $args[] = $groupUsers[$i]->userId;
             }
+            unset($groupUsers);
             $where .= ")";
             $result = $result->where($where, $args);
         }
 
-        $result = ($limit != 0 || $start != 0) ? $result->range($start, $limit) : $result->all();
-        return $result;
+        return ($limit != 0 || $start != 0) ? $result->range($start, $limit) : $result->all();
     }
 }
