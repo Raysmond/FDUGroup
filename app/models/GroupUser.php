@@ -6,6 +6,7 @@
 
 class GroupUser extends RModel
 {
+    public $group, $user;
     public $groupId, $userId, $joinTime, $status, $comment;
 
     public static $primary_key = "groupId";
@@ -17,22 +18,37 @@ class GroupUser extends RModel
         "status" => "status",
         "comment" => "join_comment"
     );
+    public static $relation = array(
+        "group" => array("groupId", "Group", "id"),
+        "user" => array("userId", "User", "id")
+    );
 
-    public static function userGroups($userId, $start = 0, $limit = 0)
+    /**
+     * getGroups: Filter groups out from a query result
+     * @param array $result Query result from GroupUser
+     * @return Groups associated with each GroupUser object in the array
+     */
+    public static function getGroups($result)
     {
-        $groupUsers = GroupUser::find("userId",$userId);
-
-        $groupUsers = ($start!=0||$limit!=0)?$groupUsers->range($start,$limit):$groupUsers->all();
-
-        if($groupUsers==null||empty($groupUsers)){
-            return array();
-        }
-
         $groups = array();
-        foreach($groupUsers as $item){
-            $groups[] = Group::get($item->groupId);
+        foreach ($result as $groupUser) {
+            $groups[] = $groupUser->group;
         }
         return $groups;
+    }
+
+    /**
+     * getUsers: Filter users out from a query result
+     * @param array $result Query result from GroupUser
+     * @return Users associated with each GroupUser object in the array
+     */
+    public static function getUsers($result)
+    {
+        $users = array();
+        foreach ($result as $groupUser) {
+            $users[] = $groupUser->user;
+        }
+        return $users;
     }
 
     public static function removeUsers($groupId,$userIds=array()){
@@ -45,8 +61,7 @@ class GroupUser extends RModel
     public static function isUserInGroup($userId, $groupId){
         if (GroupUser::find(array("groupId", $groupId, "userId", $userId))->first() != null)
             return true;
-        else
-            return false;
+        return false;
     }
 
     public function delete($assignment = []) {

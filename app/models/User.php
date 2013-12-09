@@ -132,23 +132,25 @@ class User extends RModel
      * @param $password
      * @param $email
      */
-    public function register($name, $password, $email)
+    public static function register($name, $password, $email)
     {
-        $this->setDefaults();
-        $this->name = $name;
-        $this->password = $password;
-        $this->mail = $email;
-        $id = $this->insert();
-        $this->load($id);
+        $user = new User();
+        $user->setDefaults();
+        $user->name = $name;
+        $user->password = $password;
+        $user->mail = $email;
+        $user->save();
+        return $user;
     }
 
-    public static function countPosts($userId){
-        return Topic::find("userId",$userId)->count();
+    public static function countPosts($userId)
+    {
+        return Topic::find("userId", $userId)->count();
     }
 
     public static function countFriends($userId)
     {
-        return Friend::find("uid",$userId)->count();
+        return Friend::find("uid", $userId)->count();
     }
 
     public static function countGroups($userId)
@@ -225,7 +227,7 @@ class User extends RModel
             ."--- <b>FDUGroup team</b>"
             .'<br/>'
             .date('Y-m-d H:i:s');
-        Message::sendMsg('system', 0, $this->id, $title, RHtmlHelper::encode($content), null, 1);
+        Message::sendMessage('system', 0, $this->id, $title, RHtmlHelper::encode($content), null, 1);
     }
 
     public static function getPicOptions()

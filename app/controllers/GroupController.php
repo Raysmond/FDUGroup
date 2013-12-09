@@ -14,36 +14,6 @@ class GroupController extends BaseController
         Role::ADMINISTRATOR => array('findAdmin','buildAdmin','admin','recommend'),
     );
 
-    public $_group;
-
-    public function filteredGroup(){
-        return isset($this->_group)?$this->_group : null;
-    }
-
-    public function beforeAction($action){
-        $params = $this->getActionParams();
-        $result = true;
-        switch($action){
-            case "detail":
-            case "edit":
-            case "members":
-            case "exit":
-            case "delete":
-            case "invite":
-                $result = false;
-                if(isset($params[0]) && is_numeric($params[0]) && ($group = Group::get($params[0])) !== null){
-                    $this->_group = $group;
-                    $result = true;
-                }
-                break;
-        }
-        if(!$result){
-            $this->page404();
-            return false;
-        }
-        return true;
-    }
-
     /*
      * Find groups/show all groups
      */
@@ -54,14 +24,12 @@ class GroupController extends BaseController
         $searchStr = Rays::getParam("searchstr",'');
 
         $query = Group::find();
-        $s = trim($searchStr);
-        if (isset($s) && $s != '') {
-            $s = explode(' ', $s);
-            foreach ($s as $key) {
+        if ($name = trim($searchStr)) {
+            $names = preg_split("/[\s]+/", $name);
+            foreach ($names as $key) {
                 $query = $query->like("name", $key);
             }
         }
-        $groupCount = $query->count();
         $groups = $query->order_desc("id")->range($pageSize * ($page - 1), $pageSize);
 
         if(Rays::isAjax()){
@@ -69,13 +37,9 @@ class GroupController extends BaseController
             exit;
         }
 
-//        $url = RHtmlHelper::siteUrl('group/find'.($searchStr!=''?('?search='.urlencode($searchStr)):""));
-//        $pager = new RPagerHelper('page',$groupCount,$pageSize, $url,$page);
-
         $data = array(
             'groups' => $groups,
             'searchstr'=>($searchStr != ''?$searchStr : null),
-//            'pager'=>$pager->showPager()
         );
 
         $this->setHeaderTitle("Find Group");
@@ -91,8 +55,8 @@ class GroupController extends BaseController
     public function actionMyGroups()
     {
         $page = $this->getPage("page");
-        $pageSize = $this->getPageSize("pagesize",5);
-        $groups = GroupUser::userGroups(Rays::user()->id, ($page - 1) * $pageSize, $pageSize);
+        $pageSize = $this->getPageSize("pagesize", 5);
+        $groups = GroupUser::getGroups(GroupUser::find("userId", Rays::user()->id)->join("group")->order_desc("groupId")->range(($page - 1) * $pageSize, $pageSize));
 
         if(Rays::isAjax()){
             echo empty($groups)? 'nomore' : $this->renderPartial("_groups_list", ["groups"=>$groups, 'exitGroup' => true],true);
@@ -112,10 +76,13 @@ class GroupController extends BaseController
      */
     public function actionDetail($groupId)
     {
-        // group loaded in beforeAction() method
-        $group = $this->filteredGroup();
-        $group->groupCreator = User::get($group->creator);
+        $group = Group::get($groupId);
+        if ($group == null) {
+            Rays::app()->page404();
+            return;
+        }
         $group->category = Category::get($group->categoryId);
+        $group->groupCreator = User::get($group->creator);
 
         $counter = $group->increaseCounter();
 
@@ -128,9 +95,9 @@ class GroupController extends BaseController
 
         $data = ['group'=>$group, 'counter'=>$counter->totalCount, 'latestPosts'=>$posts];
 
-        $login = Rays::isLogin();
-        $data['hasJoined'] = $login && GroupUser::isUserInGroup(Rays::user()->id,$group->id);
-        $data['isManager'] = $login && $group->creator == Rays::user()->id;
+        $isLogin = Rays::isLogin();
+        $data['hasJoined'] = $isLogin && GroupUser::isUserInGroup(Rays::user()->id,$group->id);
+        $data['isManager'] = $isLogin && $group->creator==Rays::user()->id;
 
         $this->setHeaderTitle($group->name);
         $this->addCss("/public/css/post.css");
@@ -182,8 +149,7 @@ class GroupController extends BaseController
      */
     public function actionEdit($groupId)
     {
-        // group loaded in beforeAction() method
-        $group = $this->filteredGroup();
+        $group = Group::get($groupId);
 
         if (Rays::isPost()) {
             $rules = array(
@@ -238,10 +204,9 @@ class GroupController extends BaseController
         $userId = Rays::user()->id;
         $userName = Rays::user()->name;
 
-        $group = Group::get($groupId);
-
         $joinRequest = false;
         $text = '';
+        $group = Group::get($groupId);
         if ($group !== null) {
             //join group sensor item
             $censor = new Censor();
@@ -254,7 +219,7 @@ class GroupController extends BaseController
                 ."&nbsp;&nbsp;"
                 .RHtmlHelper::linkAction('group','Decline','decline', $censor->id,array('class'=>'btn btn-xs btn-danger'));
 
-            Message::sendMsg("group", $groupId, $group->creator, "Join group request", $content, '');
+            Message::sendMessage("group", $groupId, $group->creator, "Join group request", $content, '');
 
             $joinRequest = true;
             $text = 'Your join-group request has been send to the group manager!';
@@ -287,7 +252,6 @@ class GroupController extends BaseController
                 if(!GroupUser::isUserInGroup($groupUser->userId, $groupUser->groupId)) {
                     $groupUser->save();
                     $group = Group::get($groupUser->groupId);
-
                     $group->memberCount++;
                     $group->save();
                     $this->flash("message", "Join group successfully.");
@@ -364,9 +328,6 @@ class GroupController extends BaseController
 
     public function actionExit($groupId = null)
     {
-        // group loaded in beforeAction() method
-        // $group = $this->filteredGroup();
-
         $groupUser = GroupUser::find(array("groupId", $groupId, "userId", Rays::user()->id))->first();
         $group = Group::get($groupId);
 
@@ -412,8 +373,7 @@ class GroupController extends BaseController
      */
     public function actionDelete($groupId)
     {
-        // group loaded in beforeAction() method
-        $group = $this->filteredGroup();
+        $group = Group::get($groupId);
 
         $userId = Rays::user()->id;
         if ($group->creator == $userId) {
@@ -487,9 +447,9 @@ class GroupController extends BaseController
         $this->render('admin',$data,false);
     }
 
-    public function actionInvite($groupId){
-        // group loaded in beforeAction() method
-        $group = $this->filteredGroup();
+    public function actionInvite($groupId)
+    {
+        $group = Group::get($groupId);
 
         $data = array();
         $data['group'] = $group;

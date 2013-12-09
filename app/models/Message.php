@@ -9,9 +9,9 @@ class Message extends RModel {
     public $sender;
     public $id, $typeId, $senderId, $receiverId, $title, $content, $sendTime, $status;
 
-    public static $STATUS_UNREAD = 1;
-    public static $STATUS_READ = 2;
-    public static $STATUS_TRASH = 3;
+    const STATUS_UNREAD = 1;
+    const STATUS_READ = 2;
+    const STATUS_TRASH = 3;
 
     public static $table = "messages";
     public static $primary_key = "id";
@@ -68,6 +68,6 @@ class Message extends RModel {
 
     public static function countUnreadMsgs($receiverId)
     {
-        return Message::find(array("receiverId", $receiverId, "status", Message::$STATUS_UNREAD))->count();
+        return Message::find(array("receiverId", $receiverId, "status", Message::STATUS_UNREAD))->count();
     }
 }

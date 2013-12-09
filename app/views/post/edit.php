@@ -53,7 +53,7 @@
                 }
                 else{
                     $canCreate = false;
-                    echo 'You haven\'t joint any groups. Go to '.RHtmlHelper::linkAction('group','find','find').' some and join them!' ;
+                    echo "You haven't joined any groups. Go ".RHtmlHelper::linkAction('group','find','find')." some and join them!";
                 }
 
                 ?>
