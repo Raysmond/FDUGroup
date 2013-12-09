@@ -33,9 +33,23 @@ class Friend extends RModel
         return [$result, $friendsCount];
     }
 
-    public function getFriendsToInvite($uid,$groupId, $limit=0){
-        $result = array();
-        $result = Friend::find("uid",$uid)->join("user")->all();
+    
+    public function getFriendsToInvite($uid, $groupId, $start = 0, $limit = 0)
+    {
+        $groupUsers = GroupUser::find("groupId", $groupId)->all();
+        $result = Friend::find("uid", $uid)->join("user");
+        if ($groupUsers != null && !empty($groupUsers)) {
+            $where = "[fid] not in(";
+            $args = [];
+            for ($count = count($groupUsers), $i = 0; $i < $count; $i++) {
+                $where .= "?" . ($i < $count - 1 ? "," : "");
+                $args[] = $groupUsers[$i]->userId;
+            }
+            $where .= ")";
+            $result = $result->where($where, $args);
+        }
+
+        $result = ($limit != 0 || $start != 0) ? $result->range($start, $limit) : $result->all();
         return $result;
     }
 }
