@@ -177,7 +177,7 @@ class _RModelQueryer {
         else {
             $this->query_where .= " AND ";
         }
-        $this->query_where .= $this->_substitute($constraint);
+        $this->query_where .= $this->_substitute("($constraint)");
         if (is_array($args)) {
             $this->args_where = array_merge($this->args_where, $args);
         }
