@@ -35,11 +35,13 @@ class GroupUser extends RModel
             return array();
         }
 
+        $groups = array();
         $ids = [];
         foreach($groupUsers as $item){
             $ids[] = $item->groupId;
+            $groups[] = Group::get($item->groupId);
         }
-        $groups = Group::find()->order_desc("id")->where("id",$ids)->range($start,$limit);
+        //$groups = Group::find()->order_desc("id")->where("id",$ids)->range($start,$limit);
         return $groups;
     }
 

@@ -10,6 +10,8 @@ class RatingStatistic extends RModel
     public $id, $type, $entityType, $entityId, $valueType, $value = 0, $tag, $timestamp;
 
     public static $table = "rating_statistic";
+    public static $primary_key = "id";
+
     public static $mapping = array(
         "id" => "stat_id",
         'type' => 'stat_type',
@@ -21,12 +23,12 @@ class RatingStatistic extends RModel
         "timestamp" => "timestamp"
     );
 
-    public function insert()
+    public function save()
     {
         if (!isset($this->timestamp) || $this->timestamp === '') {
             $this->timestamp = date('Y-m-d H:i:s');
         }
-        return parent::insert();
+        return parent::save();
     }
 
 }

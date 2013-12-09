@@ -29,16 +29,19 @@ class RatingPlus
     public function rate()
     {
         if ($this->check()) {
-            $plus = new Rating();
-            $plus->entityId = $this->entityId;
-            $plus->entityType = $this->entityType;
-            $plus->userId = $this->userId;
-            $plus->host = $this->host;
-            $plus->valueType = self::VALUE_TYPE;
-            $plus->value = self::VALUE;
-            $plus->tag = self::TAG;
-            if(count($plus->find())==0){
-                $ratingId = $plus->insert();
+            $rating = Rating::find("tag",self::TAG)->find("valueType",self::VALUE_TYPE)->find("value",self::VALUE);
+            $rating = $rating->find("entityId",$this->entityId)->find("entityType",$this->entityType)->find("userId",$this->userId);
+            $rating = $rating->first();
+            if($rating==null){
+                $rating = new Rating();
+                $rating->tag = self::TAG;
+                $rating->valueType = self::VALUE_TYPE;
+                $rating->value = self::VALUE;
+                $rating->host = $this->host;
+                $rating->entityId = $this->entityId;
+                $rating->entityType = $this->entityType;
+                $rating->userId = $this->userId;
+                $ratingId = $rating->save();
                 if ($ratingId !== null && is_numeric($ratingId)) {
                     $this->_ratingId = $ratingId;
                     $this->updatePlusCounter();
@@ -100,37 +103,32 @@ class RatingPlus
      * Plus counter for every plus rating
      */
     private function updatePlusCounter(){
-        $counter = new RatingStatistic();
-        $counter->entityType = $this->entityType;
-        $counter->entityId = $this->entityId;
-        $counter->type = 'count';
-        $counter->valueType = self::VALUE_TYPE;
-        $counter->tag = self::TAG;
-        $result = $counter->find();
-        if(count($result)===0){
-            $counter->value = 1;
-            $id = $counter->insert();
-            $counter->id = $id;
+        $result = RatingStatistic::find("type","count")->find("valueType",self::VALUE_TYPE)->find("tag",self::TAG);
+        $result = $result->find("entityType",$this->entityType)->find("entityId",$this->entityId)->first();
+
+        if($result==null){
+            $result = new RatingStatistic();
+            $result->entityType = $this->entityType;
+            $result->entityId = $this->entityId;
+            $result->type = "count";
+            $result->value = 1;
+            $result->valueType = self::VALUE_TYPE;
+            $result->tag = self::TAG;
+            $result->save();
         }
         else{
-            $counter = $result[0];
-            $counter->value++;
-            $counter->timestamp = date('Y-m-d H:i:s');
-            $counter->update();
+            $result->value++;
+            $result->timestamp = date('Y-m-d H:i:s');
+            $result->save();
         }
-        $this->_counter = $counter;
+        $this->_counter = $result;
     }
 
     public function getCounter(){
         if($this->_counter===null){
-            $counter = new RatingStatistic();
-            $counter->entityType = $this->entityType;
-            $counter->entityId = $this->entityId;
-            $counter->type = 'count';
-            $counter->valueType = self::VALUE_TYPE;
-            $counter->tag = self::TAG;
-            $result = $counter->find()->first();
-            $this->_counter = $result;
+              $result = RatingStatistic::find("type","count")->find("valueType",self::VALUE_TYPE)->find("tag",self::TAG);
+              $result = $result->find("entityType",$this->entityType)->find("entityId",$this->entityId)->first();
+              $this->_counter = $result;
         }
         return $this->_counter;
     }
@@ -138,14 +136,7 @@ class RatingPlus
     public function getRating()
     {
         if ($this->_ratingId !== null && $this->_rating === null) {
-            $this->_rating = new Rating();
-            $this->_rating->id = $this->_ratingId;
-            $result = $this->_rating->load();
-            if ($result !== null) {
-                $this->_rating = $result;
-            } else {
-                $this->_rating = null;
-            }
+            $this->_rating = Rating::get($this->_ratingId);
         }
         return $this->_rating;
     }

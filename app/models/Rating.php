@@ -12,6 +12,7 @@ class Rating extends RModel
     private $_user = null;
 
     public static $table = "rating";
+    public static $primary_key = "id";
 
     public static $mapping = array(
         "id" => "rating_id",
@@ -26,12 +27,12 @@ class Rating extends RModel
     );
 
 
-    public function insert()
+    public function save()
     {
         if (!isset($this->timestamp) || $this->timestamp === '') {
             $this->timestamp = date('Y-m-d H:i:s');
         }
-        return parent::insert();
+        return parent::save();
     }
 
     /**

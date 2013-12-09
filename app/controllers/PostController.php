@@ -107,7 +107,7 @@ class PostController extends BaseController
                 $topic->createdTime = date('Y-m-d H:i:s');
                 $topic->lastCommentTime = date('Y-m-d H:i:s');
                 $topic->commentCount = 0;
-                $tid = $topic->insert();
+                $tid = $topic->save();
                 $this->redirectAction('post', 'view', $tid);
             } else {
                 $data['newPostForm'] = $_POST;

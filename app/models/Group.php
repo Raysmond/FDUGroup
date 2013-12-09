@@ -45,16 +45,19 @@ class Group extends RModel
         return $topic->count();
     }
 
-    public function groupUsers($limit=0, $orderby=null, $order='ASC'){
-        $groupUsers = new GroupUser();
-        $groupUsers->groupId = $this->id;
-        $groupUsers = $groupUsers->find(0,$limit,array('key'=>$orderby,'order'=>$order));
-        $result = array();
-        foreach($groupUsers as $row){
-            $user = new User();
-            $user->load($row->userId);
-            array_push($result,$user);
+    public static function getMembers($groupId,$start = 0, $limit=0, $orderBy="", $order='DESC'){
+        $query = GroupUser::find("groupId",$groupId);
+        if($orderBy!="") $query = $query->order($order, $orderBy);
+        $groupUsers = $query->range($start,$limit);
+
+        $userIds = [];
+        foreach($groupUsers as $item){
+            $userIds[] = $groupUsers->userId;
         }
+        unset($groupUsers);
+
+        // todo order by xxx
+        $result = user::find()->where("id",$userIds)->all();
         return $result;
     }
 

@@ -9,6 +9,7 @@ class Counter extends RModel{
     public $id,$entityId,$entityTypeId,$totalCount,$dayCount,$weekCount,$timestamp;
 
     public static $table = "counter";
+    public static $primary_key = "id";
 
     public static $mapping = array(
         "id" => "cid",
@@ -21,28 +22,17 @@ class Counter extends RModel{
     );
 
 
-    public function load($id = null){
-        $result = parent::get($id);
-        if($result===null) return null;
-        $this->entityType = new EntityType();
-        $this->entityType->typeId = $this->entityTypeId;
-        if($this->checkCounter()) $this->update();
-        return $this;
-    }
-
     public function loadCounter($entityId,$entityTypeId){
         if(is_numeric($entityId)&&is_numeric($entityTypeId)){
-            $this->entityId = $entityId;
-            $this->entityTypeId = $entityTypeId;
-            $result = $this->find();
-            if($result===null||count($result)==0){
+            $result = Counter::find("entityId",$entityId)->find("entityTypeId",$entityTypeId)->first();
+            if($result===null){
                 return null;
             }
             else{
-                $result[0]->entityType = new EntityType();
-                $result[0]->entityType->typeId = $this->entityTypeId;
-                if($result[0]->checkCounter()) $result[0]->update();
-                return $result[0];
+                $result->entityType = new EntityType();
+                $result->entityType->typeId = $this->entityTypeId;
+                if($result->checkCounter()) $result->save();
+                return $result;
             }
         }
         else{
@@ -52,19 +42,16 @@ class Counter extends RModel{
 
     public function increaseCounter($entityId,$entityTypeId){
         if(is_numeric($entityId)&&is_numeric($entityTypeId)){
-            $this->entityId = $entityId;
-            $this->entityTypeId = $entityTypeId;
-            $result = $this->find();
-            if($result===null||count($result)==0){
+            $result = Counter::find("entityId",$entityId)->find("entityTypeId",$entityTypeId)->first();
+            if($result===null){
                 $this->timestamp = date('Y-m-d H:i:s');
                 $this->totalCount = 1;
                 $this->dayCount = 1;
                 $this->weekCount = 1;
-                $this->insert();
+                $this->save();
             }
             else{
-                $result = $result[0];
-                foreach($this->columns as $col=>$dbCol){
+                foreach(static::$mapping as $col=>$dbCol){
                     $this->$col = $result->$col;
                 }
                 $this->checkCounter();
@@ -72,7 +59,7 @@ class Counter extends RModel{
                 $this->dayCount++;
                 $this->weekCount++;
                 $this->timestamp = date('Y-m-d H:i:s');
-                $this->update();
+                $this->save();
             }
         }
     }

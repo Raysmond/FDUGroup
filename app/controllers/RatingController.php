@@ -28,8 +28,7 @@ class RatingController extends BaseController
 
                     switch ($_POST['plusType']) {
                         case Topic::$entityType:
-                            $post = new Topic();
-                            if ($post->load($plusId) !== null) {
+                            if (Topic::get($plusId) !== null) {
                                 $plus = new RatingPlus(Topic::$entityType, $plusId, $userId,$host);
                                 if($plus->rate()){
                                     $result = ["result"=>true,"counter"=>$plus->getCounter()->value];
@@ -37,8 +36,7 @@ class RatingController extends BaseController
                             }
                             break;
                         case Group::ENTITY_TYPE:
-                            $group = new Group();
-                            if ($group->load($plusId) !== null) {
+                            if (Group::get($plusId) !== null) {
                                 $plus = new RatingPlus(Group::ENTITY_TYPE, $plusId, $userId, $host);
                                 if($plus->rate()){
                                     $result = ["result"=>true,"counter"=>$plus->getCounter()->value];
