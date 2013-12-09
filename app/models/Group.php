@@ -47,18 +47,19 @@ class Group extends RModel
 
     public static function getMembers($groupId,$start = 0, $limit=0, $orderBy="", $order='DESC'){
         $query = GroupUser::find("groupId",$groupId);
-        if($orderBy!="") $query = $query->order($order, $orderBy);
+        if($orderBy!=""){
+            $query = ($order=="ASC" || $order=="asc")?  $query->order_asc($orderBy): $query->order_desc($orderBy);
+        }
         $groupUsers = $query->range($start,$limit);
 
-        $userIds = [];
+        // todo get all members at a time
+        $users = [];
         foreach($groupUsers as $item){
-            $userIds[] = $groupUsers->userId;
+            $users[] = User::get($item->userId);
         }
         unset($groupUsers);
 
-        // todo order by xxx
-        $result = user::find()->where("id",$userIds)->all();
-        return $result;
+        return $users;
     }
 
     public function setDefaults(){
