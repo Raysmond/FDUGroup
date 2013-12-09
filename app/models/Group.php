@@ -44,6 +44,33 @@ class Group extends RModel
         return Topic::find("groupId", $groupId)->count();
     }
 
+    public static function getGroupsOfCategory($categoryId, $start = 0, $limit = 0, $withSubCategory = true)
+    {
+        $category = Category::get($categoryId);
+        if ($category == null) {
+            return array();
+        }
+
+        $query = Group::find();
+        $whereIds = Group::$mapping["categoryId"] . " in(";
+        if ($withSubCategory) {
+            $subs = $category->children();
+            $count = count($subs);
+            $i = 0;
+            foreach ($subs as $sCat) {
+                $cidList[] = $sCat->id;
+                $whereIds .= $sCat->id;
+                if (++$i < $count) $whereIds .= ',';
+            }
+            $whereIds .= ')';
+            unset($subs);
+        }
+
+        $query = $query->where($whereIds);
+        $groups = ($start != 0 || $limit != 0) ? $query->range($start, $limit) : $query->all();
+        return $groups;
+    }
+
     public static function getMembers($groupId, $start = 0, $limit = 0, $orderBy = "", $order = 'DESC')
     {
         $query = GroupUser::find("groupId", $groupId);

@@ -1,6 +1,9 @@
 <div class="panel panel-default">
     <div class="panel-heading">Popular Groups</div>
     <div class="panel-body popular-groups">
+        <?php if(empty($groups)): ?>
+            <p>No groups</p>
+        <?php endif; ?>
         <ul>
         <?php
             foreach ($groups as $group) {
