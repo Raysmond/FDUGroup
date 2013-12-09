@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.0.4.1
+-- version 4.0.4
 -- http://www.phpmyadmin.net
 --
--- 主机: 127.0.0.1
--- 生成日期: 2013 年 12 月 05 日 08:26
--- 服务器版本: 5.5.32
--- PHP 版本: 5.4.19
+-- 主机: localhost
+-- 生成日期: 2013 年 12 月 09 日 06:32
+-- 服务器版本: 5.5.31
+-- PHP 版本: 5.4.16
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -133,7 +133,6 @@ INSERT INTO `group_category` (`cat_id`, `cat_name`, `cat_pid`) VALUES
 (44, '吐槽', 8),
 (46, '八卦', 8),
 (47, '发泄', 8),
-(48, 'Others', 0),
 (51, '影视', 1);
 
 -- --------------------------------------------------------
@@ -152,7 +151,7 @@ CREATE TABLE IF NOT EXISTS `group_censor` (
   `csr_send_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`csr_id`),
   KEY `csr_type_id` (`csr_type_id`,`csr_first_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=79 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=86 ;
 
 --
 -- 转存表中的数据 `group_censor`
@@ -233,7 +232,14 @@ INSERT INTO `group_censor` (`csr_id`, `csr_type_id`, `csr_first_id`, `csr_second
 (75, 3, 6, 17, 1, '', '2013-12-05 06:58:05'),
 (76, 3, 5, 17, 1, '', '2013-12-05 06:58:05'),
 (77, 3, 9, 17, 1, '', '2013-12-05 06:58:05'),
-(78, 3, 8, 17, 1, '', '2013-12-05 06:58:05');
+(78, 3, 8, 17, 1, '', '2013-12-05 06:58:05'),
+(79, 3, 3, 17, 1, '', '2013-12-05 13:02:32'),
+(80, 1, 1, 11, 2, '', '2013-12-05 13:32:41'),
+(81, 1, 14, 1, 2, '', '2013-12-07 17:37:20'),
+(82, 1, 14, 1, 1, '', '2013-12-07 17:39:08'),
+(83, 1, 14, 1, 1, '', '2013-12-07 17:39:30'),
+(84, 1, 14, 1, 1, '', '2013-12-07 17:40:02'),
+(85, 3, 14, 16, 2, '', '2013-12-08 06:48:16');
 
 -- --------------------------------------------------------
 
@@ -271,7 +277,7 @@ CREATE TABLE IF NOT EXISTS `group_comment` (
   `com_created_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `com_content` text NOT NULL,
   PRIMARY KEY (`com_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=20 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=24 ;
 
 --
 -- 转存表中的数据 `group_comment`
@@ -290,7 +296,11 @@ INSERT INTO `group_comment` (`com_id`, `com_pid`, `top_id`, `u_id`, `com_created
 (16, 15, 7, 1, '2013-11-22 10:28:35', '@admin hello'),
 (17, 7, 1, 1, '2013-11-26 03:34:01', '@admin this is a reply'),
 (18, 7, 1, 1, '2013-11-26 03:36:14', '@admin another reply'),
-(19, 0, 14, 2, '2013-12-05 06:58:45', '张江校区！');
+(19, 0, 14, 2, '2013-12-05 06:58:45', '张江校区！'),
+(20, 19, 14, 14, '2013-12-08 05:46:24', '@Raysmond hello'),
+(21, 0, 14, 14, '2013-12-08 05:47:34', 'comment2'),
+(22, 0, 5, 1, '2013-12-09 04:52:06', 'a'),
+(23, 0, 5, 1, '2013-12-09 04:52:11', 'hell');
 
 -- --------------------------------------------------------
 
@@ -308,50 +318,61 @@ CREATE TABLE IF NOT EXISTS `group_counter` (
   `timestamp` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP COMMENT 'last view time',
   PRIMARY KEY (`cid`),
   KEY `fk_group_counter_group_entity_type1_idx` (`entity_type_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=45 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=56 ;
 
 --
 -- 转存表中的数据 `group_counter`
 --
 
 INSERT INTO `group_counter` (`cid`, `entity_id`, `entity_type_id`, `totalcount`, `daycount`, `weekcount`, `timestamp`) VALUES
-(1, 7, 1, 37, 8, 10, '2013-12-05 07:25:41'),
-(2, 8, 1, 3, 1, 1, '2013-11-25 07:05:36'),
-(4, 13, 1, 20, 5, 5, '2013-12-05 07:14:22'),
-(5, 5, 1, 40, 33, 33, '2013-11-25 07:44:42'),
-(9, 10, 1, 35, 1, 2, '2013-11-30 17:19:33'),
+(1, 7, 1, 38, 1, 11, '2013-12-07 09:21:20'),
+(2, 8, 1, 4, 1, 1, '2013-12-06 13:20:40'),
+(4, 13, 1, 27, 1, 1, '2013-12-08 16:17:29'),
+(5, 5, 1, 67, 19, 19, '2013-12-09 04:52:11'),
+(9, 10, 1, 36, 1, 1, '2013-12-08 06:50:21'),
 (10, 9, 1, 3, 1, 1, '2013-11-25 07:07:24'),
 (11, 11, 1, 3, 1, 3, '2013-11-23 17:33:42'),
 (12, 6, 1, 2, 1, 1, '2013-11-26 02:47:36'),
-(13, 10, 2, 20, 1, 3, '2013-12-05 04:07:53'),
+(13, 10, 2, 79, 1, 1, '2013-12-08 16:16:56'),
 (14, 3, 2, 3, 2, 2, '2013-11-25 09:05:42'),
-(15, 5, 2, 10, 2, 2, '2013-12-04 11:26:39'),
-(16, 2, 2, 112, 1, 6, '2013-12-05 03:42:55'),
-(17, 4, 2, 13, 1, 1, '2013-12-04 07:54:07'),
-(18, 6, 2, 11, 1, 10, '2013-11-26 03:38:50'),
-(19, 7, 2, 10, 1, 4, '2013-11-30 16:37:29'),
-(20, 3, 1, 7, 4, 4, '2013-11-25 07:17:34'),
-(21, 1, 2, 9, 5, 8, '2013-11-30 16:45:01'),
-(22, 8, 2, 6, 2, 2, '2013-12-04 11:41:08'),
-(23, 6, 3, 6, 1, 1, '2013-11-24 16:08:30'),
-(24, 7, 3, 7, 1, 2, '2013-12-05 07:01:52'),
-(25, 14, 1, 19, 13, 13, '2013-12-05 07:03:32'),
+(15, 5, 2, 11, 1, 3, '2013-12-06 14:07:03'),
+(16, 2, 2, 117, 2, 11, '2013-12-08 07:20:12'),
+(17, 4, 2, 15, 1, 3, '2013-12-08 14:20:47'),
+(18, 6, 2, 19, 4, 4, '2013-12-09 04:52:02'),
+(19, 7, 2, 17, 4, 7, '2013-12-08 07:22:18'),
+(20, 3, 1, 12, 1, 5, '2013-12-08 15:57:20'),
+(21, 1, 2, 17, 1, 8, '2013-12-07 05:45:38'),
+(22, 8, 2, 8, 2, 4, '2013-12-07 14:02:04'),
+(23, 6, 3, 7, 1, 1, '2013-12-05 13:25:32'),
+(24, 7, 3, 9, 3, 4, '2013-12-05 13:29:44'),
+(25, 14, 1, 59, 2, 2, '2013-12-08 16:17:22'),
 (26, 4, 3, 1, 1, 1, '2013-11-25 07:46:15'),
-(27, 1, 1, 20, 19, 20, '2013-11-26 03:36:41'),
-(28, 1, 4, 138, 51, 85, '2013-12-05 05:48:06'),
-(29, 2, 4, 14, 12, 12, '2013-12-05 07:11:07'),
-(30, 10, 4, 21, 1, 1, '2013-12-05 07:25:50'),
+(27, 1, 1, 23, 1, 1, '2013-12-08 16:17:17'),
+(28, 1, 4, 347, 2, 2, '2013-12-08 16:02:10'),
+(29, 2, 4, 42, 19, 40, '2013-12-07 15:37:15'),
+(30, 10, 4, 26, 6, 6, '2013-12-05 13:16:26'),
 (31, 8, 4, 4, 2, 4, '2013-11-30 17:20:06'),
-(32, 3, 4, 3, 1, 2, '2013-12-05 06:57:14'),
-(33, 12, 4, 4, 4, 4, '2013-11-30 16:50:52'),
-(34, 5, 4, 2, 2, 2, '2013-11-30 17:49:26'),
+(32, 3, 4, 46, 36, 45, '2013-12-08 07:57:26'),
+(33, 12, 4, 15, 11, 11, '2013-12-05 13:16:44'),
+(34, 5, 4, 3, 1, 1, '2013-12-06 13:02:19'),
 (38, 7, 4, 1, 1, 1, '2013-12-04 18:04:18'),
 (39, 4, 1, 3, 3, 3, '2013-12-05 03:45:19'),
 (40, 9, 4, 5, 5, 5, '2013-12-05 04:08:58'),
-(41, 13, 2, 1, 1, 1, '2013-12-05 06:39:43'),
-(42, 15, 2, 2, 2, 2, '2013-12-05 06:44:17'),
-(43, 16, 2, 3, 3, 3, '2013-12-05 06:57:17'),
-(44, 17, 2, 6, 6, 6, '2013-12-05 07:11:00');
+(41, 13, 2, 3, 2, 3, '2013-12-07 10:47:54'),
+(42, 15, 2, 10, 1, 10, '2013-12-07 19:20:18'),
+(43, 16, 2, 186, 3, 3, '2013-12-09 04:42:25'),
+(44, 17, 2, 41, 2, 2, '2013-12-09 04:10:37'),
+(45, 14, 2, 2, 2, 2, '2013-12-05 13:14:54'),
+(46, 15, 1, 41, 1, 1, '2013-12-08 16:01:37'),
+(47, 11, 4, 6, 6, 6, '2013-12-05 13:32:41'),
+(48, 4, 4, 2, 2, 2, '2013-12-05 13:13:19'),
+(49, 12, 2, 2, 1, 2, '2013-12-08 07:20:14'),
+(50, 16, 1, 52, 2, 2, '2013-12-08 16:17:40'),
+(51, 17, 1, 1, 1, 1, '2013-12-07 15:14:54'),
+(52, 14, 4, 13, 13, 13, '2013-12-08 06:41:40'),
+(53, 18, 1, 8, 4, 4, '2013-12-09 04:42:23'),
+(54, 19, 1, 6, 1, 1, '2013-12-08 16:18:03'),
+(55, 18, 2, 3, 3, 3, '2013-12-08 15:56:25');
 
 -- --------------------------------------------------------
 
@@ -386,7 +407,7 @@ CREATE TABLE IF NOT EXISTS `group_friends` (
   `f_uid` int(11) NOT NULL,
   `f_fid` int(11) NOT NULL,
   PRIMARY KEY (`f_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=30 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=34 ;
 
 --
 -- 转存表中的数据 `group_friends`
@@ -405,8 +426,6 @@ INSERT INTO `group_friends` (`f_id`, `f_uid`, `f_fid`) VALUES
 (13, 1, 5),
 (14, 7, 1),
 (15, 1, 7),
-(16, 4, 1),
-(17, 1, 4),
 (18, 2, 6),
 (19, 6, 2),
 (20, 2, 5),
@@ -418,7 +437,11 @@ INSERT INTO `group_friends` (`f_id`, `f_uid`, `f_fid`) VALUES
 (26, 1, 9),
 (27, 9, 1),
 (28, 1, 8),
-(29, 8, 1);
+(29, 8, 1),
+(30, 11, 1),
+(31, 1, 11),
+(32, 1, 14),
+(33, 14, 1);
 
 -- --------------------------------------------------------
 
@@ -436,29 +459,30 @@ CREATE TABLE IF NOT EXISTS `group_groups` (
   `gro_intro` longtext,
   `gro_picture` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`gro_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=18 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=19 ;
 
 --
 -- 转存表中的数据 `group_groups`
 --
 
 INSERT INTO `group_groups` (`gro_id`, `gro_creator`, `cat_id`, `gro_name`, `gro_member_count`, `gro_created_time`, `gro_intro`, `gro_picture`) VALUES
-(1, 1, 1, 'FDUGroup Developers', 1, '2013-10-16 16:29:20', 'We develop wonderful web applications.', 'files/images/groups/group_1.jpg'),
+(1, 1, 1, 'FDUGroup Developers', 1, '2013-10-16 16:29:20', '&lt;p&gt;We develop wonderful web applications.&lt;/p&gt;', 'files/images/groups/group_1.jpg'),
 (2, 1, 51, '美剧fans', 2, '2013-10-16 17:32:39', '&lt;p&gt;美剧迷们请在此聚集！ Game of Thrones, The Big Bang Theory, Breaking bad, How I met your mother, 2 Broke Girls, Frie...&lt;/p&gt;', 'files/images/groups/group_2.jpg'),
 (3, 1, 6, '张江campus', 1, '2013-10-16 17:34:35', '我们在张江职业技术学校！', 'files/images/groups/group_3.jpg'),
 (4, 1, 51, 'The Vampire Diaries', 2, '2013-10-16 17:35:40', '&lt;p&gt;The Vampire Diaries is a supernatural drama television series developed by Kevin Williamson and Julie Plec, based on the book series of the same name written by L. J. Smith. The series premiered on The CW on September 10, 2009. The series takes place in Mystic Falls, Virginia, a fictional small town haunted by supernatural beings. The series narrative follows the protagonist Elena Gilbert (Nina Dobrev) as she falls in love with vampire Stefan Salvatore (Paul Wesley) and is drawn into the supernatural world as a result. As the series progresses, Elena finds herself drawn to Stefan&amp;#39;s brother Damon Salvatore (Ian Somerhalder) resulting in a love triangle. As the narrative develops in the course of the series, the focal point shifts on the mysterious past of the town involving Elena&amp;#39;s malevolent doppelg&amp;auml;nger Katerina Petrova and the family of Original Vampires, all of which have an evil agenda of their own.&lt;/p&gt;', 'files/images/groups/group_4.jpg'),
 (5, 1, 1, 'test group', 1, '2013-10-17 08:42:33', '&lt;p&gt;test&lt;/p&gt;\r\n\r\n&lt;p&gt;this is a test intro&lt;/p&gt;', 'files/images/groups/group_5.jpg'),
 (6, 2, 1, '沉睡谷 Sleepy Hollow', 4, '2013-10-22 08:18:14', '&lt;p&gt;官方网站:&amp;nbsp;&lt;a target=&quot;_blank&quot; href=&quot;http://www.douban.com/link2?url=http%3A%2F%2Fwww.fox.com%2Fsleepy-hollow%2F&amp;amp;link2key=3b063982f9&quot;&gt;www.fox.com/sleepy-hollow/&lt;/a&gt;&amp;nbsp;&lt;br /&gt;&lt;br /&gt;当你在痛苦中死去，却又在250年之后的未来时代突然醒来，那会是怎样一种情况？当你发现不可想象的事件导致世界正处在毁灭的边缘，而你自己是人类最后的希望，你会怎么做？&amp;nbsp;&lt;br /&gt;&lt;br /&gt;FOX科幻新剧#沉睡谷#（Sleepy Hollow），讲述沉睡多年的乔治华盛顿部下大战复活的无头骑士的故事。&lt;/p&gt;', 'files/images/groups/group_6.jpg'),
 (7, 2, 10, '爱旅行爱摄影', 2, '2013-10-22 08:27:32', '&lt;p&gt;&lt;strong&gt;我们爱旅行，我们爱摄影，因为我们爱生活&amp;hellip;&amp;hellip;&amp;nbsp;&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;&lt;br /&gt;鉴于新人进组约伴出游及时发帖的要求，暂时开放不用申请即可加入&amp;hellip;&amp;hellip;&amp;nbsp;&lt;br /&gt;&lt;br /&gt;注意：户外俱乐部广告、频繁自顶贴内容、借贴游记或者摄影内容加网址推广网站帖一律删除，酌情封禁，不单独解释。&amp;nbsp;&lt;br /&gt;&lt;br /&gt;【微米印】- 手机定制照片书工具，摄影控必备App&amp;rarr;&amp;nbsp;&lt;a target=&quot;_blank&quot; href=&quot;http://www.douban.com/link2?url=http%3A%2F%2Fgoo.gl%2FWzY2n&amp;amp;link2key=3b063982f9&quot;&gt;http://goo.gl/WzY2n&lt;/a&gt;&amp;nbsp;&lt;br /&gt;&lt;br /&gt;小组官方背包客淘宝店试营业（力荐漂亮行李牌）：&amp;nbsp;&lt;br /&gt;&lt;a target=&quot;_blank&quot; href=&quot;http://www.douban.com/link2?url=http%3A%2F%2Fibeibao.taobao.com%2F&amp;amp;link2key=3b063982f9&quot;&gt;http://ibeibao.taobao.com/&lt;/a&gt;&amp;nbsp;&lt;br /&gt;&lt;br /&gt;（力荐）明信片免费申领活动：&lt;a href=&quot;http://www.douban.com/link2?url=http%3A%2F%2Fwww.douban.com%2Fgroup%2Ftopic%2F37528635%2F&amp;amp;link2key=3b063982f9&quot;&gt;http://www.douban.com/group/topic/37528635/&lt;/a&gt;&amp;nbsp;&lt;br /&gt;&lt;br /&gt;爱旅行爱摄影主办方专题页面（在装修中）：&amp;nbsp;&lt;br /&gt;&lt;a href=&quot;http://www.douban.com/link2?url=http%3A%2F%2Fwww.douban.com%2Fhost%2Flvyou%2F&amp;amp;link2key=3b063982f9&quot;&gt;http://www.douban.com/host/lvyou/&lt;/a&gt;&amp;nbsp;&lt;br /&gt;出去旅行喜欢收藏可乐罐子的进来：&amp;nbsp;&lt;br /&gt;&lt;a href=&quot;http://www.douban.com/link2?url=http%3A%2F%2Fsite.douban.com%2F131460%2F&amp;amp;link2key=3b063982f9&quot;&gt;http://site.douban.com/131460/&lt;/a&gt;&amp;nbsp;&lt;br /&gt;&lt;br /&gt;爱旅行爱摄影 新浪微博群：&amp;nbsp;&lt;br /&gt;&lt;a target=&quot;_blank&quot; href=&quot;http://www.douban.com/link2?url=http%3A%2F%2Fq.weibo.com%2F245808&amp;amp;link2key=3b063982f9&quot;&gt;http://q.weibo.com/245808&lt;/a&gt;&amp;nbsp;&lt;br /&gt;&lt;br /&gt;小组优质游记推荐：&lt;a href=&quot;http://www.douban.com/link2?url=http%3A%2F%2Fwww.douban.com%2Fgroup%2Ftopic%2F23637082%2F&amp;amp;link2key=3b063982f9&quot;&gt;http://www.douban.com/group/topic/23637082/&lt;/a&gt;&amp;nbsp;&lt;br /&gt;&lt;br /&gt;沙发主人登记汇总：&lt;a href=&quot;http://www.douban.com/link2?url=http%3A%2F%2Fwww.douban.com%2Fgroup%2Ftopic%2F23594578%2F&amp;amp;link2key=3b063982f9&quot;&gt;http://www.douban.com/group/topic/23594578/&lt;/a&gt;&amp;nbsp;&lt;br /&gt;&lt;br /&gt;小组成员相册汇总：&lt;a href=&quot;http://www.douban.com/link2?url=http%3A%2F%2Fwww.douban.com%2Fgroup%2Ftopic%2F3005107%2F&amp;amp;link2key=3b063982f9&quot;&gt;http://www.douban.com/group/topic/3005107/&lt;/a&gt;&amp;nbsp;&lt;br /&gt;&lt;br /&gt;大家来说说旅途中的雷人雷事：&amp;nbsp;&lt;br /&gt;&lt;a href=&quot;http://www.douban.com/link2?url=http%3A%2F%2Fwww.douban.com%2Fgroup%2Ftopic%2F13469372%2F&amp;amp;link2key=3b063982f9&quot;&gt;http://www.douban.com/group/topic/13469372/&lt;/a&gt;&amp;nbsp;&lt;br /&gt;&lt;br /&gt;你是因摄影而去旅行,还是因旅行而摄影呢?&amp;nbsp;&lt;br /&gt;&lt;a href=&quot;http://www.douban.com/link2?url=http%3A%2F%2Fwww.douban.com%2Fgroup%2Ftopic%2F3281670%2F&amp;amp;link2key=3b063982f9&quot;&gt;http://www.douban.com/group/topic/3281670/&lt;/a&gt;&amp;nbsp;&lt;br /&gt;&lt;br /&gt;以下，请根据各人特点选择加入（请勿多个同时加入，注意加入条件，加入时无详细说明的申请者均不批准，提供blog或者相册者优先批准，入群后请按要求修改群名片使用默认规范字体发言）：&amp;nbsp;&lt;br /&gt;&lt;br /&gt;印度旅行背包客：96392862（仅限热爱印度人文以及打算、去过印度旅行的同学加入）&amp;nbsp;&lt;br /&gt;旅行摄影（北京群）：3897932（北京的同学请加入，方便活动）&amp;nbsp;&lt;br /&gt;旅行摄影（华东群）：1653181（华东的同学请加入，方便活动）&amp;nbsp;&lt;br /&gt;旅行摄影（不限地域群）：106029788（1000人大群，重点谈旅行，谢绝疯狂灌水，加入时候说明旅行过的地方，疯狂灌水扯聊者直接删除不解释）&amp;nbsp;&lt;br /&gt;海外行摄QQ群：107251272（仅限热衷海外旅行并且有海外旅行经验的朋友加入，入群申请请说明有哪些海外旅行经验。）&amp;nbsp;&lt;br /&gt;&lt;br /&gt;MSN群：msngroup9998@hotmail.com（已满，人口众多，灌水谈生活比较多）&amp;nbsp;&lt;br /&gt;&lt;br /&gt;飞信群：3695910（比较沉默，可能和飞信群还不很流行有关）&amp;nbsp;&lt;br /&gt;&lt;br /&gt;小组主管理员QQ：1417159（添加好友时候务必说明原因）&amp;nbsp;&lt;br /&gt;微博：&lt;a target=&quot;_blank&quot; href=&quot;http://www.douban.com/link2?url=http%3A%2F%2Fweibo.com%2Fxiaotao&amp;amp;link2key=3b063982f9&quot;&gt;http://weibo.com/xiaotao&lt;/a&gt;&lt;/p&gt;&lt;p&gt;原豆瓣小组：&lt;a href=&quot;http://www.douban.com/group/lvxing/&quot;&gt;http://www.douban.com/group/lvxing/&lt;/a&gt;&lt;/p&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;', 'files/images/groups/group_7.png'),
-(8, 2, 48, '恐怖电影', 3, '2013-10-22 08:31:27', '&lt;p&gt;&lt;span style=&quot;line-height:1.6em&quot;&gt;小组主群：100075281&amp;nbsp;&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;br /&gt;✪加入小组请先设好头像，谢谢✪&amp;nbsp;&lt;br /&gt;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;nbsp;&lt;br /&gt;&lt;br /&gt;牛逼论坛/小组（众多珍贵稀缺资源）：&amp;nbsp;&lt;br /&gt;&lt;br /&gt;夜半子不语&amp;nbsp;&lt;br /&gt;&lt;a href=&quot;http://www.douban.com/link2?url=http%3A%2F%2Fsite.douban.com%2F119603%2F&amp;amp;link2key=3b063982f9&quot;&gt;http://site.douban.com/119603/&lt;/a&gt;&amp;nbsp;&lt;br /&gt;非常恐怖电影首发站&amp;nbsp;&lt;br /&gt;&lt;a target=&quot;_blank&quot; href=&quot;http://www.douban.com/link2?url=http%3A%2F%2Fwww.fckb.net%2Fforum.php&amp;amp;link2key=3b063982f9&quot;&gt;http://www.fckb.net/forum.php&lt;/a&gt;&amp;nbsp;&lt;br /&gt;&lt;br /&gt;老片分享&amp;nbsp;&lt;br /&gt;&lt;a href=&quot;http://www.douban.com/link2?url=http%3A%2F%2Fwww.douban.com%2Fgroup%2F182931%2F&amp;amp;link2key=3b063982f9&quot;&gt;http://www.douban.com/group/182931/&lt;/a&gt;&amp;nbsp;&lt;br /&gt;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;nbsp;&lt;br /&gt;☞本小组发言严禁重要剧情透露(若主题涉及剧透，请在主题处标明)，如果发现酌情删除&amp;nbsp;&lt;br /&gt;多次剧透不改者考虑封禁&amp;nbsp;&lt;br /&gt;不欢迎谩骂　&amp;nbsp;&lt;br /&gt;&lt;br /&gt;☞为给大家一个干净纯粹的交流空间，请尽量不要以发布网站链接、图片的形式，进行变相的广告宣传活动，如出现的话会酌情处理。&amp;nbsp;&lt;br /&gt;（我们会定期把下载资源站放在小组介绍处）&amp;nbsp;&lt;br /&gt;&lt;br /&gt;☞广告贴一律删除+举报广告店铺！&amp;nbsp;&lt;br /&gt;&lt;br /&gt;☞不欢迎敏感的政治话题。&amp;nbsp;&lt;br /&gt;&lt;br /&gt;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;nbsp;&lt;br /&gt;许多国内恐怖片在线观看：&amp;nbsp;&lt;br /&gt;&lt;a target=&quot;_blank&quot; href=&quot;http://www.douban.com/link2?url=http%3A%2F%2Fwww.m1905.com%2Fvod%2Flist%2Ft_6%2Fo1u1p1.html&amp;amp;link2key=3b063982f9&quot;&gt;http://www.m1905.com/vod/list/t_6/o1u1p1.html&lt;/a&gt;&amp;nbsp;&lt;br /&gt;&lt;br /&gt;114恐怖电影下载：&amp;nbsp;&lt;br /&gt;&lt;a target=&quot;_blank&quot; href=&quot;http://www.douban.com/link2?url=http%3A%2F%2Fwww.3i8i.net%2Flist%2Flist5.html&amp;amp;link2key=3b063982f9&quot;&gt;http://www.3i8i.net/list/list5.html&lt;/a&gt;&amp;nbsp;&lt;br /&gt;&lt;br /&gt;3E恐怖电影下载（速度稳定）：&amp;nbsp;&lt;br /&gt;&lt;a target=&quot;_blank&quot; href=&quot;http://www.douban.com/link2?url=http%3A%2F%2Fwww.eee4.cc%2Fhtml%2Fkongbu%2Findex.html&amp;amp;link2key=3b063982f9&quot;&gt;http://www.eee4.cc/html/kongbu/index.html&lt;/a&gt;&amp;nbsp;&lt;br /&gt;&lt;br /&gt;博雅在线观看（之前较著名的稀缺恐怖片发行站 支持QVOD）：&amp;nbsp;&lt;br /&gt;&lt;a target=&quot;_blank&quot; href=&quot;http://www.douban.com/link2?url=http%3A%2F%2Fwww.5944b.com%2F&amp;amp;link2key=3b063982f9&quot;&gt;http://www.5944b.com/&lt;/a&gt;&amp;nbsp;&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;【值得期待的新片】：&lt;a href=&quot;http://www.douban.com/link2?url=http%3A%2F%2Fmovie.douban.com%2Fdoulist%2F730752%2F&amp;amp;link2key=3b063982f9&quot;&gt;http://movie.douban.com/doulist/730752/&lt;/a&gt;&lt;/p&gt;&lt;p&gt;原豆瓣小组：&lt;a href=&quot;http://www.douban.com/group/horrormovies/&quot;&gt;http://www.douban.com/group/horrormovies/&lt;/a&gt;&lt;/p&gt;', 'files/images/groups/group_8.png'),
+(8, 2, 1, '恐怖电影', 3, '2013-10-22 08:31:27', '&lt;p&gt;小组主群：100075281&amp;nbsp;&lt;/p&gt;\r\n\r\n&lt;p&gt;&lt;br /&gt;\r\n✪加入小组请先设好头像，谢谢✪&amp;nbsp;&lt;br /&gt;\r\n&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;nbsp;&lt;br /&gt;\r\n&lt;br /&gt;\r\n牛逼论坛/小组（众多珍贵稀缺资源）：&amp;nbsp;&lt;br /&gt;\r\n&lt;br /&gt;\r\n夜半子不语&amp;nbsp;&lt;br /&gt;\r\n&lt;a href=&quot;http://www.douban.com/link2?url=http%3A%2F%2Fsite.douban.com%2F119603%2F&amp;amp;link2key=3b063982f9&quot;&gt;http://site.douban.com/119603/&lt;/a&gt;&amp;nbsp;&lt;br /&gt;\r\n非常恐怖电影首发站&amp;nbsp;&lt;br /&gt;\r\n&lt;a href=&quot;http://www.douban.com/link2?url=http%3A%2F%2Fwww.fckb.net%2Fforum.php&amp;amp;link2key=3b063982f9&quot; target=&quot;_blank&quot;&gt;http://www.fckb.net/forum.php&lt;/a&gt;&amp;nbsp;&lt;br /&gt;\r\n&lt;br /&gt;\r\n老片分享&amp;nbsp;&lt;br /&gt;\r\n&lt;a href=&quot;http://www.douban.com/link2?url=http%3A%2F%2Fwww.douban.com%2Fgroup%2F182931%2F&amp;amp;link2key=3b063982f9&quot;&gt;http://www.douban.com/group/182931/&lt;/a&gt;&amp;nbsp;&lt;br /&gt;\r\n&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;nbsp;&lt;br /&gt;\r\n☞本小组发言严禁重要剧情透露(若主题涉及剧透，请在主题处标明)，如果发现酌情删除&amp;nbsp;&lt;br /&gt;\r\n多次剧透不改者考虑封禁&amp;nbsp;&lt;br /&gt;\r\n不欢迎谩骂　&amp;nbsp;&lt;br /&gt;\r\n&lt;br /&gt;\r\n☞为给大家一个干净纯粹的交流空间，请尽量不要以发布网站链接、图片的形式，进行变相的广告宣传活动，如出现的话会酌情处理。&amp;nbsp;&lt;br /&gt;\r\n（我们会定期把下载资源站放在小组介绍处）&amp;nbsp;&lt;br /&gt;\r\n&lt;br /&gt;\r\n☞广告贴一律删除+举报广告店铺！&amp;nbsp;&lt;br /&gt;\r\n&lt;br /&gt;\r\n☞不欢迎敏感的政治话题。&amp;nbsp;&lt;br /&gt;\r\n&lt;br /&gt;\r\n&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;nbsp;&lt;br /&gt;\r\n许多国内恐怖片在线观看：&amp;nbsp;&lt;br /&gt;\r\n&lt;a href=&quot;http://www.douban.com/link2?url=http%3A%2F%2Fwww.m1905.com%2Fvod%2Flist%2Ft_6%2Fo1u1p1.html&amp;amp;link2key=3b063982f9&quot; target=&quot;_blank&quot;&gt;http://www.m1905.com/vod/list/t_6/o1u1p1.html&lt;/a&gt;&amp;nbsp;&lt;br /&gt;\r\n&lt;br /&gt;\r\n114恐怖电影下载：&amp;nbsp;&lt;br /&gt;\r\n&lt;a href=&quot;http://www.douban.com/link2?url=http%3A%2F%2Fwww.3i8i.net%2Flist%2Flist5.html&amp;amp;link2key=3b063982f9&quot; target=&quot;_blank&quot;&gt;http://www.3i8i.net/list/list5.html&lt;/a&gt;&amp;nbsp;&lt;br /&gt;\r\n&lt;br /&gt;\r\n3E恐怖电影下载（速度稳定）：&amp;nbsp;&lt;br /&gt;\r\n&lt;a href=&quot;http://www.douban.com/link2?url=http%3A%2F%2Fwww.eee4.cc%2Fhtml%2Fkongbu%2Findex.html&amp;amp;link2key=3b063982f9&quot; target=&quot;_blank&quot;&gt;http://www.eee4.cc/html/kongbu/index.html&lt;/a&gt;&amp;nbsp;&lt;br /&gt;\r\n&lt;br /&gt;\r\n博雅在线观看（之前较著名的稀缺恐怖片发行站 支持QVOD）：&amp;nbsp;&lt;br /&gt;\r\n&lt;a href=&quot;http://www.douban.com/link2?url=http%3A%2F%2Fwww.5944b.com%2F&amp;amp;link2key=3b063982f9&quot; target=&quot;_blank&quot;&gt;http://www.5944b.com/&lt;/a&gt;&amp;nbsp;&lt;br /&gt;\r\n&lt;br /&gt;\r\n&lt;br /&gt;\r\n&lt;br /&gt;\r\n【值得期待的新片】：&lt;a href=&quot;http://www.douban.com/link2?url=http%3A%2F%2Fmovie.douban.com%2Fdoulist%2F730752%2F&amp;amp;link2key=3b063982f9&quot;&gt;http://movie.douban.com/doulist/730752/&lt;/a&gt;&lt;/p&gt;\r\n\r\n&lt;p&gt;原豆瓣小组：&lt;a href=&quot;http://www.douban.com/group/horrormovies/&quot;&gt;http://www.douban.com/group/horrormovies/&lt;/a&gt;&lt;/p&gt;', 'files/images/groups/group_8.png'),
 (10, 2, 14, '吃喝玩乐在上海', 3, '2013-10-22 08:53:13', '&lt;p&gt;独乐乐不如众乐乐，一起来交流【上海】海吃海喝海玩海乐和的经验吧！&amp;nbsp;&lt;br /&gt;&lt;br /&gt;我们都是一群爱&amp;quot;腐败&amp;quot;的家伙~&amp;nbsp;&lt;br /&gt;&lt;br /&gt;我们爱K歌爱泡酒吧爱美食爱旅行~&amp;nbsp;&lt;br /&gt;&lt;br /&gt;没人陪？加入同城的我们吧!&amp;nbsp;&lt;br /&gt;&lt;br /&gt;欢迎大家把自己曾去过、玩过、吃过的好地方都晒出来,一起分享上海吃喝玩乐的好去处！&amp;nbsp;&lt;br /&gt;&lt;br /&gt;*本组并非只是旅游答疑小组。天气着装之类问题在本组问过上百次，其实搜索+经验判断即有答案，不必专门发帖询问。下列FAQ供各位参考：&amp;nbsp;&lt;br /&gt;上海介绍：&lt;a target=&quot;_blank&quot; href=&quot;http://www.douban.com/link2?url=http%3A%2F%2Fbaike.baidu.com%2Fview%2F1735.htm&amp;amp;link2key=3b063982f9&quot;&gt;http://baike.baidu.com/view/1735.htm&lt;/a&gt;&amp;nbsp;&lt;br /&gt;上海天气：&lt;a target=&quot;_blank&quot; href=&quot;http://www.douban.com/link2?url=http%3A%2F%2Fwww.weather.com.cn%2Fweather%2F101020100.shtml&amp;amp;link2key=3b063982f9&quot;&gt;http://www.weather.com.cn/weather/101020100.shtml&lt;/a&gt;&amp;nbsp;&lt;br /&gt;上海美食：&lt;a target=&quot;_blank&quot; href=&quot;http://www.douban.com/link2?url=http%3A%2F%2Fwww.dianping.com%2Fshanghai%2Ffood&amp;amp;link2key=3b063982f9&quot;&gt;http://www.dianping.com/shanghai/food&lt;/a&gt;&amp;nbsp;&lt;br /&gt;上海旅游：&lt;a target=&quot;_blank&quot; href=&quot;http://www.douban.com/link2?url=http%3A%2F%2Flvyou.baidu.com%2Fshanghai%2F&amp;amp;link2key=3b063982f9&quot;&gt;http://lvyou.baidu.com/shanghai/&lt;/a&gt;&amp;nbsp;&lt;/p&gt;&lt;p&gt;原豆瓣小组链接：http://www.douban.com/group/248655/&lt;/p&gt;', 'files/images/groups/group_10.png'),
 (11, 1, 1, 'Test group', 1, '2013-10-22 15:18:46', '&lt;p&gt;This is a test group.&lt;/p&gt;&lt;p&gt;&lt;em&gt;&lt;strong&gt;We welcome everybody to join in our group!&lt;/strong&gt;&lt;/em&gt;&lt;/p&gt;', 'files/images/groups/group_11.png'),
 (12, 2, 10, '爱旅行爱摄影', 3, '2013-10-22 08:27:32', '&lt;p&gt;&lt;strong&gt;我们爱旅行，我们爱摄影，因为我们爱生活&amp;hellip;&amp;hellip;&amp;nbsp;&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;&lt;br /&gt;鉴于新人进组约伴出游及时发帖的要求，暂时开放不用申请即可加入&amp;hellip;&amp;hellip;&amp;nbsp;&lt;br /&gt;&lt;br /&gt;注意：户外俱乐部广告、频繁自顶贴内容、借贴游记或者摄影内容加网址推广网站帖一律删除，酌情封禁，不单独解释。&amp;nbsp;&lt;br /&gt;&lt;br /&gt;【微米印】- 手机定制照片书工具，摄影控必备App&amp;rarr;&amp;nbsp;&lt;a target=&quot;_blank&quot; href=&quot;http://www.douban.com/link2?url=http%3A%2F%2Fgoo.gl%2FWzY2n&amp;amp;link2key=3b063982f9&quot;&gt;http://goo.gl/WzY2n&lt;/a&gt;&amp;nbsp;&lt;br /&gt;&lt;br /&gt;小组官方背包客淘宝店试营业（力荐漂亮行李牌）：&amp;nbsp;&lt;br /&gt;&lt;a target=&quot;_blank&quot; href=&quot;http://www.douban.com/link2?url=http%3A%2F%2Fibeibao.taobao.com%2F&amp;amp;link2key=3b063982f9&quot;&gt;http://ibeibao.taobao.com/&lt;/a&gt;&amp;nbsp;&lt;br /&gt;&lt;br /&gt;（力荐）明信片免费申领活动：&lt;a href=&quot;http://www.douban.com/link2?url=http%3A%2F%2Fwww.douban.com%2Fgroup%2Ftopic%2F37528635%2F&amp;amp;link2key=3b063982f9&quot;&gt;http://www.douban.com/group/topic/37528635/&lt;/a&gt;&amp;nbsp;&lt;br /&gt;&lt;br /&gt;爱旅行爱摄影主办方专题页面（在装修中）：&amp;nbsp;&lt;br /&gt;&lt;a href=&quot;http://www.douban.com/link2?url=http%3A%2F%2Fwww.douban.com%2Fhost%2Flvyou%2F&amp;amp;link2key=3b063982f9&quot;&gt;http://www.douban.com/host/lvyou/&lt;/a&gt;&amp;nbsp;&lt;br /&gt;出去旅行喜欢收藏可乐罐子的进来：&amp;nbsp;&lt;br /&gt;&lt;a href=&quot;http://www.douban.com/link2?url=http%3A%2F%2Fsite.douban.com%2F131460%2F&amp;amp;link2key=3b063982f9&quot;&gt;http://site.douban.com/131460/&lt;/a&gt;&amp;nbsp;&lt;br /&gt;&lt;br /&gt;爱旅行爱摄影 新浪微博群：&amp;nbsp;&lt;br /&gt;&lt;a target=&quot;_blank&quot; href=&quot;http://www.douban.com/link2?url=http%3A%2F%2Fq.weibo.com%2F245808&amp;amp;link2key=3b063982f9&quot;&gt;http://q.weibo.com/245808&lt;/a&gt;&amp;nbsp;&lt;br /&gt;&lt;br /&gt;小组优质游记推荐：&lt;a href=&quot;http://www.douban.com/link2?url=http%3A%2F%2Fwww.douban.com%2Fgroup%2Ftopic%2F23637082%2F&amp;amp;link2key=3b063982f9&quot;&gt;http://www.douban.com/group/topic/23637082/&lt;/a&gt;&amp;nbsp;&lt;br /&gt;&lt;br /&gt;沙发主人登记汇总：&lt;a href=&quot;http://www.douban.com/link2?url=http%3A%2F%2Fwww.douban.com%2Fgroup%2Ftopic%2F23594578%2F&amp;amp;link2key=3b063982f9&quot;&gt;http://www.douban.com/group/topic/23594578/&lt;/a&gt;&amp;nbsp;&lt;br /&gt;&lt;br /&gt;小组成员相册汇总：&lt;a href=&quot;http://www.douban.com/link2?url=http%3A%2F%2Fwww.douban.com%2Fgroup%2Ftopic%2F3005107%2F&amp;amp;link2key=3b063982f9&quot;&gt;http://www.douban.com/group/topic/3005107/&lt;/a&gt;&amp;nbsp;&lt;br /&gt;&lt;br /&gt;大家来说说旅途中的雷人雷事：&amp;nbsp;&lt;br /&gt;&lt;a href=&quot;http://www.douban.com/link2?url=http%3A%2F%2Fwww.douban.com%2Fgroup%2Ftopic%2F13469372%2F&amp;amp;link2key=3b063982f9&quot;&gt;http://www.douban.com/group/topic/13469372/&lt;/a&gt;&amp;nbsp;&lt;br /&gt;&lt;br /&gt;你是因摄影而去旅行,还是因旅行而摄影呢?&amp;nbsp;&lt;br /&gt;&lt;a href=&quot;http://www.douban.com/link2?url=http%3A%2F%2Fwww.douban.com%2Fgroup%2Ftopic%2F3281670%2F&amp;amp;link2key=3b063982f9&quot;&gt;http://www.douban.com/group/topic/3281670/&lt;/a&gt;&amp;nbsp;&lt;br /&gt;&lt;br /&gt;以下，请根据各人特点选择加入（请勿多个同时加入，注意加入条件，加入时无详细说明的申请者均不批准，提供blog或者相册者优先批准，入群后请按要求修改群名片使用默认规范字体发言）：&amp;nbsp;&lt;br /&gt;&lt;br /&gt;印度旅行背包客：96392862（仅限热爱印度人文以及打算、去过印度旅行的同学加入）&amp;nbsp;&lt;br /&gt;旅行摄影（北京群）：3897932（北京的同学请加入，方便活动）&amp;nbsp;&lt;br /&gt;旅行摄影（华东群）：1653181（华东的同学请加入，方便活动）&amp;nbsp;&lt;br /&gt;旅行摄影（不限地域群）：106029788（1000人大群，重点谈旅行，谢绝疯狂灌水，加入时候说明旅行过的地方，疯狂灌水扯聊者直接删除不解释）&amp;nbsp;&lt;br /&gt;海外行摄QQ群：107251272（仅限热衷海外旅行并且有海外旅行经验的朋友加入，入群申请请说明有哪些海外旅行经验。）&amp;nbsp;&lt;br /&gt;&lt;br /&gt;MSN群：msngroup9998@hotmail.com（已满，人口众多，灌水谈生活比较多）&amp;nbsp;&lt;br /&gt;&lt;br /&gt;飞信群：3695910（比较沉默，可能和飞信群还不很流行有关）&amp;nbsp;&lt;br /&gt;&lt;br /&gt;小组主管理员QQ：1417159（添加好友时候务必说明原因）&amp;nbsp;&lt;br /&gt;微博：&lt;a target=&quot;_blank&quot; href=&quot;http://www.douban.com/link2?url=http%3A%2F%2Fweibo.com%2Fxiaotao&amp;amp;link2key=3b063982f9&quot;&gt;http://weibo.com/xiaotao&lt;/a&gt;&lt;/p&gt;&lt;p&gt;原豆瓣小组：&lt;a href=&quot;http://www.douban.com/group/lvxing/&quot;&gt;http://www.douban.com/group/lvxing/&lt;/a&gt;&lt;/p&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;', 'files/images/groups/group_7.png'),
 (13, 1, 36, 'Instagram', 1, '2013-12-05 06:39:25', '&lt;p&gt;Instagram is an online photo-sharing, video-sharing and social networking service that enables its users to take pictures and videos, apply digital filters to them, and share them on a variety of social networking services, such as Facebook, Twitter, Tumblr and Flickr.&lt;/p&gt;', 'files/images/groups/group_13.jpeg'),
 (14, 1, 36, 'Tumblr', 1, '2013-12-05 06:41:23', '&lt;p&gt;Tumblr, stylized in its logo as tumblr., is a microblogging platform and social networking website founded by David Karp and owned by Yahoo! Inc. The service allows users to post multimedia and other content to a short-form blog. Users can follow other users&amp;#39; blogs, as well as make their blogs private.[4][5] Much of the website&amp;#39;s features are accessed from the &amp;quot;dashboard&amp;quot; interface, where the option to post content and posts of followed blogs appear.&lt;/p&gt;', 'files/images/groups/group_14.png'),
 (15, 1, 51, 'walking dead season 4', 1, '2013-12-05 06:43:55', '&lt;p&gt;《行尸走肉》主要讲述的是主人公Rick是亚特兰大城郊一座小镇的副警长。在执行公务的过程中，Rick遭到枪击，伤势严重，被人紧急送往当地医院进行抢救。当Rick醒来之后，发现医院里已经空无一人。他意识到外面一定出了大事，但又不清楚到底是什么事。全剧围绕主人公Rick在丧尸蔓延、危机四伏的美国四处逃亡时与他的同伴的经历展开，剧情扣人心弦。&lt;/p&gt;', 'files/images/groups/group_15.jpg'),
-(16, 1, 1, '绿箭侠 第二季 Arrow Season 2 (2013)', 1, '2013-12-05 06:46:20', '&lt;p&gt;CW热门美剧《绿箭侠》的金童玉女斯蒂芬&amp;middot;阿梅尔和凯蒂&amp;middot;卡西迪声称。两人在剧中本是一对旧情人，不过因为各种原因分手当前任。英雄配美女这样老套的搭配并没有出现在剧中，而是升华为&amp;ldquo;英雄惜英雄&amp;rdquo;&amp;mdash;&amp;mdash;凯蒂饰演绿箭侠前女友Laurel，在剧中表面是一个不向恶势力低头的正义女律师，而 实际上却是超级女英雄&amp;ldquo;黑金丝雀&amp;rdquo;Black Canary。俗话说男女搭配干活不累，男女英雄亦是如此。&lt;/p&gt;', 'files/images/groups/group_16.jpg'),
-(17, 1, 51, '魔戒电影三部曲', 2, '2013-12-05 06:49:14', '&lt;p&gt;&lt;strong&gt;魔戒电影三部曲&lt;/strong&gt;包括三部实景真人的奇幻&lt;a class=&quot;new&quot; href=&quot;http://zh.wikipedia.org/w/index.php?title=%E5%8F%B2%E8%A9%A9%E9%9B%BB%E5%BD%B1&amp;amp;action=edit&amp;amp;redlink=1&quot; style=&quot;text-decoration: none; color: rgb(165, 88, 88); background-image: none; background-position: initial initial; background-repeat: initial initial;&quot; title=&quot;史诗电影（页面不存在）&quot;&gt;史诗电影&lt;/a&gt;：《&lt;a class=&quot;mw-redirect&quot; href=&quot;http://zh.wikipedia.org/wiki/%E9%AD%94%E6%88%92%E9%A6%96%E9%83%A8%E6%9B%B2%EF%BC%9A%E9%AD%94%E6%88%92%E7%8F%BE%E8%BA%AB&quot; style=&quot;text-decoration: none; color: rgb(11, 0, 128); background-image: none; background-position: initial initial; background-repeat: initial initial;&quot; title=&quot;指环王：护戒使者&quot;&gt;指环王：护戒使者&lt;/a&gt;》（&lt;a href=&quot;http://zh.wikipedia.org/wiki/2001%E5%B9%B4&quot; style=&quot;text-decoration: none; color: rgb(11, 0, 128); background-image: none; background-position: initial initial; background-repeat: initial initial;&quot; title=&quot;2001年&quot;&gt;2001年&lt;/a&gt;）、《&lt;a class=&quot;mw-redirect&quot; href=&quot;http://zh.wikipedia.org/wiki/%E9%AD%94%E6%88%92%E4%BA%8C%E9%83%A8%E6%9B%B2%EF%BC%9A%E9%9B%99%E5%9F%8E%E5%A5%87%E8%AC%80&quot; style=&quot;text-decoration: none; color: rgb(11, 0, 128); background-image: none; background-position: initial initial; background-repeat: initial initial;&quot; title=&quot;指环王：双塔奇兵&quot;&gt;指环王：双塔奇兵&lt;/a&gt;》（&lt;a href=&quot;http://zh.wikipedia.org/wiki/2002%E5%B9%B4&quot; style=&quot;text-decoration: none; color: rgb(11, 0, 128); background-image: none; background-position: initial initial; background-repeat: initial initial;&quot; title=&quot;2002年&quot;&gt;2002年&lt;/a&gt;）及《&lt;a class=&quot;mw-redirect&quot; href=&quot;http://zh.wikipedia.org/wiki/%E9%AD%94%E6%88%92%E4%B8%89%E9%83%A8%E6%9B%B2%EF%BC%9A%E7%8E%8B%E8%80%85%E5%86%8D%E8%87%A8&quot; style=&quot;text-decoration: none; color: rgb(11, 0, 128); background-image: none; background-position: initial initial; background-repeat: initial initial;&quot; title=&quot;指环王：王者归来&quot;&gt;指环王：王者归来&lt;/a&gt;》（&lt;a href=&quot;http://zh.wikipedia.org/wiki/2003%E5%B9%B4&quot; style=&quot;text-decoration: none; color: rgb(11, 0, 128); background-image: none; background-position: initial initial; background-repeat: initial initial;&quot; title=&quot;2003年&quot;&gt;2003年&lt;/a&gt;）（三部曲常被缩写成&lt;strong&gt;LotR&lt;/strong&gt;，&lt;strong&gt;FotR&lt;/strong&gt;、&lt;strong&gt;TTT&lt;/strong&gt;及&lt;strong&gt;RotK&lt;/strong&gt;分别指三部电影）&lt;a href=&quot;http://zh.wikipedia.org/wiki/%E9%AD%94%E6%88%92%E9%9B%BB%E5%BD%B1%E4%B8%89%E9%83%A8%E6%9B%B2#cite_note-1&quot; style=&quot;text-decoration: none; color: rgb(11, 0, 128); background-image: none; white-space: nowrap; background-position: initial initial; background-repeat: initial initial;&quot;&gt;[1]&lt;/a&gt;。魔戒三部曲是以&lt;a href=&quot;http://zh.wikipedia.org/wiki/J%C2%B7R%C2%B7R%C2%B7%E6%89%98%E5%B0%94%E9%87%91&quot; style=&quot;text-decoration: none; color: rgb(11, 0, 128); background-image: none; background-position: initial initial; background-repeat: initial initial;&quot; title=&quot;J·R·R·托尔金&quot;&gt;J&amp;middot;R&amp;middot;R&amp;middot;托尔金&lt;/a&gt;著作的小说《&lt;a href=&quot;http://zh.wikipedia.org/wiki/%E9%AD%94%E6%88%92&quot; style=&quot;text-decoration: none; color: rgb(11, 0, 128); background-image: none; background-position: initial initial; background-repeat: initial initial;&quot; title=&quot;魔戒&quot;&gt;魔戒&lt;/a&gt;》的三册书改编而成，电影大抵依循小说的主线故事，但也加入了一些新元素及一些偏离原著的情节&lt;a href=&quot;http://zh.wikipedia.org/wiki/%E9%AD%94%E6%88%92%E9%9B%BB%E5%BD%B1%E4%B8%89%E9%83%A8%E6%9B%B2#cite_note-2&quot; style=&quot;text-decoration: none; color: rgb(11, 0, 128); background-image: none; white-space: nowrap; background-position: initial initial; background-repeat: initial initial;&quot;&gt;[2]&lt;/a&gt;。&lt;/p&gt;\r\n\r\n&lt;p&gt;故事背景是虚构的&lt;a href=&quot;http://zh.wikipedia.org/wiki/%E4%B8%AD%E5%9C%9F%E5%A4%A7%E9%99%B8&quot; style=&quot;text-decoration: none; color: rgb(11, 0, 128); background-image: none; background-position: initial initial; background-repeat: initial initial;&quot; title=&quot;中土大陆&quot;&gt;中土大陆&lt;/a&gt;，电影三部曲的焦点都集中在年轻的&lt;a href=&quot;http://zh.wikipedia.org/wiki/%E5%93%88%E6%AF%94%E4%BA%BA&quot; style=&quot;text-decoration: none; color: rgb(11, 0, 128); background-image: none; background-position: initial initial; background-repeat: initial initial;&quot; title=&quot;霍比特人&quot;&gt;霍比特人&lt;/a&gt;&lt;a href=&quot;http://zh.wikipedia.org/wiki/%E4%BD%9B%E7%BD%97%E5%A4%9A%C2%B7%E5%B7%B4%E9%87%91%E6%96%AF&quot; style=&quot;text-decoration: none; color: rgb(11, 0, 128); background-image: none; background-position: initial initial; background-repeat: initial initial;&quot; title=&quot;佛罗多·巴金斯&quot;&gt;佛罗多&amp;middot;巴金斯&lt;/a&gt;及&lt;a href=&quot;http://zh.wikipedia.org/wiki/%E9%AD%94%E6%88%92%E9%81%A0%E5%BE%81%E9%9A%8A&quot; style=&quot;text-decoration: none; color: rgb(11, 0, 128); background-image: none; background-position: initial initial; background-repeat: initial initial;&quot; title=&quot;魔戒远征队&quot;&gt;魔戒远征队&lt;/a&gt;执行摧毁&lt;a href=&quot;http://zh.wikipedia.org/wiki/%E8%87%B3%E5%B0%8A%E9%AD%94%E6%88%92&quot; style=&quot;text-decoration: none; color: rgb(11, 0, 128); background-image: none; background-position: initial initial; background-repeat: initial initial;&quot; title=&quot;至尊魔戒&quot;&gt;至尊魔戒&lt;/a&gt;的任务，以及消灭至尊魔戒的制造者黑暗魔君&lt;a href=&quot;http://zh.wikipedia.org/wiki/%E7%B4%A2%E5%80%AB&quot; style=&quot;text-decoration: none; color: rgb(11, 0, 128); background-image: none; background-position: initial initial; background-repeat: initial initial;&quot; title=&quot;索伦&quot;&gt;索伦&lt;/a&gt;&lt;a href=&quot;http://zh.wikipedia.org/wiki/%E9%AD%94%E6%88%92%E9%9B%BB%E5%BD%B1%E4%B8%89%E9%83%A8%E6%9B%B2#cite_note-3&quot; style=&quot;text-decoration: none; color: rgb(11, 0, 128); background-image: none; white-space: nowrap; background-position: initial initial; background-repeat: initial initial;&quot;&gt;[3]&lt;/a&gt;。随着情节的发展，魔戒远征队分崩析离，佛罗多、他的忠实伙伴&lt;a href=&quot;http://zh.wikipedia.org/wiki/%E5%B1%B1%E5%A7%86%C2%B7%E8%A9%B9%E5%90%89&quot; style=&quot;text-decoration: none; color: rgb(11, 0, 128); background-image: none; background-position: initial initial; background-repeat: initial initial;&quot; title=&quot;山姆·詹吉&quot;&gt;山姆&lt;/a&gt;及奸诈的&lt;a href=&quot;http://zh.wikipedia.org/wiki/%E5%92%95%E5%9A%95&quot; style=&quot;text-decoration: none; color: rgb(11, 0, 128); background-image: none; background-position: initial initial; background-repeat: initial initial;&quot; title=&quot;古鲁姆&quot;&gt;古鲁姆&lt;/a&gt;继续执行任务。同时，巫师&lt;a href=&quot;http://zh.wikipedia.org/wiki/%E7%94%98%E9%81%93%E5%A4%AB&quot; style=&quot;text-decoration: none; color: rgb(11, 0, 128); background-image: none; background-position: initial initial; background-repeat: initial initial;&quot; title=&quot;甘道夫&quot;&gt;甘道夫&lt;/a&gt;、流亡的&lt;a href=&quot;http://zh.wikipedia.org/wiki/%E5%89%9B%E9%90%B8&quot; style=&quot;text-decoration: none; color: rgb(11, 0, 128); background-image: none; background-position: initial initial; background-repeat: initial initial;&quot; title=&quot;刚铎&quot;&gt;刚铎&lt;/a&gt;王位继承者&lt;a href=&quot;http://zh.wikipedia.org/wiki/%E4%BA%9E%E6%8B%89%E5%B2%A1_(%E9%AD%94%E6%88%92)&quot; style=&quot;text-decoration: none; color: rgb(11, 0, 128); background-image: none; background-position: initial initial; background-repeat: initial initial;&quot; title=&quot;阿拉贡 (魔戒)&quot;&gt;阿拉贡&lt;/a&gt;联合中土大陆的自由子民对抗索伦，最终在&lt;a href=&quot;http://zh.wikipedia.org/wiki/%E9%AD%94%E6%88%92%E8%81%96%E6%88%B0&quot; style=&quot;text-decoration: none; color: rgb(11, 0, 128); background-image: none; background-position: initial initial; background-repeat: initial initial;&quot; title=&quot;魔戒圣战&quot;&gt;魔戒圣战&lt;/a&gt;取得胜利。&lt;/p&gt;\r\n\r\n&lt;p&gt;魔戒三部曲由&lt;a href=&quot;http://zh.wikipedia.org/wiki/%E5%BD%BC%E5%BE%97%C2%B7%E6%9D%B0%E5%85%8B%E9%80%8A&quot; style=&quot;text-decoration: none; color: rgb(11, 0, 128); background-image: none; background-position: initial initial; background-repeat: initial initial;&quot; title=&quot;彼得·杰克逊&quot;&gt;彼得&amp;middot;杰克逊&lt;/a&gt;执导，&lt;a href=&quot;http://zh.wikipedia.org/wiki/%E6%96%B0%E7%B7%9A%E5%BD%B1%E6%A5%AD&quot; style=&quot;text-decoration: none; color: rgb(11, 0, 128); background-image: none; background-position: initial initial; background-repeat: initial initial;&quot; title=&quot;新线影业&quot;&gt;新线影业&lt;/a&gt;发行&lt;a href=&quot;http://zh.wikipedia.org/wiki/%E9%AD%94%E6%88%92%E9%9B%BB%E5%BD%B1%E4%B8%89%E9%83%A8%E6%9B%B2#cite_note-4&quot; style=&quot;text-decoration: none; color: rgb(11, 0, 128); background-image: none; white-space: nowrap; background-position: initial initial; background-repeat: initial initial;&quot;&gt;[4]&lt;/a&gt;&lt;a href=&quot;http://zh.wikipedia.org/wiki/%E9%AD%94%E6%88%92%E9%9B%BB%E5%BD%B1%E4%B8%89%E9%83%A8%E6%9B%B2#cite_note-5&quot; style=&quot;text-decoration: none; color: rgb(11, 0, 128); background-image: none; white-space: nowrap; background-position: initial initial; background-repeat: initial initial;&quot;&gt;[5]&lt;/a&gt;。魔戒三部曲被视为规模最宏大的电影之一&lt;a href=&quot;http://zh.wikipedia.org/wiki/%E9%AD%94%E6%88%92%E9%9B%BB%E5%BD%B1%E4%B8%89%E9%83%A8%E6%9B%B2#cite_note-6&quot; style=&quot;text-decoration: none; color: rgb(11, 0, 128); background-image: none; white-space: nowrap; background-position: initial initial; background-repeat: initial initial;&quot;&gt;[6]&lt;/a&gt;，共投入了2.85亿美元，整个电影拍摄计划历时八年，三部电影的拍摄工作都在杰克逊的祖国新西兰进行&lt;a href=&quot;http://zh.wikipedia.org/wiki/%E9%AD%94%E6%88%92%E9%9B%BB%E5%BD%B1%E4%B8%89%E9%83%A8%E6%9B%B2#cite_note-Film-7&quot; style=&quot;text-decoration: none; color: rgb(11, 0, 128); background-image: none; white-space: nowrap; background-position: initial initial; background-repeat: initial initial;&quot;&gt;[7]&lt;/a&gt;。三部曲的每一部电影都有特别加长版，特别加长版在电影公映的一年后以DVD形式发行&lt;a href=&quot;http://zh.wikipedia.org/wiki/%E9%AD%94%E6%88%92%E9%9B%BB%E5%BD%B1%E4%B8%89%E9%83%A8%E6%9B%B2#cite_note-Film-7&quot; style=&quot;text-decoration: none; color: rgb(11, 0, 128); background-image: none; white-space: nowrap; background-position: initial initial; background-repeat: initial initial;&quot;&gt;[7]&lt;/a&gt;。&lt;/p&gt;\r\n\r\n&lt;p&gt;魔戒三部曲取得相当高的电影票房收入，三部电影分别名列&lt;a href=&quot;http://zh.wikipedia.org/wiki/%E6%9C%80%E9%AB%98%E9%9B%BB%E5%BD%B1%E7%A5%A8%E6%88%BF%E6%94%B6%E5%85%A5%E5%88%97%E8%A1%A8&quot; style=&quot;text-decoration: none; color: rgb(11, 0, 128); background-image: none; background-position: initial initial; background-repeat: initial initial;&quot; title=&quot;最高电影票房收入列表&quot;&gt;最高电影票房收入&lt;/a&gt;的第27位、第20位及第6位，排名不考虑通货膨胀&lt;a href=&quot;http://zh.wikipedia.org/wiki/%E9%AD%94%E6%88%92%E9%9B%BB%E5%BD%B1%E4%B8%89%E9%83%A8%E6%9B%B2#cite_note-8&quot; style=&quot;text-decoration: none; color: rgb(11, 0, 128); background-image: none; white-space: nowrap; background-position: initial initial; background-repeat: initial initial;&quot;&gt;[8]&lt;/a&gt;。魔戒三部曲得到好评，在30项&lt;a class=&quot;mw-redirect&quot; href=&quot;http://zh.wikipedia.org/wiki/%E5%A5%A7%E6%96%AF%E5%8D%A1%E9%87%91%E5%83%8F%E7%8D%8E&quot; style=&quot;text-decoration: none; color: rgb(11, 0, 128); background-image: none; background-position: initial initial; background-repeat: initial initial;&quot; title=&quot;奥斯卡金像奖&quot;&gt;奥斯卡金像奖&lt;/a&gt;提名里赢得17项&lt;a href=&quot;http://zh.wikipedia.org/wiki/%E9%AD%94%E6%88%92%E9%9B%BB%E5%BD%B1%E4%B8%89%E9%83%A8%E6%9B%B2#cite_note-9&quot; style=&quot;text-decoration: none; color: rgb(11, 0, 128); background-image: none; white-space: nowrap; background-position: initial initial; background-repeat: initial initial;&quot;&gt;[9]&lt;/a&gt;，电影的演员、创新性的技术运用及&lt;a class=&quot;mw-redirect&quot; href=&quot;http://zh.wikipedia.org/wiki/%E9%9B%BB%E8%85%A6%E7%B9%AA%E5%9C%96&quot; style=&quot;text-decoration: none; color: rgb(11, 0, 128); background-image: none; background-position: initial initial; background-repeat: initial initial;&quot; title=&quot;电脑绘图&quot;&gt;电脑绘图&lt;/a&gt;效果都得到广泛的称赞。而该系列的终结片，《王者归来》，更在十一项奥斯卡奖的提名的基础上获得十一项奖项，成为继《&lt;a href=&quot;http://zh.wikipedia.org/wiki/%E6%B3%B0%E5%9D%A6%E5%B0%BC%E5%85%8B%E5%8F%B7_(1997%E5%B9%B4%E7%94%B5%E5%BD%B1)&quot; style=&quot;text-decoration: none; color: rgb(11, 0, 128); background-image: none; background-position: initial initial; background-repeat: initial initial;&quot; title=&quot;泰坦尼克号 (1997年电影)&quot;&gt;泰坦尼克号&lt;/a&gt;》和《&lt;a href=&quot;http://zh.wikipedia.org/wiki/%E8%B3%93%E6%BC%A2&quot; style=&quot;text-decoration: none; color: rgb(11, 0, 128); background-image: none; background-position: initial initial; background-repeat: initial initial;&quot; title=&quot;宾汉&quot;&gt;宾汉&lt;/a&gt;》外，第三部获得十一项奥斯卡奖的电影。&lt;/p&gt;\r\n\r\n&lt;p&gt;杰克逊又拍摄了前传《&lt;a href=&quot;http://zh.wikipedia.org/wiki/%E9%9C%8D%E6%AF%94%E7%89%B9%E4%BA%BA%E7%94%B5%E5%BD%B1%E7%B3%BB%E5%88%97&quot; style=&quot;text-decoration: none; color: rgb(11, 0, 128); background-image: none; background-position: initial initial; background-repeat: initial initial;&quot; title=&quot;霍比特人电影系列&quot;&gt;霍比特人历险记&lt;/a&gt;》三部，第一部在2012年12月上映&lt;a href=&quot;http://zh.wikipedia.org/wiki/%E9%AD%94%E6%88%92%E9%9B%BB%E5%BD%B1%E4%B8%89%E9%83%A8%E6%9B%B2#cite_note-10&quot; style=&quot;text-decoration: none; color: rgb(11, 0, 128); background-image: none; white-space: nowrap; background-position: initial initial; background-repeat: initial initial;&quot;&gt;[10]&lt;/a&gt;。&lt;/p&gt;', 'files/images/groups/group_17.jpg');
+(16, 1, 1, '绿箭侠 第二季 Arrow Season 2 (2013)', 2, '2013-12-05 06:46:20', '&lt;p&gt;CW热门美剧《绿箭侠》的金童玉女斯蒂芬&amp;middot;阿梅尔和凯蒂&amp;middot;卡西迪声称。两人在剧中本是一对旧情人，不过因为各种原因分手当前任。英雄配美女这样老套的搭配并没有出现在剧中，而是升华为&amp;ldquo;英雄惜英雄&amp;rdquo;&amp;mdash;&amp;mdash;凯蒂饰演绿箭侠前女友Laurel，在剧中表面是一个不向恶势力低头的正义女律师，而 实际上却是超级女英雄&amp;ldquo;黑金丝雀&amp;rdquo;Black Canary。俗话说男女搭配干活不累，男女英雄亦是如此。&lt;/p&gt;', 'files/images/groups/group_16.jpg'),
+(17, 1, 51, '魔戒电影三部曲', 2, '2013-12-05 06:49:14', '&lt;p&gt;&lt;strong&gt;魔戒电影三部曲&lt;/strong&gt;包括三部实景真人的奇幻&lt;a class=&quot;new&quot; href=&quot;http://zh.wikipedia.org/w/index.php?title=%E5%8F%B2%E8%A9%A9%E9%9B%BB%E5%BD%B1&amp;amp;action=edit&amp;amp;redlink=1&quot; style=&quot;text-decoration: none; color: rgb(165, 88, 88); background-image: none; background-position: initial initial; background-repeat: initial initial;&quot; title=&quot;史诗电影（页面不存在）&quot;&gt;史诗电影&lt;/a&gt;：《&lt;a class=&quot;mw-redirect&quot; href=&quot;http://zh.wikipedia.org/wiki/%E9%AD%94%E6%88%92%E9%A6%96%E9%83%A8%E6%9B%B2%EF%BC%9A%E9%AD%94%E6%88%92%E7%8F%BE%E8%BA%AB&quot; style=&quot;text-decoration: none; color: rgb(11, 0, 128); background-image: none; background-position: initial initial; background-repeat: initial initial;&quot; title=&quot;指环王：护戒使者&quot;&gt;指环王：护戒使者&lt;/a&gt;》（&lt;a href=&quot;http://zh.wikipedia.org/wiki/2001%E5%B9%B4&quot; style=&quot;text-decoration: none; color: rgb(11, 0, 128); background-image: none; background-position: initial initial; background-repeat: initial initial;&quot; title=&quot;2001年&quot;&gt;2001年&lt;/a&gt;）、《&lt;a class=&quot;mw-redirect&quot; href=&quot;http://zh.wikipedia.org/wiki/%E9%AD%94%E6%88%92%E4%BA%8C%E9%83%A8%E6%9B%B2%EF%BC%9A%E9%9B%99%E5%9F%8E%E5%A5%87%E8%AC%80&quot; style=&quot;text-decoration: none; color: rgb(11, 0, 128); background-image: none; background-position: initial initial; background-repeat: initial initial;&quot; title=&quot;指环王：双塔奇兵&quot;&gt;指环王：双塔奇兵&lt;/a&gt;》（&lt;a href=&quot;http://zh.wikipedia.org/wiki/2002%E5%B9%B4&quot; style=&quot;text-decoration: none; color: rgb(11, 0, 128); background-image: none; background-position: initial initial; background-repeat: initial initial;&quot; title=&quot;2002年&quot;&gt;2002年&lt;/a&gt;）及《&lt;a class=&quot;mw-redirect&quot; href=&quot;http://zh.wikipedia.org/wiki/%E9%AD%94%E6%88%92%E4%B8%89%E9%83%A8%E6%9B%B2%EF%BC%9A%E7%8E%8B%E8%80%85%E5%86%8D%E8%87%A8&quot; style=&quot;text-decoration: none; color: rgb(11, 0, 128); background-image: none; background-position: initial initial; background-repeat: initial initial;&quot; title=&quot;指环王：王者归来&quot;&gt;指环王：王者归来&lt;/a&gt;》（&lt;a href=&quot;http://zh.wikipedia.org/wiki/2003%E5%B9%B4&quot; style=&quot;text-decoration: none; color: rgb(11, 0, 128); background-image: none; background-position: initial initial; background-repeat: initial initial;&quot; title=&quot;2003年&quot;&gt;2003年&lt;/a&gt;）（三部曲常被缩写成&lt;strong&gt;LotR&lt;/strong&gt;，&lt;strong&gt;FotR&lt;/strong&gt;、&lt;strong&gt;TTT&lt;/strong&gt;及&lt;strong&gt;RotK&lt;/strong&gt;分别指三部电影）&lt;a href=&quot;http://zh.wikipedia.org/wiki/%E9%AD%94%E6%88%92%E9%9B%BB%E5%BD%B1%E4%B8%89%E9%83%A8%E6%9B%B2#cite_note-1&quot; style=&quot;text-decoration: none; color: rgb(11, 0, 128); background-image: none; white-space: nowrap; background-position: initial initial; background-repeat: initial initial;&quot;&gt;[1]&lt;/a&gt;。魔戒三部曲是以&lt;a href=&quot;http://zh.wikipedia.org/wiki/J%C2%B7R%C2%B7R%C2%B7%E6%89%98%E5%B0%94%E9%87%91&quot; style=&quot;text-decoration: none; color: rgb(11, 0, 128); background-image: none; background-position: initial initial; background-repeat: initial initial;&quot; title=&quot;J·R·R·托尔金&quot;&gt;J&amp;middot;R&amp;middot;R&amp;middot;托尔金&lt;/a&gt;著作的小说《&lt;a href=&quot;http://zh.wikipedia.org/wiki/%E9%AD%94%E6%88%92&quot; style=&quot;text-decoration: none; color: rgb(11, 0, 128); background-image: none; background-position: initial initial; background-repeat: initial initial;&quot; title=&quot;魔戒&quot;&gt;魔戒&lt;/a&gt;》的三册书改编而成，电影大抵依循小说的主线故事，但也加入了一些新元素及一些偏离原著的情节&lt;a href=&quot;http://zh.wikipedia.org/wiki/%E9%AD%94%E6%88%92%E9%9B%BB%E5%BD%B1%E4%B8%89%E9%83%A8%E6%9B%B2#cite_note-2&quot; style=&quot;text-decoration: none; color: rgb(11, 0, 128); background-image: none; white-space: nowrap; background-position: initial initial; background-repeat: initial initial;&quot;&gt;[2]&lt;/a&gt;。&lt;/p&gt;\r\n\r\n&lt;p&gt;故事背景是虚构的&lt;a href=&quot;http://zh.wikipedia.org/wiki/%E4%B8%AD%E5%9C%9F%E5%A4%A7%E9%99%B8&quot; style=&quot;text-decoration: none; color: rgb(11, 0, 128); background-image: none; background-position: initial initial; background-repeat: initial initial;&quot; title=&quot;中土大陆&quot;&gt;中土大陆&lt;/a&gt;，电影三部曲的焦点都集中在年轻的&lt;a href=&quot;http://zh.wikipedia.org/wiki/%E5%93%88%E6%AF%94%E4%BA%BA&quot; style=&quot;text-decoration: none; color: rgb(11, 0, 128); background-image: none; background-position: initial initial; background-repeat: initial initial;&quot; title=&quot;霍比特人&quot;&gt;霍比特人&lt;/a&gt;&lt;a href=&quot;http://zh.wikipedia.org/wiki/%E4%BD%9B%E7%BD%97%E5%A4%9A%C2%B7%E5%B7%B4%E9%87%91%E6%96%AF&quot; style=&quot;text-decoration: none; color: rgb(11, 0, 128); background-image: none; background-position: initial initial; background-repeat: initial initial;&quot; title=&quot;佛罗多·巴金斯&quot;&gt;佛罗多&amp;middot;巴金斯&lt;/a&gt;及&lt;a href=&quot;http://zh.wikipedia.org/wiki/%E9%AD%94%E6%88%92%E9%81%A0%E5%BE%81%E9%9A%8A&quot; style=&quot;text-decoration: none; color: rgb(11, 0, 128); background-image: none; background-position: initial initial; background-repeat: initial initial;&quot; title=&quot;魔戒远征队&quot;&gt;魔戒远征队&lt;/a&gt;执行摧毁&lt;a href=&quot;http://zh.wikipedia.org/wiki/%E8%87%B3%E5%B0%8A%E9%AD%94%E6%88%92&quot; style=&quot;text-decoration: none; color: rgb(11, 0, 128); background-image: none; background-position: initial initial; background-repeat: initial initial;&quot; title=&quot;至尊魔戒&quot;&gt;至尊魔戒&lt;/a&gt;的任务，以及消灭至尊魔戒的制造者黑暗魔君&lt;a href=&quot;http://zh.wikipedia.org/wiki/%E7%B4%A2%E5%80%AB&quot; style=&quot;text-decoration: none; color: rgb(11, 0, 128); background-image: none; background-position: initial initial; background-repeat: initial initial;&quot; title=&quot;索伦&quot;&gt;索伦&lt;/a&gt;&lt;a href=&quot;http://zh.wikipedia.org/wiki/%E9%AD%94%E6%88%92%E9%9B%BB%E5%BD%B1%E4%B8%89%E9%83%A8%E6%9B%B2#cite_note-3&quot; style=&quot;text-decoration: none; color: rgb(11, 0, 128); background-image: none; white-space: nowrap; background-position: initial initial; background-repeat: initial initial;&quot;&gt;[3]&lt;/a&gt;。随着情节的发展，魔戒远征队分崩析离，佛罗多、他的忠实伙伴&lt;a href=&quot;http://zh.wikipedia.org/wiki/%E5%B1%B1%E5%A7%86%C2%B7%E8%A9%B9%E5%90%89&quot; style=&quot;text-decoration: none; color: rgb(11, 0, 128); background-image: none; background-position: initial initial; background-repeat: initial initial;&quot; title=&quot;山姆·詹吉&quot;&gt;山姆&lt;/a&gt;及奸诈的&lt;a href=&quot;http://zh.wikipedia.org/wiki/%E5%92%95%E5%9A%95&quot; style=&quot;text-decoration: none; color: rgb(11, 0, 128); background-image: none; background-position: initial initial; background-repeat: initial initial;&quot; title=&quot;古鲁姆&quot;&gt;古鲁姆&lt;/a&gt;继续执行任务。同时，巫师&lt;a href=&quot;http://zh.wikipedia.org/wiki/%E7%94%98%E9%81%93%E5%A4%AB&quot; style=&quot;text-decoration: none; color: rgb(11, 0, 128); background-image: none; background-position: initial initial; background-repeat: initial initial;&quot; title=&quot;甘道夫&quot;&gt;甘道夫&lt;/a&gt;、流亡的&lt;a href=&quot;http://zh.wikipedia.org/wiki/%E5%89%9B%E9%90%B8&quot; style=&quot;text-decoration: none; color: rgb(11, 0, 128); background-image: none; background-position: initial initial; background-repeat: initial initial;&quot; title=&quot;刚铎&quot;&gt;刚铎&lt;/a&gt;王位继承者&lt;a href=&quot;http://zh.wikipedia.org/wiki/%E4%BA%9E%E6%8B%89%E5%B2%A1_(%E9%AD%94%E6%88%92)&quot; style=&quot;text-decoration: none; color: rgb(11, 0, 128); background-image: none; background-position: initial initial; background-repeat: initial initial;&quot; title=&quot;阿拉贡 (魔戒)&quot;&gt;阿拉贡&lt;/a&gt;联合中土大陆的自由子民对抗索伦，最终在&lt;a href=&quot;http://zh.wikipedia.org/wiki/%E9%AD%94%E6%88%92%E8%81%96%E6%88%B0&quot; style=&quot;text-decoration: none; color: rgb(11, 0, 128); background-image: none; background-position: initial initial; background-repeat: initial initial;&quot; title=&quot;魔戒圣战&quot;&gt;魔戒圣战&lt;/a&gt;取得胜利。&lt;/p&gt;\r\n\r\n&lt;p&gt;魔戒三部曲由&lt;a href=&quot;http://zh.wikipedia.org/wiki/%E5%BD%BC%E5%BE%97%C2%B7%E6%9D%B0%E5%85%8B%E9%80%8A&quot; style=&quot;text-decoration: none; color: rgb(11, 0, 128); background-image: none; background-position: initial initial; background-repeat: initial initial;&quot; title=&quot;彼得·杰克逊&quot;&gt;彼得&amp;middot;杰克逊&lt;/a&gt;执导，&lt;a href=&quot;http://zh.wikipedia.org/wiki/%E6%96%B0%E7%B7%9A%E5%BD%B1%E6%A5%AD&quot; style=&quot;text-decoration: none; color: rgb(11, 0, 128); background-image: none; background-position: initial initial; background-repeat: initial initial;&quot; title=&quot;新线影业&quot;&gt;新线影业&lt;/a&gt;发行&lt;a href=&quot;http://zh.wikipedia.org/wiki/%E9%AD%94%E6%88%92%E9%9B%BB%E5%BD%B1%E4%B8%89%E9%83%A8%E6%9B%B2#cite_note-4&quot; style=&quot;text-decoration: none; color: rgb(11, 0, 128); background-image: none; white-space: nowrap; background-position: initial initial; background-repeat: initial initial;&quot;&gt;[4]&lt;/a&gt;&lt;a href=&quot;http://zh.wikipedia.org/wiki/%E9%AD%94%E6%88%92%E9%9B%BB%E5%BD%B1%E4%B8%89%E9%83%A8%E6%9B%B2#cite_note-5&quot; style=&quot;text-decoration: none; color: rgb(11, 0, 128); background-image: none; white-space: nowrap; background-position: initial initial; background-repeat: initial initial;&quot;&gt;[5]&lt;/a&gt;。魔戒三部曲被视为规模最宏大的电影之一&lt;a href=&quot;http://zh.wikipedia.org/wiki/%E9%AD%94%E6%88%92%E9%9B%BB%E5%BD%B1%E4%B8%89%E9%83%A8%E6%9B%B2#cite_note-6&quot; style=&quot;text-decoration: none; color: rgb(11, 0, 128); background-image: none; white-space: nowrap; background-position: initial initial; background-repeat: initial initial;&quot;&gt;[6]&lt;/a&gt;，共投入了2.85亿美元，整个电影拍摄计划历时八年，三部电影的拍摄工作都在杰克逊的祖国新西兰进行&lt;a href=&quot;http://zh.wikipedia.org/wiki/%E9%AD%94%E6%88%92%E9%9B%BB%E5%BD%B1%E4%B8%89%E9%83%A8%E6%9B%B2#cite_note-Film-7&quot; style=&quot;text-decoration: none; color: rgb(11, 0, 128); background-image: none; white-space: nowrap; background-position: initial initial; background-repeat: initial initial;&quot;&gt;[7]&lt;/a&gt;。三部曲的每一部电影都有特别加长版，特别加长版在电影公映的一年后以DVD形式发行&lt;a href=&quot;http://zh.wikipedia.org/wiki/%E9%AD%94%E6%88%92%E9%9B%BB%E5%BD%B1%E4%B8%89%E9%83%A8%E6%9B%B2#cite_note-Film-7&quot; style=&quot;text-decoration: none; color: rgb(11, 0, 128); background-image: none; white-space: nowrap; background-position: initial initial; background-repeat: initial initial;&quot;&gt;[7]&lt;/a&gt;。&lt;/p&gt;\r\n\r\n&lt;p&gt;魔戒三部曲取得相当高的电影票房收入，三部电影分别名列&lt;a href=&quot;http://zh.wikipedia.org/wiki/%E6%9C%80%E9%AB%98%E9%9B%BB%E5%BD%B1%E7%A5%A8%E6%88%BF%E6%94%B6%E5%85%A5%E5%88%97%E8%A1%A8&quot; style=&quot;text-decoration: none; color: rgb(11, 0, 128); background-image: none; background-position: initial initial; background-repeat: initial initial;&quot; title=&quot;最高电影票房收入列表&quot;&gt;最高电影票房收入&lt;/a&gt;的第27位、第20位及第6位，排名不考虑通货膨胀&lt;a href=&quot;http://zh.wikipedia.org/wiki/%E9%AD%94%E6%88%92%E9%9B%BB%E5%BD%B1%E4%B8%89%E9%83%A8%E6%9B%B2#cite_note-8&quot; style=&quot;text-decoration: none; color: rgb(11, 0, 128); background-image: none; white-space: nowrap; background-position: initial initial; background-repeat: initial initial;&quot;&gt;[8]&lt;/a&gt;。魔戒三部曲得到好评，在30项&lt;a class=&quot;mw-redirect&quot; href=&quot;http://zh.wikipedia.org/wiki/%E5%A5%A7%E6%96%AF%E5%8D%A1%E9%87%91%E5%83%8F%E7%8D%8E&quot; style=&quot;text-decoration: none; color: rgb(11, 0, 128); background-image: none; background-position: initial initial; background-repeat: initial initial;&quot; title=&quot;奥斯卡金像奖&quot;&gt;奥斯卡金像奖&lt;/a&gt;提名里赢得17项&lt;a href=&quot;http://zh.wikipedia.org/wiki/%E9%AD%94%E6%88%92%E9%9B%BB%E5%BD%B1%E4%B8%89%E9%83%A8%E6%9B%B2#cite_note-9&quot; style=&quot;text-decoration: none; color: rgb(11, 0, 128); background-image: none; white-space: nowrap; background-position: initial initial; background-repeat: initial initial;&quot;&gt;[9]&lt;/a&gt;，电影的演员、创新性的技术运用及&lt;a class=&quot;mw-redirect&quot; href=&quot;http://zh.wikipedia.org/wiki/%E9%9B%BB%E8%85%A6%E7%B9%AA%E5%9C%96&quot; style=&quot;text-decoration: none; color: rgb(11, 0, 128); background-image: none; background-position: initial initial; background-repeat: initial initial;&quot; title=&quot;电脑绘图&quot;&gt;电脑绘图&lt;/a&gt;效果都得到广泛的称赞。而该系列的终结片，《王者归来》，更在十一项奥斯卡奖的提名的基础上获得十一项奖项，成为继《&lt;a href=&quot;http://zh.wikipedia.org/wiki/%E6%B3%B0%E5%9D%A6%E5%B0%BC%E5%85%8B%E5%8F%B7_(1997%E5%B9%B4%E7%94%B5%E5%BD%B1)&quot; style=&quot;text-decoration: none; color: rgb(11, 0, 128); background-image: none; background-position: initial initial; background-repeat: initial initial;&quot; title=&quot;泰坦尼克号 (1997年电影)&quot;&gt;泰坦尼克号&lt;/a&gt;》和《&lt;a href=&quot;http://zh.wikipedia.org/wiki/%E8%B3%93%E6%BC%A2&quot; style=&quot;text-decoration: none; color: rgb(11, 0, 128); background-image: none; background-position: initial initial; background-repeat: initial initial;&quot; title=&quot;宾汉&quot;&gt;宾汉&lt;/a&gt;》外，第三部获得十一项奥斯卡奖的电影。&lt;/p&gt;\r\n\r\n&lt;p&gt;杰克逊又拍摄了前传《&lt;a href=&quot;http://zh.wikipedia.org/wiki/%E9%9C%8D%E6%AF%94%E7%89%B9%E4%BA%BA%E7%94%B5%E5%BD%B1%E7%B3%BB%E5%88%97&quot; style=&quot;text-decoration: none; color: rgb(11, 0, 128); background-image: none; background-position: initial initial; background-repeat: initial initial;&quot; title=&quot;霍比特人电影系列&quot;&gt;霍比特人历险记&lt;/a&gt;》三部，第一部在2012年12月上映&lt;a href=&quot;http://zh.wikipedia.org/wiki/%E9%AD%94%E6%88%92%E9%9B%BB%E5%BD%B1%E4%B8%89%E9%83%A8%E6%9B%B2#cite_note-10&quot; style=&quot;text-decoration: none; color: rgb(11, 0, 128); background-image: none; white-space: nowrap; background-position: initial initial; background-repeat: initial initial;&quot;&gt;[10]&lt;/a&gt;。&lt;/p&gt;', 'files/images/groups/group_17.jpg'),
+(18, 1, 9, 'Test group', 1, '2013-12-08 14:50:37', '&lt;p&gt;test&lt;/p&gt;', '');
 
 -- --------------------------------------------------------
 
@@ -513,8 +537,10 @@ INSERT INTO `group_group_has_users` (`gro_id`, `u_id`, `join_time`, `status`, `j
 (14, 1, '2013-12-05 06:41:23', 1, ''),
 (15, 1, '2013-12-05 06:43:55', 1, ''),
 (16, 1, '2013-12-05 06:46:20', 1, ''),
+(16, 14, '2013-12-08 06:48:28', 1, ''),
 (17, 1, '2013-12-05 06:49:14', 1, ''),
-(17, 2, '2013-12-05 07:05:47', 1, '');
+(17, 2, '2013-12-05 07:05:47', 1, ''),
+(18, 1, '2013-12-08 14:50:37', 1, '');
 
 -- --------------------------------------------------------
 
@@ -533,7 +559,7 @@ CREATE TABLE IF NOT EXISTS `group_messages` (
   `msg_send_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`msg_id`,`msg_type_id`,`msg_receiver_id`),
   UNIQUE KEY `msg_id_UNIQUE` (`msg_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=111 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=127 ;
 
 --
 -- 转存表中的数据 `group_messages`
@@ -628,7 +654,23 @@ INSERT INTO `group_messages` (`msg_id`, `msg_type_id`, `msg_receiver_id`, `msg_s
 (107, 3, 8, 1, 'new group invitation', '&lt;a  title=&quot;admin&quot; href=&quot;/FDUGroup/user/view/1&quot; &gt;admin&lt;/a&gt; invited you to join group &lt;a  title=&quot;魔戒电影三部曲&quot; href=&quot;/FDUGroup/group/detail/17&quot; &gt;魔戒电影三部曲&lt;/a&gt;&amp;nbsp;&amp;nbsp;&lt;a class=&quot;btn btn-xs btn-info&quot;  title=&quot;Accept invitation&quot; href=&quot;/FDUGroup/group/acceptInvite/78&quot; &gt;Accept invitation&lt;/a&gt;&lt;/br&gt;经典的史诗电影！', 1, '2013-12-05 06:58:05'),
 (108, 4, 1, 2, 'New Comment', 'Raysmond has replied to your topic <a  title="旅游真爽" href="/FDUGroup/post/view/14?reply=19" >旅游真爽</a>', 1, '2013-12-05 06:58:45'),
 (109, 3, 1, 6, 'Join group request accepted', 'Group creator has accepted your request of joining in group &lt;a  title=&quot;沉睡谷 Sleepy Hollow&quot; href=&quot;/FDUGroup/group/detail/6&quot; &gt;沉睡谷 Sleepy Hollow&lt;/a&gt;', 1, '2013-12-05 07:05:54'),
-(110, 3, 1, 12, 'Join group request accepted', 'Group creator has accepted your request of joining in group &lt;a  title=&quot;爱旅行爱摄影&quot; href=&quot;/FDUGroup/group/detail/12&quot; &gt;爱旅行爱摄影&lt;/a&gt;', 1, '2013-12-05 07:06:03');
+(110, 3, 1, 12, 'Join group request accepted', 'Group creator has accepted your request of joining in group &lt;a  title=&quot;爱旅行爱摄影&quot; href=&quot;/FDUGroup/group/detail/12&quot; &gt;爱旅行爱摄影&lt;/a&gt;', 1, '2013-12-05 07:06:03'),
+(111, 3, 1, 17, 'Join group request', '<a  title="Klaus" href="/FDUGroup/user/view/3" >Klaus</a> wants to join your group <a  title="魔戒电影三部曲" href="/FDUGroup/group/detail/17" >魔戒电影三部曲</a><br/><a class="btn btn-xs btn-success"  title="Accept" href="/FDUGroup/group/accept/79" >Accept</a>&nbsp;&nbsp;<a class="btn btn-xs btn-danger"  title="Decline" href="/FDUGroup/group/decline/79" >Decline</a>', 1, '2013-12-05 13:02:32'),
+(112, 1, 11, 1, 'Friend request', '<a  title="admin" href="/FDUGroup/user/view/1" >admin</a> wants to be friends with you.<br/><a class="btn btn-xs btn-success"  title="Confirm" href="/FDUGroup/friend/confirm/1" >Confirm</a>&nbsp;&nbsp;<a class="btn btn-xs btn-danger"  title="Decline" href="/FDUGroup/friend/decline/1" >Decline</a>', 1, '2013-12-05 13:32:41'),
+(113, 1, 1, 11, 'Friend confirmed', '<a  title="Bonne" href="/FDUGroup/user/view/11" >Bonne</a> has accepted your friend request.', 1, '2013-12-05 13:32:58'),
+(114, 1, 14, 0, 'Welcome Caroline', 'Dear Caroline : &lt;br/&gt;Welcome to join the FDUGroup big family!&lt;br/&gt;&lt;br/&gt;--- &lt;b&gt;FDUGroup team&lt;/b&gt;&lt;br/&gt;2013-12-08 01:35:36', 1, '2013-12-07 17:35:36'),
+(115, 1, 1, 14, 'Friend request', '<a  title="Caroline" href="/FDUGroup/user/view/14" >Caroline</a> wants to be your friends. <br/><a class="btn btn-xs btn-success"  title="Confirm" href="/FDUGroup/friend/confirm/14" >Confirm</a>&nbsp;&nbsp;<a class="btn btn-xs btn-danger"  title="Decline" href="/FDUGroup/friend/decline/14" >Decline</a><br/>2013-12-08 01:37:20', 1, '2013-12-07 17:37:20'),
+(116, 1, 1, 14, 'Friend request', '<p><a  title="Caroline" href="/FDUGroup/user/view/14" >Caroline</a> wants to be your friends. <br/></p><p><a class="btn btn-xs btn-success"  title="Confirm" href="/FDUGroup/friend/confirm/14" >Confirm</a>&nbsp;&nbsp;<a class="btn btn-xs btn-danger"  title="Decline" href="/FDUGroup/friend/decline/14" >Decline</a><br/></p><p>2013-12-08 01:39:08</p>', 1, '2013-12-07 17:39:08'),
+(117, 1, 1, 14, 'Friend request', '<p><a  title="Caroline" href="/FDUGroup/user/view/14" >Caroline</a> wants to be your friends. <br/></p><p><a class="btn btn-xs btn-success"  title="Confirm" href="/FDUGroup/friend/confirm/14" >Confirm</a>&nbsp;&nbsp;<a class="btn btn-xs btn-danger"  title="Decline" href="/FDUGroup/friend/decline/14" >Decline</a><br/></p>', 1, '2013-12-07 17:39:30'),
+(118, 1, 1, 14, 'Friend request', '<p><a  title="Caroline" href="/FDUGroup/user/view/14" >Caroline</a> wants to be your friends. <br/></p><p><a class="btn btn-xs btn-success"  title="Confirm" href="/FDUGroup/friend/confirm/14" >Confirm</a>&nbsp;&nbsp;<a class="btn btn-xs btn-danger"  title="Decline" href="/FDUGroup/friend/decline/14" >Decline</a></p>', 1, '2013-12-07 17:40:02'),
+(119, 1, 14, 1, 'Friend confirmed', '<a  title="admin" href="/FDUGroup/user/view/1" >admin</a> has accepted your friend request.', 1, '2013-12-07 17:40:11'),
+(120, 4, 2, 14, 'New reply', 'Caroline has replied to your comment <a  title="旅游真爽" href="/FDUGroup/post/view/14?reply=20" >旅游真爽</a>', 1, '2013-12-08 05:46:24'),
+(121, 4, 1, 14, 'New Comment', 'Caroline has replied to your topic <a  title="旅游真爽" href="/FDUGroup/post/view/14?reply=21" >旅游真爽</a>', 1, '2013-12-08 05:47:34'),
+(122, 3, 1, 16, 'Join group request', '<a  title="Caroline" href="/FDUGroup/user/view/14" >Caroline</a> wants to join your group <a  title="绿箭侠 第二季 Arrow Season 2 (2013)" href="/FDUGroup/group/detail/16" >绿箭侠 第二季 Arrow Season 2 (2013)</a><br/><a class="btn btn-xs btn-success"  title="Accept" href="/FDUGroup/group/accept/85" >Accept</a>&nbsp;&nbsp;<a class="btn btn-xs btn-danger"  title="Decline" href="/FDUGroup/group/decline/85" >Decline</a>', 1, '2013-12-08 06:48:16'),
+(123, 3, 14, 16, 'Join group request accepted', 'Group creator has accepted your request of joining in group &lt;a  title=&quot;绿箭侠 第二季 Arrow Season 2 (2013)&quot; href=&quot;/FDUGroup/group/detail/16&quot; &gt;绿箭侠 第二季 Arrow Season 2 (2013)&lt;/a&gt;', 1, '2013-12-08 06:48:28'),
+(124, 4, 2, 1, 'New Comment', 'admin has replied to your topic <a  title="沉睡谷 第一季的剧情简介" href="/FDUGroup/post/view/5?reply=0" >沉睡谷 第一季的剧情简介</a>', 1, '2013-12-09 04:47:33'),
+(125, 4, 2, 1, 'New Comment', 'admin has replied to your topic <a  title="沉睡谷 第一季的剧情简介" href="/FDUGroup/post/view/5?reply=22" >沉睡谷 第一季的剧情简介</a>', 1, '2013-12-09 04:52:06'),
+(126, 4, 2, 1, 'New Comment', 'admin has replied to your topic <a  title="沉睡谷 第一季的剧情简介" href="/FDUGroup/post/view/5?reply=23" >沉睡谷 第一季的剧情简介</a>', 1, '2013-12-09 04:52:11');
 
 -- --------------------------------------------------------
 
@@ -671,7 +713,7 @@ CREATE TABLE IF NOT EXISTS `group_rating` (
   `timestamp` varchar(45) NOT NULL,
   PRIMARY KEY (`rating_id`),
   KEY `fk_group_rating_group_entity_type1_idx` (`entity_type`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=33 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=48 ;
 
 --
 -- 转存表中的数据 `group_rating`
@@ -709,7 +751,22 @@ INSERT INTO `group_rating` (`rating_id`, `entity_type`, `entity_id`, `value`, `v
 (29, 1, 3, 1, 'integer', 'plus', 1, '::1', '2013-12-05 13:54:40'),
 (30, 2, 13, 1, 'integer', 'plus', 1, '::1', '2013-12-05 14:39:41'),
 (31, 2, 16, 1, 'integer', 'plus', 1, '::1', '2013-12-05 14:51:22'),
-(32, 2, 17, 1, 'integer', 'plus', 1, '::1', '2013-12-05 14:51:22');
+(32, 2, 17, 1, 'integer', 'plus', 1, '::1', '2013-12-05 14:51:22'),
+(33, 1, 13, 1, 'integer', 'plus', 1, '::1', '2013-12-05 20:58:37'),
+(34, 1, 5, 1, 'integer', 'plus', 2, '::1', '2013-12-05 21:00:05'),
+(35, 1, 14, 1, 'integer', 'plus', 3, '::1', '2013-12-05 21:00:33'),
+(36, 1, 15, 1, 'integer', 'plus', 3, '::1', '2013-12-05 21:03:39'),
+(37, 1, 15, 1, 'integer', 'plus', 1, '::1', '2013-12-06 16:52:05'),
+(38, 1, 11, 1, 'integer', 'plus', 1, '::1', '2013-12-06 16:52:11'),
+(39, 1, 6, 1, 'integer', 'plus', 1, '::1', '2013-12-06 16:52:18'),
+(40, 2, 7, 1, 'integer', 'plus', 1, '::1', '2013-12-07 16:11:51'),
+(41, 1, 16, 1, 'integer', 'plus', 1, '::1', '2013-12-07 17:44:01'),
+(42, 1, 17, 1, 'integer', 'plus', 2, '::1', '2013-12-07 23:18:59'),
+(43, 1, 16, 1, 'integer', 'plus', 14, '::1', '2013-12-08 12:39:50'),
+(44, 1, 18, 1, 'integer', 'plus', 14, '::1', '2013-12-08 15:02:54'),
+(45, 1, 3, 1, 'integer', 'plus', 14, '::1', '2013-12-08 15:03:02'),
+(46, 1, 1, 1, 'integer', 'plus', 14, '::1', '2013-12-08 15:03:03'),
+(47, 1, 19, 1, 'integer', 'plus', 1, '::1', '2013-12-08 21:01:44');
 
 -- --------------------------------------------------------
 
@@ -728,16 +785,16 @@ CREATE TABLE IF NOT EXISTS `group_rating_statistic` (
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`stat_id`),
   KEY `fk_group_rating_statistic_group_entity_type1_idx` (`entity_type`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=30 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=36 ;
 
 --
 -- 转存表中的数据 `group_rating_statistic`
 --
 
 INSERT INTO `group_rating_statistic` (`stat_id`, `stat_type`, `entity_type`, `entity_id`, `value_type`, `value`, `tag`, `timestamp`) VALUES
-(1, 'count', 1, 14, 'integer', 2, 'plus', '2013-12-05 04:55:59'),
-(2, 'count', 1, 13, 'integer', 1, 'plus', '2013-11-30 17:18:33'),
-(3, 'count', 1, 11, 'integer', 1, 'plus', '2013-11-30 17:18:34'),
+(1, 'count', 1, 14, 'integer', 3, 'plus', '2013-12-05 13:00:33'),
+(2, 'count', 1, 13, 'integer', 2, 'plus', '2013-12-05 12:58:37'),
+(3, 'count', 1, 11, 'integer', 2, 'plus', '2013-12-06 08:52:11'),
 (4, 'count', 1, 10, 'integer', 2, 'plus', '2013-11-30 17:19:24'),
 (5, 'count', 1, 9, 'integer', 2, 'plus', '2013-11-30 17:19:30'),
 (6, 'count', 2, 153, 'integer', 1, 'plus', '2013-12-04 13:16:39'),
@@ -754,16 +811,22 @@ INSERT INTO `group_rating_statistic` (`stat_id`, `stat_type`, `entity_type`, `en
 (17, 'count', 2, 6, 'integer', 1, 'plus', '2013-12-04 14:33:56'),
 (18, 'count', 2, 21, 'integer', 1, 'plus', '2013-12-04 14:35:05'),
 (19, 'count', 2, 35, 'integer', 1, 'plus', '2013-12-04 14:35:07'),
-(20, 'count', 1, 6, 'integer', 1, 'plus', '2013-12-04 16:34:17'),
+(20, 'count', 1, 6, 'integer', 2, 'plus', '2013-12-06 08:52:18'),
 (21, 'count', 1, 7, 'integer', 1, 'plus', '2013-12-04 18:00:31'),
-(22, 'count', 1, 5, 'integer', 1, 'plus', '2013-12-04 18:00:46'),
+(22, 'count', 1, 5, 'integer', 2, 'plus', '2013-12-05 13:00:05'),
 (23, 'count', 2, 8, 'integer', 1, 'plus', '2013-12-05 03:39:41'),
 (24, 'count', 1, 8, 'integer', 1, 'plus', '2013-12-05 03:44:50'),
-(25, 'count', 1, 1, 'integer', 1, 'plus', '2013-12-05 04:46:54'),
-(26, 'count', 1, 3, 'integer', 1, 'plus', '2013-12-05 05:54:40'),
+(25, 'count', 1, 1, 'integer', 2, 'plus', '2013-12-08 07:03:03'),
+(26, 'count', 1, 3, 'integer', 2, 'plus', '2013-12-08 07:03:02'),
 (27, 'count', 2, 13, 'integer', 1, 'plus', '2013-12-05 06:39:41'),
 (28, 'count', 2, 16, 'integer', 1, 'plus', '2013-12-05 06:51:22'),
-(29, 'count', 2, 17, 'integer', 1, 'plus', '2013-12-05 06:51:22');
+(29, 'count', 2, 17, 'integer', 1, 'plus', '2013-12-05 06:51:22'),
+(30, 'count', 1, 15, 'integer', 2, 'plus', '2013-12-06 08:52:05'),
+(31, 'count', 2, 7, 'integer', 1, 'plus', '2013-12-07 08:11:51'),
+(32, 'count', 1, 16, 'integer', 2, 'plus', '2013-12-08 04:39:50'),
+(33, 'count', 1, 17, 'integer', 1, 'plus', '2013-12-07 15:18:59'),
+(34, 'count', 1, 18, 'integer', 1, 'plus', '2013-12-08 07:02:54'),
+(35, 'count', 1, 19, 'integer', 1, 'plus', '2013-12-08 13:01:44');
 
 -- --------------------------------------------------------
 
@@ -782,7 +845,7 @@ CREATE TABLE IF NOT EXISTS `group_syslog` (
   `host` varchar(45) NOT NULL,
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`log_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=13 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=72 ;
 
 --
 -- 转存表中的数据 `group_syslog`
@@ -800,7 +863,66 @@ INSERT INTO `group_syslog` (`log_id`, `u_id`, `type`, `message`, `severity`, `pa
 (9, 1, 'system', 'Page not found!', 1, 'category/groups', 'http://localhost/FDUGroup/category/groups/1', '::1', '2013-12-04 14:29:04'),
 (10, 1, 'system', 'Page not found!', 1, 'category/groups', 'http://localhost/FDUGroup/category/groups/1', '::1', '2013-12-04 14:29:04'),
 (11, 1, 'system', 'Page not found!', 1, 'category/groups', 'http://localhost/FDUGroup/category/groups/1', '::1', '2013-12-04 14:29:04'),
-(12, 1, 'system', 'Page not found!', 1, 'category/groups', 'http://localhost/FDUGroup/category/groups/1', '::1', '2013-12-04 14:29:04');
+(12, 1, 'system', 'Page not found!', 1, 'category/groups', 'http://localhost/FDUGroup/category/groups/1', '::1', '2013-12-04 14:29:04'),
+(13, 1, 'system', 'Page not found! On action matched.', 1, 'site/help', 'http://localhost/FDUGroup/user/home', '::1', '2013-12-05 07:30:06'),
+(14, 1, 'system', 'Page not found! On action matched.', 1, 'site/help', 'http://localhost/FDUGroup/user/home', '::1', '2013-12-05 07:30:50'),
+(15, 1, 'system', 'Page not found! On action matched.', 1, 'site/help', 'http://localhost/FDUGroup/user/home', '::1', '2013-12-05 07:31:05'),
+(16, 1, 'system', 'Page not found!', 1, 'user/view/12', '', '::1', '2013-12-05 13:17:07'),
+(17, 1, 'system', 'Page not found!', 1, 'user/view/12', '', '::1', '2013-12-05 13:18:04'),
+(18, 1, 'system', 'Page not found!', 1, 'group/edit/170', '', '::1', '2013-12-07 04:01:10'),
+(19, 1, 'system', 'Page not found! No action matched.', 1, 'group/view', 'http://localhost/FDUGroup/group/mygroups', '::1', '2013-12-07 17:05:17'),
+(20, 1, 'system', 'Page not found! No action matched.', 1, 'group/view', 'http://localhost/FDUGroup/group/mygroups', '::1', '2013-12-07 17:05:17'),
+(21, 1, 'system', 'Page not found! No action matched.', 1, 'group/view', 'http://localhost/FDUGroup/group/mygroups', '::1', '2013-12-07 17:05:17'),
+(22, 1, 'system', 'Page not found! No action matched.', 1, 'group/view', 'http://localhost/FDUGroup/group/mygroups', '::1', '2013-12-07 17:05:18'),
+(23, 1, 'system', 'Page not found! No action matched.', 1, 'group/view', 'http://localhost/FDUGroup/group/mygroups', '::1', '2013-12-07 17:05:18'),
+(24, 1, 'system', 'Page not found! No action matched.', 1, 'group/view', 'http://localhost/FDUGroup/group/mygroups', '::1', '2013-12-07 17:05:18'),
+(25, 1, 'system', 'Page not found! No action matched.', 1, 'group/view', 'http://localhost/FDUGroup/group/mygroups', '::1', '2013-12-07 17:05:18'),
+(26, 1, 'system', 'Page not found! No action matched.', 1, 'group/view', 'http://localhost/FDUGroup/group/mygroups', '::1', '2013-12-07 17:05:18'),
+(27, 1, 'system', 'Page not found! No action matched.', 1, 'group/view', 'http://localhost/FDUGroup/group/mygroups', '::1', '2013-12-07 17:05:18'),
+(28, 1, 'system', 'Page not found! No action matched.', 1, 'group/view', 'http://localhost/FDUGroup/group/mygroups', '::1', '2013-12-07 17:05:18'),
+(29, 1, 'system', 'Page not found! No action matched.', 1, 'group/view', 'http://localhost/FDUGroup/group/mygroups', '::1', '2013-12-07 17:05:18'),
+(30, 1, 'system', 'Page not found! No action matched.', 1, 'group/view', 'http://localhost/FDUGroup/group/mygroups', '::1', '2013-12-07 17:05:18'),
+(31, 1, 'system', 'Page not found! No action matched.', 1, 'group/view', 'http://localhost/FDUGroup/group/mygroups', '::1', '2013-12-07 17:05:19'),
+(32, 1, 'system', 'Page not found! No action matched.', 1, 'group/view', 'http://localhost/FDUGroup/group/mygroups', '::1', '2013-12-07 17:05:19'),
+(33, 1, 'system', 'Page not found! No action matched.', 1, 'group/view', 'http://localhost/FDUGroup/group/mygroups', '::1', '2013-12-07 17:05:19'),
+(34, 1, 'system', 'Page not found! No action matched.', 1, 'group/view', 'http://localhost/FDUGroup/group/mygroups', '::1', '2013-12-07 17:05:19'),
+(35, 1, 'system', 'Page not found! No action matched.', 1, 'group/view', 'http://localhost/FDUGroup/group/mygroups', '::1', '2013-12-07 17:05:19'),
+(36, 1, 'system', 'Page not found! No action matched.', 1, 'group/view', 'http://localhost/FDUGroup/group/mygroups', '::1', '2013-12-07 17:05:19'),
+(37, 1, 'system', 'Page not found! No action matched.', 1, 'group/view', 'http://localhost/FDUGroup/group/mygroups', '::1', '2013-12-07 17:05:19'),
+(38, 1, 'system', 'Page not found! No action matched.', 1, 'group/view', 'http://localhost/FDUGroup/group/mygroups', '::1', '2013-12-07 17:05:19'),
+(39, 1, 'system', 'Page not found! No action matched.', 1, 'group/view', 'http://localhost/FDUGroup/group/mygroups', '::1', '2013-12-07 17:05:19'),
+(40, 1, 'system', 'Page not found! No action matched.', 1, 'group/view', 'http://localhost/FDUGroup/group/mygroups', '::1', '2013-12-07 17:05:19'),
+(41, 1, 'system', 'Page not found! No action matched.', 1, 'group/view', 'http://localhost/FDUGroup/group/mygroups', '::1', '2013-12-07 17:05:19'),
+(42, 1, 'system', 'Page not found! No action matched.', 1, 'group/view', 'http://localhost/FDUGroup/group/mygroups', '::1', '2013-12-07 17:05:20'),
+(43, 1, 'system', 'Page not found! No action matched.', 1, 'group/view', 'http://localhost/FDUGroup/group/mygroups', '::1', '2013-12-07 17:05:20'),
+(44, 1, 'system', 'Page not found! No action matched.', 1, 'group/view', 'http://localhost/FDUGroup/group/mygroups', '::1', '2013-12-07 17:05:20'),
+(45, 1, 'system', 'Page not found! No action matched.', 1, 'group/view', 'http://localhost/FDUGroup/group/mygroups', '::1', '2013-12-07 17:05:20'),
+(46, 1, 'system', 'Page not found! No action matched.', 1, 'group/view', 'http://localhost/FDUGroup/group/mygroups', '::1', '2013-12-07 17:05:20'),
+(47, 1, 'system', 'Page not found! No action matched.', 1, 'group/view', 'http://localhost/FDUGroup/group/mygroups', '::1', '2013-12-07 17:05:20'),
+(48, 1, 'system', 'Page not found! No action matched.', 1, 'group/view', 'http://localhost/FDUGroup/group/mygroups', '::1', '2013-12-07 17:05:21'),
+(49, 1, 'system', 'Page not found! No action matched.', 1, 'group/view', 'http://localhost/FDUGroup/group/mygroups', '::1', '2013-12-07 17:05:21'),
+(50, 1, 'system', 'Page not found! No action matched.', 1, 'group/view', 'http://localhost/FDUGroup/group/mygroups', '::1', '2013-12-07 17:05:21'),
+(51, 1, 'system', 'Page not found! No action matched.', 1, 'group/view', 'http://localhost/FDUGroup/group/mygroups', '::1', '2013-12-07 17:05:21'),
+(52, 1, 'system', 'Page not found! No action matched.', 1, 'group/view', 'http://localhost/FDUGroup/group/mygroups', '::1', '2013-12-07 17:05:21'),
+(53, 1, 'system', 'Page not found! No action matched.', 1, 'group/view', 'http://localhost/FDUGroup/group/mygroups', '::1', '2013-12-07 17:05:21'),
+(54, 1, 'system', 'Page not found! No action matched.', 1, 'group/view', 'http://localhost/FDUGroup/group/mygroups', '::1', '2013-12-07 17:05:21'),
+(55, 1, 'system', 'Page not found! No action matched.', 1, 'group/view', 'http://localhost/FDUGroup/group/mygroups', '::1', '2013-12-07 17:05:21'),
+(56, 1, 'system', 'Page not found! No action matched.', 1, 'group/view', 'http://localhost/FDUGroup/group/mygroups', '::1', '2013-12-07 17:05:21'),
+(57, 1, 'system', 'Page not found! No action matched.', 1, 'group/view', 'http://localhost/FDUGroup/group/mygroups', '::1', '2013-12-07 17:05:21'),
+(58, 1, 'system', 'Page not found! No action matched.', 1, 'group/view', 'http://localhost/FDUGroup/group/mygroups', '::1', '2013-12-07 17:05:22'),
+(59, 1, 'system', 'Page not found! No action matched.', 1, 'group/view', 'http://localhost/FDUGroup/group/mygroups', '::1', '2013-12-07 17:05:22'),
+(60, 1, 'system', 'Page not found! No action matched.', 1, 'group/view', 'http://localhost/FDUGroup/group/mygroups', '::1', '2013-12-07 17:05:22'),
+(61, 1, 'system', 'Page not found! No action matched.', 1, 'group/view', 'http://localhost/FDUGroup/group/mygroups', '::1', '2013-12-07 17:05:22'),
+(62, 1, 'system', 'Page not found! No action matched.', 1, 'group/view', 'http://localhost/FDUGroup/group/mygroups', '::1', '2013-12-07 17:05:22'),
+(63, 1, 'system', 'Page not found! No action matched.', 1, 'group/view', 'http://localhost/FDUGroup/group/mygroups', '::1', '2013-12-07 17:05:23'),
+(64, 1, 'system', 'Page not found! No action matched.', 1, 'group/view', 'http://localhost/FDUGroup/group/mygroups', '::1', '2013-12-07 17:05:23'),
+(65, 1, 'system', 'Page not found! No action matched.', 1, 'group/view', 'http://localhost/FDUGroup/group/mygroups', '::1', '2013-12-07 17:05:23'),
+(66, 1, 'system', 'Page not found! No action matched.', 1, 'group/view', 'http://localhost/FDUGroup/group/mygroups', '::1', '2013-12-07 17:05:23'),
+(67, 1, 'system', 'Page not found! No action matched.', 1, 'group/view', 'http://localhost/FDUGroup/group/mygroups', '::1', '2013-12-07 17:05:24'),
+(68, 1, 'system', 'Page not found! No action matched.', 1, 'group/view', 'http://localhost/FDUGroup/group/mygroups', '::1', '2013-12-07 17:05:24'),
+(69, 1, 'system', 'Page not found! No action matched.', 1, 'group/view', 'http://localhost/FDUGroup/group/mygroups', '::1', '2013-12-07 17:05:24'),
+(70, 1, 'system', 'Page not found! No action matched.', 1, 'group/view', 'http://localhost/FDUGroup/group/mygroups', '::1', '2013-12-07 17:05:24'),
+(71, 1, 'system', 'Page not found! No action matched.', 1, 'group/view', 'http://localhost/FDUGroup/group/mygroups', '::1', '2013-12-07 17:05:24');
 
 -- --------------------------------------------------------
 
@@ -832,7 +954,7 @@ CREATE TABLE IF NOT EXISTS `group_topic` (
   `top_last_comment_time` timestamp NULL DEFAULT NULL,
   `top_comment_count` int(11) NOT NULL,
   PRIMARY KEY (`top_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=15 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=20 ;
 
 --
 -- 转存表中的数据 `group_topic`
@@ -842,7 +964,7 @@ INSERT INTO `group_topic` (`top_id`, `gro_id`, `u_id`, `top_title`, `top_created
 (1, 1, 1, 'Test topic', '2013-10-16 18:32:10', '&lt;p&gt;This is a test topic.&lt;/p&gt;&lt;p&gt;&lt;strong&gt;Hello,World!&lt;/strong&gt;&lt;/p&gt;', '2013-11-26 03:36:14', 4),
 (3, 4, 1, 'Jeremy的扮演者Steven R. McQueen即将加入《绿箭侠》', '2013-10-19 12:52:13', '&lt;p&gt;【独家资讯】《&lt;a href=&quot;http://huati.weibo.com/k/%E5%90%B8%E8%A1%80%E9%AC%BC%E6%97%A5%E8%AE%B0?from=501&quot;&gt;#吸血鬼日记#&lt;/a&gt;》Jeremy的扮演者Steven R. McQueen即将加入《绿箭侠》！他将出演超级英雄【夜翼】这个角色！目前他已与执行制片人讨论了关于该角色的相关事宜，并为夜翼进行肌肉训练！其他演员也将各种跨剧！你期待吗？【美剧频道&amp;nbsp;&lt;a href=&quot;http://weibo.com/n/%E5%85%A8%E7%90%83%E7%BE%8E%E5%89%A7%E7%94%B5%E5%BD%B1&quot;&gt;@全球美剧电影&lt;/a&gt;&amp;nbsp;联合&amp;nbsp;&lt;a href=&quot;http://weibo.com/n/%E5%90%B8%E8%A1%80%E9%AC%BC%E6%97%A5%E8%AE%B0&quot;&gt;@吸血鬼日记&lt;/a&gt;&amp;nbsp;官方微博 每周全网首播】&lt;/p&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;', '2013-10-19 12:52:19', 1),
 (4, 1, 1, 'Test', '2013-10-19 13:16:15', '&lt;p&gt;test&lt;/p&gt;', '2013-10-19 13:16:15', 0),
-(5, 6, 2, '沉睡谷 第一季的剧情简介', '2013-10-22 08:19:39', '&lt;p&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; 1781年，美国独立战争期间。乔治&amp;middot;华盛顿麾下的伊卡博德&amp;middot;克兰上尉（汤姆&amp;middot;米森 Tom Mison 饰）在战场上砍掉了一个手执利斧的面具骑士的头颅，自己也身负重伤失去意识。当他再度醒来，发现周遭早已翻天覆地，此时他正处在250年后的现代化美国社会。与此同时，断头谷治安官被残忍杀害，他的搭档艾比&amp;middot;米尔斯（妮可&amp;middot;贝哈瑞 Nicole Beharie 饰）意外邂逅伊卡博德，进而得知杀害治安官的正是阴森的无头骑士。伊卡博德了解到妻子卡特里娜（卡蒂亚&amp;middot;温特 Katia Winter 饰）在他受伤后所做的一切，并从圣经的记载中意识到邪恶的天启四骑士即将和来自地狱的邪魔军团莅临人间。在此之后，死亡和杀戮在断头谷肆意蔓延，女巫、血咒、恶魔，种种鬼魅迷雾萦绕着美国的历史，从古至今，影响深远&amp;hellip;&amp;hellip;&amp;nbsp;&lt;br /&gt;　　本片根据华盛顿&amp;middot;欧文创作的《断头谷传奇》改编。&lt;/p&gt;', '2013-11-19 06:04:19', 4),
+(5, 6, 2, '沉睡谷 第一季的剧情简介', '2013-10-22 08:19:39', '&lt;p&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; 1781年，美国独立战争期间。乔治&amp;middot;华盛顿麾下的伊卡博德&amp;middot;克兰上尉（汤姆&amp;middot;米森 Tom Mison 饰）在战场上砍掉了一个手执利斧的面具骑士的头颅，自己也身负重伤失去意识。当他再度醒来，发现周遭早已翻天覆地，此时他正处在250年后的现代化美国社会。与此同时，断头谷治安官被残忍杀害，他的搭档艾比&amp;middot;米尔斯（妮可&amp;middot;贝哈瑞 Nicole Beharie 饰）意外邂逅伊卡博德，进而得知杀害治安官的正是阴森的无头骑士。伊卡博德了解到妻子卡特里娜（卡蒂亚&amp;middot;温特 Katia Winter 饰）在他受伤后所做的一切，并从圣经的记载中意识到邪恶的天启四骑士即将和来自地狱的邪魔军团莅临人间。在此之后，死亡和杀戮在断头谷肆意蔓延，女巫、血咒、恶魔，种种鬼魅迷雾萦绕着美国的历史，从古至今，影响深远&amp;hellip;&amp;hellip;&amp;nbsp;&lt;br /&gt;　　本片根据华盛顿&amp;middot;欧文创作的《断头谷传奇》改编。&lt;/p&gt;', '2013-12-09 04:52:11', 11),
 (6, 8, 2, '一起看看《招魂》2013 英文名《The conjuring》', '2013-10-22 08:32:49', '&lt;p&gt;没看过的，赶紧看看吧！&lt;/p&gt;', '2013-10-22 08:32:49', 0),
 (7, 2, 1, 'The vampire diaries S05', '2013-10-22 15:16:21', '&lt;p&gt;The vampire diaries S05 now returned.&lt;/p&gt;\r\n\r\n&lt;p&gt;&lt;img alt=&quot;&quot; src=&quot;http://img31.mtime.cn/CMS/Gallery/2013/09/16/093927.83154902_900.jpg&quot; style=&quot;height:354px; width:500px&quot; /&gt;&lt;/p&gt;\r\n', '2013-11-22 10:28:35', 2),
 (8, 2, 1, 'Sleep Hollow S01', '2013-10-22 15:16:38', '&lt;p&gt;Sleep Hollow S01&lt;/p&gt;', '2013-10-22 15:16:38', 0),
@@ -850,7 +972,12 @@ INSERT INTO `group_topic` (`top_id`, `gro_id`, `u_id`, `top_title`, `top_created
 (10, 4, 1, '《吸血鬼日记》 TXT 中英文下载', '2013-11-20 13:53:58', '&lt;ul&gt;\r\n	&lt;li&gt;中英文小说1~4部&amp;nbsp;&lt;/li&gt;\r\n	&lt;li&gt;这是下载页面：&amp;nbsp;&lt;br /&gt;\r\n	&lt;a href=&quot;http://www.rayfile.com/zh-cn/files/2793bd57-eb23-11df-925f-0015c55db73d/a1c5a521/&quot; target=&quot;_blank&quot;&gt;http://www.rayfile.com/zh-cn/files/2793bd57-eb23-11df-925f-0015c55db73d/a1c5a521/&lt;/a&gt;&lt;/li&gt;\r\n&lt;/ul&gt;\r\n', '2013-11-20 13:56:19', 1),
 (11, 4, 1, 'Katherine', '2013-11-20 13:55:35', '&lt;p&gt;头发变白，掉了牙齿，总是感到饥饿。可怜的人类。&lt;/p&gt;', '2013-11-20 13:55:35', 0),
 (13, 7, 2, '旅行的心情', '2013-11-25 07:18:27', '&lt;blockquote&gt;\r\n&lt;p&gt;&lt;strong&gt;旅行的心情很重要&lt;/strong&gt;&lt;/p&gt;\r\n&lt;/blockquote&gt;\r\n\r\n&lt;p&gt;&lt;strong&gt;&lt;img alt=&quot;&quot; src=&quot;http://distilleryimage4.ak.instagram.com/3504a0e25d0111e38ee312c5088542ac_7.jpg&quot; style=&quot;height:612px; width:612px&quot; /&gt;&lt;/strong&gt;&lt;/p&gt;\r\n', '2013-11-25 07:18:27', 0),
-(14, 7, 1, '旅游真爽', '2013-11-25 07:34:57', '&lt;p&gt;&lt;strong&gt;旅游真爽&lt;/strong&gt;&lt;/p&gt;\r\n\r\n&lt;p&gt;&lt;strong style=&quot;line-height:1.6em&quot;&gt;​&lt;img alt=&quot;&quot; src=&quot;http://distilleryimage5.ak.instagram.com/50bc45405c3b11e389ef12ac79f96301_8.jpg&quot; /&gt;&lt;/strong&gt;&lt;/p&gt;\r\n', '2013-12-05 06:58:45', 1);
+(14, 7, 1, '旅游真爽', '2013-11-25 07:34:57', '&lt;p&gt;&lt;strong&gt;旅游真爽&lt;/strong&gt;&lt;/p&gt;\r\n\r\n&lt;p&gt;&lt;strong&gt;​&lt;img alt=&quot;&quot; src=&quot;http://distilleryimage5.ak.instagram.com/50bc45405c3b11e389ef12ac79f96301_8.jpg&quot; /&gt;&lt;/strong&gt;&lt;/p&gt;\r\n', '2013-12-08 05:47:34', 3),
+(15, 10, 3, '东方明珠', '2013-12-05 13:03:36', '&lt;p&gt;&lt;img alt=&quot;&quot; src=&quot;http://www.chachaba.com/news/uploads/allimg/110707/1615536131-1.jpg&quot; style=&quot;height:450px; width:600px&quot; /&gt;&lt;/p&gt;\r\n', '2013-12-05 13:03:36', 0),
+(16, 16, 1, 'Hello', '2013-12-07 09:43:59', '&lt;p&gt;Body&lt;/p&gt;', '2013-12-07 09:43:59', 0),
+(17, 0, 2, '真是太好看啦！', '2013-12-07 15:14:54', '&lt;p&gt;&lt;img alt=&quot;&quot; src=&quot;http://upload.wikimedia.org/wikipedia/en/8/87/Ringstrilogyposter.jpg&quot; /&gt;&lt;/p&gt;', '2013-12-07 15:14:54', 0),
+(18, 16, 14, 'I like the show very much', '2013-12-08 06:49:11', '&lt;p&gt;I like the show very much&lt;/p&gt;\r\n\r\n&lt;p&gt;&amp;nbsp;&lt;/p&gt;', '2013-12-08 06:49:11', 0),
+(19, 10, 1, 'test 1111', '2013-12-08 10:05:15', '&lt;p&gt;estasdfasdf&lt;/p&gt;', '2013-12-08 10:05:15', 0);
 
 -- --------------------------------------------------------
 
@@ -879,7 +1006,7 @@ CREATE TABLE IF NOT EXISTS `group_users` (
   PRIMARY KEY (`u_id`,`u_role_id`),
   UNIQUE KEY `u_name_UNIQUE` (`u_name`),
   UNIQUE KEY `u_mail_UNIQUE` (`u_mail`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=14 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=15 ;
 
 --
 -- 转存表中的数据 `group_users`
@@ -888,17 +1015,18 @@ CREATE TABLE IF NOT EXISTS `group_users` (
 INSERT INTO `group_users` (`u_id`, `u_role_id`, `u_name`, `u_mail`, `u_password`, `u_region`, `u_mobile`, `u_qq`, `u_weibo`, `u_register_time`, `u_status`, `u_picture`, `u_intro`, `u_homepage`, `u_credits`, `u_gender`, `u_privacy`) VALUES
 (1, 1, 'admin', 'admin@fudan.edu.cn', '96e79218965eb72c92a549dd5a330112', '上海', '18801730000', '10300240000', 'http://weibo.com/fdugroup', '0000-00-00 00:00:00', 1, 'files/images/users/pic_u_1.png', 'FDUGroup administrator!', 'http://localhost/FDUGroup', 0, 2, 0),
 (2, 4, 'Raysmond', 'jiankunlei@126.com', '96e79218965eb72c92a549dd5a330112', 'shanghai', '18801734441', '913282582', 'http://weibo.com/leijiankun', '2013-10-16 16:29:20', 1, 'files/images/users/pic_u_2.jpg', '"The task was appointed to you. If you do not find a way, no one will."', 'http://raysmond.com', 0, 1, 0),
-(3, 2, 'Klaus', 'klaus@fdugroup.com', '96e79218965eb72c92a549dd5a330112', '', '', '', '', '2013-10-16 17:57:37', 1, '', '', '', 1, 0, 0),
-(4, 2, 'raysmond1', 'raysmond1@126.com', '96e79218965eb72c92a549dd5a330112', '', '', '', '', '2013-11-17 03:13:56', 1, '', '', '', 1, 0, 0),
+(3, 2, 'Klaus', 'klaus@fdugroup.com', '96e79218965eb72c92a549dd5a330112', '', '', '', '', '2013-10-16 17:57:37', 1, 'files/images/users/pic_u_3.jpg', '', '', 1, 0, 0),
+(4, 2, 'raysmond1', 'raysmond1@126.com', '96e79218965eb72c92a549dd5a330112', '', '', '', '', '2013-11-17 03:13:56', 0, '', '', '', 1, 0, 0),
 (5, 2, 'Damon', 'damon@gmail.com', '96e79218965eb72c92a549dd5a330112', '', '', '', '', '2013-11-20 14:46:08', 1, 'files/images/users/pic_u_5.jpg', '', '', 1, 0, 0),
 (6, 2, 'Stefan', 'stefan@gmail.com', '96e79218965eb72c92a549dd5a330112', '', '', '', '', '2013-11-20 14:46:23', 1, 'files/images/users/pic_u_6.jpg', '', '', 1, 0, 0),
 (7, 2, 'God Thor', 'thor@gmail.com', '96e79218965eb72c92a549dd5a330112', '', '', '', '', '2013-11-20 14:46:59', 0, 'files/images/users/pic_u_7.jpg', '', '', 1, 0, 0),
 (8, 2, 'Renchu Song', 'songrenchu@sina.com', '96e79218965eb72c92a549dd5a330112', '', '', '', '', '2013-11-22 03:06:20', 1, 'files/images/users/pic_u_8.jpg', '', '', 1, 0, 0),
 (9, 2, 'Junshi Guo', '10300240031@fudan.edu.cn', '96e79218965eb72c92a549dd5a330112', '', '', '', '', '2013-11-22 03:22:41', 1, 'files/images/users/pic_u_9.jpg', '', '', 1, 0, 0),
-(10, 2, 'Jiankun Lei', 'test@asasd.com', '96e79218965eb72c92a549dd5a330112', '', '', '', '', '2013-11-22 15:31:16', 1, 'files/images/default_pic.png', '', '', 1, 0, 0),
-(11, 2, 'Bonne', 'bonne@bonne.com', '96e79218965eb72c92a549dd5a330112', '', '', '', '', '2013-11-22 15:32:56', 1, 'files/images/default_pic.png', '', '', 1, 0, 0),
+(10, 2, 'Jiankun Lei', 'test@asasd.com', '96e79218965eb72c92a549dd5a330112', '', '', '', '', '2013-11-22 15:31:16', 1, 'files/images/users/pic_u_10.PNG', '', '', 1, 0, 0),
+(11, 2, 'Bonne', 'bonne@bonne.com', '96e79218965eb72c92a549dd5a330112', '', '', '', '', '2013-11-22 15:32:56', 1, 'files/images/users/pic_u_11.PNG', '', '', 1, 0, 0),
 (12, 2, 'testuser', 'testuser212@fudan.edu.cn', '96e79218965eb72c92a549dd5a330112', '', '', '', '', '2013-11-25 16:34:37', 0, 'files/images/default_pic.png', '', '', 1, 0, 0),
-(13, 2, 'testuser2', 'testue@s.com', '96e79218965eb72c92a549dd5a330112', '', '', '', '', '2013-11-25 16:35:06', 0, 'files/images/default_pic.png', '', '', 1, 0, 0);
+(13, 2, 'testuser2', 'testue@s.com', '96e79218965eb72c92a549dd5a330112', '', '', '', '', '2013-11-25 16:35:06', 0, 'files/images/default_pic.png', '', '', 1, 0, 0),
+(14, 2, 'Caroline', 'caroline@gmail.com', '96e79218965eb72c92a549dd5a330112', 'America', '', '', '', '2013-12-07 17:35:36', 1, 'files/images/users/pic_u_14.jpg', '', '', 1, 2, 0);
 
 -- --------------------------------------------------------
 
@@ -936,7 +1064,7 @@ CREATE TABLE IF NOT EXISTS `group_wallet` (
   `w_frozen_money` int(11) NOT NULL,
   `w_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`u_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=15 ;
 
 --
 -- 转存表中的数据 `group_wallet`
@@ -944,7 +1072,11 @@ CREATE TABLE IF NOT EXISTS `group_wallet` (
 
 INSERT INTO `group_wallet` (`u_id`, `w_type`, `w_money`, `w_frozen_money`, `w_timestamp`) VALUES
 (1, '', 0, 0, '2013-11-24 16:18:23'),
-(2, '', 2, 0, '2013-12-05 07:01:52');
+(2, '', 5, 0, '2013-12-05 13:29:44'),
+(3, '', 0, 0, '2013-12-05 13:01:14'),
+(10, '', 0, 0, '2013-12-05 13:09:38'),
+(11, '', 0, 0, '2013-12-05 13:11:09'),
+(14, '', 0, 0, '2013-12-07 17:37:12');
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
