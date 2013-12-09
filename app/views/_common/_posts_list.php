@@ -93,7 +93,7 @@
                         $this->module("rating_plus",
                             array(
                                 'id' => 'rating_plus',
-                                'entityType' => Topic::$entityType,
+                                'entityType' => Topic::ENTITY_TYPE,
                                 'entityId' => $topic->id,
 //                                'count' => $topic['plusCount']
                             ));

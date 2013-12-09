@@ -57,7 +57,8 @@ class Category extends Tree
             $where .= ") ";
         }
 
-        $query =  Topic::find()->join("user")->join("group")->where($where);
+        $query =  Topic::find()->join("user")->join("group");
+        if($where!="") $query = $query->where($where);
 
         $groups = ($start!=0||$limit!=0) ? $query->range($start,$limit) : $query->all();
 
@@ -86,6 +87,8 @@ class Category extends Tree
             $where .= ") ";
         }
 
-        return Topic::find()->join("group")->where($where)->count();
+        $query = Topic::find()->join("group");
+        if($where!="") $query = $query->where($where);
+        return $query->count();
     }
 }

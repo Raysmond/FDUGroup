@@ -55,14 +55,14 @@ class RatingPlus
     public static function countUserPostsPlus($userId)
     {
         $rating = Rating::find("tag",self::TAG)->find("valueType",self::VALUE_TYPE)->find("value",self::VALUE);
-        $rating = $rating->find("entityType",Topic::$entityType)->find("userId",$userId);
+        $rating = $rating->find("entityType",Topic::ENTITY_TYPE)->find("userId",$userId);
 
         return $rating->count();
     }
 
     public static function getUserPlusTopics($userId,$start=0,$limit=0)
     {
-        $ratings = Rating::find("entityType",Topic::$entityType)->find("userId",$userId)->find("valueType",self::VALUE_TYPE)->find("value",self::VALUE)->find("tag",self::TAG)->all();
+        $ratings = Rating::find("entityType",Topic::ENTITY_TYPE)->find("userId",$userId)->find("valueType",self::VALUE_TYPE)->find("value",self::VALUE)->find("tag",self::TAG)->all();
         $ids = array_map(function ($value) {
             return $value->entityId;
         }, $ratings);

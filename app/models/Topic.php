@@ -11,7 +11,7 @@ class Topic extends RModel
 
     public $id, $groupId, $userId, $title, $createdTime, $content, $lastCommentTime, $commentCount;
 
-    public static $entityType = 1;
+    const ENTITY_TYPE = 1;
 
     public static $primary_key = "id";
     public static $table = "topic";
@@ -29,12 +29,14 @@ class Topic extends RModel
     public static $relation = array(
         "group" => array("groupId", "Group", "id"),
         "user" => array("userId", "User", "id"),
+        "rating" => array("id","RatingStatistic","entityId","on"=>"RatingStatistic.entityType=1")
+
     );
 
     public function increaseCounter(){
         if(isset($this->id)&&$this->id!=''){
             $counter = new Counter();
-            $counter->increaseCounter($this->id,self::$entityType);
+            $counter->increaseCounter($this->id,self::ENTITY_TYPE);
             return $counter;
         }
     }
@@ -76,7 +78,7 @@ class Topic extends RModel
         $user = new User();
         $group = new Group();
         $ratingStats = new RatingStatistic();
-        $entityType = Topic::$entityType;
+        $entityType = Topic::ENTITY_TYPE;
 
         $prefix = Rays::app()->getDBPrefix();
         $sql = "SELECT "
@@ -133,7 +135,7 @@ class Topic extends RModel
 
     public function delete($assignment = array()){
         $counter = new Counter();
-        $counter = $counter->loadCounter($this->id,self::$entityType);
+        $counter = $counter->loadCounter($this->id,self::ENTITY_TYPE);
         if($counter!=null)
             $counter->delete();
         $this->deleteWithComment();
@@ -159,7 +161,7 @@ class Topic extends RModel
         $group = new Group();
         $counter = new Counter();
         $ratingStats = new RatingStatistic();
-        $entityType = Topic::$entityType;
+        $entityType = Topic::ENTITY_TYPE;
 
         $prefix = Rays::app()->getDBPrefix();
         $sql = "SELECT "

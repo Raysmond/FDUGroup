@@ -27,9 +27,9 @@ class RatingController extends BaseController
                     $host = Rays::httpRequest()->getUserHostAddress();
 
                     switch ($_POST['plusType']) {
-                        case Topic::$entityType:
+                        case Topic::ENTITY_TYPE:
                             if (Topic::get($plusId) !== null) {
-                                $plus = new RatingPlus(Topic::$entityType, $plusId, $userId,$host);
+                                $plus = new RatingPlus(Topic::ENTITY_TYPE, $plusId, $userId,$host);
                                 if($plus->rate()){
                                     $result = ["result"=>true,"counter"=>$plus->getCounter()->value];
                                 }
