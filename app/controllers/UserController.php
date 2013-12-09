@@ -209,12 +209,12 @@ class UserController extends BaseController
 
             if ($validation->run()) {
                 $user->name = $_POST['username'];
-                foreach ($user->columns as $objCol => $dbCol) {
+                foreach (User::$mapping as $objCol => $dbCol) {
                     if (isset($_POST[$objCol])) {
                         $user->$objCol = $_POST[$objCol];
                     }
                 }
-                $user->update();
+                $user->save();
                 $this->flash("message", "Update information successfully.");
 
                 // if picture selected
@@ -229,7 +229,7 @@ class UserController extends BaseController
                         $this->flash("error", $upload->error);
                     } else {
                         $user->picture = "files/images/users/" . $upload->file_name;
-                        $user->update();
+                        $user->save();
                         RImageHelper::updateStyle($user->picture, User::getPicOptions());
                     }
                 }
