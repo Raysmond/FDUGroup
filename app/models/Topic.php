@@ -134,27 +134,6 @@ class Topic extends RModel
         return Data::db_query($sql);
     }
 
-    public function delete($assignment = array()){
-        $counter = new Counter();
-        $counter = $counter->loadCounter($this->id,self::ENTITY_TYPE);
-        if($counter!=null)
-            $counter->delete();
-        $this->deleteWithComment();
-    }
-
-    public function deleteWithComment($topicId=''){
-        if($topicId!==''&&is_numeric($topicId)){
-            $this->id = $topicId;
-        }
-        if (isset($this->id) && $this->id != '') {
-            $comments = $this->getComments();
-            foreach ($comments as $comment){
-                $comment['root']->delete();
-            }
-            parent::delete();
-        }
-    }
-
     // TODO: use Model functions instead of SQL
     public static function getDayTopViewPosts($start=0,$limit=0){
         $topics = new Topic();

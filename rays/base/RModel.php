@@ -375,7 +375,7 @@ abstract class RModel {
     {
         $model = get_called_class();
         $primary_key = $model::$primary_key;
-        $sql = "DELETE FROM ".Rays::app()->getDBPrefix().$model::$table." WHERE {$model::$mapping[$primary_key]} == $this->$primary_key";
+        $sql = "DELETE FROM ".Rays::app()->getDBPrefix().$model::$table." WHERE {$model::$mapping[$primary_key]} == {$this->$primary_key}";
         RModel::getConnection()->exec($sql);
     }
 }
