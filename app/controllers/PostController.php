@@ -7,49 +7,10 @@ class PostController extends BaseController
         Role::ADMINISTRATOR => array('admin', 'active')
     );
 
-    public $post = null;
-    public $group = null;
-
-    public function beforeAction($action)
-    {
-        $params = $this->getActionParams();
-        $result = true;
-        switch ($action) {
-            case "list":
-                $group = new Group();
-                if (!$params || !isset($params[0]) || !is_numeric($params[0]) || $group->load($params[0]) === null) {
-                    $result = false;
-                } else {
-                    $this->group = $group;
-                    $result = true;
-                }
-                break;
-            case "edit":
-            case "view":
-            case "comment":
-            case "delete":
-                $topic = new Topic();
-                if (!$params || !isset($params[0]) || !is_numeric($params[0]) || $topic->load($params[0]) === null) {
-                    $result = false;
-                } else {
-                    $this->post = $topic;
-                    $result = true;
-                }
-                break;
-
-        }
-        if (!$result) {
-            $this->page404();
-            return false;
-        }
-        return $result;
-    }
-
     /* List all topics belonging to a given group */
     public function actionList($groupId = null)
     {
-        // group loaded in beforeAction() method
-        $group = $this->group;
+        $group = Group::get($groupId);
 
         $page = $this->getPage("page");
         $pageSize = $this->getPageSize("pagesize", 2);
@@ -80,17 +41,7 @@ class PostController extends BaseController
     public function actionNew($groupId = null)
     {
         $data = array("type" => "new", "groupId" => $groupId);
-        $data['groups'] = GroupUser::userGroups(Rays::user()->id);
-
-        $data['groupId'] = null;
-        if ($groupId != null) {
-            foreach ($data['groups'] as $item) {
-                if ($item->id == $groupId) {
-                    $data['groupId'] = $groupId;
-                    break;
-                }
-            }
-        }
+        $data['groups'] = GroupUser::getGroups(GroupUser::find("userId", Rays::user()->id)->join("group")->order_desc("groupId")->all());
 
         if (Rays::isPost()) {
             $validation = new RFormValidationHelper(array(
@@ -124,8 +75,7 @@ class PostController extends BaseController
     /* Edit topic */
     public function actionEdit($topicId)
     {
-        // topic loaded in beforeAction() method
-        $topic = $this->post;
+        $topic = Topic::get($topicId);
 
         if (Rays::isPost()) {
             $validation = new RFormValidationHelper(array(
@@ -148,7 +98,7 @@ class PostController extends BaseController
         $group = new Group();
         $group->load($topic->groupId);
         $data = array("type" => "edit", "topic" => $topic, 'group' => $group,'groupId'=>$group->id);
-        $data['groups'] = GroupUser::userGroups(Rays::user()->id);
+        $data['groups'] = GroupUser::getGroups(GroupUser::find("userId", Rays::user()->id)->join("group")->order_desc("groupId")->all());
 
         $this->layout = 'user';
         $this->addCss('/public/css/post.css');
@@ -159,8 +109,7 @@ class PostController extends BaseController
     /* View topic */
     public function actionView($topicId = null)
     {
-        // topic loaded in beforeAction() method
-        $topic = $this->post;
+        $topic = Topic::get($topicId);
 
         $counter = $topic->increaseCounter();
         $topic->user->load();
@@ -197,8 +146,7 @@ class PostController extends BaseController
     /* Add comment */
     public function actionComment($topicId)
     {
-        // topic loaded in beforeAction() method
-        $topic = $this->post;
+        $topic = Topic::get($topicId);
 
         if (Rays::isPost()) {
             $validation = new RFormValidationHelper(array(
@@ -282,8 +230,7 @@ class PostController extends BaseController
 
     public function actionDelete($topicId)
     {
-        // topic loaded in beforeAction() method
-        $topic = $this->post;
+        $topic = Topic::get($topicId);
 
         $topic->delete();
         $this->flash("message", "Post " . $topic->title . " was deleted.");

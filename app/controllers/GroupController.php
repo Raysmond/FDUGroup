@@ -50,8 +50,8 @@ class GroupController extends BaseController
     public function actionMyGroups()
     {
         $page = $this->getPage("page");
-        $pageSize = $this->getPageSize("pagesize",5);
-        $groups = GroupUser::userGroups(Rays::user()->id, ($page - 1) * $pageSize, $pageSize);
+        $pageSize = $this->getPageSize("pagesize", 5);
+        $groups = GroupUser::getGroups(GroupUser::find("userId", Rays::user()->id)->join("group")->order_desc("groupId")->range(($page - 1) * $pageSize, $pageSize));
 
         if(Rays::isAjax()){
             echo empty($groups)? 'nomore' : $this->renderPartial("_groups_list", ["groups"=>$groups, 'exitGroup' => true],true);

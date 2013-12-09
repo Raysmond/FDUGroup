@@ -69,7 +69,7 @@ class UserController extends BaseController
         switch ($part) {
             case 'joins':
                 $pageSize = $this->getPageSize("pageSize",5);
-                $data['userGroup'] = GroupUser::userGroups($userId, ($page-1) * $pageSize, $pageSize);
+                $data['userGroup'] = GroupUser::getGroups(GroupUser::find("userId", Rays::user()->id)->join("group")->order_desc("groupId")->range(($page-1) * $pageSize, $pageSize));
                 $count = User::countGroups($userId);
                 break;
             case 'posts':

@@ -6,6 +6,7 @@
 
 class GroupUser extends RModel
 {
+    public $group, $user;
     public $groupId, $userId, $joinTime, $status, $comment;
 
     public static $primary_key = "groupId";
@@ -17,20 +18,37 @@ class GroupUser extends RModel
         "status" => "status",
         "comment" => "join_comment"
     );
+    public static $relation = array(
+        "group" => array("groupId", "Group", "id"),
+        "user" => array("userId", "User", "id")
+    );
 
-    public static function userGroups($userId, $start = 0, $limit = 0)
+    /**
+     * getGroups: Filter groups out from a query result
+     * @param array $result Query result from GroupUser
+     * @return Groups associated with each GroupUser object in the array
+     */
+    public static function getGroups($result)
     {
-        $result = array();
-        $groupUser = new GroupUser();
-        $groupUser->userId = $userId;
-        $userGroups = $groupUser->find($start, $limit, ['key' => $groupUser->columns['groupId'], 'order' => 'desc']);
-        foreach($userGroups as $userGroup){
-            $group = new Group();
-            $group->id = $userGroup->groupId;
-            $group->load();
-            array_push($result,$group);
+        $groups = array();
+        foreach ($result as $groupUser) {
+            $groups[] = $groupUser->group;
         }
-        return $result;
+        return $groups;
+    }
+
+    /**
+     * getUsers: Filter users out from a query result
+     * @param array $result Query result from GroupUser
+     * @return Users associated with each GroupUser object in the array
+     */
+    public static function getUsers($result)
+    {
+        $users = array();
+        foreach ($result as $groupUser) {
+            $users[] = $groupUser->user;
+        }
+        return $users;
     }
 
     public static function removeUsers($groupId,$userIds=array()){
