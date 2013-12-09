@@ -268,11 +268,11 @@ class PostController extends BaseController
         $data = [];
 
         $category = new Category();
-        if (isset($categoryId) && (!is_numeric($categoryId) || $category->load($categoryId) === null)) {
+        if (isset($categoryId) && (!is_numeric($categoryId) || ($category=Category::get($categoryId)) === null)) {
             $this->page404();
             return;
         } else {
-            $data['category'] = $category->id?$category:null;
+            $data['category'] = $category;
             $data['subs'] = $category->children();
         }
 

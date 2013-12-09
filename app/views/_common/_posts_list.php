@@ -10,20 +10,20 @@
 <?php if(!empty($topics)): ?>
 <div class="posts-list">
     <?php
-    $currentUserId = Rays::app()->isUserLogin()?Rays::app()->getLoginUser()->id:0;
+    $currentUserId = Rays::isLogin()?Rays::user()->id:0;
     foreach ($topics as $topic) {
         ?>
         <div class="row topic-item">
             <!-- User picture -->
             <div class="col-lg-2 topic-picture">
                 <?php
-                if ($topic['u_picture'] == '') {
-                    $topic['u_picture'] = User::$defaults['picture'];
+                if ($topic->user->picture == '') {
+                    $topic->user->picture = User::$defaults['picture'];
                 }
-                $thumbnail = RImageHelper::styleSrc($topic['u_picture'], User::getPicOptions());
+                $thumbnail = RImageHelper::styleSrc($topic->user->picture, User::getPicOptions());
                 ?>
-                <a href="<?=RHtmlHelper::siteUrl("user/view/".$topic['u_id'])?>" title="<?=$topic['u_name']?>">
-                    <?= RHtmlHelper::showImage($thumbnail, $topic['u_name'], array('width' => '64px')) ?>
+                <a href="<?=RHtmlHelper::siteUrl("user/view/".$topic->user->id)?>" title="<?=$topic->user->name?>">
+                    <?= RHtmlHelper::showImage($thumbnail, $topic->user->name, array('width' => '64px')) ?>
                 </a>
 
             </div>
@@ -32,27 +32,27 @@
             <div class="col-lg-10 topic-content">
                 <span class="arrow"></span>
                 <div class="inner">
-                    <div class="topic-title"><?= RHtmlHelper::linkAction('post', $topic['top_title'], 'view', $topic['top_id']) ?></div>
+                    <div class="topic-title"><?= RHtmlHelper::linkAction('post', $topic->title, 'view', $topic->id) ?></div>
 
                     <!-- Topic meta info -->
                     <div class="topic-meta">
-                        <?= RHtmlHelper::linkAction('user', $topic['u_name'], 'view', $topic['u_id']) ?>
+                        <?= RHtmlHelper::linkAction('user', $topic->user->name, 'view', $topic->user->id) ?>
                         post
-                        in <?= RHtmlHelper::linkAction('group', $topic['gro_name'], 'detail', $topic['gro_id']) ?>
+                        in <?= RHtmlHelper::linkAction('group', $topic->group->name, 'detail', $topic->group->id) ?>
 
                     </div>
 
                     <!-- Topic summary -->
                     <div>
                         <?php
-                        $topic['top_content'] = (RHtmlHelper::decode($topic['top_content']));
-                        $content = strip_tags($topic['top_content']);
+                        $topic->content = (RHtmlHelper::decode($topic->content));
+                        $content = strip_tags($topic->content);
                         if (mb_strlen($content) > 140) {
                             echo '<p>' . mb_substr($content, 0, 140, 'UTF-8') . '...</p>';
                         } else {
                             echo '<p>' . $content . '</p>';
                         }
-                        preg_match_all("/<img[^>]+>/i",$topic['top_content'],$matches);
+                        preg_match_all("/<img[^>]+>/i",$topic->content,$matches);
                         if(!empty($matches)){
                             foreach($matches as $src){
                                 if(!empty($src)){
@@ -71,21 +71,21 @@
 //                    $interval = $now->diff($time);
 
                     ?>
-                    <?= $topic['top_created_time'] ?>
+                    <?= $topic->createdTime ?>
 
                     <div class="actions">
-                        <a href="<?=RHtmlHelper::siteUrl('post/view/'.$topic['top_id']).'#reply'?>">
-                            <span class="glyphicon glyphicon-comment"></span> <?=$topic['top_comment_count']?>
+                        <a href="<?=RHtmlHelper::siteUrl('post/view/'.$topic->id).'#reply'?>">
+                            <span class="glyphicon glyphicon-comment"></span> <?=$topic->commentCount?>
                         </a>
                         <?php
 
                         if(isset($enabledDelete)&&$enabledDelete){
-                            if($currentUserId!==0&&$topic['u_id']==$currentUserId){
+                            if($currentUserId!==0&&$topic->user->id==$currentUserId){
                                 echo '&nbsp;';
                                 echo RHtmlHelper::linkAction(
                                     'post',
                                     'Delete',
-                                    'delete', $topic['top_id'],
+                                    'delete', $topic->id,
                                     array('class' => 'btn btn-xs btn-danger'));
                             }
                         }
@@ -94,8 +94,8 @@
                             array(
                                 'id' => 'rating_plus',
                                 'entityType' => Topic::$entityType,
-                                'entityId' => $topic['top_id'],
-                                'count' => $topic['plusCount']
+                                'entityId' => $topic->id,
+//                                'count' => $topic['plusCount']
                             ));
                         ?>
                     </div>

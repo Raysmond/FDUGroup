@@ -34,98 +34,59 @@ class Category extends Tree
         parent::delete($assignment);
     }
 
+    /**
+     * Todo how to define active posts?
+     *
+     * @param null $categoryId
+     * @param int $start
+     * @param int $limit
+     */
     public function getActivePosts($categoryId = null, $start = 0, $limit = 0)
     {
-        $topic = new Topic();
-        $group = new Group();
-        $user = new User();
-
-
-        $limitSQL = "";
-        if ($start != 0 || $limit != 0) {
-            $limitSQL .= " LIMIT {$start} , " . $limit;
-        }
-
-        $whereSQL = "";
+        $where = "";
         if ($categoryId !== null) {
             $this->id = $categoryId;
-            if ($this->load() !== null) {
-                $subs = $this->children();
-                $whereSQL = "WHERE groups.{$group::$mapping['categoryId']} IN ({$categoryId},";
-                $total = count($subs);
-                $count = 0;
-                foreach ($subs as $item) {
-                    $whereSQL .= $item->id;
-                    if (++$count < $total)
-                        $whereSQL .= ",";
-                }
-                $whereSQL .= ") ";
+            $subs = $this->children();
+            $where = Group::$mapping['categoryId']." IN ({$categoryId},";
+            $total = count($subs);
+            $count = 0;
+            foreach ($subs as $item) {
+                $where .= $item->id;
+                $where .= (++$count<$total)?",":"";
             }
+            $where .= ") ";
         }
-        $ratingStats = new RatingStatistic();
-        $entityType = Topic::$entityType;
-        $prefix = Rays::app()->getDBPrefix();
-        $sql = "SELECT "
-            . "user.{$user::$mapping['id']},"
-            . "user.{$user::$mapping['name']},"
-            . "user.{$user::$mapping['picture']},"
-            . "topic.{$topic::$mapping['id']},"
-            . "topic.{$topic::$mapping['title']},"
-            . "topic.{$topic::$mapping['content']},"
-            . "topic.{$topic::$mapping['createdTime']},"
-            . "topic.{$topic::$mapping['commentCount']},"
-            . "groups.{$group::$mapping['id']},"
-            . "groups.{$group::$mapping['name']},"
-            . "rating.{$ratingStats::$mapping['value']} AS plusCount "
-            . "FROM {$prefix}{$topic::$table} as topic "
-            . "LEFT JOIN {$prefix}{$user::$table} as user ON user.{$user::$mapping['id']}=topic.{$topic::$mapping['userId']} "
-            . "LEFT JOIN {$prefix}{$group::$table} as groups ON groups.{$group::$mapping['id']}=topic.{$topic::$mapping['groupId']} "
-            . "LEFT JOIN {$prefix}{$this::$table} AS category ON  category.{$this::$mapping['id']}=groups.{$group::$mapping['categoryId']} "
-            . "LEFT JOIN {$prefix}{$ratingStats::$table} AS rating on rating.{$ratingStats::$mapping['entityType']}={$entityType} "
-            . "AND rating.{$ratingStats::$mapping['entityId']}=topic.{$topic::$mapping['id']} "
-            . "AND rating.{$ratingStats::$mapping['tag']}='plus' "
-            . "AND rating.{$ratingStats::$mapping['type']}='count'"
-            . $whereSQL
-            . "ORDER BY topic.{$topic::$mapping['id']} DESC "
-            . $limitSQL
-            . "";
 
-        return Data::db_query($sql);
+        $query =  Topic::find()->join("user")->join("group")->where($where);
+
+        $groups = ($start!=0||$limit!=0) ? $query->range($start,$limit) : $query->all();
+
+        return $groups;
     }
 
+    /**
+     * Todo how to define active posts?
+     *
+     * Now the method count all posts in a given category
+     * @param null $categoryId
+     * @return mixed
+     */
     public function getActivePostsCount($categoryId = null)
     {
-        $topic = new Topic();
-        $group = new Group();
-
-        $whereSQL = "";
+        $where = "";
         if ($categoryId !== null) {
             $this->id = $categoryId;
-            if ($this->load() !== null) {
-                $subs = $this->children();
-                $whereSQL = "WHERE groups.{$group->mapping['categoryId']} IN ({$categoryId},";
-                $total = count($subs);
-                $count = 0;
-                foreach ($subs as $item) {
-                    $whereSQL .= $item->id;
-                    if (++$count < $total)
-                        $whereSQL .= ",";
-                }
-                $whereSQL .= ") ";
+            $subs = $this->children();
+            $where = Group::$mapping['categoryId']." IN ({$categoryId},";
+            $total = count($subs);
+            $count = 0;
+            foreach ($subs as $item) {
+                $where .= $item->id;
+                $where .= (++$count<$total)?",":"";
             }
+            $where .= ") ";
         }
 
-        $prefix = Rays::app()->getDBPrefix();
-        $sql = "SELECT "
-            . "COUNT(topic.{$topic::$mapping['id']}) AS totalCount "
-            . "FROM {$prefix}{$topic::$table} as topic "
-            . "LEFT JOIN {$prefix}{$group::$table} as groups ON groups.{$group::$mapping['id']}=topic.{$topic::$mapping['groupId']} "
-            . "LEFT JOIN {$prefix}{$this::$table} AS category ON  category.{$this::$mapping['id']}=groups.{$group::$mapping['categoryId']} "
-            . $whereSQL
-            . "";
-
-        $result = Data::db_query($sql);
-
-        return $result[0]["totalCount"];
+        return Topic::find()->join("group")->where($where)->count();
     }
 }

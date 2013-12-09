@@ -37,10 +37,7 @@ class GroupController extends BaseController
             exit;
         }
 
-        $data = array(
-            'groups' => $groups,
-            'searchstr'=>($searchStr != ''?$searchStr : null),
-        );
+        $data = ['groups' => $groups, 'searchstr'=>$searchStr];
 
         $this->setHeaderTitle("Find Group");
 
@@ -78,7 +75,7 @@ class GroupController extends BaseController
     {
         $group = Group::get($groupId);
         if ($group == null) {
-            Rays::app()->page404();
+            $this->page404();
             return;
         }
         $group->category = Category::get($group->categoryId);
