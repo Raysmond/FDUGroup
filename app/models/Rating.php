@@ -13,7 +13,6 @@ class Rating extends RModel
 
     public static $table = "rating";
     public static $primary_key = "id";
-
     public static $mapping = array(
         "id" => "rating_id",
         'entityType' => 'entity_type',

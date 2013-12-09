@@ -25,9 +25,10 @@ class Topic extends RModel
         "lastCommentTime" => "top_last_comment_time",
         "commentCount" => "top_comment_count"
     );
+
     public static $relation = array(
         "group" => array("groupId", "Group", "id"),
-        "user" => array("userId", "User", "id")
+        "user" => array("userId", "User", "id"),
     );
 
     public function increaseCounter(){
@@ -59,6 +60,7 @@ class Topic extends RModel
         return $topics;
     }
 
+    // TODO: use Model functions instead of SQL
     public function getUserFriendsTopics($uid,$limit=0,$endTime=null){
         $friends = new Friend();
         $friends->uid = $uid;
@@ -150,6 +152,7 @@ class Topic extends RModel
         }
     }
 
+    // TODO: use Model functions instead of SQL
     public static function getDayTopViewPosts($start=0,$limit=0){
         $topics = new Topic();
         $user = new User();

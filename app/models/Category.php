@@ -29,13 +29,13 @@ class Category extends Tree
         $groups = $group->find();
         foreach ($groups as $item) {
             $item->categoryId = self::DEFAULT_CATEGORY_ID;
-            $item->update();
+            $item->save();
         }
         parent::delete($assignment);
     }
 
     /**
-     * Todo how to define active posts?
+     * TODO: how to define active posts?
      *
      * @param null $categoryId
      * @param int $start
@@ -65,7 +65,7 @@ class Category extends Tree
     }
 
     /**
-     * Todo how to define active posts?
+     * TODO: how to define active posts?
      *
      * Now the method count all posts in a given category
      * @param null $categoryId
@@ -77,12 +77,11 @@ class Category extends Tree
         if ($categoryId !== null) {
             $this->id = $categoryId;
             $subs = $this->children();
-            $where = Group::$mapping['categoryId']." IN ({$categoryId},";
+            $where = Group::$mapping['categoryId'] . " IN ({$categoryId},";
             $total = count($subs);
             $count = 0;
             foreach ($subs as $item) {
-                $where .= $item->id;
-                $where .= (++$count<$total)?",":"";
+                $where .= $item->id . ((++$count < $total) ? "," : "");
             }
             $where .= ") ";
         }
