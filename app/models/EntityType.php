@@ -1,27 +1,20 @@
 <?php
 /**
- * Class EntityType
+ * EntityType model
+ *
  * @author: Raysmond
  */
 
-class EntityType extends Data{
+class EntityType extends RModel{
     public $typeId,$typeName;
 
-    public function __construct() {
-        $options =array(
-            "key" => "typeId",
-            "table" => "entity_type",
-            "columns" => array(
-                "typeId" => "typ_id",
-                "typeName" =>"typ_name",
-            )
-        );
-        parent::init($options);
-    }
+    public static $table = "entity_type";
+    public static $primary_key = "typeId";
 
-    public function load($id = null) {
-        parent::load($id);
-    }
+    public static $mapping = array(
+                    "typeId" => "typ_id",
+                    "typeName" =>"typ_name",
+                    );
 }
 
 
