@@ -2,7 +2,7 @@
 /**
  * Data model for advertisements
  *
- * @author songrenchu, Xiangyan Sun
+ * @author songrenchu, Xiangyan Sun, Raysmond
  */
 class Ads extends RModel {
     public $publisher;
@@ -43,19 +43,9 @@ class Ads extends RModel {
         return isset($this->id);
     }
 
-    public function getUserAds($userId, $type) {
-        if(!isset($userId)||$userId==''){
-            return null;
-        }
-        $ads = new Ads();
-        $ads->userId = $userId;
-        $ads->status = $type;
-        /* TODO pager */
-        return $ads->find(0, 0, ['key' => 'ads_id', 'order' => 'desc']);
-    }
-
-    public static function getPublishedAds() {     //get published advertisements, order by paid price, but the effectiveness of price deminish along with the elapse of timer
-        return self::find()->order("desc", "[pubTime] / 10000 + [paidPrice]")->all();
+    //get published advertisements, order by paid price, but the effectiveness of price deminish along with the elapse of timer
+    public static function getPublishedAds() {
+        return self::find(["status",static::APPROVED])->order("desc", "[pubTime] / 10000 + [paidPrice]")->all();
     }
 
     public function delete() {

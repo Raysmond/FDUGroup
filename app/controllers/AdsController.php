@@ -14,17 +14,16 @@ class AdsController extends BaseController {
 
     public function actionView($type='active') {
         $this->setHeaderTitle('My Advertisements');
-        $currentUserId = Rays::user()->id;
+        $userId = Rays::user()->id;
 
-        $ads = new Ads();
         if($type === 'blocked'){
-            $data['ads'] = $ads->getUserAds($currentUserId, Ads::BLOCKED);
+            $data['ads'] = Ads::find(["userId",$userId,"status",Ads::BLOCKED])->all();
             $data['type'] = Ads::BLOCKED;
         } else if($type === 'published'){
-            $data['ads'] = $ads->getUserAds($currentUserId, Ads::APPROVED);
+            $data['ads'] = Ads::find(["userId",$userId,"status",Ads::APPROVED])->all();
             $data['type'] = Ads::APPROVED;
         } else{
-            $data['ads'] = $ads->getUserAds($currentUserId, Ads::APPLYING);
+            $data['ads'] = Ads::find(["userId",$userId,"status",Ads::APPLYING])->all();
             $data['type'] = Ads::APPLYING;
         }
 

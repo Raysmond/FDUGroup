@@ -99,11 +99,14 @@ class User extends RModel
             if (isset($this->id) && is_numeric($this->id)) {
                 $this->_wallet = new Wallet();
                 $this->_wallet->userId = $this->id;
-                $result = $this->_wallet->load();
+                $result = Wallet::get($this->id);
                 if ($result === null) {
+                    $this->_wallet->money = 0;
                     $this->_wallet->timestamp = date('Y-m-d H:i:s');
-                    $this->_wallet->insert();
-                    $this->_wallet->load();
+                    $this->_wallet->save();
+                }
+                else{
+                    $this->_wallet = $result;
                 }
             }
             return $this->_wallet;
