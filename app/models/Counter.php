@@ -21,28 +21,22 @@ class Counter extends RModel{
         "timestamp" => "timestamp",
     );
 
+    $relations = array("entityType"=>["entityTypeId","EntityType","typeId"]);
 
     public function loadCounter($entityId,$entityTypeId){
         if(is_numeric($entityId)&&is_numeric($entityTypeId)){
-            $result = Counter::find("entityId",$entityId)->find("entityTypeId",$entityTypeId)->first();
-            if($result===null){
-                return null;
-            }
-            else{
-                $result->entityType = new EntityType();
-                $result->entityType->typeId = $this->entityTypeId;
+            $result = Counter::find(["entityId",$entityId, "entityTypeId",$entityTypeId])->join("entityType")->first();
+            if($result!=null){
                 if($result->checkCounter()) $result->save();
                 return $result;
             }
         }
-        else{
-            return null;
-        }
+        return $result;
     }
 
     public function increaseCounter($entityId,$entityTypeId){
         if(is_numeric($entityId)&&is_numeric($entityTypeId)){
-            $result = Counter::find("entityId",$entityId)->find("entityTypeId",$entityTypeId)->first();
+            $result = Counter::find(["entityId",$entityId, "entityTypeId",$entityTypeId])->join("entityType")->first();
             if($result===null){
                 $this->timestamp = date('Y-m-d H:i:s');
                 $this->totalCount = 1;
