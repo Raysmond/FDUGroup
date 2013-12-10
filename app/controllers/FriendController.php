@@ -69,7 +69,7 @@ class FriendController extends BaseController {
         if ($cid === null) {
             $this->flash('warning','Request already processed');
         } else {
-            $censor->passCensor($cid);
+            $censor = Censor::passCensor($cid);
             if (count($friend->find()) == 0) {     //bug fixed by songrenchu: only new relationship need to be inserted
                 $friend->insert();
 
@@ -104,7 +104,7 @@ class FriendController extends BaseController {
         if ($cid === null) {
             $this->flash('warning','Request already processed');
         } else {
-            $censor->failCensor($cid);
+            $censor = Censor::failCensor($cid);
 
             $content = RHtmlHelper::linkAction('user',$userName,'view',$uid)." has declined your friend request.";
             $message = new Message();

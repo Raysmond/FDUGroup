@@ -415,7 +415,7 @@ class UserController extends BaseController
         if (isset($_GET['censorId']) && isset($_GET['op'])) {
             $censor = new Censor();
             if ((int)$_GET['op'] === 0) {
-                $censor->passCensor( (int)$_GET['censorId']);
+                $censor = Censor::passCensor( (int)$_GET['censorId']);
 
                 $user = User::get($censor->firstId);
                 $user->roleId = Role::VIP_ID;
@@ -424,7 +424,7 @@ class UserController extends BaseController
                 $content = "Congratulations, " . RHtmlHelper::linkAction('user',$user->name,'view',$user->id). "!<br/> Your VIP application is accepted by Administrator.";
                 Message::sendMessage("system", 0, $user->id, "VIP application accepted", RHtmlHelper::encode($content), '');
             } else {
-                $censor->failCensor( (int)$_GET['censorId']);
+                $censor = Censor::failCensor((int)$_GET['censorId']);
 
                 $user = User::get($censor->firstId);
                 $content = "Sorry, " . RHtmlHelper::linkAction('user',$user->name,'view',$user->id). "!<br/> Your VIP application is declined by Administrator.";
@@ -438,7 +438,7 @@ class UserController extends BaseController
 
         $applications = new Censor();
         $applications->status = Censor::UNPROCESS;
-        $applications->getTypeIdbyTypeName('apply_vip');
+        $applications->getTypeId('apply_vip');
         $count = $applications->count([]);
         $data['count'] = $count;
 

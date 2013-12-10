@@ -255,7 +255,7 @@ class GroupController extends BaseController
                 }else{
                     $this->flash("warning","You're already a member of this group.");
                 }
-                $censor->passCensor($censorId);
+                $censor = Censor::passCensor($censorId);
             }
             $this->redirectAction('message','view');
         }
@@ -290,7 +290,7 @@ class GroupController extends BaseController
                 $this->flash("warning","You're already a member of this group.");
             }
 
-            $censor->passCensor($censorId);
+            $censor = Censor::passCensor($censorId);
             $this->redirectAction('message','view');
         }
     }
@@ -318,7 +318,7 @@ class GroupController extends BaseController
                 $this->flash("warning","TA is already a member of this group.");
             }
 
-            $censor->failCensor($censorId);
+            $censor = Censor::failCensor($censorId);
             $this->redirectAction('message','view');
         }
     }
