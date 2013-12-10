@@ -1,7 +1,8 @@
 <?php
 /**
  * Message Model class file.
- * @author: songrenchu
+
+ * @author: songrenchu, Raysmond
  */
 
 class Censor extends RModel
@@ -41,7 +42,7 @@ class Censor extends RModel
                     $result->related = null;
                     break;
                 case 'join_group':
-                    $result->related = Group::get(Group);
+                    $result->related = Group::get($result->secondId);
                     break;
                 case 'post_ads':
                     /* TODO */
