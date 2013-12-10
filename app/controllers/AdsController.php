@@ -199,7 +199,7 @@ class AdsController extends BaseController {
             $adId = (int)$_POST['adId'];
             $ad = Ads::get($adId);
             if ($ad !== null) {
-                (new Counter())->increaseCounter($adId, Ads::ENTITY_ID);        //Ad访问计数器
+                (new Counter())->increaseCounter($adId, Ads::ENTITY_TYPE);        //Ad访问计数器
                 /** TODO 刷广告访问监测机制 */
                 $user = User::get($ad->userId);
                 if ($user !== null) {

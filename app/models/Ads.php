@@ -10,11 +10,10 @@ class Ads extends RModel {
 
     const APPLYING = 1;
     const BLOCKED = 2;
-    // Approved ads can show on some pages of the site
     const APPROVED = 3;
     const REMOVED = 4;
 
-    const ENTITY_ID = 3;
+    const ENTITY_TYPE = 3;
 
     public static $primary_key = 'id';
     public static $table = 'ads';
@@ -49,6 +48,7 @@ class Ads extends RModel {
     }
 
     public function delete() {
-        $this->markStatus($this->id, Ads::REMOVED);
+        $this->status = static::REMOVED;
+        $this->save();
     }
 }

@@ -43,22 +43,19 @@ class Category extends Tree
      */
     public function getActivePosts($categoryId = null, $start = 0, $limit = 0)
     {
-        $where = "";
+        $query = Topic::find()->join("user")->join("group");
         if ($categoryId !== null) {
             $this->id = $categoryId;
             $subs = $this->children();
-            $where = Group::$mapping['categoryId']." IN ({$categoryId},";
-            $total = count($subs);
-            $count = 0;
-            foreach ($subs as $item) {
-                $where .= $item->id;
-                $where .= (++$count<$total)?",":"";
+            $where = Rays::app()->getDBPrefix().Group::$table.'.'.Group::$mapping['categoryId']." IN (?";
+            $args = [$categoryId];
+            for($i=0,$count = count($subs);$i<$count;$i++){
+                $where.=',?';
+                $args[] = $subs[$i]->id;
             }
-            $where .= ") ";
+            $where.=')';
+            $query = $query->where($where,$args);
         }
-
-        $query =  Topic::find()->join("user")->join("group")->join("rating");
-        if($where!="") $query = $query->where($where);
 
         $groups = ($start!=0||$limit!=0) ? $query->range($start,$limit) : $query->all();
         return $groups;
@@ -73,21 +70,19 @@ class Category extends Tree
      */
     public function getActivePostsCount($categoryId = null)
     {
-        $where = "";
+        $query = Topic::find()->join("group");
         if ($categoryId !== null) {
             $this->id = $categoryId;
             $subs = $this->children();
-            $where = Group::$mapping['categoryId'] . " IN ({$categoryId},";
-            $total = count($subs);
-            $count = 0;
-            foreach ($subs as $item) {
-                $where .= $item->id . ((++$count < $total) ? "," : "");
+            $where = "[categoryId] IN (?";
+            $args = [$categoryId];
+            for($i=0,$count = count($subs);$i<$count;$i++){
+                $where.=',?';
+                $args[] = $subs[$i]->id;
             }
-            $where .= ") ";
+            $where.=')';
+            $query = $query->where($where,$args);
         }
-
-        $query = Topic::find()->join("group");
-        if($where!="") $query = $query->where($where);
         return $query->count();
     }
 }
