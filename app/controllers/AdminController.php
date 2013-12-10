@@ -1,7 +1,7 @@
 <?php
 /**
  * AdminController class file.
- * 
+ *
  * @author: Raysmond
  */
 

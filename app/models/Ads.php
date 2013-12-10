@@ -1,6 +1,7 @@
 <?php
 /**
  * Data model for advertisements
+ *
  * @author songrenchu, Xiangyan Sun
  */
 class Ads extends RModel {
@@ -27,16 +28,9 @@ class Ads extends RModel {
         'paidPrice'=>'ads_paid_price',
     );
 
-    public function load($id=null)
-    {
-        $result = parent::load($id);
-        if($result==null) return null;
-        $this->publisher = new User();
-        $this->publisher->id = $this->userId;
-        $this->publisher->load();
-
-        return $this;
-    }
+    public static $relation = array(
+        'publisher'=>array('userId','User','id')
+    );
 
     public function apply($userId,$title,$content,$paidPrice,$applyTime = null){
         $this->userId = $userId;
@@ -45,35 +39,8 @@ class Ads extends RModel {
         $this->paidPrice = $paidPrice;
         $this->pubTime = $applyTime!=null? $applyTime : date('Y-m-d H:i:s');
         $this->status = self::APPLYING;
-        $id = $this->insert();
-        if(is_numeric($id)){
-            $this->load($id);
-            return true;
-        }
-        else{
-            return false;
-        }
-    }
-
-    public function block($adId=''){
-        $this->markStatus($adId,self::BLOCKED);
-    }
-
-
-    public function activate($adId=''){
-        $this->markStatus($adId,self::APPROVED);
-    }
-
-    private function markStatus($adId, $status)
-    {
-        if (isset($adId) && is_numeric($adId)) {
-            $this->id = $adId;
-        }
-        if(isset($this->id) && is_numeric($this->id)){
-            $this->load();
-            $this->status = $status;
-            $this->update();
-        }
+        $this->save();
+        return isset($this->id);
     }
 
     public function getUserAds($userId, $type) {
