@@ -1,6 +1,7 @@
 <?php
 /**
  * Base framework bootstrap file
+ *
  * @author: Raysmond
  */
 
@@ -13,7 +14,8 @@ define('HELPER_PATH', SYSTEM_PATH . '/helpers');
 
 
 /**
- * Class RaysBase is a basic helper class for common framework functionalities.
+ * Class RaysBase is a basic helper class for common framework functionality.
+ *
  * @author: Raysmond
  */
 class RaysBase
@@ -175,5 +177,7 @@ class RaysBase
 }
 
 spl_autoload_register(array('RaysBase', 'autoload'));
+
+set_exception_handler(array("RExceptionHandler", "handleException"));
 
 header('Content-Type: text/html; charset=UTF-8');

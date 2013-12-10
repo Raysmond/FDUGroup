@@ -51,8 +51,9 @@ class UserController extends BaseController
     {
         $user = User::get($userId);
         if ($user == null) {
-            $this->page404();
-            return;
+            throw new RException("page not found!");
+//            $this->page404();
+//            return;
         }
         $data = array('user' => $user, 'part' => $part);
         if (Rays::isLogin()) {

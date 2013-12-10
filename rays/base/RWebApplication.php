@@ -82,9 +82,9 @@ class RWebApplication extends RBaseApplication
 
     /**
      * Create and run the requested controller
-     * @param $route array router information
+     * @param array $route array router information
      */
-    private function runController($route = array())
+    public function runController($route=array())
     {
         $_controller = '';
         if (isset($route['controller']) && $route['controller'] != '') {
@@ -99,12 +99,38 @@ class RWebApplication extends RBaseApplication
             $_controller = new $_controller;
             $_controller->setId($route['controller']);
             $this->controller = $_controller;
-            $_controller->runAction($this->router->getAction(), $this->router->getParams());
+            $action = isset($route['action'])?$route['action']:'';
+            $params = isset($route['params'])?$route['params']:array();
+            $_controller->runAction($action, $params);
         } else {
             // No controller found
             // die("Controller(" . $_controller . ") not exists....");
             $this->page404();
         }
+    }
+
+    /**
+     * Run controller action
+     *
+     * @param $controllerAction
+     * for example:
+     * runControllerAction('site/index',['arg1'])
+     * </pre>
+     *
+     * @param array $params
+     */
+    public function runControllerAction($controllerAction,$params = array()){
+        $route = $this->router->getRouteUrl($controllerAction);
+        if(!is_array($params)){
+            $params = array($params);
+        }
+        if(isset($route['params'])){
+             $route['params'] = $params;
+//           array_merge($route['params'], $params);
+        }
+        else
+            $route['params'] = $params;
+        self::runController($route);
     }
 
     /**

@@ -238,8 +238,11 @@ class RController
      * @param $action string action ID
      * @param $params array parameters
      */
-    public function runAction($action, $params)
+    public function runAction($action='', $params=array())
     {
+        if($action=='')
+            $action = $this->defaultAction;
+
         $this->setCurrentAction($action);
         $this->setActionParams($params);
 

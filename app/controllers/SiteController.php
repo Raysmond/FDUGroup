@@ -19,46 +19,22 @@ class SiteController extends BaseController
         $this->userModel = new User();
     }
 
-    /**
-     * Home page
-     * @param null $params
-     */
     public function actionIndex($params = null)
     {
         $this->setHeaderTitle("Welcome to FDUGroup");
         $this->render("index", array(), false);
     }
 
-    /**
-     * View page
-     * @param null $params
-     */
-    public function actionView($params = null)
-    {
-        echo "<br/>action view executed by SiteController..<br/>";
-        if ($params != null)
-            print_r($params);
-        $this->setHeaderTitle("View Page");
-    }
-
-    /**
-     * About page
-     */
     public function actionAbout()
     {
         $this->setHeaderTitle("About FDUGroup");
         $this->render('about', null, false);
     }
 
-    /**
-     * Contact page
-     */
     public function actionContact()
     {
         $this->setHeaderTitle("Contact with FDUGroup");
-        $data = array(
-            'githubLink' => "https://github.com/Raysmond/FDUGroup",
-        );
+        $data = ['githubLink' => "https://github.com/Raysmond/FDUGroup"];
 
         $this->render('contact', $data, false);
     }
@@ -67,5 +43,20 @@ class SiteController extends BaseController
         $this->setHeaderTitle("Site help");
         $data = array();
         $this->render('help',$data,false);
+    }
+
+    public function actionException(Exception $e){
+        if(Rays::isAjax()){
+            print $e;
+            exit;
+        }
+        switch($e->getCode()){
+            //case "404":
+            //    $this->render("404",['message',$e->getMessage()]);
+            //    break;
+            default:
+                $this->render("exception",['code'=>$e->getCode(),'message'=>$e->getMessage()]);
+                print $e;
+        }
     }
 }

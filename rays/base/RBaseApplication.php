@@ -86,6 +86,8 @@ class RBaseApplication
      */
     private $_cache = array();
 
+    private $_exceptionAction = "";
+
     public function __construct($config = null)
     {
         $this->init($config);
@@ -117,6 +119,9 @@ class RBaseApplication
         }
         if(isset($config['baseDir'])){
             $this->_baseDir = $config['baseDir'];
+        }
+        if(isset($config['exceptionAction'])){
+            $this->setExceptionAction($config['exceptionAction']);
         }
     }
 
@@ -235,5 +240,14 @@ class RBaseApplication
 
     public function getCacheConfig(){
         return $this->_cache;
+    }
+
+    public function getExceptionAction(){
+        return $this->_exceptionAction;
+    }
+
+    public function setExceptionAction($action=""){
+        $this->_exceptionAction = $action;
+        RExceptionHandler::setExceptionAction($action);
     }
 }

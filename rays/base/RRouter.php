@@ -40,9 +40,17 @@ class RRouter
         $this->queryUrl = parse_url($_SERVER['REQUEST_URI']);
     }
 
-    public function getRouteUrl()
+    /**
+     * Get router from uri
+     * @param string $uriInfo
+     * @return array
+     */
+    public function getRouteUrl($uriInfo='')
     {
-        $this->processUrl();
+        if($uriInfo=='')
+            $uriInfo = Rays::app()->getHttpRequest()->getRequestUriInfo();
+
+        $this->processUrl($uriInfo);
         return $this->_routeUrl;
     }
 
@@ -51,20 +59,20 @@ class RRouter
         $this->_routeUrl = $route;
     }
 
-    public function processUrl()
+    public function processUrl($uriInfo)
     {
         // what if there're more url types
-        $this->processQueryUrl();
+        $this->processQueryUrl($uriInfo);
+
+        // $this->processAliasUrl($uriInfo);
     }
 
     /**
      * Processes the query uri and transforms the params into route
+     * @param string $query like 'user/view/1'
      */
-    public function processQueryUrl()
+    public function processQueryUrl($query)
     {
-        // uri info form:
-        // user/view/1
-        $query = Rays::app()->getHttpRequest()->getRequestUriInfo();
         if(($pos = strpos($query,"?")))
             $query = substr($query,0,$pos);
 
