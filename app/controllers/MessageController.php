@@ -17,8 +17,8 @@ class MessageController extends BaseController
     // to be implemented
     public function actionDetail($msgId = '')
     {
-        // message filtered in beforeAction() method
         $message = Message::get($msgId);
+        RAssert::not_null($message);
 
         $loginId = Rays::user()->id;
         if ($message->receiverId != $loginId && $message->senderId != $loginId) {
@@ -43,10 +43,7 @@ class MessageController extends BaseController
         if (!$type) {
             $type = 'private';
         }
-        if (!in_array($type, $types)) {
-            $this->page404();
-            return;
-        }
+        RAssert::is_true(in_array($type, $types));
 
         $data = array('type' => $type);
 
@@ -110,6 +107,7 @@ class MessageController extends BaseController
     public function actionRead($msgId)
     {
         $message = Message::get($msgId);
+        RAssert::not_null($message);
         if (Rays::user()->id != $message->receiverId) {
             $this->flash("error", "Sorry. You don't have the right to mark the message read.");
         }
@@ -171,6 +169,7 @@ class MessageController extends BaseController
     public function actionTrash($msgId)
     {
         $message = Message::get($msgId);
+        RAssert::not_null($message);
         $user = Rays::user();
         if (($message->receiverId == $user->id) || $user->isAdmin()) {
             $message->status = Message::STATUS_TRASH;
@@ -182,6 +181,7 @@ class MessageController extends BaseController
     public function actionDelete($msgId)
     {
         $message = Message::get($msgId);
+        RAssert::not_null($message);
         $user = Rays::user();
         if (($message->receiverId == $user->id || $user->isAdmin())) {
             $message->delete();
