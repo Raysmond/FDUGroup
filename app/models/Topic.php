@@ -52,6 +52,27 @@ class Topic extends RModel
         return $result;
     }
 
+    public function delete(){
+        $tid = $this->id;
+
+        // delete view counter
+        $counter = Counter::find(["entityId",$tid,"entityTypeId",Topic::ENTITY_TYPE])->first();
+        if($counter!=null)
+            $counter->delete();
+
+        // delete plus-rating data
+        $plus = new RatingPlus(Topic::ENTITY_TYPE,$tid);
+        $plus->delete();
+
+        // delete all comments
+        // todo delete all rows at the same time
+        $comments = Comment::find("topicId",$tid)->all();
+        foreach($comments as $item)
+            $item->delete();
+
+        parent::delete();
+    }
+
     // TODO: use Model functions instead of SQL
     public function getUserFriendsTopics($uid,$limit=0,$endTime=null){
         $friends = new Friend();

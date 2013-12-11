@@ -223,21 +223,13 @@ class PostController extends BaseController
     public function actionDelete($topicId)
     {
         $topic = Topic::get($topicId);
-        if($topic===null)
-            return;
-
-        $counter = Counter::find("entityId",$topic->id)->find("entityType",Topic::ENTITY_TYPE)->first();
-        if($counter!=null)
-            $counter->delete();
-
-        // todo delete all rows at the same time
-        $comments = Comment::find("topicId",$topic->id)->all();
-        foreach($comments as $item)
-            $item->delete();
-
-        $topic->delete();
-
-        $this->flash("message", "Post " . $topic->title . " was deleted.");
+        if($topic===null){
+            $this->flash("message","No such topic!");
+        }
+        else{
+            $topic->delete();
+            $this->flash("message", "Post " . $topic->title . " was deleted.");
+        }
         $this->redirect(Rays::referrerUri());
     }
 
