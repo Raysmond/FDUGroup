@@ -1,6 +1,7 @@
 <?php
 /**
  * RatingController class file.
+ *
  * @author: Raysmond
  */
 

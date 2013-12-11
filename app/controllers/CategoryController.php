@@ -1,6 +1,7 @@
 <?php
 /**
  * CategoryController class file.
+ *
  * @author: Raysmond
  */
 

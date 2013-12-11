@@ -1,11 +1,9 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: Raysmond
- * Date: 13-11-23
- * Time: PM4:28
+ * Class FileController
+ *
+ * @author: Raysmond
  */
-
 class FileController extends RController{
 
     public $access = array(Role::AUTHENTICATED => array('upload'));

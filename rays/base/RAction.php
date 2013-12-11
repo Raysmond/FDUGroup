@@ -27,6 +27,12 @@ abstract class RAction
      */
     private $params = array();
 
+    /**
+     * Constructor
+     * @param $controller
+     * @param string $id the unique ID of the action in the controller context
+     * @param null $params the parameters passed to the action method
+     */
     public function __construct($controller, $id='', $params = null)
     {
         $this->id = $id;
@@ -40,16 +46,28 @@ abstract class RAction
      */
     abstract function run();
 
+    /**
+     * Get the controller of the action
+     * @return object
+     */
     public function getController()
     {
         return $this->controller;
     }
 
+    /**
+     * Get the unique action id in the controller context
+     * @return string
+     */
     public function getId()
     {
         return $this->id;
     }
 
+    /**
+     * Get parameters passed to the action method
+     * @return array|null
+     */
     public function getParams()
     {
         return $this->params;

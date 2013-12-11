@@ -1,6 +1,7 @@
 <?php
 /**
  * UserController class file.
+ *
  * @author: Raysmond
  */
 
@@ -168,8 +169,9 @@ class UserController extends BaseController
      * Change user info action
      * @param null $userId
      */
-    public function actionEdit($userId)
+    public function actionEdit($userId=null)
     {
+        $userId = (null===$userId)?Rays::user()->id: $userId;
         $user = User::get($userId);
         RAssert::not_null($user);
 

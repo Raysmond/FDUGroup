@@ -8,19 +8,34 @@
 
 class RController
 {
-    // the layout for the controller
+    /**
+     * The layout used in the controller
+     * @var string the layout view file in 'view/layout' directory
+     */
     public $layout = "index";
 
-    // default action is provided if there's no action requested from the URL
+    /**
+     * default action is provided if there's no action requested from the URL
+     * @var string
+     */
     public $defaultAction = "index";
 
-    // current action id
+    /**
+     * current action id
+     * @var string
+     */
     private $_action;
 
-    // Parameters passed to the action methd
-    private $_params;
+    /**
+     * Parameters passed to the action method
+     * @var array
+     */
+    private $_params = array();
 
-    // Header title within the <title> tag in HTML
+    /**
+     * Header title within the <title> tag in HTML
+     * @var string
+     */
     private $_headerTitle;
 
     /**
@@ -34,7 +49,10 @@ class RController
      */
     public $access = array();
 
-    // the unique ID of the controller
+    /**
+     * the unique ID of the controller
+     * @var string
+     */
     private $_id = '';
 
     /**

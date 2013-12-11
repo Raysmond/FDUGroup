@@ -1,5 +1,9 @@
 <?php
-
+/**
+ * Class PostController
+ *
+ * @author: Xiangyan Sun, Raysmond
+ */
 class PostController extends BaseController
 {
     public $access = array(
