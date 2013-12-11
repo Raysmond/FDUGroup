@@ -150,6 +150,17 @@ class _RModelQueryer {
         $stmt->execute($this->_args());
     }
 
+    /**
+     * Do SQL update query
+     */
+    public function update($update, $args = array())
+    {
+        $model = $this->model;
+        $update = $this->_substitute($update);
+        $stmt = RModel::getConnection()->prepare("UPDATE ".Rays::app()->getDBPrefix().$model::$table." SET $update $this->query_where");
+        $stmt->execute(array_merge($args, $this->_args()));
+    }
+
     private function _substitute($constraint)
     {
         /* Substitute [member]s */
