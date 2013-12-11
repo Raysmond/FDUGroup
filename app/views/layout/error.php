@@ -46,8 +46,9 @@ $this->module('main_nav',array('id'=>'main_nav','name'=>'Main navigation'));
             </div>
 
     </div><!--/row-->
-    <hr>
+
     <div id="footer" class="row">
+        <hr>
         <div class="copyright col-lg-5"><?php echo RHtmlHelper::encode(Rays::getCopyright()); ?></div>
 
         <div class="footer-links col-lg-7">
