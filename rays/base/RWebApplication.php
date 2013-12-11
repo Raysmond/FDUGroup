@@ -110,7 +110,7 @@ class RWebApplication extends RBaseApplication
     }
 
     /**
-     * Run controller action
+     * Run a controller action
      *
      * @param $controllerAction
      * for example:
@@ -125,8 +125,7 @@ class RWebApplication extends RBaseApplication
             $params = array($params);
         }
         if(isset($route['params'])){
-             $route['params'] = $params;
-//           array_merge($route['params'], $params);
+            $route['params'] = array_merge($route['params'], $params);
         }
         else
             $route['params'] = $params;
