@@ -141,7 +141,9 @@ class FriendController extends BaseController {
 
         $pager = new RPagerHelper('page', $count, $pageSize, RHtmlHelper::siteUrl('friend/myFriend'), $curPage);
         $data['friends'] = $friends;
-        $data['pager'] = $pager->showPager();
+
+        if($count>$pageSize)
+            $data['pager'] = $pager->showPager();
         $data['friNumber'] = $count;
 
         return $this->render('my_friend',$data);

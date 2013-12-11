@@ -37,7 +37,7 @@
         </div>
         <div class="clearfix"></div>
         <div>
-            <?= $pager ?>
+            <?= isset($pager)?$pager:"" ?>
         </div>
     </div>
 </div>

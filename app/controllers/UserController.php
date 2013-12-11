@@ -90,8 +90,10 @@ class UserController extends BaseController
         }
 
         if($part=="posts" || $part=="likes"){
-            $pager = new RPagerHelper("page",$count,$pageSize,RHtmlHelper::siteUrl("user/view/".$userId."/".$part),$page);
-            $data['pager'] = $pager->showPager();
+            if($count>$pageSize){
+                $pager = new RPagerHelper("page",$count,$pageSize,RHtmlHelper::siteUrl("user/view/".$userId."/".$part),$page);
+                $data['pager'] = $pager->showPager();
+            }
         }
 
         if($part=="joins"){
