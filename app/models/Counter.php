@@ -21,7 +21,7 @@ class Counter extends RModel{
         "timestamp" => "timestamp",
     );
 
-    $relations = array("entityType"=>["entityTypeId","EntityType","typeId"]);
+    public static $relation = array("entityType"=>["entityTypeId","EntityType","typeId"]);
 
     public function loadCounter($entityId,$entityTypeId){
         if(is_numeric($entityId)&&is_numeric($entityTypeId)){
