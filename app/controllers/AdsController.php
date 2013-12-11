@@ -1,7 +1,8 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: songrenchu
+ * AdsController class file
+ *
+ * @author: songrenchu, Raysmond
  */
 class AdsController extends BaseController {
     public $layout = "user";
@@ -82,34 +83,29 @@ class AdsController extends BaseController {
         }
         $currentUserId = Rays::user()->id;
         $ad = Ads::get($adId);
-        if ($ad !== null) {
-            if ($ad->userId == $currentUserId) {
-                $ad->delete();
+        RAssert::not_null($ad);
 
-                $this->flash('message', 'Advertisement removed successfully.');
-                $redirect = null;
-                switch ($type) {
-                    case Ads::APPROVED: $redirect = 'published';break;
-                    case Ads::APPLYING: $redirect = 'applying';break;
-                    case Ads::BLOCKED: $redirect = 'blocked';break;
-                }
-                $this->redirectAction('ads', 'view', $redirect);
-                return;
-            } else {
-                die('Permission denied');
+        if ($ad->userId == $currentUserId) {
+            $ad->delete();
+
+            $this->flash('message', 'Advertisement removed successfully.');
+            $redirect = null;
+            switch ($type) {
+                case Ads::APPROVED: $redirect = 'published';break;
+                case Ads::APPLYING: $redirect = 'applying';break;
+                case Ads::BLOCKED: $redirect = 'blocked';break;
             }
-        } else {
-            $this->page404();
+            $this->redirectAction('ads', 'view', $redirect);
             return;
+        } else {
+            $this->flash("error",'Permission denied');
+            $this->page404();
         }
     }
 
     public function actionEdit($adId, $type) {
-        $ad = null;
-        if(!isset($adId)||!is_numeric($adId)||($ad = Ads::get($adId))==null){
-            $this->page404();
-            return;
-        }
+        $ad = Ads::get($adId);
+        RAssert::not_null($ad);
 
         $data = ['ad'=>$ad,'edit'=>true,'type'=>$type];
 

@@ -74,10 +74,8 @@ class GroupController extends BaseController
     public function actionDetail($groupId)
     {
         $group = Group::get($groupId);
-        if ($group == null) {
-            $this->page404();
-            return;
-        }
+        RAssert::not_null($group);
+
         $group->category = Category::get($group->categoryId);
         $group->groupCreator = User::get($group->creator);
 
@@ -147,6 +145,7 @@ class GroupController extends BaseController
     public function actionEdit($groupId)
     {
         $group = Group::get($groupId);
+        RAssert::not_null($group);
 
         if (Rays::isPost()) {
             $rules = array(

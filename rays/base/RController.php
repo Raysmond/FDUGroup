@@ -257,9 +257,7 @@ class RController
                 $this->redirectAction('user','login');
                 return;
             }
-            $this->flash("error","Sorry, you're not authorized to view the requested page.");
-            Rays::app()->page404();
-            return;
+            throw new RPageNotFoundException("Sorry, you're not authorized to view the requested page.");
         }
 
         $methodName = $this->generateActionMethod();
@@ -298,9 +296,7 @@ class RController
             }
 
         } else {
-            Rays::app()->page404();
-            Rays::log("Page not found! No action matched.",RLog::LEVEL_WARNING,"system");
-            Rays::logger()->flush();
+            throw new RPageNotFoundException("No actions matches the HTTP request!");
         }
         $this->afterAction();
     }
