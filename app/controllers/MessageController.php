@@ -151,7 +151,7 @@ class MessageController extends BaseController
                 return;
         }
         $count = $query->count();
-        $messages = $query->order_desc("id")->range(($curPage - 1) * $pageSize, $pageSize);
+        $messages = $query->join('type')->order_desc("id")->range(($curPage - 1) * $pageSize, $pageSize);
         $data = array(
             'msgs' => $messages,
             'type' => $msgType,

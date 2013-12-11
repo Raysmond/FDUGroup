@@ -26,6 +26,10 @@ class Message extends RModel {
         'status'=>'msg_status',
     );
 
+    public static $relation = array(
+        'type' => array('typeId','MessageType','id')
+    );
+
     /*public function load($id=null)
     {
         $result = parent::load($id);

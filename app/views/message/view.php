@@ -50,19 +50,23 @@
 
                     echo '</div><div class="panel-body">';
                     echo '<div class="message-meta">';
-                    if($msg->sender=='system'){
+                    if($msg->type->name=='system'){
                         echo "From: 系统消息";
                     }
                     else{
-                        /* TODO
-                        if ($msg->sender !== null)
-                            $msg->sender->load();
-                        if($msg->sender instanceof User){
-                            echo "From: ".RHtmlHelper::linkAction('user',$msg->sender->name,'view',$msg->sender->id);
-                        }
-                        else if($msg->sender instanceof Group){
-                            echo "From: ".RHtmlHelper::linkAction('group',$msg->sender->name,'detail',$msg->sender->id);
-                        }*/
+                         $sender = null;
+                         if($msg->type->name == "user" || $msg->type->name =="private"){
+                             $sender = User::get($msg->senderId);
+                             echo "From: ".RHtmlHelper::linkAction('user',$sender->name,'view',$sender->id);
+                         }
+                         else if($msg->type->name == "group"){
+                             $sender = Group::get($msg->senderId);
+                             echo "From: ".RHtmlHelper::linkAction('group',$sender->name,'detail',$sender->id);
+                         }
+                         else{
+                            echo "From: Unknown";
+                         }
+
                     }
                     echo '&nbsp;&nbsp;Delivery time: '.$msg->sendTime;
                     echo '&nbsp;&nbsp;Status: '.($msg->status==1?"unread":"read");
