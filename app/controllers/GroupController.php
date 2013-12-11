@@ -236,9 +236,8 @@ class GroupController extends BaseController
     }
 
     public function actionAcceptInvite($censorId = null) {
-        $censor = new Censor();
-        $censor->id = (int)$censorId;
-        if ($censor->load() !== null) {
+        $censor = Censor::get($censorId);
+        if ($censor !== null) {
             if ($censor->firstId == Rays::user()->id) {
                 $groupUser = new GroupUser();
                 $groupUser->groupId = $censor->secondId;
@@ -255,7 +254,7 @@ class GroupController extends BaseController
                 }else{
                     $this->flash("warning","You're already a member of this group.");
                 }
-                $censor = Censor::passCensor($censorId);
+                $censor->pass();
             }
             $this->redirectAction('message','view');
         }
@@ -263,9 +262,8 @@ class GroupController extends BaseController
 
     public function actionAccept($censorId = null)
     {
-        $censor = new Censor();
-        $censor->id = (int)$censorId;
-        if ($censor->load() !==null) {
+        $censor = Censor::get($censorId);
+        if ($censor!==null) {
             $groupUser = new GroupUser();
             $groupUser->groupId = $censor->secondId;
             $groupUser->userId = $censor->firstId;
@@ -290,15 +288,14 @@ class GroupController extends BaseController
                 $this->flash("warning","You're already a member of this group.");
             }
 
-            $censor = Censor::passCensor($censorId);
+            $censor->pass();
             $this->redirectAction('message','view');
         }
     }
 
     public function actionDecline($censorId = null) {
-        $censor = new Censor();
-        $censor->id = $censorId;
-        if ($censor->load() !==null) {
+        $censor = Censor::get($censorId);
+        if ($censor!==null) {
             $groupUser = new GroupUser();
             $groupUser->groupId = $censor->secondId;
             $groupUser->userId = $censor->firstId;
@@ -312,13 +309,12 @@ class GroupController extends BaseController
                 $title = "Join group request declined";
                 $content = 'Group creator have declined your request of joining in group ' . RHtmlHelper::linkAction('group', $group->name, 'detail', $group->id);
                 $content = RHtmlHelper::encode($content);
-                $message = new Message();
-                $message->sendMsg("group", $group->id, $groupUser->userId, $title, $content);
+                Message::sendMessage("group", $group->id, $groupUser->userId, $title, $content);
             }else{
                 $this->flash("warning","TA is already a member of this group.");
             }
 
-            $censor = Censor::failCensor($censorId);
+            $censor->fail();
             $this->redirectAction('message','view');
         }
     }

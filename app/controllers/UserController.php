@@ -396,7 +396,7 @@ class UserController extends BaseController
         }
 
         $censor = new Censor();
-        if ($censor->applyVIPExist($user->id)) {
+        if ($censor->applyVIPExist($user->id)!=null) {
             $this->flash('error', 'Your previous VIP application is under review!');
             $this->redirectAction('user', 'profile');
             return;
@@ -414,36 +414,35 @@ class UserController extends BaseController
         $data = array();
 
         if (isset($_GET['censorId']) && isset($_GET['op'])) {
-            $censor = new Censor();
-            if ((int)$_GET['op'] === 0) {
-                $censor = Censor::passCensor( (int)$_GET['censorId']);
+            $censor = Censor::get($_GET['censorId']);
+            if($censor!==null){
+                if ((int)$_GET['op'] === 0) {
+                    $user = User::get($censor->firstId);
+                    $user->roleId = Role::VIP_ID;
+                    $user->save();
 
-                $user = User::get($censor->firstId);
-                $user->roleId = Role::VIP_ID;
-                $user->save();
+                    $censor->pass();
 
-                $content = "Congratulations, " . RHtmlHelper::linkAction('user',$user->name,'view',$user->id). "!<br/> Your VIP application is accepted by Administrator.";
-                Message::sendMessage("system", 0, $user->id, "VIP application accepted", RHtmlHelper::encode($content), '');
-            } else {
-                $censor = Censor::failCensor((int)$_GET['censorId']);
+                    $content = "Congratulations, " . RHtmlHelper::linkAction('user',$user->name,'view',$user->id). "!<br/> Your VIP application is accepted by Administrator.";
+                    Message::sendMessage("system", 0, $user->id, "VIP application accepted", RHtmlHelper::encode($content), '');
+                } else {
+                    $censor->fail();
 
-                $user = User::get($censor->firstId);
-                $content = "Sorry, " . RHtmlHelper::linkAction('user',$user->name,'view',$user->id). "!<br/> Your VIP application is declined by Administrator.";
-                Message::sendMessage("system", 0, $user->id, "VIP application declined", RHtmlHelper::encode($content), '');
+                    $user = User::get($censor->firstId);
+                    $content = "Sorry, " . RHtmlHelper::linkAction('user',$user->name,'view',$user->id). "!<br/> Your VIP application is declined by Administrator.";
+                    Message::sendMessage("system", 0, $user->id, "VIP application declined", RHtmlHelper::encode($content), '');
+                }
             }
             $this->redirectAction('user','processVIP');
         }
 
-        $curPage = $this->getHttpRequest()->getQuery('page',1);
-        $pageSize = (isset($_GET['pagesize'])&&is_numeric($_GET['pagesize']))?$_GET['pagesize'] : 5;
+        $curPage = $this->getPage("page");
+        $pageSize = $this->getPageSize("pagesize",5);
 
-        $applications = new Censor();
-        $applications->status = Censor::UNPROCESS;
-        $applications->getTypeId('apply_vip');
-        $count = $applications->count([]);
-        $data['count'] = $count;
+        $query = Censor::find(['status',Censor::UNPROCESS,'typeId',(new Censor())->getTypeId("apply_vip")]);
+        $count = $data['count'] = $query->count();
 
-        $applications = $applications->find(($curPage-1)*$pageSize,$pageSize,array('key'=>$applications->columns["id"],"order"=>'desc'));
+        $applications = $query->order_desc("id")->range(($curPage-1)*$pageSize,$pageSize);
 
         $data['applications'] = $applications;
 

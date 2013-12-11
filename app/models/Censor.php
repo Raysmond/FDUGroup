@@ -78,45 +78,39 @@ class Censor extends RModel
         $this->save();
     }
 
-    public static function passCensor($censorId)
-    {
-        $censor = Censor::get($censorId);
-        if ($censor != null) {
-            $censor->status = self::PASS;
-            $censor->save();
+    public function pass(){
+        if(isset($this->id)){
+            $this->status = self::PASS;
+            $this->save();
         }
-        return $censor;
     }
 
-    public static function failCensor($censorId)
-    {
-        $censor = Censor::get($censorId);
-        if ($censor != null) {
-            $censor->status = self::DENY;
-            $censor->save();
+    public function fail(){
+        if(isset($this->id)){
+            $this->status = self::DENY;
+            $this->save();
         }
-        return $censor;
     }
 
     public function addFriendApplication($userFrom, $userTo)
-    { //add friend application
+    {
         $this->postApplication('add_friend', $userFrom, $userTo);
         return $this;
     }
 
     public function addFriendExist($userFrom, $userTo)
-    { //add friend request id if exist, or null is not exist
+    {
         return Censor::find(['typeId', $this->getTypeId('add_friend'), 'firstId', $userFrom, "secondId", $userTo, "status", self::UNPROCESS])->first();
     }
 
     public function joinGroupApplication($userId, $groupId)
-    { //join group application
+    {
         $this->postApplication('join_group', $userId, $groupId);
         return $this;
     }
 
     public function joinGroupExist($userId, $groupId)
-    { //join group request id if exist, or null is not exist
+    {
         return Censor::find(['typeId', $this->getTypeId('join_group'), 'firstId', $userId, "secondId", $groupId, "status", self::UNPROCESS])->first();
     }
 
@@ -132,7 +126,7 @@ class Censor extends RModel
     }
 
     public function joinGroupInvitationApplication($userId, $groupId)
-    { //Invite to join Group
+    {
         $this->postApplication('join_group_invite', $userId, $groupId);
         return $this;
     }

@@ -12,8 +12,8 @@ if(isset($validation_errors)){
     RHtmlHelper::showValidationErrors($validation_errors);
 }
 $form = array();
-if(isset($sendForm))
-    $form = $sendForm;
+if(isset($editForm))
+    $form = $editForm;
 
 echo RFormHelper::openForm('user/applyVIP/',array('id'=>'vipApplyForm'));
 
