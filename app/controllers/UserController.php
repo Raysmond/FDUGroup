@@ -13,6 +13,8 @@ class UserController extends BaseController
         Role::AUTHENTICATED => array('edit', 'logout','home','profile','myPosts', 'applyVIP', 'listFriend', 'find'),
         Role::ADMINISTRATOR=>array('admin','processVIP'));
 
+    private $loginRedirect = ['group', 'post']; //允许重定向的范围。目前仅支持Controller级别。将来可以扩展为键值对精确到action
+
     public function actionLogin()
     {
         if (Rays::isLogin()) {
@@ -27,7 +29,15 @@ class UserController extends BaseController
             $login = User::login($_POST);
             if ($login instanceof User) {
                 $this->getSession()->set("user", $login->id);
-                $this->redirect(isset($_POST['returnURL']) ? $_POST['returnURL'] : RHtmlHelper::siteUrl("user/home"));
+                if (!isset($_POST['returnURL'])) {
+                    $this->redirect(RHtmlHelper::siteUrl("user/home"));
+                }
+
+                var_dump(Rays::router()->splitControllerAction($_POST['returnURL']));exit;
+                if (!in_array(Rays::router()->splitControllerAction($_POST['returnURL']), $this->loginRedirect)) {
+                    $this->redirect(RHtmlHelper::siteUrl("user/home"));
+                }
+                $this->redirect($_POST['returnURL']);
             } else {
                 $data['loginForm'] = $_POST;
                 if (isset($login['verify_error'])) {
