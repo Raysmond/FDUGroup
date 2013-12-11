@@ -281,8 +281,7 @@ class GroupController extends BaseController
                 $title = "Join group request accepted";
                 $content = 'Group creator has accepted your request of joining in group ' . RHtmlHelper::linkAction('group', $group->name, 'detail', $group->id);
                 $content = RHtmlHelper::encode($content);
-                $message = new Message();
-                $message->sendMsg("group", $group->id, $groupUser->userId, $title, $content);
+                Message::sendMessage("group", $group->id, $groupUser->userId, $title, $content);
 
             }else{
                 $this->flash("warning","You're already a member of this group.");
@@ -331,13 +330,13 @@ class GroupController extends BaseController
             $this->flash("error", "You cannot exit group ".RHtmlHelper::linkAction('group',$group->name,'detail',$group->id)." , because you're the group creator!");
         }
         else{
+            $groupUser->delete();
             $group->memberCount--;
             $group->save();
-            $groupUser->delete();
             $this->flash("message", "You have exited the group successfully.");
         }
 
-        $this->redirectAction('group', 'view', Rays::user()->id);
+        $this->redirectAction('group', 'mygroups', Rays::user()->id);
 
     }
 

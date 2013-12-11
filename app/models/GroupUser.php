@@ -9,6 +9,7 @@ class GroupUser extends RModel
     public $group, $user;
     public $groupId, $userId, $joinTime, $status, $comment;
 
+    // todo this is not the primary key
     public static $primary_key = "groupId";
     public static $table = "group_has_users";
     public static $mapping = array(
@@ -65,8 +66,9 @@ class GroupUser extends RModel
     }
 
     public function delete($assignment = []) {
+        $table = Rays::app()->getDBPrefix().GroupUser::$table;
         if(is_numeric($this->groupId) && is_numeric($this->userId)){
-            $sql = "DELETE FROM {$this->table} WHERE {$this->columns['groupId']}={$this->groupId} AND {$this->columns['userId']} = {$this->userId} LIMIT 1";
+            $sql = "DELETE FROM ".$table. " WHERE {$table}.".GroupUser::$mapping['groupId']."={$this->groupId} AND {$table}.".GroupUser::$mapping['userId']." = {$this->userId}";
             Data::executeSQL($sql);
         }
     }
