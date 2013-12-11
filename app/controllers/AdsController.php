@@ -173,7 +173,7 @@ class AdsController extends BaseController {
         $pageSize = $this->getPageSize("pagesize",10);
 
         $filterStr = Rays::getParam('search', null);
-        $query = Ads::find();
+        $query = Ads::find()->join("publisher");
         if ($name = trim($filterStr)) {
             $names = preg_split("/[\s]+/", $name);
             foreach ($names as $key) {

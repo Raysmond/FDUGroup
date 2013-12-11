@@ -48,8 +48,8 @@ class Censor extends RModel
                     /* TODO */
                     break;
             }
-            return $result;
         }
+        return $result;
     }
 
     private static $_type_id_mapping = array();
