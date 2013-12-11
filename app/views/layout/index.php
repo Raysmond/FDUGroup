@@ -58,6 +58,7 @@ $this->module('main_nav',array('id'=>'main_nav','name'=>'Main navigation'));
         <div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar" role="navigation">
 
             <?php
+            $this->module("follow_us");
             $this->module("help_nav");
             $this->module("contact_nav");
 

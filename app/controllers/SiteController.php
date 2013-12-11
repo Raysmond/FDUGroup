@@ -64,7 +64,6 @@ class SiteController extends BaseController
                     $this->render("exception", ['code'=>$e->getCode(),'message'=>$e->getMessage()]);
                 }
         }
-
         Rays::logger()->flush();
     }
 }

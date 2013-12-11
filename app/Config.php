@@ -45,7 +45,7 @@ return array(
 
     'isCleanUri' => true,
 
-    'defaultController' => 'site',
+    'defaultController' => 'user',
 
     'defaultAction' => 'index',
 

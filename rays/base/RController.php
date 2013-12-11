@@ -251,9 +251,7 @@ class RController
         }
 
         if(!$this->userCanAccessAction()){
-
             if(!Rays::app()->isUserLogin()){
-                $this->flash("message","Please login first.");
                 $this->redirectAction('user','login');
                 return;
             }

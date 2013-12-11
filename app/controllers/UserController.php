@@ -113,7 +113,7 @@ class UserController extends BaseController
         $this->layout = 'user';
         $user = Rays::user();
         if($action==='edit'){
-            $this->actionEdit();
+            $this->actionEdit($user->id);
             return;
         }
         $this->setHeaderTitle($user->name);
