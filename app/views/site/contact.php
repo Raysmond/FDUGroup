@@ -66,5 +66,10 @@
         <p>
             <?=RHtmlHelper::link("FDUGroup github page",$githubLink,$githubLink);?>
         </p>
+        <div class="user-item" style="overflow: hidden;text-align:left;">
+            <a href="<?=$githubLink?>" target="_blank">
+                <img src="<?=RHtmlHelper::siteUrl('public/images').'/QuickMark.png'?>" title="Scan This!" />
+            </a>
+        </div>
     </div>
 </div>
