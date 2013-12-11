@@ -86,7 +86,13 @@ class RBaseApplication
      */
     private $_cache = array();
 
+    /**
+     * Exception handling action
+     * @var string controller action string representation. like : 'site/exception'
+     */
     private $_exceptionAction = "";
+
+    private $debug = true;
 
     public function __construct($config = null)
     {
@@ -123,6 +129,13 @@ class RBaseApplication
         if(isset($config['exceptionAction'])){
             $this->setExceptionAction($config['exceptionAction']);
         }
+        if(isset($config['debug'])){
+            $this->debug = $config['debug'];
+        }
+
+        date_default_timezone_set($this->timeZone);
+
+        Rays::import("system.base.RException");
     }
 
     /**
@@ -130,7 +143,7 @@ class RBaseApplication
      */
     public function run()
     {
-        date_default_timezone_set($this->timeZone);
+
     }
 
     /**
@@ -238,16 +251,24 @@ class RBaseApplication
         return isset($this->_db['table_prefix'])?$this->_db['table_prefix']:"";
     }
 
-    public function getCacheConfig(){
+    public function getCacheConfig()
+    {
         return $this->_cache;
     }
 
-    public function getExceptionAction(){
+    public function getExceptionAction()
+    {
         return $this->_exceptionAction;
     }
 
-    public function setExceptionAction($action=""){
+    public function setExceptionAction($action="")
+    {
         $this->_exceptionAction = $action;
         RExceptionHandler::setExceptionAction($action);
+    }
+
+    public function isDebug()
+    {
+        return $this->debug === true? true: false;
     }
 }

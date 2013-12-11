@@ -1,6 +1,7 @@
 <?php
 /**
- * Topic data model
+ * Topic model
+ *
  * @author: Raysmond, Xiangyan Sun
  */
 class Topic extends RModel
@@ -37,7 +38,7 @@ class Topic extends RModel
     public function increaseCounter(){
         if(isset($this->id)&&$this->id!=''){
             $counter = new Counter();
-            $counter->increaseCounter($this->id,self::ENTITY_TYPE);
+            $counter->increaseCounter($this->id, self::ENTITY_TYPE);
             return $counter;
         }
     }
@@ -52,6 +53,10 @@ class Topic extends RModel
         return $result;
     }
 
+    /**
+     * Override delete method
+     * Delete topic itself and all it's comments, ratings, and view counter
+     */
     public function delete(){
         $tid = $this->id;
 
@@ -75,9 +80,7 @@ class Topic extends RModel
 
     // TODO: use Model functions instead of SQL
     public function getUserFriendsTopics($uid,$limit=0,$endTime=null){
-        $friends = new Friend();
-        $friends->uid = $uid;
-        $friends = $friends->find();
+        $friends = Friend::find("uid",$uid)->all();
 
         $topics = new Topic();
         $ids = array();

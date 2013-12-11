@@ -527,5 +527,4 @@ class RController
             $module->run();
         }
     }
-
 }

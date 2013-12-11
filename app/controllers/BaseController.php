@@ -16,8 +16,6 @@ class BaseController extends RController
     public function page404()
     {
         Rays::app()->page404();
-        Rays::log('Page not found!', "warning", "system");
-        Rays::logger()->flush();
     }
 
     public function afterAction()

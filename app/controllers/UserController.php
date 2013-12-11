@@ -50,11 +50,8 @@ class UserController extends BaseController
     public function actionView($userId, $part = 'joins')
     {
         $user = User::get($userId);
-        if ($user == null) {
-            throw new RException("page not found!");
-//            $this->page404();
-//            return;
-        }
+        RAssert::not_null($user);
+
         $data = array('user' => $user, 'part' => $part);
         if (Rays::isLogin()) {
             $currentUser = Rays::user();
@@ -170,30 +167,18 @@ class UserController extends BaseController
      * Change user info action
      * @param null $userId
      */
-    public function actionEdit($userId = null)
+    public function actionEdit($userId)
     {
-        if (!Rays::isLogin()||(isset($userId)) && (!is_numeric($userId))){
-            $this->page404();
-            return;
-        }
-        if (isset($userId) && Rays::user()->roleId != Role::ADMINISTRATOR_ID && Rays::user()->id!=$userId) {
+        $user = User::get($userId);
+        RAssert::not_null($user);
+
+        if (Rays::user()->roleId != Role::ADMINISTRATOR_ID && Rays::user()->id!=$userId) {
             $this->flash("error", "You don't have the right to change the user information!");
             $this->redirectAction('user', 'view', $userId);
         }
 
-        if ($userId == null) {
-            $user = Rays::user();
-        }
-        else {
-            $user = User::get($userId);
-        }
-        if ($user === null) {
-            $this->flash("message","No such user");
-            $this->page404();
-            return;
-        }
-
         $data = array('user' => $user);
+
         if (Rays::isPost()) {
             $config = array(
                 array('field' => 'username', 'label' => 'User name', 'rules' => 'trim|required|min_length[5]|max_length[20]'),

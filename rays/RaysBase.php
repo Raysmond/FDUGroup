@@ -107,18 +107,28 @@ class RaysBase
     /**
      * Import custom PHP files
      *
-     * @param $files files like: extension.file_name or extension.ext1.*
-     * extension.file_name locates to extension/file_name.php
-     * extension.ext1.* will import
+     * @param $files files like: application.extension.file_name or application.extension.ext1.*
+     * 1. application.extension.file_name locates to extension/file_name.php
+     * 2. application.extension.ext1.* will import
+     * - application. locates the application base directory (default)
+     * - system. locates the system(framework directory)
      */
     public static function import($files)
     {
         $files = str_replace('.', '/', $files);
         if ($files) {
-            $fileName = end(explode('/', $files));
+            $arr = explode('/', $files);
+            $baseDir = ($arr[0]=="system")? SYSTEM_PATH : static::app()->getBaseDir();
+            if($arr[0]=="system")
+                $files = substr($files,7);
+            if($arr[0] =="application")
+                $files = substr($files,12);
+
+            $fileName = end($arr);
+            unset($arr);
             if ($fileName !== '*') {
                 if (!isset(static::$imports[$files])) {
-                    $path = static::app()->getBaseDir() . '/' . $files . '.php';
+                    $path = $baseDir . '/' . $files . '.php';
                     if (is_file($path)) {
                         static::$imports[$files] = $path;
                         require($path);
@@ -126,7 +136,7 @@ class RaysBase
                 }
             } else {
                 $files = str_replace('/*', '', $files);
-                $dir = static::app()->getBaseDir() . '/' . $files;
+                $dir = $baseDir . '/' . $files;
                 if (is_dir($dir)) {
                     $dp = dir($dir);
                     while ($file = $dp->read()) {

@@ -61,6 +61,7 @@ class RWebApplication extends RBaseApplication
             $this->isCleanUri = $config['isCleanUri'];
 
         Rays::setApplication($this);
+
     }
 
     /**
@@ -137,8 +138,7 @@ class RWebApplication extends RBaseApplication
      */
     public function page404()
     {
-        $controller = new RController();
-        $controller->render("404");
+        throw new RPageNotFoundException();
     }
 
     /**

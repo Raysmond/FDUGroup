@@ -17,6 +17,11 @@ class RExceptionHandler {
         self::$exceptionAction = $action;
     }
 
+    /**
+     * Handle exceptions, if no exception actions provided, default PHP 'print' method will be called
+     *
+     * @param Exception $e
+     */
     public static function handleException(Exception $e)
     {
         if(self::$exceptionAction!=""){

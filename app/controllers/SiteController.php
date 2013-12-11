@@ -50,13 +50,21 @@ class SiteController extends BaseController
             print $e;
             exit;
         }
+        $this->layout = 'error';
         switch($e->getCode()){
-            //case "404":
-            //    $this->render("404",['message',$e->getMessage()]);
-            //    break;
+            case 404:
+                $this->render('404', ['message'=>$e->getMessage()]);
+                Rays::log('Page not found! ('.$e->getMessage().')', "warning", "system");
+                break;
             default:
-                $this->render("exception",['code'=>$e->getCode(),'message'=>$e->getMessage()]);
-                print $e;
+                if(Rays::app()->isDebug()){
+                    print $e;
+                }
+                else{
+                    $this->render("exception", ['code'=>$e->getCode(),'message'=>$e->getMessage()]);
+                }
         }
+
+        Rays::logger()->flush();
     }
 }
