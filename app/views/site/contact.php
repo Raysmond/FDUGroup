@@ -62,9 +62,14 @@
             School of Computer Science, Fudan University<br/>
             825 Zhangheng Road, Pudong District, Shanghai, China (201203)<br/>
         </p><br/>
-        <h4>Follow us on Github </h4>
+        <h4>Follow us on Github </srcylqh4>
         <p>
             <?=RHtmlHelper::link("FDUGroup github page",$githubLink,$githubLink);?>
         </p>
+        <div class="user-item" style="overflow: hidden;text-align:left;">
+            <a href="<?=$githubLink?>" target="_blank">
+                <img src="<?=RHtmlHelper::siteUrl('public/images').'/QuickMark.png'?>" title="Scan This!" />
+            </a>
+        </div>
     </div>
 </div>
