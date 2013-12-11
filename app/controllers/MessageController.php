@@ -1,6 +1,7 @@
 <?php
 /**
  * MessageController class file.
+ *
  * @author: Raysmond
  */
 

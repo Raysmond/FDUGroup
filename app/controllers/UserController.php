@@ -1,6 +1,7 @@
 <?php
 /**
  * UserController class file.
+ *
  * @author: Raysmond
  */
 

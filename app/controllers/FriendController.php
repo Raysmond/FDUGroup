@@ -1,4 +1,9 @@
 <?php
+/**
+ * Class FriendController
+ *
+ * @author: Xiangyan Sun, Renchu Song, Raysmond
+ */
 class FriendController extends BaseController {
     public $access = array(
         Role::AUTHENTICATED => array('add', 'confirm', 'decline')
