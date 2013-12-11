@@ -60,7 +60,7 @@ $this->module('main_nav',array('id'=>'main_nav','name'=>'Main navigation'));
             <?php
             $this->module("follow_us");
             $this->module("help_nav");
-            $this->module("contact_nav");
+            //$this->module("contact_nav");
 
             $this->module("active_groups");
             $this->module("hot_posts");
