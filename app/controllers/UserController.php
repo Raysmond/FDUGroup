@@ -43,7 +43,6 @@ class UserController extends BaseController
     public function actionLogout()
     {
         $this->getSession()->deleteSession("user");
-        $this->flash("message", "You have already logout.");
         $this->redirect(Rays::baseUrl());
     }
 
