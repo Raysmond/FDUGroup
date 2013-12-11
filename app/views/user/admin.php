@@ -1,83 +1,85 @@
 <?php
 /**
- * Created by JetBrains PhpStorm.
- * User: Raysmond
- * Date: 13-10-18
- * Time: PM5:21
- * To change this template use File | Settings | File Templates.
+ * @author: Raysmond
  */
 ?>
-
+<?=RFormHelper::openForm('user/admin',array('id'=>'blockUserForm'))?>
     <div class="panel panel-default">
-        <?=RFormHelper::openForm('user/admin',array('id'=>'blockUserForm'))?>
+
         <!-- Default panel contents -->
         <div class="panel-heading">
-            Users
-            <div class="navbar-right">
-                <div class="input-group" style="margin-top: -6px;">
+            <div class="heading-actions">
+                <div class="input-group">
                     <?=RFormHelper::input(array('name'=>'search','class'=>'form-control','style'=>'width:200px;','placeholder'=>'filter users','value'=>(isset($filterStr)?$filterStr:"")))?>
-                    <div style="float:right; position: relative;">
-                        <button class="btn btn-default" type="submit">Go!</button>
-                        &nbsp;&nbsp;
-                        <a class='btn btn-xs btn-danger' href="javascript:block_submit()">Block</a>
-                        &nbsp;&nbsp;
-                        <a class='btn btn-xs btn-success' href="javascript:active_submit()">Activate</a>
-                        <?=RFormHelper::hidden(array('id'=>'operation_type','name'=>'operation_type','value'=>'block'))?>
-                   </div>
+                    <button class="btn btn-default" type="submit">Go!</button>
+                    &nbsp;&nbsp;
+                    <a class='btn btn-xs btn-danger' href="javascript:block_submit()">Block</a>
+                    &nbsp;&nbsp;
+                    <a class='btn btn-xs btn-success' href="javascript:active_submit()">Activate</a>
+                    <?=RFormHelper::hidden(array('id'=>'operation_type','name'=>'operation_type','value'=>'block'))?>
                 </div>
-            </div>
-        </div>
-        <!-- Table -->
 
-        <table id="admin-users" class="table">
-            <thead>
-            <tr>
+            </div>
+
+            <h1 class="panel-title">Users</h1>
+
+        </div>
+
+        <div class="panel-body">
+
+            <table id="admin-users" class="table">
+                <thead>
+                <tr>
+                    <?php
+                    $skips = array('id', 'weibo', 'password', 'intro', 'credits', 'permission', 'privacy', 'picture');
+                    echo '<th><input id="check-all" name="check-all" onclick="javascript:checkReverse(\'checked_users[]\');" type="checkbox" /></th>';
+                    foreach (User::$labels as $key => $label) {
+                        if (in_array($key, $skips)) continue;
+                        echo '<th>' . $label . '</th>';
+                    }
+                    ?>
+                </tr>
+                </thead>
+                <tbody>
                 <?php
-                $skips = array('id', 'weibo', 'password', 'intro', 'credits', 'permission', 'privacy', 'picture');
-                echo '<th><input id="check-all" name="check-all" onclick="javascript:checkReverse(\'checked_users[]\');" type="checkbox" /></th>';
-                foreach (User::$labels as $key => $label) {
-                    if (in_array($key, $skips)) continue;
-                    echo '<th>' . $label . '</th>';
+                foreach ($users as $user) {
+                    echo '<tr>';
+                    ?><td><?=RFormHelper::input(array('name'=>'checked_users[]', 'type'=>'checkbox','value'=>$user->id))?></td><?php
+                    foreach (User::$mapping as $objCol => $dbcol) {
+                        if (in_array($objCol, $skips)) continue;
+                        echo '<td>';
+                        switch ($objCol) {
+                            case "roleId":
+                                echo Role::getRoleNameById($user->$objCol);
+                                break;
+                            case "name":
+                                echo RHtmlHelper::linkAction('user', $user->$objCol, 'view', $user->id);
+                                break;
+                            case "homepage":
+                                echo RHtmlHelper::link($user->$objCol, $user->$objCol, $user->$objCol);
+                                break;
+                            case "gender":
+                                echo User::getGenderName($user->gender);
+                                break;
+                            case "status":
+                                if ($user->status == 1) echo '<span style="color:green">active</span>';
+                                else echo '<span style="color:red">blocked</span>';
+                                break;
+                            default:
+                                echo $user->$objCol;
+                        }
+                        echo '</td>';
+                    }
+                    echo '</tr>';
                 }
                 ?>
-            </tr>
-            </thead>
-            <tbody>
-            <?php
-            foreach ($users as $user) {
-                echo '<tr>';
-                ?><td><?=RFormHelper::input(array('name'=>'checked_users[]', 'type'=>'checkbox','value'=>$user->id))?></td><?php
-                foreach (User::$mapping as $objCol => $dbcol) {
-                    if (in_array($objCol, $skips)) continue;
-                    echo '<td>';
-                    switch ($objCol) {
-                        case "roleId":
-                            echo Role::getRoleNameById($user->$objCol);
-                            break;
-                        case "name":
-                            echo RHtmlHelper::linkAction('user', $user->$objCol, 'view', $user->id);
-                            break;
-                        case "homepage":
-                            echo RHtmlHelper::link($user->$objCol, $user->$objCol, $user->$objCol);
-                            break;
-                        case "status":
-                            if ($user->status == 1) echo '<span style="color:green">active</span>';
-                            else echo '<span style="color:red">blocked</span>';
-                            break;
-                        default:
-                            echo $user->$objCol;
-                    }
-                    echo '</td>';
-                }
-                echo '</tr>';
-            }
-            ?>
-            </tbody>
-        </table>
-        <?=RFormHelper::endForm();?>
+                </tbody>
+            </table>
+            <?= (isset($pager) ? $pager : '') ?>
+        </div>
     </div>
+<?=RFormHelper::endForm();?>
 
-<?= (isset($pager) ? $pager : '') ?>
 <script>
     function block_submit() {
         $("#operation_type").val('block');

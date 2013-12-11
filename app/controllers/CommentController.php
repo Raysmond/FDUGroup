@@ -15,9 +15,6 @@ class CommentController extends BaseController
 
     public function actionAdmin()
     {
-        $this->layout = 'admin';
-        $data = array();
-
         // delete comment request
         if (Rays::isPost()) {
             if (isset($_POST['checked_comments'])) {
@@ -34,16 +31,15 @@ class CommentController extends BaseController
         }
 
         $curPage = $this->getPage("page");
-        $pageSize = $this->getPageSize('pagesize',5);
+        $pageSize = $this->getPageSize('pagesize',10);
 
         $count = Comment::find()->count();
-        $data['count'] = $count;
-
-        $data['comments'] = Comment::find()->join("user")->join("topic")->order_desc("id")->range(($curPage - 1) * $pageSize, $pageSize);
-
+        $comments = Comment::find()->join("user")->join("topic")->order_desc("id")->range(($curPage - 1) * $pageSize, $pageSize);
         $pager = new RPagerHelper('page', $count, $pageSize, RHtmlHelper::siteUrl('comment/admin'), $curPage);
-        $data['pager'] = $pager->showPager();
 
+        $this->layout = 'admin';
+        $this->setHeaderTitle("Comments administration");
+        $data = array('count'=>$count,'comments'=>$comments,'pager'=>$pager->showPager());
         $this->render('admin', $data, false);
     }
 } 

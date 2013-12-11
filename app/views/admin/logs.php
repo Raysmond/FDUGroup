@@ -1,5 +1,5 @@
 <div class="system-logs panel panel-default">
-    <div class="panel-heading"><b>System logs (<?= $count ?>)</b></div>
+    <div class="panel-heading"><h1 class="panel-title">System logs (<?= $count ?>)</h1></div>
     <div class="panel-body">
         <div class="system-logs-list">
             <table class="table">
