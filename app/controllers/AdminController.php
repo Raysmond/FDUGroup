@@ -26,7 +26,7 @@ class AdminController extends BaseController
         $pageSize = $this->getPageSize("pagesize", 10);
 
         $count = SystemLog::find()->count();
-        $logs = SystemLog::find()->order_desc("id")->range(($curPage - 1) * $pageSize, $pageSize);
+        $logs = SystemLog::find()->order_desc("id")->join('user')->range(($curPage - 1) * $pageSize, $pageSize);
 
         $pager = new RPagerHelper('page', $count, $pageSize, RHtmlHelper::siteUrl('admin/logs'), $curPage);
         $this->setHeaderTitle("System logs");

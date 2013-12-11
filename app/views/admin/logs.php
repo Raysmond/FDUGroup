@@ -25,9 +25,7 @@
                     if ($log->userId == 0) {
                         echo '<td>Anonymous</td>';
                     } else {
-                        $user = new User();
-                        $user->load($log->userId);
-                        echo '<td>' . RHtmlHelper::linkAction('user', $user->name, 'view', $user->id) . '</td>';
+                        echo '<td>' . RHtmlHelper::linkAction('user', $log->user->name, 'view', $log->user->id) . '</td>';
                     }
                     echo '<td>' . $log->host . '</td>';
                     echo '<td>' . $log->timestamp . '</td>';

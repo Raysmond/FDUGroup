@@ -6,6 +6,7 @@
  */
 
 class SystemLog extends RModel{
+    public $user;
 
     public $id,$type,$userId,$message,$severity,$path,$referrerUri,$host,$timestamp;
 
@@ -23,6 +24,10 @@ class SystemLog extends RModel{
         'path' => 'path',
         'referrerUri' => 'referer_uri',
         'timestamp' => 'timestamp'
+    );
+
+    public static $relation = array(
+        'user'=>array('userId','User','id')
     );
 
 }
