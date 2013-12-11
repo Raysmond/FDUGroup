@@ -202,6 +202,7 @@ class AdsController extends BaseController {
                     $wallet = $user->getWallet();                               //访问一次挣一元钱
                     $wallet->addMoney(1);
                 }
+
             }
         }
     }
