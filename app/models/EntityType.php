@@ -16,6 +16,26 @@ class EntityType extends RModel
         "typeId" => "typ_id",
         "typeName" => "typ_name",
     );
+
+    public static $id_or_name_mapping = array();
+
+    public static function getTypeId($typeName)
+    {
+        if (!isset(self::$id_or_name_mapping[$typeName])) {
+            $type = EntityType::find("typeName", $typeName)->first();
+            self::$id_or_name_mapping[$typeName] = $type != null ? $type->typeId : null;
+        }
+        return self::$id_or_name_mapping[$typeName];
+    }
+
+    public static function getTypeName($typeId)
+    {
+        if (!isset(self::$id_or_name_mapping[$typeId])) {
+            $type = EntityType::get($typeId);
+            self::$id_or_name_mapping[$typeId] = $type != null ? $type->typeName : null;
+        }
+        return self::$id_or_name_mapping[$typeId];
+    }
 }
 
 

@@ -65,6 +65,7 @@ class GroupUser extends RModel
         return false;
     }
 
+    // TODO: use RModel/delete method to delete the record. Currently, RModel doesn't support deleting records with multiple conditions
     public function delete($assignment = []) {
         $table = Rays::app()->getDBPrefix().GroupUser::$table;
         if(is_numeric($this->groupId) && is_numeric($this->userId)){
