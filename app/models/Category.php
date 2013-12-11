@@ -43,7 +43,7 @@ class Category extends Tree
      */
     public function getActivePosts($categoryId = null, $start = 0, $limit = 0)
     {
-        $query = Topic::find()->join("user")->join("group");
+        $query = Topic::find()->join("user")->join("group")->order_desc("id");
         if ($categoryId !== null) {
             $this->id = $categoryId;
             $subs = $this->children();
