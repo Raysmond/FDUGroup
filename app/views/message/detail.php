@@ -1,3 +1,6 @@
+<?php
+    $this->setHeaderTitle($message->title);
+?>
 <div class="message-container">
     <div class="panel panel-default">
         <div class="panel-heading">

@@ -56,21 +56,19 @@ class Group extends RModel
         }
 
         $query = Group::find();
-        $whereIds = Group::$mapping["categoryId"] . " in(";
         if ($withSubCategory) {
             $subs = $category->children();
-            $count = count($subs);
-            $i = 0;
-            foreach ($subs as $sCat) {
-                $cidList[] = $sCat->id;
-                $whereIds .= $sCat->id;
-                if (++$i < $count) $whereIds .= ',';
+            $where = "[categoryId] in (?";
+            $args = [$categoryId];
+            for ($i = 0, $count = count($subs); $i < $count; $i++) {
+                $where .= ",?";
+                $args[] = $subs[$i]->id;
             }
-            $whereIds .= ')';
+            $where .= ')';
+            $query->where($where, $args);
             unset($subs);
         }
 
-        $query = $query->where($whereIds);
         $groups = ($start != 0 || $limit != 0) ? $query->range($start, $limit) : $query->all();
         return $groups;
     }
