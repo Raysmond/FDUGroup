@@ -32,9 +32,7 @@ class UserController extends BaseController
                 if (!isset($_POST['returnURL'])) {
                     $this->redirect(RHtmlHelper::siteUrl("user/home"));
                 }
-
-                var_dump(Rays::router()->splitControllerAction($_POST['returnURL']));exit;
-                if (!in_array(Rays::router()->splitControllerAction($_POST['returnURL']), $this->loginRedirect)) {
+                if (!in_array(Rays::router()->processQueryUrl(RHtmlHelper::internalUrl($_POST['returnURL']))['controller'], $this->loginRedirect)) {
                     $this->redirect(RHtmlHelper::siteUrl("user/home"));
                 }
                 $this->redirect($_POST['returnURL']);
