@@ -1,162 +1,138 @@
 <?php
 /**
  * Message Model class file.
- * @author: songrenchu
+
+ * @author: songrenchu, Raysmond
  */
 
-class Censor extends Data{
+class Censor extends RModel
+{
     public $type, $sender, $related;
-    public $id,$typeId,$firstId,$secondId,$content,$sendTime,$status;
+    public $id, $typeId, $firstId, $secondId, $content, $sendTime, $status;
 
     const UNPROCESS = 1;
     const PASS = 2;
     const DENY = 3;
 
-    public function __construct()
-    {
-        $options = array(
-            'key'=>'id',
-            'table'=>'censor',
-            'columns'=>array(
-                'id'=>'csr_id',
-                'typeId'=>'csr_type_id',
-                'firstId'=>'csr_first_id',
-                'secondId'=>'csr_second_id',
-                'content'=>'csr_content',
-                'sendTime'=>'csr_send_time',
-                'status'=>'csr_status',
-            )
-        );
-        parent::init($options);
-    }
+    public static $table = "censor";
+    public static $primary_key = "id";
+    public static $mapping = array(
+        'id' => 'csr_id',
+        'typeId' => 'csr_type_id',
+        'firstId' => 'csr_first_id',
+        'secondId' => 'csr_second_id',
+        'content' => 'csr_content',
+        'sendTime' => 'csr_send_time',
+        'status' => 'csr_status');
 
-    public function load($id=null)
+    public static $relation = array(
+        'type' => array('typeId', "CensorType", "typeId")
+    );
+
+    public static function load($id = null)
     {
-        $result = parent::load($id);
+        $result = Censor::find("id", $id)->join("type")->first();
         if ($result !== null) {
-            $this->type = new CensorType();
-            $this->type->typeId = $this->typeId;
-            $this->type->load();
-
-            $this->sender = new User();
-            $this->sender->id = $this->firstId;
-            switch ($this->type->typeName) {
+            $result->sender = User::get($result->firstId);
+            switch ($result->type->typeName) {
                 case 'add_friend':
-                    $this->related = new User();
-                    $this->related = $this->secondId;
+                    $result->related = User::get($result->secondId);
                     break;
                 case 'apply_vip':
-                    $this->related = null;
+                    $result->related = null;
                     break;
                 case 'join_group':
-                    $this->related = new Group();
-                    $this->related = $this->secondId;
+                    $result->related = Group::get($result->secondId);
                     break;
                 case 'post_ads':
                     /* TODO */
                     break;
             }
-            return $this;
-        } else {
-            return null;
         }
+        return $result;
     }
 
-    public function getTypeIdbyTypeName($typeName) {
-        $this->typeId = new CensorType();
-        $this->typeId->typeName = $typeName;
-        $this->typeId = $this->typeId->find()[0]->typeId;
-    }
+    private static $_type_id_mapping = array();
 
-    public function postApplication($typeName,$firstId,$secondId = null,$content = null,$sendTime=null,$status=self::UNPROCESS)
+    public function getTypeId($typeName)
     {
-        $this->getTypeIdbyTypeName($typeName);
+        if (!isset(self::$_type_id_mapping[$typeName])) {
+            self::$_type_id_mapping[$typeName] = CensorType::find("typeName", $typeName)->first()->typeId;
+        }
+        $this->typeId = self::$_type_id_mapping[$typeName];
+        return self::$_type_id_mapping[$typeName];
+    }
+
+    public function postApplication($typeName, $firstId, $secondId = null, $content = null, $sendTime = null, $status = self::UNPROCESS)
+    {
+        $this->getTypeId($typeName);
 
         $this->firstId = $firstId;
         $this->secondId = $secondId;
         $this->content = $content;
         $this->sendTime = $sendTime;
         $this->status = $status;
-        if(!isset($this->sendTime)||$this->sendTime==''){
-            date_default_timezone_set(Rays::app()->getTimeZone());
+        if (!isset($this->sendTime) || $this->sendTime == '') {
             $this->sendTime = date('Y-m-d H:i:s');;
         }
-        $_id = $this->insert();
-        $this->load($_id);
+        $this->save();
     }
 
-    public function passCensor($censorId = null) {
-        if ($censorId !== null) {
-            $this->id = $censorId;
-            $this->load();
+    public function pass(){
+        if(isset($this->id)){
+            $this->status = self::PASS;
+            $this->save();
         }
-        $this->status = self::PASS;
-        $this->update();
-        return $this;
     }
 
-    public function failCensor($censorId = null) {
-        if ($censorId !== null) {
-            $this->id = $censorId;
-            $this->load();
+    public function fail(){
+        if(isset($this->id)){
+            $this->status = self::DENY;
+            $this->save();
         }
-        $this->status = self::DENY;
-        $this->update();
-        return $this;
     }
 
-    public function addFriendApplication($userFrom, $userTo) {      //add friend application
+    public function addFriendApplication($userFrom, $userTo)
+    {
         $this->postApplication('add_friend', $userFrom, $userTo);
         return $this;
     }
 
-    public function addFriendExist($userFrom, $userTo) {    //add friend request id if exist, or null is not exist
-        $this->getTypeIdbyTypeName('add_friend');
-        $this->firstId = $userFrom;
-        $this->secondId = $userTo;
-        $this->status = self::UNPROCESS;
-        $result = $this->find();
-        return count($result) == 0 ? null : $result[0]->id;
+    public function addFriendExist($userFrom, $userTo)
+    {
+        return Censor::find(['typeId', $this->getTypeId('add_friend'), 'firstId', $userFrom, "secondId", $userTo, "status", self::UNPROCESS])->first();
     }
 
-    public function joinGroupApplication($userId, $groupId) {       //join group application
+    public function joinGroupApplication($userId, $groupId)
+    {
         $this->postApplication('join_group', $userId, $groupId);
         return $this;
     }
 
-    public function joinGroupExist($userId, $groupId) {    //join group request id if exist, or null is not exist
-        $this->getTypeIdbyTypeName('join_group');
-        $this->firstId = $userId;
-        $this->secondId = $groupId;
-        $this->status = self::UNPROCESS;
-        $result = $this->find();
-        return count($result) == 0 ? null : $result[0]->id;
+    public function joinGroupExist($userId, $groupId)
+    {
+        return Censor::find(['typeId', $this->getTypeId('join_group'), 'firstId', $userId, "secondId", $groupId, "status", self::UNPROCESS])->first();
     }
 
-    public function applyVIPApplication($userId, $content) {      //apply for VIP
-        $this->postApplication('apply_vip',$userId, null, $content);
+    public function applyVIPApplication($userId, $content)
+    { //apply for VIP
+        $this->postApplication('apply_vip', $userId, null, $content);
         return $this;
     }
 
-    public function applyVIPExist($userId) {
-        $this->getTypeIdbyTypeName('apply_vip');
-        $this->firstId = $userId;
-        $this->status = self::UNPROCESS;
-        $result = $this->find();
-        return count($result) == 0 ? null : $result[0]->id;
+    public function applyVIPExist($userId)
+    {
+        return Censor::find(['typeId', $this->getTypeId('apply_vip'), 'firstId', $userId, "status", self::UNPROCESS])->first();
     }
 
-    public function joinGroupInvitationApplication($userId, $groupId) {  //Invite to join Group
+    public function joinGroupInvitationApplication($userId, $groupId)
+    {
         $this->postApplication('join_group_invite', $userId, $groupId);
         return $this;
     }
 
-    public function joinGroupInvitationExist($userId, $groupId) {
-        $this->getTypeIdbyTypeName('join_group_invite');
-        $this->firstId = $userId;
-        $this->secondId = $groupId;
-        $this->status = self::UNPROCESS;
-        $result = $this->find();
-        return count($result) == 0 ? null : $result[0]->id;
+    public function joinGroupInvitationExist($userId, $groupId)
+    {
+        return Censor::find(['typeId', $this->getTypeId('join_group_invite'), 'firstId', $userId, "secondId", $groupId, "status", self::UNPROCESS])->first();
     }
 }

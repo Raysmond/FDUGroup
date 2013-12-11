@@ -1,7 +1,8 @@
 <?php
 /**
  * Group categories module
- * @author: Raysmond
+ *
+ * @author: Raysmond, Renchu Song
  */
 
 class group_categories_module extends RModule
@@ -11,14 +12,14 @@ class group_categories_module extends RModule
     public function module_content()
     {
         $data = array(
-            'categories' => (new Category())->find(0, 0, [], [], ['pid' => 0]),
+            'categories' => Category::find("pid","0")->all(),
             'cid' => [],
         );
 
         $cid = Rays::router()->getParams()[0];
         if (isset($cid) && $cid !== null) {
             $data['cid'] [] = $cid;
-            $category = (new Category())->load($cid);
+            $category = Category::get($cid);
             if ($category->pid != 0) {
                 $data['cid'] [] = $category->pid;
             }

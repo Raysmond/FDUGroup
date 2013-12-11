@@ -35,6 +35,7 @@
                 'id'=>'ads-title',
                 'name'=>'ads-title',
                 'class'=>'form-control',
+                'placeholder'=>'Ads title'
             ), isset($form['ads-title'])?$form:(isset($edit)?$ad->title:$form))?>
 
         <br/>

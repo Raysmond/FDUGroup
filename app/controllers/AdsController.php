@@ -1,7 +1,8 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: songrenchu
+ * AdsController class file
+ *
+ * @author: songrenchu, Raysmond
  */
 class AdsController extends BaseController {
     public $layout = "user";
@@ -14,17 +15,16 @@ class AdsController extends BaseController {
 
     public function actionView($type='active') {
         $this->setHeaderTitle('My Advertisements');
-        $currentUserId = Rays::user()->id;
+        $userId = Rays::user()->id;
 
-        $ads = new Ads();
         if($type === 'blocked'){
-            $data['ads'] = $ads->getUserAds($currentUserId, Ads::BLOCKED);
+            $data['ads'] = Ads::find(["userId",$userId,"status",Ads::BLOCKED])->all();
             $data['type'] = Ads::BLOCKED;
         } else if($type === 'published'){
-            $data['ads'] = $ads->getUserAds($currentUserId, Ads::APPROVED);
+            $data['ads'] = Ads::find(["userId",$userId,"status",Ads::APPROVED])->all();
             $data['type'] = Ads::APPROVED;
         } else{
-            $data['ads'] = $ads->getUserAds($currentUserId, Ads::APPLYING);
+            $data['ads'] = Ads::find(["userId",$userId,"status",Ads::APPLYING])->all();
             $data['type'] = Ads::APPLYING;
         }
 
@@ -82,48 +82,33 @@ class AdsController extends BaseController {
             return;
         }
         $currentUserId = Rays::user()->id;
-        $ad = new Ads();
-        $ad->id = $adId;
-        $ad = $ad->load();
-        if ($ad !== null) {
-            if ($ad->userId == $currentUserId) {
-                $ad->delete();
+        $ad = Ads::get($adId);
+        RAssert::not_null($ad);
 
-                $this->flash('message', 'Advertisement removed successfully.');
-                $redirect = null;
-                switch ($type) {
-                    case Ads::APPROVED: $redirect = 'published';break;
-                    case Ads::APPLYING: $redirect = 'applying';break;
-                    case Ads::BLOCKED: $redirect = 'blocked';break;
-                }
-                $this->redirectAction('ads', 'view', $redirect);
-                return;
-            } else {
-                die('Permission denied');
+        if ($ad->userId == $currentUserId) {
+            $ad->delete();
+
+            $this->flash('message', 'Advertisement removed successfully.');
+            $redirect = null;
+            switch ($type) {
+                case Ads::APPROVED: $redirect = 'published';break;
+                case Ads::APPLYING: $redirect = 'applying';break;
+                case Ads::BLOCKED: $redirect = 'blocked';break;
             }
-        } else {
-            $this->page404();
+            $this->redirectAction('ads', 'view', $redirect);
             return;
+        } else {
+            $this->flash("error",'Permission denied');
+            $this->page404();
         }
     }
 
     public function actionEdit($adId, $type) {
-        if(!isset($adId)||!is_numeric($adId)){
-            $this->page404();
-            return;
-        }
-        $data = array();
-        $ad = new Ads();
-        $ad->id = $adId;
-        $result = $ad->load();
+        $ad = Ads::get($adId);
+        RAssert::not_null($ad);
 
-        if($result===null){
-            $this->page404();
-            return;
-        }
-        $data['ad'] = $ad;
-        $data['edit'] = true;
-        $data['type'] = $type;
+        $data = ['ad'=>$ad,'edit'=>true,'type'=>$type];
+
         if(Rays::isPost()){
             $rules = array(
                 array('field'=>'ads-title','label'=>'Ads title','rules'=>'trim|required|min_length[5]|max_length[255]'),
@@ -132,12 +117,9 @@ class AdsController extends BaseController {
             );
             $validation = new RFormValidationHelper($rules);
             if($validation->run()){
-                $ads = new Ads();
-                $ads->id = $adId;
-                $ads->load();
-                $ads->title = $_POST['ads-title'];
-                $ads->content = RHtmlHelper::encode($_POST['ads-content']);
-                $ads->update();
+                $ad->title = $_POST['ads-title'];
+                $ad->content = RHtmlHelper::encode($_POST['ads-content']);
+                $ad->save();
                 $this->flash('message','Your ads was edited successfully.');
                 $redirect = null;
                 switch ($type) {
@@ -160,7 +142,6 @@ class AdsController extends BaseController {
     public function actionAdmin() {
         $this->setHeaderTitle('Advertisement');
         $this->layout = 'admin';
-        $data = [];
 
         if (Rays::isPost()) {
             if (isset($_POST['checked_ads'])) {
@@ -168,45 +149,37 @@ class AdsController extends BaseController {
                 if (is_array($selected)) {
                     $operation = $_POST['operation_type'];
                     foreach ($selected as $id) {
-                        $ad = new Ads();
+                        $ad = Ads::get($id);
+                        if($ad==null) break;
                         switch ($operation) {
                             case "block":
-                                $ad->block($id);
+                                $ad->status = Ads::BLOCKED;
+                                $ad->save();
                                 break;
                             case "active":
-                                $ad->activate($id);
+                                $ad->status = Ads::APPROVED;
+                                $ad->save();
                                 break;
                         }
                     }
                 }
             }
         }
-
-        $filterStr = Rays::getParam('search', null);
-
-        $like = array();
-        if ($filterStr != null) {
-            $data['filterStr'] = $filterStr;
-            if (($str = trim($filterStr)) != '') {
-                $names = explode(' ', $str);
-                foreach ($names as $val) {
-                    array_push($like, array('key' => 'title', 'value' => $val));
-                }
-            }
-        }
-
-        $ad = new Ads();
-        $count = $ad->count($like);
-        $data['count'] = $count;
-
         $curPage = $this->getPage('page');
         $pageSize = $this->getPageSize("pagesize",10);
-        $ads = new Ads();
-        $ads = $ads->find(($curPage - 1) * $pageSize, $pageSize, array('key' => $ads->columns["id"], "order" => 'desc'), $like);
-        foreach ($ads as $ad) {
-            $ad->load();
+
+        $filterStr = Rays::getParam('search', null);
+        $query = Ads::find()->join("publisher");
+        if ($name = trim($filterStr)) {
+            $names = preg_split("/[\s]+/", $name);
+            foreach ($names as $key) {
+                $query = $query->like("name", $key);
+            }
         }
-        $data['ads'] = $ads;
+        $count = $query->count();
+        $ads = $query->order_desc("id")->range($pageSize * ($curPage - 1), $pageSize);
+
+        $data = ['ads'=>$ads,'count'=>$count];
 
         $url = RHtmlHelper::siteUrl('ads/admin');
         if ($filterStr != null) $url .= '?search=' . urlencode(trim($filterStr));
@@ -220,11 +193,11 @@ class AdsController extends BaseController {
     public function actionHitAd() {
         if (Rays::isAjax()) {
             $adId = (int)$_POST['adId'];
-            $ad = (new Ads())->load($adId);
+            $ad = Ads::get($adId);
             if ($ad !== null) {
-                (new Counter())->increaseCounter($adId, Ads::ENTITY_ID);        //Ad访问计数器
+                (new Counter())->increaseCounter($adId, Ads::ENTITY_TYPE);        //Ad访问计数器
                 /** TODO 刷广告访问监测机制 */
-                $user = (new User())->load($ad->userId);
+                $user = User::get($ad->userId);
                 if ($user !== null) {
                     $wallet = $user->getWallet();                               //访问一次挣一元钱
                     $wallet->addMoney(1);

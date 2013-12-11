@@ -58,6 +58,7 @@ $this->module('main_nav',array('id'=>'main_nav','name'=>'Main navigation'));
         <div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar" role="navigation">
 
             <?php
+            $this->module("follow_us");
             $this->module("help_nav");
             $this->module("contact_nav");
 
@@ -70,8 +71,9 @@ $this->module('main_nav',array('id'=>'main_nav','name'=>'Main navigation'));
             ?>
         </div><!--/span-->
     </div><!--/row-->
-    <hr>
+
     <div id="footer" class="row">
+        <hr>
         <div class="copyright col-lg-5"><?php echo RHtmlHelper::encode(Rays::getCopyright()); ?></div>
 
         <div class="footer-links col-lg-7">

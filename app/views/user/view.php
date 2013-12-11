@@ -49,7 +49,7 @@ Rays::css("/public/css/post.css");
                 ?>
                 <ul class="list-group">
                     <?php
-                    foreach ($user->columns as $objCol => $dbCol) {
+                    foreach (User::$mapping as $objCol => $dbCol) {
                         if ($user->$objCol && !in_array($objCol, $skip)) {
                             echo "<li class='list-group-item'>";
                             switch ($objCol) {

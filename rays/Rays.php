@@ -118,4 +118,15 @@ class Rays extends RaysBase{
         return static::app()->getHttpRequest()->getParam($name,$default);
     }
 
+    /**
+     * Get args of action
+     * @param $index
+     * @return string|null
+     */
+    public static function args($index)
+    {
+        $args = Rays::router()->getParams();
+        return isset($args[$index]) ?$args[$index] : null;
+    }
+
 }

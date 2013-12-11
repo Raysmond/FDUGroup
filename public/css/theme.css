@@ -628,3 +628,7 @@ span.spliter {
 .page-post-find .topic-content {
     border: 1px solid #eee;
 }
+
+#footer hr{
+    border-top: 1px solid #CFCFCF;
+}

@@ -1,6 +1,7 @@
 <?php
 /**
  * AdminController class file.
+ *
  * @author: Raysmond
  */
 
@@ -24,12 +25,10 @@ class AdminController extends BaseController
         $curPage = $this->getPage("page");
         $pageSize = $this->getPageSize("pagesize", 10);
 
-        $count = (new SystemLog())->count();
+        $count = SystemLog::find()->count();
+        $logs = SystemLog::find()->order_desc("id")->join('user')->range(($curPage - 1) * $pageSize, $pageSize);
+
         $pager = new RPagerHelper('page', $count, $pageSize, RHtmlHelper::siteUrl('admin/logs'), $curPage);
-
-        $sysLogs = new SystemLog();
-        $logs = $sysLogs->find(($curPage - 1) * $pageSize, $pageSize, ['key' => $sysLogs->columns['id'], 'order' => 'desc']);
-
         $this->setHeaderTitle("System logs");
         $this->render('logs', ['logs' => $logs, 'pager' => $pager->showPager(), 'count' => $count], false);
     }

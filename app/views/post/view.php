@@ -26,7 +26,7 @@
         <br/><br/>
 
         <div class="post-rating-plus">
-            <?php $this->module('rating_plus', array('entityType' => Topic::$entityType, 'entityId' => $topic->id)); ?>
+            <?php $this->module('rating_plus', array('entityType' => Topic::ENTITY_TYPE, 'entityId' => $topic->id)); ?>
         </div>
 
         <hr/>

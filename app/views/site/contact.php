@@ -9,44 +9,51 @@
         <h1 class="panel-title">Contact with FDUGroup team.</h1>
     </div>
 
-    <div class="panel-body site-hook">
+    <div class="panel-body site-hook" id="developers-list">
         <h4>Developers</h4>
-        <div class="user-item col-lg-3" style="overflow: hidden;text-align: center;height:170px;">
+        <div class="user-item col-lg-3" style="overflow: hidden;text-align: center;">
             <a href="https://github.com/Raysmond/" target="_blank">
                 <img src="<?=RHtmlHelper::siteUrl('public/images').'/ljk.jpg'?>" class="img-thumbnail" title="Raysmond">
             </a>
             <a title="admin" href="https://github.com/Raysmond/" target="_blank">Raysmond</a>
         </div>
-        <div class="user-item col-lg-3" style="overflow: hidden;text-align: center;height:165px;">
+        <div class="user-item col-lg-3" style="overflow: hidden;text-align: center;">
             <a href="https://github.com/RenchuSong/" target="_blank">
                 <img src="<?=RHtmlHelper::siteUrl('public/images').'/src.jpg'?>"class="img-thumbnail"  title="Renchu Song">
             </a>
             <a title="admin" href="https://github.com/RenchuSong/" target="_blank">Renchu Song</a>
         </div>
-        <div class="user-item col-lg-3" style="overflow: hidden;text-align: center;height:165px;">
+        <div class="user-item col-lg-3" style="overflow: hidden;text-align: center;">
             <a href="https://github.com/wishstudio/" target="_blank">
                 <img src="<?=RHtmlHelper::siteUrl('public/images').'/sxy.jpg'?>"class="img-thumbnail"  title="wishstudio">
             </a>
             <a title="admin" href="https://github.com/wishstudio/" target="_blank">wishstudio</a>
         </div>
-        <div class="user-item col-lg-3" style="overflow: hidden;text-align: center;height:165px;">
+        <div class="user-item col-lg-3" style="overflow: hidden;text-align: center;">
             <a href="https://github.com/junshiguo/" target="_blank">
                 <img src="<?=RHtmlHelper::siteUrl('public/images').'/gjs.jpg'?>"class="img-thumbnail"  title="junshiguo">
             </a>
             <a title="admin" href="https://github.com/junshiguo/" target="_blank">Junshi Guo</a>
         </div>
-        <div class="user-item col-lg-3" style="overflow: hidden;text-align: center;">
+        <div class="clearfix"></div>
+        <div class="user-item  col-lg-3"></div>
+        <div class="user-item  col-lg-3" style="overflow: hidden;text-align: center;">
             <a href="https://github.com/zyz282994112/" target="_blank">
-                <img src="<?=RHtmlHelper::siteUrl('public/images').'/zyz.jpg'?>"class="img-thumbnail"  title="zyz282994112">
+                <img src="<?=RHtmlHelper::siteUrl('public/images').'/zyz.jpg'?>" class="img-thumbnail"  title="zyz282994112">
             </a>
+            <br/>
             <a title="admin" href="https://github.com/zyz282994112/" target="_blank">Yizhou Zhang</a>
         </div>
-        <div id="contact" class="user-item col-lg-3" style="overflow: hidden;text-align: center;">
+
+        <div class="user-item col-lg-3" style="overflow: hidden;text-align: center;">
             <a href="http://www.renren.com/284019636/profile" target="_blank">
-                <img src="<?=RHtmlHelper::siteUrl('public/images').'/wjh.jpg'?>"class="img-thumbnail"  title="Junhao Wu">
+                <img src="<?=RHtmlHelper::siteUrl('public/images').'/wjh.jpg'?>" class="img-thumbnail"  title="Junhao Wu">
             </a>
+            <br/>
             <a title="admin" href="http://www.renren.com/284019636/profile" target="_blank">Junhao Wu</a>
         </div>
+        <div class="user-item  col-lg-3"></div>
+
 
         <div class="clearfix"></div>
         <br/>

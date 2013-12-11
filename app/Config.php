@@ -45,9 +45,11 @@ return array(
 
     'isCleanUri' => true,
 
-    'defaultController' => 'site',
+    'defaultController' => 'user',
 
     'defaultAction' => 'index',
+
+    'exceptionAction' => 'site/exception',
 
     'cache' => array(
         'cache_dir' => '/cache',

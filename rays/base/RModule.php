@@ -1,6 +1,7 @@
 <?php
 /**
  * RModule class file.
+ *
  * @author: Raysmond
  */
 
@@ -114,11 +115,19 @@ class RModule
         }
     }
 
+    /**
+     * Add css
+     * @param $cssPath
+     */
     public function addCss($cssPath)
     {
         Rays::app()->getClientManager()->registerCss($cssPath);
     }
 
+    /**
+     * Add js
+     * @param $jsPath
+     */
     public function addJs($jsPath)
     {
         Rays::app()->getClientManager()->registerScript($jsPath);
@@ -132,26 +141,46 @@ class RModule
         return Rays::app()->getHttpRequest()->urlMatch($this->access);
     }
 
+    /**
+     * Whether the module cannot be viewed in the current page or not
+     * @return bool
+     */
     public function denyAccess()
     {
         return empty($this->denyAccess)? false : Rays::app()->getHttpRequest()->urlMatch($this->denyAccess);
     }
 
+    /**
+     * Set the unique ID of the module
+     * @param string $id
+     */
     public function setId($id)
     {
         $this->_id = $id;
     }
 
+    /**
+     * Get the unique ID of the module
+     * @return string
+     */
     public function getId()
     {
         return $this->_id;
     }
 
+    /**
+     * Set the name of the module
+     * @param string $name
+     */
     public function setName($name)
     {
         $this->name = $name;
     }
 
+    /**
+     * Get the name of the module
+     * @return string
+     */
     public function getName()
     {
         return $this->name;

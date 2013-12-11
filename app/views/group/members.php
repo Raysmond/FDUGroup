@@ -10,7 +10,6 @@
         <?= RHtmlHelper::linkAction('user', $manager->name, 'view', $manager->id); ?> created
         at <?= $group->createdTime ?>
         <br/>
-        <?php $group->category->load(); ?>
         Category: <?= RHtmlHelper::linkAction('category', $group->category->name, 'groups', $group->categoryId) ?>
         <br/>
         Members: <?= $memberCount ?>
@@ -21,7 +20,7 @@
 
     <?php
     $isManager = false;
-    if (Rays::app()->isUserLogin() && Rays::app()->getLoginUser()->id == $manager->id) {
+    if (Rays::isLogin() && Rays::user()->id == $manager->id) {
         $isManager = true;
     }
     ?>

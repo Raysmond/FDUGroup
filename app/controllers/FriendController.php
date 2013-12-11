@@ -20,8 +20,8 @@ class FriendController extends BaseController {
             case "decline":
             case "cancel":
                 $result = false;
-                $user = new User();
-                if (isset($params) && isset($params[0]) && is_numeric($params[0]) && $user->load($params[0]) !== null) {
+                $user = null;
+                if (isset($params) && isset($params[0]) && is_numeric($params[0]) && ($user = User::get($params[0])) !== null) {
                     $result = true;
                     $this->_user = $user;
                 }
@@ -58,30 +58,31 @@ class FriendController extends BaseController {
         $uid = Rays::user()->id;
         $userName = Rays::user()->name;
 
-        $friend = new Friend();
-        $friend->uid = $uid;
-        $friend->fid = $userId;
+        $friend = Friend::find(['fid',$userId,'uid',$uid])->first();
+
+
 
         //only request exist can friendship be built
-        $censor = new Censor();
-        $cid = $censor->addFriendExist($userId, $uid);
+        $censor = (new Censor())->addFriendExist($userId, $uid);
 
-        if ($cid === null) {
+        if ($censor === null) {
             $this->flash('warning','Request already processed');
         } else {
-            $censor->passCensor($cid);
-            if (count($friend->find()) == 0) {     //bug fixed by songrenchu: only new relationship need to be inserted
-                $friend->insert();
+            $censor->pass();
+            if ($friend == null) {     //bug fixed by songrenchu: only new relationship need to be inserted
+                $friend = new Friend();
+                $friend->fid = $userId;
+                $friend->uid = $uid;
+                $friend->save();
 
                 $friend = new Friend();
                 $friend->uid = $userId;
                 $friend->fid = $uid;
-                $friend->insert();
+                $friend->save();
 
                 $content = RHtmlHelper::linkAction('user',$userName,'view',$uid)." has accepted your friend request.";
 
-                $message = new Message();
-                $message->sendMsg("system", $uid, $userId, "Friend confirmed", $content, '');
+                Message::sendMessage("system", $uid, $userId, "Friend confirmed", $content, '');
                 $this->flash('message','Friends confirmed.');
             }
             else{
@@ -98,17 +99,15 @@ class FriendController extends BaseController {
         $userName = Rays::user()->name;
 
         //only request exist can friendship be declined
-        $censor = new Censor();
-        $cid = $censor->addFriendExist($userId, $uid);
+        $censor = (new Censor())->addFriendExist($userId, $uid);
 
-        if ($cid === null) {
+        if ($censor === null) {
             $this->flash('warning','Request already processed');
         } else {
-            $censor->failCensor($cid);
+            $censor->fail();
 
             $content = RHtmlHelper::linkAction('user',$userName,'view',$uid)." has declined your friend request.";
-            $message = new Message();
-            $message->sendMsg("system", $uid, $userId, "Friend request declined", $content, '');
+            Message::sendMessage("system", $uid, $userId, "Friend request declined", $content, '');
             $this->flash('message','Friend request declined.');
         }
         $this->redirectAction('message', 'view', null);
@@ -118,11 +117,13 @@ class FriendController extends BaseController {
     public function actionCancel($userId = null) {
         $uid = Rays::user()->id;
 
-        $friend = new Friend();
-        $friend->delete(['uid' => $uid, 'fid' => $userId]);
+        $friend = Friend::find(['uid',$uid,'fid',$userId])->first();
+        if($friend!=null)
+            $friend->delete();
 
-        $friend = new Friend();
-        $friend->delete(['uid' => $userId, 'fid' => $uid]);
+        $friend = Friend::find(['fid',$uid,'uid',$userId])->first();
+        if($friend!=null)
+            $friend->delete();
 
         $this->redirectAction('user', 'view', $userId);
     }
@@ -140,7 +141,9 @@ class FriendController extends BaseController {
 
         $pager = new RPagerHelper('page', $count, $pageSize, RHtmlHelper::siteUrl('friend/myFriend'), $curPage);
         $data['friends'] = $friends;
-        $data['pager'] = $pager->showPager();
+
+        if($count>$pageSize)
+            $data['pager'] = $pager->showPager();
         $data['friNumber'] = $count;
 
         return $this->render('my_friend',$data);

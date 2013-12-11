@@ -5,37 +5,29 @@
  * Date: 13-11-26
  */
 
-class SystemLog extends Data{
+class SystemLog extends RModel{
+    public $user;
 
     public $id,$type,$userId,$message,$severity,$path,$referrerUri,$host,$timestamp;
 
+    public static $primary_key = "id";
 
-    public function __construct()
-    {
-        $options = array(
-            'key' => 'id',
-            'table' => 'syslog',
-            'columns' => array(
-                'id' => 'log_id',
-                'type' => 'type',
-                'userId' => 'u_id',
-                'message' => 'message',
-                'severity' => 'severity',
-                'host' => 'host',
-                'path' => 'path',
-                'referrerUri' => 'referer_uri',
-                'timestamp' => 'timestamp'
-            )
-        );
-        parent::init($options);
-    }
+    public static $table = "syslog";
 
-    public function insert()
-    {
-        if (!isset($this->timestamp) || $this->timestamp === '') {
-            $this->timestamp = date('Y-m-d H:i:s');
-        }
-        return parent::insert();
-    }
+    public static $mapping = array(
+        'id' => 'log_id',
+        'type' => 'type',
+        'userId' => 'u_id',
+        'message' => 'message',
+        'severity' => 'severity',
+        'host' => 'host',
+        'path' => 'path',
+        'referrerUri' => 'referer_uri',
+        'timestamp' => 'timestamp'
+    );
 
-} 
+    public static $relation = array(
+        'user'=>array('userId','User','id')
+    );
+
+}

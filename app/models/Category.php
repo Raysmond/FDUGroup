@@ -1,7 +1,7 @@
 <?php
 /**
- * Class Category
- * @author: Raysmond
+ * Category data model
+ * @author: Raysmond, Xiangyan Sun
  */
 
 class Category extends Tree
@@ -10,21 +10,14 @@ class Category extends Tree
 
     const DEFAULT_CATEGORY_ID = 48;
 
-    public function __construct()
-    {
-        $option = array(
-            "key" => "id",
-            "pkey" => "pid",
-            "table" => "category",
-            "columns" => array(
-                "id" => "cat_id",
-                "name" => "cat_name",
-                "pid" => "cat_pid"
-            )
-        );
-
-        parent::init($option);
-    }
+    public static $primary_key = "id";
+    public static $parent_key = "pid";
+    public static $table = "category";
+    public static $mapping = array(
+        "id" => "cat_id",
+        "name" => "cat_name",
+        "pid" => "cat_pid"
+    );
 
     public function delete($assignment = array())
     {
@@ -36,102 +29,60 @@ class Category extends Tree
         $groups = $group->find();
         foreach ($groups as $item) {
             $item->categoryId = self::DEFAULT_CATEGORY_ID;
-            $item->update();
+            $item->save();
         }
         parent::delete($assignment);
     }
 
+    /**
+     * TODO: how to define active posts?
+     *
+     * @param null $categoryId
+     * @param int $start
+     * @param int $limit
+     */
     public function getActivePosts($categoryId = null, $start = 0, $limit = 0)
     {
-        $topic = new Topic();
-        $group = new Group();
-        $user = new User();
-
-
-        $limitSQL = "";
-        if ($start != 0 || $limit != 0) {
-            $limitSQL .= " LIMIT {$start} , " . $limit;
-        }
-
-        $whereSQL = "";
+        $query = Topic::find()->join("user")->join("group");
         if ($categoryId !== null) {
             $this->id = $categoryId;
-            if ($this->load() !== null) {
-                $subs = $this->children();
-                $whereSQL = "WHERE groups.{$group->columns['categoryId']} IN ({$categoryId},";
-                $total = count($subs);
-                $count = 0;
-                foreach ($subs as $item) {
-                    $whereSQL .= $item->id;
-                    if (++$count < $total)
-                        $whereSQL .= ",";
-                }
-                $whereSQL .= ") ";
+            $subs = $this->children();
+            $where = Rays::app()->getDBPrefix().Group::$table.'.'.Group::$mapping['categoryId']." IN (?";
+            $args = [$categoryId];
+            for($i=0,$count = count($subs);$i<$count;$i++){
+                $where.=',?';
+                $args[] = $subs[$i]->id;
             }
+            $where.=')';
+            $query = $query->where($where,$args);
         }
-        $ratingStats = new RatingStatistic();
-        $entityType = Topic::$entityType;
 
-        $sql = "SELECT "
-            . "user.{$user->columns['id']},"
-            . "user.{$user->columns['name']},"
-            . "user.{$user->columns['picture']},"
-            . "topic.{$topic->columns['id']},"
-            . "topic.{$topic->columns['title']},"
-            . "topic.{$topic->columns['content']},"
-            . "topic.{$topic->columns['createdTime']},"
-            . "topic.{$topic->columns['commentCount']},"
-            . "groups.{$group->columns['id']},"
-            . "groups.{$group->columns['name']},"
-            . "rating.{$ratingStats->columns['value']} AS plusCount "
-            . "FROM {$topic->table} as topic "
-            . "LEFT JOIN {$user->table} as user ON user.{$user->columns['id']}=topic.{$topic->columns['userId']} "
-            . "LEFT JOIN {$group->table} as groups ON groups.{$group->columns['id']}=topic.{$topic->columns['groupId']} "
-            . "LEFT JOIN {$this->table} AS category ON  category.{$this->columns['id']}=groups.{$group->columns['categoryId']} "
-            . "LEFT JOIN {$ratingStats->table} AS rating on rating.{$ratingStats->columns['entityType']}={$entityType} "
-            . "AND rating.{$ratingStats->columns['entityId']}=topic.{$topic->columns['id']} "
-            . "AND rating.{$ratingStats->columns['tag']}='plus' "
-            . "AND rating.{$ratingStats->columns['type']}='count'"
-            . $whereSQL
-            . "ORDER BY topic.{$topic->columns['id']} DESC "
-            . $limitSQL
-            . "";
-
-        return Data::db_query($sql);
+        $groups = ($start!=0||$limit!=0) ? $query->range($start,$limit) : $query->all();
+        return $groups;
     }
 
+    /**
+     * TODO: how to define active posts?
+     *
+     * Now the method count all posts in a given category
+     * @param null $categoryId
+     * @return mixed
+     */
     public function getActivePostsCount($categoryId = null)
     {
-        $topic = new Topic();
-        $group = new Group();
-
-        $whereSQL = "";
+        $query = Topic::find()->join("group");
         if ($categoryId !== null) {
             $this->id = $categoryId;
-            if ($this->load() !== null) {
-                $subs = $this->children();
-                $whereSQL = "WHERE groups.{$group->columns['categoryId']} IN ({$categoryId},";
-                $total = count($subs);
-                $count = 0;
-                foreach ($subs as $item) {
-                    $whereSQL .= $item->id;
-                    if (++$count < $total)
-                        $whereSQL .= ",";
-                }
-                $whereSQL .= ") ";
+            $subs = $this->children();
+            $where = "[categoryId] IN (?";
+            $args = [$categoryId];
+            for($i=0,$count = count($subs);$i<$count;$i++){
+                $where.=',?';
+                $args[] = $subs[$i]->id;
             }
+            $where.=')';
+            $query = $query->where($where,$args);
         }
-
-        $sql = "SELECT "
-            . "COUNT(topic.{$topic->columns['id']}) AS totalCount "
-            . "FROM {$topic->table} as topic "
-            . "LEFT JOIN {$group->table} as groups ON groups.{$group->columns['id']}=topic.{$topic->columns['groupId']} "
-            . "LEFT JOIN {$this->table} AS category ON  category.{$this->columns['id']}=groups.{$group->columns['categoryId']} "
-            . $whereSQL
-            . "";
-
-        $result = Data::db_query($sql);
-
-        return $result[0]["totalCount"];
+        return $query->count();
     }
 }
