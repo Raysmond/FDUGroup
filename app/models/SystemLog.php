@@ -27,7 +27,7 @@ class SystemLog extends RModel{
     );
 
     public static $relation = array(
-        'user'=>array('userId','User','id')
+        'user' => array("User", "[userId] = [User.id]")
     );
 
 }

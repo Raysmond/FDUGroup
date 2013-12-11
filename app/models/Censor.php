@@ -26,7 +26,7 @@ class Censor extends RModel
         'status' => 'csr_status');
 
     public static $relation = array(
-        'type' => array('typeId', "CensorType", "typeId")
+        'type' => array("CensorType", "[typeId] = [CensorType.typeId]")
     );
 
     public static function load($id = null)

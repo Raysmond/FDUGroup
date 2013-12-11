@@ -24,7 +24,7 @@ class Counter extends RModel
     );
 
     public static $relation = array(
-        "entityType" => ["entityTypeId", "EntityType", "typeId"]
+        "entityType" => array("EntityType", "[entityTypeId] = [EntityType.typeId]")
     );
 
     public function loadCounter($entityId, $entityTypeId)

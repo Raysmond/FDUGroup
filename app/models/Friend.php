@@ -13,7 +13,9 @@ class Friend extends RModel
     );
 
     public static $relation = array(
-        'user'=>array('fid',"User","id")
+        /* TODO: There should be two relations and the current name needs to be fixed */
+        /*       Plus, work needs to be done for RModel to support joining multiple same tables */
+        'user' => array("User", "[fid] = [User.id]")
     );
 
     public function getFriends($uid = '', $friendLimit = '', $excludeIds = array(), $friendStart = 0)

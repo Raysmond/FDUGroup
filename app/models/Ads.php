@@ -28,7 +28,7 @@ class Ads extends RModel {
     );
 
     public static $relation = array(
-        'publisher'=>array('userId','User','id')
+        'publisher' => array('User', '[userId] = [User.id]')
     );
 
     public function apply($userId,$title,$content,$paidPrice,$applyTime = null){

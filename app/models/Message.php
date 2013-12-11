@@ -27,7 +27,7 @@ class Message extends RModel {
     );
 
     public static $relation = array(
-        'type' => array('typeId','MessageType','id')
+        'type' => array("MessageType", "[typeId] = [MessageType.id]")
     );
 
     /*public function load($id=null)

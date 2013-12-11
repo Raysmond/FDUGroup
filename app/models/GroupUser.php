@@ -20,8 +20,8 @@ class GroupUser extends RModel
         "comment" => "join_comment"
     );
     public static $relation = array(
-        "group" => array("groupId", "Group", "id"),
-        "user" => array("userId", "User", "id")
+        "group" => array("Group", "[groupId] = [Group.id]"),
+        "user" => array("User", "[userId] = [User.id]")
     );
 
     /**

@@ -39,8 +39,8 @@ class Group extends RModel
         "picture" => 'gro_picture'
     );
     public static $relation = array(
-        "groupCreator" => array("creator", "User", "id"),
-        "category" => array("categoryId", "Category", "id")
+        "groupCreator" => array("User", "[creator] = [User.id]"),
+        "category" => array("Category", "[categoryId] = [Category.id]")
     );
 
     public static function countTopics($groupId)

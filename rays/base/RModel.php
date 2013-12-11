@@ -37,7 +37,7 @@ class _RModelQueryer {
         }
         /* Add fields from joined members */
         foreach ($this->query_join as $rel_member) {
-            list($key, $m, $mkey) = $model::$relation[$rel_member];
+            list($m, $constraint) = $model::$relation[$rel_member];
             foreach ($m::$mapping as $member => $db_member) {
                 $fields .= Rays::app()->getDBPrefix().$m::$table.".{$m::$mapping[$member]},";
             }
@@ -50,10 +50,10 @@ class _RModelQueryer {
         $model = $this->model;
         $clause = "";
         foreach ($this->query_join as $member) {
-            list($key, $m, $mkey) = $model::$relation[$member];
+            list($m, $constraint) = $model::$relation[$member];
             $modeltable = Rays::app()->getDBPrefix().$model::$table;
             $mtable = Rays::app()->getDBPrefix().$m::$table;
-            $clause = "$clause LEFT JOIN $mtable ON $modeltable.{$model::$mapping[$key]} = $mtable.{$m::$mapping[$mkey]}";
+            $clause = "$clause LEFT JOIN $mtable ON " . $this->_substitute($constraint);
         }
         return $clause;
     }
@@ -85,7 +85,7 @@ class _RModelQueryer {
             }
             /* Construct joined member objects */
             foreach ($this->query_join as $rel_member) {
-                list($key, $m, $mkey) = $model::$relation[$rel_member];
+                list($m, $constraint) = $model::$relation[$rel_member];
                 $obj->$rel_member = new $m();
                 foreach ($m::$mapping as $member => $db_member) {
                     $obj->$rel_member->$member = $row[$i++];
@@ -153,14 +153,18 @@ class _RModelQueryer {
     private function _substitute($constraint)
     {
         /* Substitute [member]s */
-        $model = $this->model;
-        $search = array();
-        $replace = array();
-        foreach ($model::$mapping as $member => $db_member) {
-            $search[] = "[$member]";
-            $replace[] = Rays::app()->getDBPrefix().$model::$table . ".$db_member";
-        }
-        return str_replace($search, $replace, $constraint);
+        return preg_replace_callback('/\[(.+?)\]/', function ($matches) {
+            $s = explode(".", $matches[1]);
+            if (count($s) == 1) {
+                $model = $this->model;
+                $member = $s[0];
+            }
+            else {
+                $model = $s[0];
+                $member = $s[1];
+            }
+            return Rays::app()->getDBPrefix() . $model::$table . "." . $model::$mapping[$member];
+        }, $constraint);
     }
 
     /**

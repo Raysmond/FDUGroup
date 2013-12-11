@@ -21,7 +21,7 @@ class Comment extends Tree
         "content" => "com_content"
     );
     public static $relation = array(
-        "user" => array("userId", "User", "id"),
-        "topic" => array("topicId", "Topic", "id")
+        "user" => array("User", "[userId] = [User.id]"),
+        "topic" => array("Topic", "[topicId] = [Topic.id]")
     );
 }

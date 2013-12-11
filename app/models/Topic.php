@@ -30,9 +30,9 @@ class Topic extends RModel
     );
 
     public static $relation = array(
-        "group" => array("groupId", "Group", "id"),
-        "user" => array("userId", "User", "id"),
-        "rating" => array("id","RatingStatistic","entityId","on"=>"RatingStatistic.entityType=1"),
+        "group" => array("Group", "[groupId] = [Group.id]"),
+        "user" => array("User", "[userId] = [User.id]"),
+        "rating" => array("RatingStatistic", "[id] = [RatingStatistic.entityId] AND [RatingStatistic.entityType] = 1")
     );
 
     public function increaseCounter(){

@@ -18,7 +18,7 @@ class Tag extends RModel{
     );
 
     public static $relation = array(
-        'type'=>array('entityTypeId','EntityType','typeId')
+        'type' => array("EntityType", "[entityTypeId] = [EntityType.typeId]")
     );
 
 }
