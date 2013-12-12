@@ -11,6 +11,7 @@ class Topic extends RModel
     public $comments = array();
 
     public $rating;
+    public $counter;
 
     public $id, $groupId, $userId, $title, $createdTime, $content, $lastCommentTime, $commentCount;
 
@@ -32,7 +33,8 @@ class Topic extends RModel
     public static $relation = array(
         "group" => array("Group", "[groupId] = [Group.id]"),
         "user" => array("User", "[userId] = [User.id]"),
-        "rating" => array("RatingStatistic", "[id] = [RatingStatistic.entityId] AND [RatingStatistic.entityType] = 1")
+        "rating" => array("RatingStatistic", "[id] = [RatingStatistic.entityId] AND [RatingStatistic.type]='count' AND [RatingStatistic.tag]='plus' AND [RatingStatistic.entityType] = 1"),
+        "counter" => array("Counter","[id] = [Counter.entityId] AND [Counter.entityTypeId] = 1")
     );
 
     public function increaseCounter(){
@@ -143,52 +145,12 @@ class Topic extends RModel
         return Data::db_query($sql);
     }
 
-    // TODO: use Model functions instead of SQL
-    public static function getDayTopViewPosts($start=0,$limit=0){
-        $topics = new Topic();
-        $user = new User();
-        $group = new Group();
-        $counter = new Counter();
-        $ratingStats = new RatingStatistic();
-        $entityType = Topic::ENTITY_TYPE;
-
-        $prefix = Rays::app()->getDBPrefix();
-        $sql = "SELECT "
-            ."user.{$user::$mapping['id']},"
-            ."user.{$user::$mapping['name']},"
-            ."user.{$user::$mapping['picture']},"
-            ."topic.{$topics::$mapping['id']},"
-            ."topic.{$topics::$mapping['title']},"
-            ."topic.{$topics::$mapping['content']},"
-            ."topic.{$topics::$mapping['createdTime']},"
-            ."topic.{$topics::$mapping['commentCount']},"
-            ."groups.{$group::$mapping['id']},"
-            ."groups.{$group::$mapping['name']},"
-            ."counter.{$counter::$mapping['dayCount']},"
-            ."rating.{$ratingStats::$mapping['value']} AS plusCount "
-            ." FROM {$prefix}{$topics::$table} AS topic "
-            ."LEFT JOIN {$prefix}{$counter::$table} AS counter ON counter.{$counter::$mapping['entityId']}=topic.{$topics::$mapping['id']} AND counter.{$counter::$mapping['entityTypeId']}={$entityType} "
-            ."LEFT JOIN {$prefix}{$user::$table} AS user on topic.{$topics::$mapping['userId']}=user.{$user::$mapping['id']} "
-            ."LEFT JOIN {$prefix}{$group::$table} AS groups on groups.{$group::$mapping['id']}=topic.{$topics::$mapping['groupId']} "
-            ."LEFT JOIN {$prefix}{$ratingStats::$table} AS rating on rating.{$ratingStats::$mapping['entityType']}={$entityType} "
-            ."AND rating.{$ratingStats::$mapping['entityId']}=topic.{$topics::$mapping['id']} "
-            ."AND rating.{$ratingStats::$mapping['tag']}='plus' "
-            ."AND rating.{$ratingStats::$mapping['type']}='count'";
-
-        $where = "WHERE 1=1 ";
-//        $beginTime = date('Y-m-d: 00:00:00');
-
-//        $where .=" AND topic.{$topics::$mapping['createdTime']}>'{$beginTime}' ";
-        $where .=" AND counter.{$counter::$mapping['dayCount']} > 0 ";
-
-        $sql.=$where;
-
-        $sql.="ORDER BY counter.{$counter::$mapping['dayCount']} DESC ";
-
-        if($start!=0||$limit!=0){
-            $sql .= "LIMIT {$start},{$limit} ";
-        }
-
-        return Data::db_query($sql);
+    public static function getDayTopViewPosts($start=0,$limit=10){
+        Counter::checkAll(Topic::ENTITY_TYPE);
+        $query = Topic::find()->join("user")->join("group")->join("rating")->join("counter");
+        $query = $query->order("desc","[Counter.dayCount]");
+        $query = $query->where("[Counter.dayCount]>0");
+        $results = $query->range($start,$limit);
+        return $results;
     }
 }

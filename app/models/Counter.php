@@ -62,6 +62,17 @@ class Counter extends RModel
         }
     }
 
+    // TODO: check and fix in SQL
+    public static function checkAll($entityType)
+    {
+        $counters = Counter::find("entityTypeId",$entityType)->all();
+        foreach($counters as $counter){
+            if($counter->checkCounter()){
+                $counter->save();
+            }
+        }
+    }
+
     public function checkCounter()
     {
         $needToUpdate = false;

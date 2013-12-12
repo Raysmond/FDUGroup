@@ -47,7 +47,7 @@ class Category extends Tree
         if ($categoryId !== null) {
             $this->id = $categoryId;
             $subs = $this->children();
-            $where = Rays::app()->getDBPrefix().Group::$table.'.'.Group::$mapping['categoryId']." IN (?";
+            $where = "[Group.categoryId] IN (?";
             $args = [$categoryId];
             for($i=0,$count = count($subs);$i<$count;$i++){
                 $where.=',?';
@@ -74,7 +74,7 @@ class Category extends Tree
         if ($categoryId !== null) {
             $this->id = $categoryId;
             $subs = $this->children();
-            $where = "[categoryId] IN (?";
+            $where = "[Group.categoryId] IN (?";
             $args = [$categoryId];
             for($i=0,$count = count($subs);$i<$count;$i++){
                 $where.=',?';
