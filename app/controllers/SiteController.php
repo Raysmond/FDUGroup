@@ -23,7 +23,8 @@ class SiteController extends BaseController
     public function actionIndex($params = null)
     {
         $this->setHeaderTitle("Welcome to FDUGroup");
-        $this->render("index", array(), false);
+        $this->redirectAction('group','find');
+        //$this->render("index", array(), false);
     }
 
     public function actionAbout()
