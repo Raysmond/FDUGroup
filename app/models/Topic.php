@@ -145,12 +145,12 @@ class Topic extends RModel
         return Data::db_query($sql);
     }
 
-    public static function getDayTopViewPosts($start=0,$limit=10){
+    public static function getDayTopViewPosts($start = 0, $limit = 10)
+    {
         Counter::checkAll(Topic::ENTITY_TYPE);
         $query = Topic::find()->join("user")->join("group")->join("rating")->join("counter");
-        $query = $query->order("desc","[Counter.dayCount]");
-        $query = $query->where("[Counter.dayCount]>0");
-        $results = $query->range($start,$limit);
+        $query = $query->order("desc", "[Counter.dayCount]")->where("[Counter.dayCount]>0");
+        $results = $query->range($start, $limit);
         return $results;
     }
 }
