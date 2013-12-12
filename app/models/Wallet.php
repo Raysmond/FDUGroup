@@ -9,6 +9,7 @@ class Wallet extends RModel{
     public $user;
 
     const COIN_NAME = 'Group Coins';
+    const COIN_DB_NAME = "group_coin";
 
     public $userId,$type,$money,$frozenMoney,$timestamp;
 

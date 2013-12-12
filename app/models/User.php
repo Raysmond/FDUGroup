@@ -101,7 +101,9 @@ class User extends RModel
                 $this->_wallet->userId = $this->id;
                 $result = Wallet::get($this->id);
                 if ($result === null) {
+                    $this->_wallet->type = Wallet::COIN_DB_NAME;
                     $this->_wallet->money = 0;
+                    $this->_wallet->frozenMoney = 0;
                     $this->_wallet->timestamp = date('Y-m-d H:i:s');
                     $this->_wallet->save();
                 }
