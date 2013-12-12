@@ -14,8 +14,8 @@ class AdsController extends BaseController {
     ];
 
     public function actionView($type='active') {
-        $this->setHeaderTitle('My Advertisements');
         $userId = Rays::user()->id;
+        RAssert::is_true($type!='' && in_array($type, ["blocked",'published','applying']));
 
         if($type === 'blocked'){
             $data['ads'] = Ads::find(["userId",$userId,"status",Ads::BLOCKED])->all();
@@ -28,6 +28,7 @@ class AdsController extends BaseController {
             $data['type'] = Ads::APPLYING;
         }
 
+        $this->setHeaderTitle('My Advertisements');
         $this->render('view', $data, false);
     }
 
@@ -64,8 +65,6 @@ class AdsController extends BaseController {
                         $this->flash('message','Apply failed.');
                     }
                 }
-
-
             }
             else{
                 $data['applyForm'] = $_POST;
@@ -78,12 +77,9 @@ class AdsController extends BaseController {
     }
 
     public function actionRemove($adId = null, $type) {
-        if (!isset($adId) || !is_numeric($adId)) {
-            return;
-        }
-        $currentUserId = Rays::user()->id;
         $ad = Ads::get($adId);
         RAssert::not_null($ad);
+        $currentUserId = Rays::user()->id;
 
         if ($ad->userId == $currentUserId) {
             $ad->delete();

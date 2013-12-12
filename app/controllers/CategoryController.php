@@ -24,8 +24,8 @@ class CategoryController extends BaseController
         $category = Category::get($categoryId);
         RAssert::not_null($category);
 
-        $page = Rays::getParam("page",1);
-        $pageSize = 5;
+        $page = $this->getPage("page",1);
+        $pageSize = $this->getPageSize("pagesize", 5);
 
         $groups = Group::getGroupsOfCategory($categoryId,($page-1)*$pageSize,$pageSize);
 
