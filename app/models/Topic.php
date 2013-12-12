@@ -69,11 +69,7 @@ class Topic extends RModel
         $plus = new RatingPlus(Topic::ENTITY_TYPE,$tid);
         $plus->delete();
 
-        // delete all comments
-        // todo delete all rows at the same time
-        $comments = Comment::find("topicId",$tid)->all();
-        foreach($comments as $item)
-            $item->delete();
+        Comment::where("[topicId] = ?", $tid)->delete();
 
         parent::delete();
     }

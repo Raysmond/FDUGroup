@@ -137,6 +137,7 @@ class User extends RModel
      * @param $name
      * @param $password
      * @param $email
+     * @return User user
      */
     public static function register($name, $password, $email)
     {

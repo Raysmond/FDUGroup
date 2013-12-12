@@ -2,7 +2,7 @@
 /**
  * UserController class file.
  *
- * @author: Raysmond
+ * @author: Raysmond, Renchu Song
  */
 
 class UserController extends BaseController
@@ -62,12 +62,12 @@ class UserController extends BaseController
 
         $data = array('user' => $user, 'part' => $part);
         if (Rays::isLogin()) {
-            $currentUser = Rays::user();
+            $loginUser = Rays::user();
             $friend = new Friend();
             $friend->uid = Rays::user()->id;
             $friend->fid = $user->id;
-            $data['canAdd'] = ($currentUser->id !== $user->id && Friend::find(array("uid", $currentUser->id, "fid", $user->id))->first() == null);
-            $data['canCancel'] = ($currentUser->id !== $user->id && !$data['canAdd']);
+            $data['canAdd'] = !Friend::isFriend($loginUser->id,$userId);
+            $data['canCancel'] = ($loginUser->id != $user->id && !$data['canAdd']);
         }
         $page = $this->getPage("page");
         $pageSize = $this->getPageSize("pageSize",10);
@@ -247,22 +247,18 @@ class UserController extends BaseController
 
     public function actionMyPosts()
     {
-        $data = array();
-
         $curPage = $this->getPage("page");
-        $pageSize = $this->getPageSize("pagesize",10);
+        $pageSize = $this->getPageSize("pagesize", 10);
 
         $userId = Rays::user()->id;
         $query = Topic::find("userId", $userId);
         $count = $query->count();
         $posts = $query->order_desc("id")->range(($curPage - 1) * $pageSize, $pageSize);
-        $data['posts'] = $posts;
-        $data['count'] = $count;
 
-        $url = RHtmlHelper::siteUrl('user/myposts');
-        $pager = new RPagerHelper('page', $count, $pageSize, $url, $curPage);
-        $data['pager'] = ($count>$curPage*$pageSize)?$pager->showPager() : null;
-        $data['enabledDelete'] = true;
+        $pager = new RPagerHelper('page', $count, $pageSize, RHtmlHelper::siteUrl('user/myposts'), $curPage);
+        $pager = ($count > $pageSize) ? $pager->showPager() : null;
+
+        $data = ['posts' => $posts, 'count' => $count, 'pager' => $pager, 'enabledDelete' => true];
 
         $this->layout = 'user';
         $this->setHeaderTitle("My posts");
@@ -272,9 +268,8 @@ class UserController extends BaseController
 
     public function actionAdmin()
     {
-        $this->setHeaderTitle('User administration');
         $this->layout = 'admin';
-        $data = array();
+        $this->setHeaderTitle('User administration');
 
         if (Rays::isPost()) {
             if (isset($_POST['checked_users'])) {
@@ -310,15 +305,13 @@ class UserController extends BaseController
 
         $count = $query->count();
         $users = $query->order_desc("id")->order_desc("id")->range($pageSize * ($page - 1), $pageSize);
-        $data['count'] = $count;
-        $data['users'] = $users;
 
-        $url = RHtmlHelper::siteUrl('user/admin');
+        $url = RHtmlHelper::siteUrl('user/admin' . ($searchStr != null ? ('?search=' . urlencode(trim($searchStr))) : ""));
         if ($searchStr != null) $url .= '?search=' . urlencode(trim($searchStr));
 
         $pager = new RPagerHelper('page', $count, $pageSize, $url, $page);
-        $data['pager'] = $pager->showPager();
 
+        $data = ['count'=>$count,'users'=>$users,'pager'=>$pager->showPager()];
         $this->render('admin', $data, false);
     }
 

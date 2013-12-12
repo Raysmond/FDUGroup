@@ -108,6 +108,7 @@ class MessageController extends BaseController
     {
         $message = Message::get($msgId);
         RAssert::not_null($message);
+
         if (Rays::user()->id != $message->receiverId) {
             $this->flash("error", "Sorry. You don't have the right to mark the message read.");
         }

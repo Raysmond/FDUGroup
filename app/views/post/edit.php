@@ -1,8 +1,18 @@
 <div class="panel panel-default">
 
     <div class="panel-heading">
+        <div class="heading-actions">
+            <?php if($type=='edit')
+                echo RHtmlHelper::linkAction(
+                    'post','Delete','delete',$topic->id.'?returnUrl='.RHtmlHelper::siteUrl('user/myposts'),
+                    array(
+                        'class'=>'btn btn-xs btn-danger',
+                        'onclick'=>'return confirm("Are you sure to delete this topic? This operation cannot be undo!!!")'
+                    ));
+            ?>
+        </div>
         <h1 class="panel-title">
-            New topic
+            <?=$type=='edit'?$topic->title:"New topic"?>
         </h1>
     </div>
 

@@ -22,4 +22,5 @@ class Rating extends RModel
         "host" => "host",
         "timestamp" => "timestamp"
     );
+
 }

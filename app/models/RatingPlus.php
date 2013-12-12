@@ -136,17 +136,8 @@ class RatingPlus
      */
     public function delete(){
         if (isset($this->entityType) && isset($this->entityId)) {
-            // delete all rating records
-            $ratings = Rating::find(["tag", self::TAG, "valueType", self::VALUE_TYPE,'entityId', $this->entityId,"entityType", $this->entityType])->all();
-            foreach($ratings as $item){
-                $item->delete();
-            }
-
-            // delete rating counting statistic
-            $stat = RatingStatistic::find(["type", "count", "valueType", self::VALUE_TYPE, "tag", self::TAG, "entityType", $this->entityType, "entityId", $this->entityId])->first();
-            if($stat!==null){
-                $stat->delete();
-            }
+            Rating::where("[entityId] = ? AND [entityType] = ?",[$this->entityId,$this->entityType])->delete();
+            RatingStatistic::where("[entityId] = ? AND [entityType] = ?",[$this->entityId,$this->entityType])->delete();
         }
     }
 } 

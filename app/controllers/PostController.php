@@ -234,7 +234,10 @@ class PostController extends BaseController
             $topic->delete();
             $this->flash("message", "Post " . $topic->title . " was deleted.");
         }
-        $this->redirect(Rays::referrerUri());
+        if($url = Rays::getParam("returnUrl",null))
+            $this->redirect($url);
+        else
+            $this->redirect(Rays::referrerUri());
     }
 
     /**
