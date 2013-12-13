@@ -430,11 +430,13 @@ span.spliter {
 
 .user-panel .user-picture{
     float: left;
-    margin: 0 15px 0 10px;
+    padding-left: 0;
 }
 
 .user-panel .user-profile{
-    padding-top: 25px;
+    padding-top: 15px;
+    padding-left: 0px;
+    margin-left: -10px;
 }
 
 .index .user-panel .user-profile{
@@ -450,9 +452,8 @@ span.spliter {
 }
 
 .user-panel .user-statistics{
-    float: right;
-    margin: 30px 10px 0 0;
     padding: 10px 0;
+    margin-top:30px;
     border: 1px #eee solid;
     -webkit-border-radius: 4px;
     border-radius: 4px;
@@ -462,7 +463,6 @@ span.spliter {
 }
 
 .index .user-panel .user-statistics{
-    float: right;
     margin: 0;
     padding: 10px 0;
 }
@@ -471,29 +471,13 @@ span.spliter {
     font-size:28px;
 }
 
-.user-info {
-    padding-left:145px;
-}
-
-.user-introduction {
-    padding-left:145px;
-}
-
-.index .user-info {
-    padding-left:105px;
-}
-
-.index .user-introduction {
-    padding-left:105px;
-}
-
 .user-panel .user-statistics .stat-item{
     float: left;
-    padding: 0 15px 0 14px;
+    padding-top: 0;
+    padding-bottom: 0;
     text-align: center;
     border-right: 1px #eee solid;
-    width: 70px;
-    margin-right: -1px;
+    width: 33.333333333334%;
 }
 .user-panel .user-statistics .stat-item .number{
     font-size: 20px;

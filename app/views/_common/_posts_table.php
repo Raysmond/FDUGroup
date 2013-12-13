@@ -1,5 +1,5 @@
 <?php
-$this->addJs("/public/js/jquery.dotdotdot.min.js");
+
 if (empty($posts)) {
     echo "<p>No posts!</p>";
 } else {
