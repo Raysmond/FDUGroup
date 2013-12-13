@@ -104,9 +104,20 @@ class MessageController extends BaseController
     }
 
 
-    public function actionRead($msgId)
+    public function actionRead($msgId=null)
     {
+        $msgId = Rays::getParam("messageId",$msgId);
         $message = Message::get($msgId);
+        if(Rays::isAjax()){
+            if (Rays::user()->id != $message->receiverId) {
+                echo "Sorry. You don't have the right to mark the message read.";
+                exit;
+            }
+            $message->status = Message::STATUS_READ;
+            $message->save();
+            echo 'success';
+            exit;
+        }
         RAssert::not_null($message);
 
         if (Rays::user()->id != $message->receiverId) {

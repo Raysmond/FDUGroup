@@ -27,12 +27,12 @@
 
         </div>
         <div class="clearfix" style="margin-bottom: 10px;"></div>
-        <div class="message-container">
+        <div class="message-container message-list">
         <?php
         foreach($msgs as $msg)
         {
         ?>
-        <div class="panel panel-info <?=($msg->status==Message::STATUS_UNREAD)?"message-unread":""?>">
+        <div id="message-item-<?=$msg->id?>" class="message-item panel panel-info <?=($msg->status==Message::STATUS_UNREAD)?"message-unread":""?>">
             <div class="panel-heading">
                 <div style="float:right;margin-top: -2px;">
                     <?php
@@ -71,7 +71,7 @@
                     echo '&nbsp;&nbsp;Delivery time: '.$msg->sendTime;
                     echo '&nbsp;&nbsp;Status: '.($msg->status==1?"unread":"read");
                     echo '</div>';
-                    echo '<p>'.RHtmlHelper::decode($msg->content).'</p>';
+                    echo '<div class="message-body" messageId="'.$msg->id.'">'.RHtmlHelper::decode($msg->content).'</div>';
 
                     echo '</div></div>';
                     }
@@ -82,5 +82,24 @@
                     </div>
     </div>
 </div>
-
+<script>
+    $(document).ready(function () {
+        $(".message-list .message-item .message-body a").click(function () {
+            var id = $(this).parents(".message-body").attr("messageId");
+            if (id) {
+                $.ajax({
+                    url: "<?=RHtmlHelper::siteUrl("message/read")?>",
+                    type: "post",
+                    data: {messageId: id},
+                    success: function (data) {
+                        if (data == "success") {
+                            // do some thing
+                        }
+                    }
+                });
+            }
+            return true;
+        });
+    });
+</script>
 
