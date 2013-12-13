@@ -12,6 +12,7 @@ $baseUrl = Rays::app()->getBaseUrl();
     <link rel="shortcut icon" href="<?=$baseUrl ?>/public/images/favicon.ico" type="image/x-icon">
 
     <link rel="stylesheet" type="text/css" href="<?=$baseUrl; ?>/public/bootstrap-3.0/css/bootstrap.min.css"/>
+
     <link rel="stylesheet" type="text/css" href="<?=$baseUrl; ?>/public/css/main.css"/>
     <link rel="stylesheet" type="text/css" href="<?=$baseUrl; ?>/public/css/theme.css"/>
     <?php
@@ -24,6 +25,7 @@ $baseUrl = Rays::app()->getBaseUrl();
     <script type="text/javascript" src="<?=$baseUrl; ?>/public/js/jquery.min.js"></script>
     <script type="text/javascript" src="<?=$baseUrl; ?>/public/bootstrap-3.0/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="<?=$baseUrl; ?>/public/js/main.js"></script>
+    <script type="text/javascript" src="<?=$baseUrl; ?>/public/js/jquery.dotdotdot.min.js"></script>
 
 </head>
 

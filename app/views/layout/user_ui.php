@@ -24,6 +24,7 @@ $baseUrl = Rays::app()->getBaseUrl();
     <script type="text/javascript" src="<?php echo $baseUrl; ?>/public/js/jquery.min.js"></script>
     <script type="text/javascript" src="<?php echo $baseUrl; ?>/public/bootstrap-3.0/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="<?php echo $baseUrl; ?>/public/js/main.js"></script>
+    <script type="text/javascript" src="<?=$baseUrl; ?>/public/js/jquery.dotdotdot.min.js"></script>
 </head>
 
 <body class=" page-<?=Rays::router()->getControllerId().'-'.Rays::router()->getActionId()?>">

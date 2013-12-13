@@ -15,7 +15,7 @@ class hot_posts_module extends RModule{
      */
     public function module_content()
     {
-        $this->addJs("/public/js/jquery.dotdotdot.min.js");
+        //$this->addJs("/public/js/jquery.dotdotdot.min.js");
         return $this->render("hot_posts",['posts'=>Topic::getDayTopViewPosts(0,10)]);
     }
 }

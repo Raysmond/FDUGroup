@@ -17,7 +17,7 @@ class PostController extends BaseController
         $group = Group::get($groupId);
 
         $page = $this->getPage("page");
-        $pageSize = $this->getPageSize("pagesize", 2);
+        $pageSize = $this->getPageSize("pagesize", 10);
 
         $query = Topic::find("groupId", $groupId)->join("user")->order_desc("lastCommentTime");
         $count = $query->count();
@@ -305,7 +305,7 @@ class PostController extends BaseController
         }
 
         $page = $this->getPage("page");
-        $pageSize = $this->getPageSize("pagesize", 5);
+        $pageSize = $this->getPageSize("pagesize", 10);
 
         $count = 0;
         $cat = new Category();

@@ -20,7 +20,7 @@ class GroupController extends BaseController
     public function actionFind()
     {
         $page = $this->getPage("page");
-        $pageSize = $this->getPageSize("pagesize",5);
+        $pageSize = $this->getPageSize("pagesize",10);
         $searchStr = Rays::getParam("searchstr",'');
 
         $query = Group::find();
@@ -52,7 +52,7 @@ class GroupController extends BaseController
     public function actionMyGroups()
     {
         $page = $this->getPage("page");
-        $pageSize = $this->getPageSize("pagesize", 5);
+        $pageSize = $this->getPageSize("pagesize", 10);
         $groups = GroupUser::getGroups(GroupUser::find("userId", Rays::user()->id)->join("group")->order_desc("groupId")->range(($page - 1) * $pageSize, $pageSize));
 
         if(Rays::isAjax()){
