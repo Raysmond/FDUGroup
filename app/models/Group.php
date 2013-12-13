@@ -8,6 +8,9 @@ class Group extends RModel
 {
     public $groupCreator;
     public $category;
+    public $rating;
+    public $counter;
+
     public $id, $creator, $categoryId, $name, $memberCount, $createdTime, $intro, $picture;
 
     const ENTITY_TYPE = 2;
@@ -40,7 +43,9 @@ class Group extends RModel
     );
     public static $relation = array(
         "groupCreator" => array("User", "[creator] = [User.id]"),
-        "category" => array("Category", "[categoryId] = [Category.id]")
+        "category" => array("Category", "[categoryId] = [Category.id]"),
+        "rating" => array("RatingStatistic", "[id] = [RatingStatistic.entityId] AND [RatingStatistic.type]='count' AND [RatingStatistic.tag]='plus' AND [RatingStatistic.entityType] = 2"),
+        "counter" => array("Counter","[id] = [Counter.entityId] AND [Counter.entityTypeId] = 2")
     );
 
     public static function countTopics($groupId)

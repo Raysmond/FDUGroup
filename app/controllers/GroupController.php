@@ -419,13 +419,27 @@ class GroupController extends BaseController
         $pageSize = $this->getPageSize("pagesize",5);
 
         $count = $query->count();
-        $groups = $query->join("category")->join("groupCreator")->order_desc("id")->range($pageSize * ($page - 1), $pageSize);
+
+        $query = $query->join("category")->join("groupCreator")->join("rating")->join("counter");
+        $orderBy = Rays::getParam("orderBy","id");
+        $order = Rays::getParam("order","desc");
+
+        switch($orderBy){
+            case "id": $query = $query->order($order, "[Group.id]"); break;
+            case "likes": $query = $query->order($order, "[RatingStatistic.value]"); break;
+            case "views": $query = $query->order($order, "[Counter.totalCount]"); break;
+            case "createTime": $query = $query->order($order, "[Group.id]"); break;
+            case "memberCount": $query = $query->order($order, "[Group.memberCount]"); break;
+            default:
+                $query = $query->order_desc("id");
+        }
+        $groups = $query->range($pageSize * ($page - 1), $pageSize);
 
         $data['count'] = $count;
         $data['groups'] = $groups;
 
-        $url = RHtmlHelper::siteUrl('group/admin');
-        if ($searchStr != null) $url .= '?search='.urlencode(trim($searchStr));
+        $url = RHtmlHelper::siteUrl("group/admin?orderBy=$orderBy&&order=$order");
+        if ($searchStr != null) $url .= 'search='.urlencode(trim($searchStr));
 
         // pager
         $pager = new RPagerHelper('page', $count, $pageSize, $url, $page);

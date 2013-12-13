@@ -267,9 +267,21 @@ class PostController extends BaseController
 
         $count = Topic::find()->count();;
         $data['count'] = $count;
-        $data['topics'] = Topic::find()->join("user")->join("group")->order_desc("id")->range(($curPage - 1) * $pageSize, $pageSize);
 
-        $pager = new RPagerHelper('page', $count, $pageSize, RHtmlHelper::siteUrl('post/admin'), $curPage);
+        $query = Topic::find()->join("user")->join("group")->join("rating")->join("counter");
+        $orderBy = Rays::getParam("orderBy","id");
+        $order = Rays::getParam("order","desc");
+        switch($orderBy){
+            case "id": $query = $query->order($order, "[Topic.id]"); break;
+            case "likes": $query = $query->order($order, "[RatingStatistic.value]"); break;
+            case "views": $query = $query->order($order, "[Counter.totalCount]"); break;
+            case "createTime": $query = $query->order($order, "[Topic.id]"); break;
+            default:
+                $query = $query->order_desc("id");
+        }
+        $posts = $query->range(($curPage-1)*$pageSize,$pageSize);
+        $data['topics'] = $posts;
+        $pager = new RPagerHelper('page', $count, $pageSize, RHtmlHelper::siteUrl("post/admin?orderBy=$orderBy&&order=$order"), $curPage);
         $pager = $pager->showPager();
         $data['pager'] = $pager;
 

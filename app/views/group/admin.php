@@ -26,14 +26,77 @@
         <table id="admin-users" class="table">
             <thead>
             <tr>
+                <?php $order = Rays::getParam("order","asc")=="asc"?"desc":"asc"; ?>
+
                 <?php
+
                 $skips = array("intro");
                 echo '<th><input id="check-all" name="check-all" onclick="javascript:checkReverse(\'checked_groups[]\')" type="checkbox" /></th>';
-                foreach (Group::$labels as $key => $label) {
-                    if (in_array($key, $skips)) continue;
-                    echo '<th>' . $label . '</th>';
-                }
                 ?>
+                <th><a class="highlight" href="<?=RHtmlHelper::siteUrl("group/admin?orderBy=id&&order=".$order)?>">
+                        ID <?php if(Rays::getParam("orderBy",null)=="id"){
+                            if(Rays::getParam("order","asc")=="asc"){
+                                echo '<span class="glyphicon glyphicon-chevron-up"></span>';
+                            }
+                            else{
+                                echo '<span class="glyphicon glyphicon-chevron-down"></span>';
+                            }
+                        }?>
+                    </a>
+                </th>
+
+                <th>Creator</th>
+                <th>Category</th>
+                <th>Title</th>
+
+                <th><a class="highlight" href="<?=RHtmlHelper::siteUrl("group/admin?orderBy=memberCount&&order=".$order)?>">
+                        Member Count <?php if(Rays::getParam("orderBy",null)=="memberCount"){
+                            if(Rays::getParam("order","asc")=="asc"){
+                                echo '<span class="glyphicon glyphicon-chevron-up"></span>';
+                            }
+                            else{
+                                echo '<span class="glyphicon glyphicon-chevron-down"></span>';
+                            }
+                        }?>
+                    </a>
+                </th>
+
+                <th><a class="highlight" href="<?=RHtmlHelper::siteUrl("group/admin?orderBy=createTime&&order=".$order)?>">
+                          Create Time <?php if(Rays::getParam("orderBy",null)=="createTime"){
+                            if(Rays::getParam("order","asc")=="asc"){
+                                echo '<span class="glyphicon glyphicon-chevron-up"></span>';
+                            }
+                            else{
+                                echo '<span class="glyphicon glyphicon-chevron-down"></span>';
+                            }
+                        }?>
+                    </a>
+                </th>
+                <th>Picture</th>
+
+                <th><a class="highlight" href="<?=RHtmlHelper::siteUrl("group/admin?orderBy=views&&order=".$order)?>">
+                        Views <?php if(Rays::getParam("orderBy",null)=="views"){
+                            if(Rays::getParam("order","asc")=="asc"){
+                                echo '<span class="glyphicon glyphicon-chevron-up"></span>';
+                            }
+                            else{
+                                echo '<span class="glyphicon glyphicon-chevron-down"></span>';
+                            }
+                        }?>
+                    </a>
+                </th>
+
+                <th><a class="highlight" href="<?=RHtmlHelper::siteUrl("group/admin?orderBy=likes&&order=".$order)?>">
+                        Likes <?php if(Rays::getParam("orderBy",null)=="likes"){
+                            if(Rays::getParam("order","asc")=="asc"){
+                                echo '<span class="glyphicon glyphicon-chevron-up"></span>';
+                            }
+                            else{
+                                echo '<span class="glyphicon glyphicon-chevron-down"></span>';
+                            }
+                        }?>
+                    </a>
+                </th>
             </tr>
             </thead>
             <tbody>
@@ -58,6 +121,9 @@
                 else{
                     echo '<td></td>';
                 }
+                echo $group->counter->totalCount!=null?("<td>".$group->counter->totalCount."</td>"):'<td>0</td>';
+                echo $group->rating->value!=null?("<td>".$group->rating->value."</td>"):'<td>0</td>';
+
                 echo '</tr>';
             }
             ?>

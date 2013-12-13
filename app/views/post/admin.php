@@ -12,12 +12,59 @@
                 <thead>
 
                 <tr>
+                    <?php $order = Rays::getParam("order","asc")=="asc"?"desc":"asc"; ?>
                     <?php echo '<th><input type="checkbox" id="check-all" onclick="javascript:checkReverse(\'checked_topics[]\')" /></th>'; ?>
                     <th>Author</th>
                     <th>Title</th>
                     <th>Group</th>
-                    <th>Create Time</th>
-                    <th>Replies</th>
+
+                    <th><a class="highlight" href="<?=RHtmlHelper::siteUrl("post/admin?orderBy=createTime&&order=".$order)?>">
+                            Create Time <?php if(Rays::getParam("orderBy",null)=="createTime"){
+                                if(Rays::getParam("order","asc")=="asc"){
+                                    echo '<span class="glyphicon glyphicon-chevron-up"></span>';
+                                }
+                                else{
+                                    echo '<span class="glyphicon glyphicon-chevron-down"></span>';
+                                }
+                            }?>
+                        </a>
+                    </th>
+
+                    <th><a class="highlight" href="<?=RHtmlHelper::siteUrl("post/admin?orderBy=replies&&order=".$order)?>">
+                            Replies <?php if(Rays::getParam("orderBy",null)=="replies"){
+                                if(Rays::getParam("order","asc")=="asc"){
+                                    echo '<span class="glyphicon glyphicon-chevron-up"></span>';
+                                }
+                                else{
+                                    echo '<span class="glyphicon glyphicon-chevron-down"></span>';
+                                }
+                            }?>
+                        </a>
+                    </th>
+
+                    <th><a class="highlight" href="<?=RHtmlHelper::siteUrl("post/admin?orderBy=views&&order=".$order)?>">
+                            Views <?php if(Rays::getParam("orderBy",null)=="views"){
+                                if(Rays::getParam("order","asc")=="asc"){
+                                    echo '<span class="glyphicon glyphicon-chevron-up"></span>';
+                                }
+                                else{
+                                    echo '<span class="glyphicon glyphicon-chevron-down"></span>';
+                                }
+                            }?>
+                        </a>
+                    </th>
+
+                    <th><a class="highlight" href="<?=RHtmlHelper::siteUrl("post/admin?orderBy=likes&&order=".$order)?>">
+                            Likes <?php if(Rays::getParam("orderBy",null)=="likes"){
+                                if(Rays::getParam("order","asc")=="asc"){
+                                    echo '<span class="glyphicon glyphicon-chevron-up"></span>';
+                                }
+                                else{
+                                    echo '<span class="glyphicon glyphicon-chevron-down"></span>';
+                                }
+                            }?>
+                        </a>
+                    </th>
                 </tr>
                 </thead>
                 <tbody>
@@ -30,6 +77,8 @@
                     echo '<td>' . RHtmlHelper::linkAction('group', $topic->group->name, 'detail', $topic->group->id) . '</td>';
                     echo '<td>' . $topic->createdTime . '</td>';
                     echo '<td>' . $topic->commentCount . '</td>';
+                    echo '<td>' . ($topic->counter->totalCount!=null?$topic->counter->totalCount:"0"). '</td>';
+                    echo '<td>' . ($topic->rating->value!=null?$topic->rating->value:"0") . '</td>';
                     echo '</tr>';
                 }
                 ?>

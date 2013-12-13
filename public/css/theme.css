@@ -74,6 +74,14 @@ a:active {
     text-decoration: none;
 }
 
+a.highlight{
+    color:#ff6b6b;
+}
+
+a.highlight:hover{
+    color:#ffc1c1;
+}
+
 #logo{
     padding: 5px;
 }

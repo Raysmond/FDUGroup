@@ -8,7 +8,7 @@
 class Counter extends RModel
 {
     public $entityType;
-    public $id, $entityId, $entityTypeId, $totalCount, $dayCount, $weekCount, $timestamp;
+    public $id, $entityId, $entityTypeId, $totalCount=0, $dayCount=0, $weekCount=0, $timestamp;
 
     public static $table = "counter";
     public static $primary_key = "id";
