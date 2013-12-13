@@ -1,56 +1,62 @@
 <?php
-class Friend extends Data {
+class Friend extends RModel
+{
     public $id, $uid, $fid;
+    public $user;
 
-    public function __construct() {
-        $option = array(
-            "key" => "uid",
-            "key2" => "fid",
-            "table" => "friends",
-            "columns" => array (
-                "id" => "f_id",
-                "uid" => "f_uid",
-                "fid" => "f_fid"
-            )
-        );
-        parent::init($option);
+    public static $primary_key = "id";
+    public static $table = "friends";
+    public static $mapping = array(
+        "id" => "f_id",
+        "uid" => "f_uid",
+        "fid" => "f_fid"
+    );
+
+    public static $relation = array(
+        /* TODO: There should be two relations and the current name needs to be fixed */
+        /*       Plus, work needs to be done for RModel to support joining multiple same tables */
+        'user' => array("User", "[fid] = [User.id]")
+    );
+
+    public static function isFriend($uid1,$uid2)
+    {
+        return ($uid1 !== $uid2 && Friend::find(array("uid", $uid1, "fid", $uid2))->first() != null);
     }
 
-    public function getFriends($uid = '', $friendLimit = '', $exceptFriendIds=array(), $friendStart = 0)
+    public function getFriends($uid = '', $friendLimit = '', $excludeIds = array(), $friendStart = 0)
     {
-        if ($uid != '')
-            $this->uid = $uid;
-        $friends = $this->find($friendStart, $friendLimit,array('key'=>$this->columns['id'],'value'=>'desc'));
-        $friNumber = $this->count();
+        $query = Friend::find();
+        if ($uid != '') {
+            $query->find("uid", $uid);
+        }
+        $friendsCount = $query->count();
+        $friends = $query->order_desc("id")->range($friendStart, $friendLimit);
         $result = array();
         foreach ($friends as $friend) {
-            if(!in_array($friend->fid,$exceptFriendIds)){
-                $user = new User();
-                $user->id = $friend->fid;
-                $user->load();
-                array_push($result, $user);
+            if (!in_array($friend->fid, $excludeIds)) {
+                $result[] = User::get($friend->fid);
             }
         }
-        return [$result, $friNumber];
+        return [$result, $friendsCount];
     }
 
-    public function getFriendsToInvite($uid,$groupId, $limit=0){
-        $user = new User();
-        $group = new Group();
-        $groupUser = new GroupUser();
-        $sql = "SELECT "
-            ."user2.{$user->columns['id']} AS friend_id "
-            .",user2.{$user->columns['name']} AS friend_name "
-            .",user2.{$user->columns['picture']} AS friend_picture "
-            ."FROM {$this->table} AS friends "
-            ."JOIN {$user->table} AS user2 ON user2.{$user->columns['id']}={$this->columns['fid']} "
-            ."WHERE {$this->columns['uid']}={$uid} "
-            ."AND {$this->columns['fid']} NOT IN "
-            ."(SELECT group_users.{$groupUser->columns['userId']} AS f_fid "
-            ."FROM {$groupUser->table} AS group_users WHERE group_users.{$groupUser->columns['groupId']}={$groupId}) "
-            .($limit!=0?"LIMIT ".$limit:"")
-            ;
-        $result = Data::db_query($sql);
-        return $result;
+
+    public function getFriendsToInvite($uid, $groupId, $start = 0, $limit = 0)
+    {
+        $groupUsers = GroupUser::find("groupId", $groupId)->all();
+        $result = Friend::find("uid", $uid)->join("user");
+        if ($groupUsers != null && !empty($groupUsers)) {
+            $where = "[fid] not in(";
+            $args = [];
+            for ($count = count($groupUsers), $i = 0; $i < $count; $i++) {
+                $where .= "?" . ($i < $count - 1 ? "," : "");
+                $args[] = $groupUsers[$i]->userId;
+            }
+            unset($groupUsers);
+            $where .= ")";
+            $result = $result->where($where, $args);
+        }
+
+        return ($limit != 0 || $start != 0) ? $result->range($start, $limit) : $result->all();
     }
 }

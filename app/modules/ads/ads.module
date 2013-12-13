@@ -5,13 +5,15 @@
  */
 class ads_module extends RModule {
 
+    public $denyAccess = array("<front>","site/*",'user/login','user/register');
+
     /**
      * Override module_content method
      * @return string|void
      */
     public function module_content() {
-        $ads = new Ads();
-        $ads = $ads->getPublishedAds();
+        $ads = Ads::getPublishedAds();
+        if(empty($ads)) return '';
 
         return $this->render('ads',
             array(

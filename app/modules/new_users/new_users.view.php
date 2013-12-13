@@ -1,4 +1,4 @@
-<div class="panel panel-info">
+<div class="panel panel-default">
     <div class="panel-heading"><h3 class="panel-title">New Users</h3></div>
     <div class="panel-body">
         <?php

@@ -1,18 +1,16 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: Raysmond
- * Date: 13-11-23
- * Time: PM4:28
+ * Class FileController
+ *
+ * @author: Raysmond
  */
-
 class FileController extends RController{
 
     public $access = array(Role::AUTHENTICATED => array('upload'));
 
     public function actionUploadImage(){
         $fileTag = 'upload';
-        $user = Rays::app()->getLoginUser();
+        $user = Rays::user();
         if(isset($_FILES[$fileTag])){
             $path = Rays::app()->getBaseDir() . "/files/userfiles/u_".$user->id."/";
             if(!file_exists($path)){

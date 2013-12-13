@@ -1,18 +1,8 @@
-<?php
-/**
- * Administration home page
- * @author: Raysmond
- */
-?>
-
-<div class="jumbotron">
-    <h2>FDUGroup Administration</h2>
-        <p>
+<div class="panel panel-default">
+    <div class="panel-heading"><h1 class="panel-title">FDUGroup Administration</h1></div>
+    <div class="panel-body">
         <?php
-            date_default_timezone_set(Rays::app()->getTimeZone());
-            echo Date('Y-m-d H:i:s');
+        echo Date('Y-m-d H:i:s');
         ?>
-        </p>
-   
-    <?php ?>
+    </div>
 </div>

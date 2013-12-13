@@ -41,6 +41,13 @@ class RHtmlHelper
         return self::tryCleanLink(Rays::app()->getBasePath().'/'. $url);
     }
 
+    public static function internalUrl($url){
+        if(strpos($url,"//")>0){
+            return str_replace(Rays::baseUrl().'/',"",$url);
+        }
+        return $url;
+    }
+
     public static function linkAction($controller, $name, $action = null, $params = null,$attributes=array())
     {
         $link = "?q=" . $controller;

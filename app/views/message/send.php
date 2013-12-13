@@ -1,5 +1,5 @@
-<div class="row panel panel-default">
-    <div class="panel-heading"><b>Send Message</b></div>
+<div class="panel panel-default">
+    <div class="panel-heading"><h1 class="panel-title">Send Message</h1></div>
     <div class="panel-body">
 <?php
 /**
@@ -62,10 +62,9 @@
 
 
         echo "<br/>";
-        echo "<br/>";
 
         echo RFormHelper::input(array('type'=>'hidden','value'=>$type,'name'=>'type'),$type);
-        echo RFormHelper::input(array('type'=>'submit','value'=>'Send','class'=>'btn btn-lg btn-primary btn-block'));
+        echo RFormHelper::input(array('type'=>'submit','value'=>'Send','class'=>'btn btn-lg btn-primary'));
 
         echo RFormHelper::endForm();
 ?>

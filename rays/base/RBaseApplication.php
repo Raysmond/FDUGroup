@@ -1,16 +1,29 @@
 <?php
 /**
  * RBaseApplication class file
+ *
  * @author: Raysmond
  */
 
 class RBaseApplication
 {
 
+    /**
+     * The name of the application
+     * @var string
+     */
     public $name = "My Application";
 
+    /**
+     * The charset of the front-end view
+     * @var string
+     */
     public $charset = "UTF-8";
 
+    /**
+     * The time zone
+     * @var string
+     */
     public $timeZone = 'PRC';
 
     /**
@@ -40,11 +53,46 @@ class RBaseApplication
      */
     private $_baseUrl;
 
+    /**
+     * The database config array
+     * for example:
+     * 'db' => array(
+     *   'host' => '127.0.0.1',
+     *   'user' => 'fdugroup',
+     *   'password' => 'fdugroup',
+     *   'db_name' => 'fdugroup',
+     *   'table_prefix' => 'group_',
+     *   'charset' => 'utf8',
+     *   ),
+     * @var array
+     */
     private $_db;
 
+    /**
+     * The whole config array
+     * @var array
+     */
     private $_config = array();
 
+    /**
+     * Cache config array
+     * for example:
+     * 'cache' => array(
+     *   'cache_dir' => '/cache',
+     *   'cache_prefix' => "cache_",
+     *   'cache_time' => 1800, //seconds
+     *   )
+     * @var array
+     */
     private $_cache = array();
+
+    /**
+     * Exception handling action
+     * @var string controller action string representation. like : 'site/exception'
+     */
+    private $_exceptionAction = "";
+
+    private $debug = true;
 
     public function __construct($config = null)
     {
@@ -78,6 +126,16 @@ class RBaseApplication
         if(isset($config['baseDir'])){
             $this->_baseDir = $config['baseDir'];
         }
+        if(isset($config['exceptionAction'])){
+            $this->setExceptionAction($config['exceptionAction']);
+        }
+        if(isset($config['debug'])){
+            $this->debug = $config['debug'];
+        }
+
+        date_default_timezone_set($this->timeZone);
+
+        Rays::import("system.base.RException");
     }
 
     /**
@@ -85,7 +143,7 @@ class RBaseApplication
      */
     public function run()
     {
-        date_default_timezone_set($this->timeZone);
+
     }
 
     /**
@@ -109,11 +167,19 @@ class RBaseApplication
         return $this->_baseUrl;
     }
 
+    /**
+     * Set the base URL of the application site
+     * @param $value
+     */
     public function setBaseUrl($value)
     {
         $this->_baseUrl =  $value;
     }
 
+    /**
+     * Get application base path
+     * @return string
+     */
     public function getAppPath()
     {
         if($this->_appPath===''){
@@ -185,7 +251,24 @@ class RBaseApplication
         return isset($this->_db['table_prefix'])?$this->_db['table_prefix']:"";
     }
 
-    public function getCacheConfig(){
+    public function getCacheConfig()
+    {
         return $this->_cache;
+    }
+
+    public function getExceptionAction()
+    {
+        return $this->_exceptionAction;
+    }
+
+    public function setExceptionAction($action="")
+    {
+        $this->_exceptionAction = $action;
+        RExceptionHandler::setExceptionAction($action);
+    }
+
+    public function isDebug()
+    {
+        return $this->debug === true? true: false;
     }
 }

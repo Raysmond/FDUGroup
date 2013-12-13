@@ -1,41 +1,34 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: Raysmond
- * Date: 13-11-24
- * Time: PM7:27
+ * Wallet data model class
+ *
+ * @author: Raysmond
  */
 
-class Wallet extends Data{
+class Wallet extends RModel{
     public $user;
 
     const COIN_NAME = 'Group Coins';
+    const COIN_DB_NAME = "group_coin";
 
     public $userId,$type,$money,$frozenMoney,$timestamp;
 
-    public function __construct(){
-        $option = array(
-            "key" => "userId",
-            "table" => "wallet",
-            "columns" => array(
-                'userId'=>'u_id',
-                "type" => "w_type",
-                "money" => "w_money",
-                "frozenMoney" => "w_frozen_money",
-                "timestamp" => "w_timestamp"
-            ),
+    public static $table = "wallet";
+    public static $primary_key = "userId";
 
-        );
-        parent::init($option);
-    }
+    public static $mapping = array(
+        'userId'=>'u_id',
+        "type" => "w_type",
+        "money" => "w_money",
+        "frozenMoney" => "w_frozen_money",
+        "timestamp" => "w_timestamp"
+    );
 
-    public function load($userId=null){
-        $result = parent::load($userId);
-        if($result==null) return null;
-        $this->user = new User();
-        $this->user->id = $this->userId;
-        return $this;
-    }
+    public static $relation = array(
+        'user' => array("User", "[userId] = [User.id]")
+    );
+
+
 
     public function addMoney($money){
         if(!isset($money)||!is_numeric($money)){
@@ -62,7 +55,7 @@ class Wallet extends Data{
         else{
             if($this->isSetUserId()){
                 $this->frozenMoney = $money;
-                $this->update();
+                $this->save();
                 return true;
             }
         }
@@ -72,7 +65,7 @@ class Wallet extends Data{
         if($this->isSetUserId()){
             $this->money = $money;
             $this->timestamp = date('Y-m-d H:i:s');
-            $this->update();
+            $this->save();
             return true;
         }
         else return false;

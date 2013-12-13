@@ -1,14 +1,11 @@
-<div class="panel panel-default row">
-    <div class="panel-heading">
-        <b>My posts (<?=$count?>)</b>
-    </div>
-    <div class="panel-body" id="latest-topics-list">
+<?php if(!empty($posts)): ?>
+<div class="posts-list">
+    <div id="latest-topics-list">
         <?php
         $user = Rays::app()->getLoginUser();
         if ($user->picture == '') {
             $user->picture = User::$defaults['picture'];
         }
-
         foreach ($posts as $post) {
             ?>
             <div class="row topic-item">
@@ -16,54 +13,75 @@
                     <?= RHtmlHelper::showImage(RImageHelper::styleSrc($user->picture, User::getPicOptions()), $user->name, array('width' => '64px')) ?>
                 </div>
                 <div class="col-lg-10 topic-content">
-                    <div class="topic-title">
-                        <?= RHtmlHelper::linkAction('post', $post->title, 'view', $post->id) ?>
-                    </div>
-                    <div class="topic-meta">
-                        <?= RHtmlHelper::linkAction('view', $user->name, 'view', $user->id) ?>
-                        <?= $post->createdTime ?>
-                    </div>
-                    <div class="topic-summary">
-                        <?php
-                        $post->title = strip_tags(RHtmlHelper::decode($post->title));
-                        if (mb_strlen($post->title) > 140) {
-                            echo '<p>' . mb_substr($post->title, 0, 140, 'UTF-8') . '...</p>';
-                        } else echo '<p>' . $post->title . '</p>';
-                        ?>
+                    <span class="arrow"></span>
+                    <div class="inner">
+                        <div class="topic-title">
+                            <?= RHtmlHelper::linkAction('post', $post->title, 'view', $post->id) ?>
+                        </div>
+                        <div class="topic-meta">
+                            <?= RHtmlHelper::linkAction('view', $user->name, 'view', $user->id) ?>
+                            <?= $post->createdTime ?>
+                        </div>
+                        <div class="topic-summary">
+                            <?php
+                            $post->content = (RHtmlHelper::decode($post->content));
+                            $content = strip_tags($post->content);
+                            if (mb_strlen($content) > 140) {
+                                echo '<p>' . mb_substr($content, 0, 140, 'UTF-8') . '...</p>';
+                            } else echo '<p>' . $content . '</p>';
+
+                            preg_match_all("/<img[^>]+>/i",$post->content,$matches);
+                            if(!empty($matches)){
+                                foreach($matches as $src){
+                                    if(!empty($src)){
+                                        echo $src[0];
+                                    }
+                                }
+                            }
+                            ?>
+
+                        </div>
                     </div>
 
-                    <div>
-                        <?=
-                        RHtmlHelper::linkAction(
-                            'post',
-                            'Reply(' . $post->commentCount . ')',
-                            'view', $post->id . '#reply',
-                            array('class' => 'btn btn-xs btn-info')) ?>
-                        <?php
-                        echo RHtmlHelper::linkAction(
-                            'post',
-                            'Delete',
-                            'delete', $post->id,
-                            array('class' => 'btn btn-xs btn-danger'));
-                        ?>
-                        <?php
-                        /*
-                        $this->module("rating_plus",
-                            array(
-                                'id'=>'rating_plus',
-                                'entityType'=>Topic::$entityType,
-                                'entityId'=>$post->id,
-                                'buttonClass'=>'btn btn-info btn-xs'
-                            ));
-                        */
-                        ?>
+                    <div class="footer">
+                        <div class="actions">
+                            <a href="<?=RHtmlHelper::siteUrl('post/view/'.$post->id).'#reply'?>">
+                                <span class="glyphicon glyphicon-comment"></span> <?=$post->commentCount?>
+                            </a>
+
+                            &nbsp;
+                            <?php
+                            $this->module("rating_plus",
+                                array(
+                                    'id'=>'rating_plus',
+                                    'entityType'=>Topic::ENTITY_TYPE,
+                                    'entityId'=>$post->id,
+                                ));
+                            ?>
+
+                            &nbsp;
+                            <a href="<?=RHtmlHelper::siteUrl('post/delete/'.$post->id)?>">
+                                <span class="glyphicon glyphicon-trash"></span>
+                            </a>
+
+                        </div>
                     </div>
+
 
                 </div>
             </div>
             <hr>
         <?php } ?>
 
-        <?= $pager ?>
+        <?= (isset($pager))?$pager:"" ?>
     </div>
 </div>
+<?php endif; ?>
+
+<?php if(empty($posts)): ?>
+    <div class="panel panel-default">
+        <div class="panel-body">
+            You have no posts.
+        </div>
+    </div>
+<?php endif; ?>

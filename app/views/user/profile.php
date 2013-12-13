@@ -1,14 +1,22 @@
-<div id="profile" class="row panel panel-default">
-    <div class="panel-heading" style="font-weight: bold;"><?=$user->name?></div>
+<div id="profile" class="panel panel-default">
+    <div class="panel-heading">
+        <div class="heading-actions">
+            <?=RHtmlHelper::linkAction('user',"Edit profile",'profile/edit',null,array('class'=>'btn btn-xs btn-info'))?>
+        </div>
+        <h1 class="panel-title"><?=$user->name?></h1>
+    </div>
     <div class="panel-body">
         <div class="col-lg-8">
             <ul class="list-group">
             <?php
-            $skip = array('id', 'status', 'picture', 'privacy', 'permission', 'password', 'credits', 'name');
-            foreach ($user->columns as $objCol => $dbCol) {
+            $skip = array('id', 'status', 'picture', 'privacy', 'password', 'credits', 'name');
+            foreach (User::$mapping as $objCol => $dbCol) {
                 if (in_array($objCol, $skip)) continue;
                 echo '<li class="list-group-item">';
                 switch ($objCol) {
+                    case "gender":
+                        echo "Gender: " . User::getGenderName($user->gender);
+                        break;
                     case "registerTime":
                         echo "Register time: " . $user->registerTime . "<br/>";
                         break;
@@ -45,9 +53,6 @@
         </div>
 
         <div class="col-lg-4">
-            <div style="float: right;">
-                <?=RHtmlHelper::linkAction('user',"Edit profile",'profile/edit',$user->id,array('class'=>'btn btn-xs btn-info'))?>
-            </div>
             <div style="margin-top: 30px;">
                 <?php
                 $pic = (isset($user->picture) && $user->picture != '') ? $user->picture : "public/images/default_pic.png";

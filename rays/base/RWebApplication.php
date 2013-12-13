@@ -61,6 +61,7 @@ class RWebApplication extends RBaseApplication
             $this->isCleanUri = $config['isCleanUri'];
 
         Rays::setApplication($this);
+
     }
 
     /**
@@ -82,9 +83,9 @@ class RWebApplication extends RBaseApplication
 
     /**
      * Create and run the requested controller
-     * @param $route array router information
+     * @param array $route array router information
      */
-    private function runController($route = array())
+    public function runController($route=array())
     {
         $_controller = '';
         if (isset($route['controller']) && $route['controller'] != '') {
@@ -99,7 +100,9 @@ class RWebApplication extends RBaseApplication
             $_controller = new $_controller;
             $_controller->setId($route['controller']);
             $this->controller = $_controller;
-            $_controller->runAction($this->router->getAction(), $this->router->getParams());
+            $action = isset($route['action'])?$route['action']:'';
+            $params = isset($route['params'])?$route['params']:array();
+            $_controller->runAction($action, $params);
         } else {
             // No controller found
             // die("Controller(" . $_controller . ") not exists....");
@@ -108,12 +111,34 @@ class RWebApplication extends RBaseApplication
     }
 
     /**
+     * Run a controller action
+     *
+     * @param $controllerAction
+     * for example:
+     * runControllerAction('site/index',['arg1'])
+     * </pre>
+     *
+     * @param array $params
+     */
+    public function runControllerAction($controllerAction,$params = array()){
+        $route = $this->router->getRouteUrl($controllerAction);
+        if(!is_array($params)){
+            $params = array($params);
+        }
+        if(isset($route['params'])){
+            $route['params'] = array_merge($route['params'], $params);
+        }
+        else
+            $route['params'] = $params;
+        self::runController($route);
+    }
+
+    /**
      * Show 404 page.
      */
     public function page404()
     {
-        $controller = new RController();
-        $controller->render("404");
+        throw new RPageNotFoundException();
     }
 
     /**
@@ -123,6 +148,11 @@ class RWebApplication extends RBaseApplication
     public function getHttpRequest()
     {
         return $this->httpRequestHandler;
+    }
+
+    public function getRouter()
+    {
+        return $this->router;
     }
 
     /**
@@ -154,11 +184,15 @@ class RWebApplication extends RBaseApplication
     {
         if ($this->isUserLogin() && !isset($this->user)) {
             $id = $this->getHttpSession()->get("user");
-            $user = new User();
-            $user->load($id);
-            $user->role->load();
-            return $user;
-        } else return null;
+            $this->user = User::find($id)->join("role")->first();
+            return $this->user;
+        }
+        else if (isset($this->user)) {
+            return $this->user;
+        }
+        else {
+            return null;
+        }
     }
 
     public function isUserLogin()
@@ -169,6 +203,10 @@ class RWebApplication extends RBaseApplication
     public function isCleanUri()
     {
         return $this->isCleanUri != false;
+    }
+
+    public function getController(){
+        return $this->controller;
     }
 
 }

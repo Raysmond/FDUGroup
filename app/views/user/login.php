@@ -1,13 +1,5 @@
-<?php
-/**
- * User login view
- * @author: Raysmond
- */
-?>
-<div class="row">
-    <div class="col-lg-3"></div>
-    <div class="col-lg-6">
-        <div class="panel panel-default">
+
+        <div class="panel panel-default user-login-register-panel">
             <div class="panel-heading"><b>Sign in</b></div>
             <div class="panel-body">
                 <?php
@@ -20,7 +12,8 @@
                 }
                 echo RFormHelper::openForm('user/login',
                     array('id'=>'loginForm', 'class'=>'form-signin login-form'));
-                echo RFormHelper::label("User name",'username');
+                //echo RFormHelper::label("User name",'username');
+                echo RFormHelper::hidden('returnURL', Rays::referrerUri()?:"");
                 echo RFormHelper::input(
                     array('id'=>'username',
                         'name'=>'username',
@@ -28,7 +21,7 @@
                         'placeholder'=>'User name',
                     ),$form);
 
-                echo RFormHelper::label("Password",'password');
+                //echo RFormHelper::label("Password",'password');
                 echo RFormHelper::input(
                     array('id'=>'password',
                         'name'=>'password',
@@ -42,8 +35,6 @@
                 ?>
             </div>
         </div>
-    </div>
-    <div class="col-lg-6"></div>
-</div>
+
 
 

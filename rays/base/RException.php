@@ -1,10 +1,17 @@
 <?php
 /**
- * Base Exception class
+ * RException class
+ *
  * @author: Raysmond
- * @date: 13-11-27
  */
 
 class RException extends Exception{
 
-} 
+}
+
+class RPageNotFoundException extends RException{
+
+    public function __construct($message=''){
+        $this->code = 404;
+    }
+}

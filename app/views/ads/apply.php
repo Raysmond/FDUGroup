@@ -6,23 +6,27 @@
  * Time: PM10:56
  */
 ?>
-<div class="row" style="margin-bottom: 10px;">
 
-</div>
 <div class="panel panel-default">
-    <div class="panel-heading"><b>
+    <div class="panel-heading">
+        <div class="heading-actions">
+            <?=RHtmlHelper::linkAction('ads','Back to ads','view',null,array(
+                'class'=>'btn btn-xs btn-info'
+            ))?>
+        </div>
+
+        <h1 class="panel-title">
         <?php if (isset($edit)) echo 'Edit Advertisement'; else echo 'Ads application'; ?>
-        <?php
-        $form = isset($applyForm)?$applyForm:array();
-        if(isset($validation_errors)){
-            RHtmlHelper::showValidationErrors($validation_errors);
-        }
-        ?>
-        &nbsp;&nbsp;&nbsp;
-        <?=RHtmlHelper::linkAction('ads','Back to ads','view',null,array(
-            'class'=>'btn btn-xs btn-info'
-        ))?>
-    </b></div>
+
+        </h1>
+    </div>
+    <?php
+    $form = isset($applyForm)?$applyForm:array();
+    if(isset($validation_errors)){
+        RHtmlHelper::showValidationErrors($validation_errors);
+    }
+    ?>
+
     <div class="panel-body">
         <?=RFormHelper::openForm('ads/'.(isset($edit)?'edit/'.$ad->id.'/'.$type:'apply'),array('id'=>'applyAdsForm'))?>
         <?=RFormHelper::label('Ads title','ads-title')?>
@@ -31,6 +35,7 @@
                 'id'=>'ads-title',
                 'name'=>'ads-title',
                 'class'=>'form-control',
+                'placeholder'=>'Ads title'
             ), isset($form['ads-title'])?$form:(isset($edit)?$ad->title:$form))?>
 
         <br/>
@@ -65,7 +70,7 @@
         <?=RFormHelper::input(
             array(
                 'type'=>'submit',
-                'class'=>'btn btn-sm btn-success',
+                'class'=>'btn btn-sm btn-primary',
                 'value'=>isset($edit)?'Save':'Send Ads application'
             ))?>
 

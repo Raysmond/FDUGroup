@@ -1,75 +1,79 @@
-<?php
-/**
- * show all groups
- * Author: Guo Junshi
- * Date: 13-10-14
- * Time: 下午1:52
- */
-$form = array();
-if (isset($searchForm)) {
-    $form = $searchForm;
-}
-$lastSearchStr = isset($searchstr) ? $searchstr : "";
-if ($lastSearchStr != '')
-    $lastSearchStr = urlencode($lastSearchStr);
-echo '<div>';
+<?php if (!count($groups)) {
+    echo "<div  class='panel panel-default'><div class='panel-heading'><h1 class='panel-title'>Search for: ".$searchstr."</h1></div><div class=\"panel-body\">No groups found!</div></div>";
+} else {
 ?>
-    <div class="navbar">
-        <div class="navbar-left"><h2 class="form-signin-heading">Find Groups</h2></div>
-        <div class="navbar-right" style="">
-            <?= RFormHelper::openForm('group/find', array('class' => 'form-signin find-group-form')); ?>
-            <div class="col-lg-6" style="float:right;">
-                <div class="input-group">
-                    <input type="text" class="form-control" name="searchstr"
-                           value="<?php echo urldecode($lastSearchStr); ?>"
-                           placeholder="Search Groups">
-              <span class="input-group-btn">
-                <button class="btn btn-default" type="submit">Go!</button>
-              </span>
+<div>
+    <div class="find-groups">
+
+            <div id="waterfall-groups" class="waterfall">
+                <?php
+                $this->renderPartial("_groups_list", array('groups' => $groups), false);
+                ?>
+            </div>
+
+            <div class="clearfix"></div>
+            <div class="load-more-groups-processing" id="loading-groups">
+                <div class="horizon-center">
+                    <img class="loading-24-24" src="<?=RHtmlHelper::siteUrl('/public/images/loading.gif')?>" /> loading...
                 </div>
             </div>
-            <?= RFormHelper::endForm() ?>
-        </div>
+            <a id="load-more-groups" href="javascript:loadMoreGroups()" class="btn btn-lg btn-primary btn-block">Load more groups</a>
+
+            <script>
+                var $container = $('#waterfall-groups');
+                var curPage = 1;
+                var loadCount = 0;
+                var isLoading = false;
+                var nomore = false;
+                $(document).ready(function () {
+                    $('#loading-groups').hide(0);
+                    $('#load-more-groups').hide(0);
+                    $container.masonry({
+                        columnWidth: 0,
+                        itemSelector: '.item'
+                    });
+
+                    $(window).scroll(function () {
+                        var height = $("#load-more-groups").position().top;
+                        var curHeight = $(window).scrollTop() + $(window).height();
+                        if (!isLoading && curHeight >= height && !nomore) {
+                            loadMoreGroups();
+                        }
+                    });
+                });
+
+
+                function loadMoreGroups() {
+                    isLoading = true;
+                    $('#loading-groups').show(0);
+                    //$('#load-more-groups').hide(0);
+                    $.ajax({
+                        url: "<?=RHtmlHelper::siteUrl('group/find') ?>",
+                        type: "post",
+                        data: {page: ++curPage, searchstr: $("#searchstr").val()},
+                        success: function (data) {
+                            $('#loading-groups').hide(0);
+                            //$('#load-more-groups').show(0);
+                            if (data == 'nomore') {
+                                nomore = true;
+                                $('#loading-groups').hide(0);
+                                //$('#load-more-groups').hide(0);
+                                return;
+                            }
+                            var $blocks = jQuery(data).filter('div.item');
+                            $("#waterfall-groups").append($blocks);
+                            $("#waterfall-groups").masonry('appended', $blocks);
+                            isLoading = false;
+                            loadCount++;
+                        }
+                    });
+                }
+
+            </script>
+
     </div>
 
+</div>
+
 <?php
-
-
-echo '<div class="clearfix" style="margin-bottom: 10px;"></div>';
-
-echo '<div class="row">';
-$groups = $data['group'];
-foreach ($groups as $group) {
-    echo '<div class="col-6 col-sm-6 col-lg-4" style="height: 190px;">';
-    echo "<div class='panel panel-default' style='height: 170px;'>";
-    echo "<div class='panel-heading'>";
-    echo RHtmlHelper::linkAction('group', $group->name, 'detail', $group->id);
-    echo "</div>";
-    echo "<div class='panel-body'>";
-    echo $group->memberCount . " members";
-    $group->intro = strip_tags(RHtmlHelper::decode($group->intro));
-    if (mb_strlen($group->intro) > 70) {
-        echo '<p>' . mb_substr($group->intro, 0, 70,'UTF-8') . '...</p>';
-    } else echo '<p>' . $group->intro . '</p>';
-
-    if (Rays::app()->isUserLogin()) {
-        $g_u = new GroupUser();
-        $g_u->userId = Rays::app()->getLoginUser()->id;
-        $g_u->groupId = $group->id;
-        if (count($g_u->find()) == 0) {
-            echo RHtmlHelper::linkAction('group', '+ Join the group', 'join', $group->id."?returnurl=".Rays::app()->getHttpRequest()->getRequestUri(),
-                array('class' => 'btn btn-xs btn-info', 'style' => 'position:absolute;top:140px;'));
-        } else if(!$group->creator==Rays::app()->getLoginUser()->id){
-            echo RHtmlHelper::linkAction('group', '- Exit group', 'exit', $group->id,
-                array('class' => 'btn btn-xs btn-info', 'style' => 'position:absolute;top:140px;'));
-        }
-    } else {
-        echo RHtmlHelper::linkAction('group', '+ Join the group', 'join', $group->id,
-            array('class' => 'btn btn-xs btn-info', 'style' => 'position:absolute;top:140px;'));
-    }
-    echo "</div></div></div>";
 }
-?>
-</div>
-<?=(isset($pager)?$pager:"")?>
-</div>

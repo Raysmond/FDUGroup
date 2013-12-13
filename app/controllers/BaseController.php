@@ -16,19 +16,21 @@ class BaseController extends RController
     public function page404()
     {
         Rays::app()->page404();
-        Rays::log('Page not found!', "warning", "system");
-        Rays::logger()->flush();
     }
 
     public function afterAction()
     {
+        //$time = microtime(true);
+        //echo '<center style="color: gray;padding: 10px;">'."Page generated in ".(($time-Rays::$startTime)*1000) . " ms"."</center>";
+
         $accessLog = new AccessLog();
         $accessLog->host = $this->getHttpRequest()->getUserHostAddress();
-        $accessLog->path = $this->getHttpRequest()->getRequestUriInfo();
-        $accessLog->userId = Rays::app()->isUserLogin() ? Rays::app()->getLoginUser()->id : 0;;
+        $accessLog->path = Rays::uri();
+        $accessLog->userId = Rays::isLogin()? Rays::user()->id : 0;;
         $accessLog->title = $this->getHeaderTitle();
-        $accessLog->uri = $this->getHttpRequest()->getUrlReferrer();
-        $accessLog->insert();
+        $accessLog->uri = Rays::referrerUri();
+        $accessLog->timestamp = date('Y-m-d H:i:s');
+        $accessLog->save();
     }
 
     /**
@@ -44,9 +46,9 @@ class BaseController extends RController
             foreach ($logs as $log) {
                 $sysLog = new SystemLog();
                 $sysLog->host = $this->getHttpRequest()->getUserHostAddress();
-                $sysLog->userId = Rays::app()->isUserLogin() ? Rays::app()->getLoginUser()->id : 0;
-                $sysLog->referrerUri = $this->getHttpRequest()->getUrlReferrer();
-                $sysLog->path = $this->getHttpRequest()->getRequestUriInfo();
+                $sysLog->userId = Rays::isLogin()? Rays::user()->id : 0;
+                $sysLog->referrerUri = Rays::referrerUri();
+                $sysLog->path = Rays::uri();
                 $sysLog->timestamp = $log['timestamp'];
                 $sysLog->message = $log['message'];
 
@@ -65,9 +67,29 @@ class BaseController extends RController
                 if ($level === null) continue;
                 $sysLog->severity = $level;
                 $sysLog->type = $log['type'];
-                $sysLog->insert();
+                $sysLog->save();
                 unset($sysLog);
             }
         }
+    }
+
+    public function getPage($key, $default = 1)
+    {
+        $page = Rays::getParam($key, $default);
+        if (!is_numeric($page) || $page < 1) {
+            $page = 1;
+        }
+        return $page;
+    }
+
+    const DEFAULT_PAGE_SIZE = 10;
+
+    public function getPageSize($key, $default = BaseController::DEFAULT_PAGE_SIZE)
+    {
+        $size = Rays::getParam($key, $default);
+        if (!is_numeric($size) || $size < 1) {
+            $size = DEFAULT_PAGE_SIZE;
+        }
+        return $size;
     }
 }

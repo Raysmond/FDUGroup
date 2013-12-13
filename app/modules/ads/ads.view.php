@@ -4,7 +4,7 @@
  * User: songrenchu
  */
 ?>
-<div class="panel panel-info">
+<div class="panel panel-default">
     <div class="panel-body ads-container" style="margin:5px;padding:0;overflow: hidden;">
         <input type="hidden" id="ad_number" value="<?=count($ads);?>"/>
         <?php

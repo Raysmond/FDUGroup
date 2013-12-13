@@ -1,7 +1,8 @@
 <?php
 /**
  * UserController class file.
- * @author: Raysmond
+ *
+ * @author: Raysmond, Renchu Song
  */
 
 class UserController extends BaseController
@@ -9,31 +10,39 @@ class UserController extends BaseController
     public $layout = "index";
     public $defaultAction = "home";
     public $access = array(
-        Role::AUTHENTICATED => array('edit', 'logout','home','profile','myPosts', 'applyVIP', 'listFriend'),
+        Role::AUTHENTICATED => array('edit', 'logout','home','profile','myPosts', 'applyVIP', 'listFriend', 'find'),
         Role::ADMINISTRATOR=>array('admin','processVIP'));
+
+    private $loginRedirect = ['group', 'post']; //允许重定向的范围。目前仅支持Controller级别。将来可以扩展为键值对精确到action
 
     public function actionLogin()
     {
-        $data = array();
-        if (Rays::app()->isUserLogin()) {
+        if (Rays::isLogin()) {
             $this->redirectAction('user', 'home');
         }
 
-        if ($this->getHttpRequest()->isPostRequest()) {
+        $this->layout = 'user_ui';
+        $data = array();
+
+        if (Rays::isPost()) {
             $user = new User();
-            $login = $user->login($_POST);
-            if ($login == true) {
-                $this->getSession()->set("user", $user->id);
-                $this->redirectAction('user', 'home');
+            $login = User::login($_POST);
+            if ($login instanceof User) {
+                $this->getSession()->set("user", $login->id);
+                if (!isset($_POST['returnURL'])) {
+                    $this->redirect(RHtmlHelper::siteUrl("user/home"));
+                }
+                if (!in_array(Rays::router()->processQueryUrl(RHtmlHelper::internalUrl($_POST['returnURL']))['controller'], $this->loginRedirect)) {
+                    $this->redirect(RHtmlHelper::siteUrl("user/home"));
+                }
+                $this->redirect($_POST['returnURL']);
             } else {
                 $data['loginForm'] = $_POST;
                 if (isset($login['verify_error'])) {
                     $this->flash('error', $login['verify_error']);
                 }
-                if (isset($login['validation_errors'])) {
-                    $data['validation_errors'] = $login['validation_errors'];
+                $data['validation_errors'] = isset($login['validation_errors'])?$login['validation_errors']:null;
                 }
-            }
         }
         $this->setHeaderTitle("Login");
         $this->addCss('/public/css/form.css');
@@ -43,83 +52,77 @@ class UserController extends BaseController
     public function actionLogout()
     {
         $this->getSession()->deleteSession("user");
-        $this->flash("message", "You have already logout.");
-        $this->redirect(Rays::app()->getBaseUrl());
+        $this->redirect(Rays::baseUrl());
     }
-
 
     public function actionView($userId, $part = 'joins')
     {
-        $user = new User();
-        if (!is_numeric($userId) || $user->load($userId) === null) {
-            $this->page404();
-            return;
-        }
-        $canEdit = false;
-        $canAdd = false;
-        $canCancel = false;
-        $currentUser = Rays::app()->getLoginUser();
-        if ($currentUser != null) {
+        $user = User::get($userId);
+        RAssert::not_null($user);
+
+        $data = array('user' => $user, 'part' => $part);
+        if (Rays::isLogin()) {
+            $loginUser = Rays::user();
             $friend = new Friend();
-            $friend->uid = $currentUser->id;
+            $friend->uid = Rays::user()->id;
             $friend->fid = $user->id;
-            $canAdd = ($friend->uid !== $friend->fid && count($friend->find()) == 0);
-            $canCancel = ($friend->uid !== $friend->fid && !$canAdd);
-            $canEdit = ($currentUser->id == $user->id);
+            $data['canAdd'] = !Friend::isFriend($loginUser->id,$userId);
+            $data['canCancel'] = ($loginUser->id != $user->id && !$data['canAdd']);
         }
-
-        $userGroup = [];
-        $postTopics = [];
-        $likeTopics = [];
+        $page = $this->getPage("page");
+        $pageSize = $this->getPageSize("pageSize",10);
+        $count = 0;
         switch ($part) {
-            case 'joins': $userGroup = (new GroupUser())->userGroups($userId);break;
-            case 'posts': $postTopics = (new Topic())->getUserTopics($userId);break;
-            case 'likes': $topicList = new Rating();
-                          $topicList->entityType = Topic::$entityType;
-                          $topicList->userId = $userId;
-                          $topicList = $topicList->find();
-                          $topicIdList = array_map(function($value) {
-                              return $value->entityId;
-                          }, $topicList);
-                          $likeTopics = new Topic();
-                          if(count($topicList)>0){
-                              $likeTopics = $likeTopics->find(0,0,
-                                  ['key' => $likeTopics->columns['id'], 'order' => 'desc'],
-                                  null,
-                                  ['id' => $topicIdList]
-                              );
-                          }
-                          else{
-                              $likeTopics = array();
-                          }
-
+            case 'joins':
+                $pageSize = $this->getPageSize("pageSize",5);
+                $data['userGroup'] = GroupUser::getGroups(GroupUser::find("userId", $userId)->join("group")->order_desc("groupId")->range(($page-1) * $pageSize, $pageSize));
+                $count = User::countGroups($userId);
                 break;
-            case 'profile': break;
-            default: return;
+            case 'posts':
+                $data['postTopics'] = Topic::find("userId",$userId)->join("group")->order_desc("id")->range(($page-1) * $pageSize, $pageSize);
+                $count = User::countPosts($userId);
+                break;
+            case 'likes':
+                $data['likeTopics'] = RatingPlus::getUserPlusTopics($userId, ($page-1) * $pageSize, $pageSize);
+                $count = RatingPlus::countUserPostsPlus($userId);
+                break;
+            case 'profile':
+                break;
+            default:
+                return;
         }
 
+        if(Rays::isAjax()){
+            echo empty($data['userGroup'])? 'nomore' : $this->renderPartial("_common._groups_list", ["groups"=>$data['userGroup']],true);
+            exit;
+        }
+
+        if($part=="posts" || $part=="likes"){
+            if($count>$pageSize){
+                $pager = new RPagerHelper("page",$count,$pageSize,RHtmlHelper::siteUrl("user/view/".$userId."/".$part),$page);
+                $data['pager'] = $pager->showPager();
+            }
+        }
+
+        if($part=="joins"){
+            $this->addCss('/public/css/group.css');
+            $this->addJs('/public/js/masonry.pkgd.min.js');
+        }
+
+        $this->addJs("/public/js/jquery.dotdotdot.min.js");
         $this->setHeaderTitle($user->name);
-        $this->render('view',
-            array('user' => $user,
-                'canEdit' => $canEdit,
-                'canAdd' => $canAdd,
-                'canCancel' => $canCancel,
-                'part' => $part,
-                'userGroup' => $userGroup,
-                'postTopics' => $postTopics,
-                'likeTopics' => $likeTopics,
-            ), false);
+        $this->render('view', $data, false);
 
         // Need to be complete because the codes below will increase the counter every time this page is viewed
         $counter = new Counter();
-        $counter->increaseCounter($user->id,User::ENTITY_TYPE);
+        $counter->increaseCounter($user->id, User::ENTITY_TYPE);
     }
 
     public function actionProfile($action=null){
         $this->layout = 'user';
-        $user = Rays::app()->getLoginUser();
-        if($action=='edit'){
-            $this->actionEdit();
+        $user = Rays::user();
+        if($action==='edit'){
+            $this->actionEdit($user->id);
             return;
         }
         $this->setHeaderTitle($user->name);
@@ -132,9 +135,14 @@ class UserController extends BaseController
      */
     public function actionRegister()
     {
+        if(Rays::isLogin()){
+            $this->actionHome();
+            return;
+        }
+        $this->layout = 'user_ui';
         $this->setHeaderTitle("Register");
         $form = '';
-        if ($this->getHttpRequest()->isPostRequest()) {
+        if (Rays::isPost()) {
             // validate the form data
             $rules = array(
                 array('field' => 'username', 'label' => 'User name', 'rules' => 'trim|required|min_length[5]|max_length[20]'),
@@ -144,8 +152,7 @@ class UserController extends BaseController
             );
             $validation = new RFormValidationHelper($rules);
             if ($validation->run()) {
-                $user = new User();
-                $user->register($_POST['username'], md5($_POST['password']), $_POST['email']);
+                $user = User::register($_POST['username'], md5($_POST['password']), $_POST['email']);
                 $user->sendWelcomeMessage();
 
                 /*
@@ -171,23 +178,20 @@ class UserController extends BaseController
      * Change user info action
      * @param null $userId
      */
-    public function actionEdit($userId = null)
+    public function actionEdit($userId=null)
     {
-        if (!Rays::app()->isUserLogin()||(isset($userId)) && (!is_numeric($userId))){
-            $this->page404();
-            return;
-        }
-        if (isset($userId) && Rays::app()->getLoginUser()->roleId != Role::ADMINISTRATOR_ID&&Rays::app()->getLoginUser()->id!=$userId) {
+        $userId = (null===$userId)?Rays::user()->id: $userId;
+        $user = User::get($userId);
+        RAssert::not_null($user);
+
+        if (Rays::user()->roleId != Role::ADMINISTRATOR_ID && Rays::user()->id!=$userId) {
             $this->flash("error", "You don't have the right to change the user information!");
             $this->redirectAction('user', 'view', $userId);
         }
-        $user = new User();
 
-        //$user->load(($userId==null)?Rays::app()->getLoginUser()->id:$userId);
-        // for now , the user can only edit his own profile
-        $user->load(Rays::app()->getLoginUser()->id);
         $data = array('user' => $user);
-        if ($this->getHttpRequest()->isPostRequest()) {
+
+        if (Rays::isPost()) {
             $config = array(
                 array('field' => 'username', 'label' => 'User name', 'rules' => 'trim|required|min_length[5]|max_length[20]'),
             );
@@ -203,12 +207,12 @@ class UserController extends BaseController
 
             if ($validation->run()) {
                 $user->name = $_POST['username'];
-                foreach ($user->columns as $objCol => $dbCol) {
+                foreach (User::$mapping as $objCol => $dbCol) {
                     if (isset($_POST[$objCol])) {
                         $user->$objCol = $_POST[$objCol];
                     }
                 }
-                $user->update();
+                $user->save();
                 $this->flash("message", "Update information successfully.");
 
                 // if picture selected
@@ -223,11 +227,11 @@ class UserController extends BaseController
                         $this->flash("error", $upload->error);
                     } else {
                         $user->picture = "files/images/users/" . $upload->file_name;
-                        $user->update();
+                        $user->save();
                         RImageHelper::updateStyle($user->picture, User::getPicOptions());
                     }
                 }
-                $this->redirectAction('user', 'view', $user->id);
+                $this->redirect(Rays::referrerUri());
                 return;
             } else {
                 $errors = $validation->getErrors();
@@ -236,54 +240,50 @@ class UserController extends BaseController
 
             }
         }
+
+        $this->layout = 'user';
         $this->setHeaderTitle("Edit profile - " . $user->name);
         $this->render('edit', $data, false);
     }
 
     public function actionMyPosts()
     {
-        $data = array();
+        $curPage = $this->getPage("page");
+        $pageSize = $this->getPageSize("pagesize", 10);
 
-        $curPage = $this->getHttpRequest()->getQuery('page', 1);
-        $pageSize = (isset($_GET['pagesize']) && is_numeric($_GET['pagesize'])) ? $_GET['pagesize'] : 5;
+        $userId = Rays::user()->id;
+        $query = Topic::find("userId", $userId);
+        $count = $query->count();
+        $posts = $query->order_desc("id")->range(($curPage - 1) * $pageSize, $pageSize);
 
-        $userId = Rays::app()->getLoginUser()->id;
-        $posts = new Topic();
-        $posts->userId = $userId;
-        $count = $posts->count();
-        $posts = $posts->find(($curPage - 1) * $pageSize, $pageSize, ['key' => $posts->columns['id'], 'order' => 'desc']);
-        $data['posts'] = $posts;
-        $data['count'] = $count;
+        $pager = new RPagerHelper('page', $count, $pageSize, RHtmlHelper::siteUrl('user/myposts'), $curPage);
+        $pager = ($count > $pageSize) ? $pager->showPager() : null;
 
-        $url = RHtmlHelper::siteUrl('user/myposts');
-        $pager = new RPagerHelper('page', $count, $pageSize, $url, $curPage);
-        $data['pager'] = $pager->showPager();
-        $data['enabledDelete'] = true;
+        $data = ['posts' => $posts, 'count' => $count, 'pager' => $pager, 'enabledDelete' => true];
 
         $this->layout = 'user';
         $this->setHeaderTitle("My posts");
+        $this->addCss('/public/css/post.css');
         $this->render('myposts', $data, false);
     }
 
     public function actionAdmin()
     {
-        $this->setHeaderTitle('User administration');
         $this->layout = 'admin';
-        $data = array();
+        $this->setHeaderTitle('User administration');
 
-        if ($this->getHttpRequest()->isPostRequest()) {
+        if (Rays::isPost()) {
             if (isset($_POST['checked_users'])) {
                 $selected = $_POST['checked_users'];
                 if (is_array($selected)) {
                     $operation = $_POST['operation_type'];
                     foreach ($selected as $id) {
-                        $user = new User();
                         switch ($operation) {
                             case "block":
-                                $user->blockUser($id);
+                                User::blockUser($id);
                                 break;
                             case "active":
-                                $user->activeUser($id);
+                                User::activateUser($id);
                                 break;
                         }
                     }
@@ -291,35 +291,28 @@ class UserController extends BaseController
             }
         }
 
-        $filterStr = $this->getHttpRequest()->getParam('search', null);
 
-        $like = array();
-        if ($filterStr != null) {
-            $data['filterStr'] = $filterStr;
-            if (($str = trim($filterStr)) != '') {
-                $names = explode(' ', $str);
-                foreach ($names as $val) {
-                    array_push($like, array('key' => 'name', 'value' => $val));
-                }
+        $searchStr = Rays::getParam('search', null);
+
+        $query = User::find();
+        if ($name = trim($searchStr)) {
+            $names = preg_split("/[\s]+/", $name);
+            foreach ($names as $key) {
+                $query = $query->like("name", $key);
             }
         }
+        $page = $this->getPage("page");
+        $pageSize = $this->getPageSize("pagesize", 10);
 
-        $user = new User();
-        $count = $user->count($like);
-        $data['count'] = $count;
+        $count = $query->count();
+        $users = $query->order_desc("id")->order_desc("id")->range($pageSize * ($page - 1), $pageSize);
 
-        $curPage = $this->getHttpRequest()->getQuery('page', 1);
-        $pageSize = (isset($_GET['pagesize']) && is_numeric($_GET['pagesize'])) ? $_GET['pagesize'] : 10;
-        $users = new User();
-        $users = $users->find(($curPage - 1) * $pageSize, $pageSize, array('key' => $users->columns["id"], "order" => 'desc'), $like);
-        $data['users'] = $users;
+        $url = RHtmlHelper::siteUrl('user/admin' . ($searchStr != null ? ('?search=' . urlencode(trim($searchStr))) : ""));
+        if ($searchStr != null) $url .= '?search=' . urlencode(trim($searchStr));
 
-        $url = RHtmlHelper::siteUrl('group/admin');
-        if ($filterStr != null) $url .= '?search=' . urlencode(trim($filterStr));
+        $pager = new RPagerHelper('page', $count, $pageSize, $url, $page);
 
-        $pager = new RPagerHelper('page', $count, $pageSize, $url, $curPage);
-        $data['pager'] = $pager->showPager();
-
+        $data = ['count'=>$count,'users'=>$users,'pager'=>$pager->showPager()];
         $this->render('admin', $data, false);
     }
 
@@ -329,13 +322,13 @@ class UserController extends BaseController
     public function actionHome()
     {
         $this->layout = 'user';
-        $user = Rays::app()->getLoginUser();
+        $user = Rays::user();
         $data = array('user' => $user);
-        $defaultSize = 5;
+        $defaultSize = 10;
 
         // ajax request
         // load more posts
-        if ($this->getHttpRequest()->getIsAjaxRequest()) {
+        if (Rays::isAjax()) {
             $topics = new Topic();
             $lastLoadedTime = @$_POST['lastLoadedTime'];
             $lastLoadedTime = $lastLoadedTime != '' ? $lastLoadedTime : null;
@@ -357,6 +350,7 @@ class UserController extends BaseController
         $data['topics'] = $topics->getUserFriendsTopics($user->id, $defaultSize);
 
         $this->setHeaderTitle($user->name);
+        $this->addCss('/public/css/post.css');
         $this->render('home', $data, false);
     }
 
@@ -368,10 +362,10 @@ class UserController extends BaseController
         $this->setHeaderTitle('VIP application');
 
         $this->layout = 'user';
-        $user = Rays::app()->getLoginUser();
+        $user = Rays::user();
         $data = array('user'=>$user);
 
-        if ($this->getHttpRequest()->isPostRequest()) {
+        if (Rays::isPost()) {
             $config = [
                 ['field' => 'content', 'label' => 'Statement', 'rules' => 'trim|required|min_length[10]|max_length[1000]'],
             ];
@@ -392,7 +386,7 @@ class UserController extends BaseController
         }
 
         $censor = new Censor();
-        if ($censor->applyVIPExist($user->id)) {
+        if ($censor->applyVIPExist($user->id)!=null) {
             $this->flash('error', 'Your previous VIP application is under review!');
             $this->redirectAction('user', 'profile');
             return;
@@ -410,50 +404,41 @@ class UserController extends BaseController
         $data = array();
 
         if (isset($_GET['censorId']) && isset($_GET['op'])) {
-            $censor = new Censor();
-            if ((int)$_GET['op'] === 0) {
-                $censor->passCensor( (int)$_GET['censorId']);
+            $censor = Censor::get($_GET['censorId']);
+            if($censor!==null){
+                if ((int)$_GET['op'] === 0) {
+                    $user = User::get($censor->firstId);
+                    $user->roleId = Role::VIP_ID;
+                    $user->save();
 
-                $user = new User();
-                $user->id = $censor->firstId;
-                $user->load();
-                $user->roleId = Role::VIP_ID;
-                $user->update();
+                    $censor->pass();
 
-                $content = "Congratulations, " . RHtmlHelper::linkAction('user',$user->name,'view',$user->id). "!<br/> Your VIP application is accepted by Administrator.";
-                $message = new Message();
-                $message->sendMsg("system", 0, $user->id, "VIP application accepted", $content, '');
-            } else {
-                $censor->failCensor( (int)$_GET['censorId']);
+                    $content = "Congratulations, " . RHtmlHelper::linkAction('user',$user->name,'view',$user->id). "!<br/> Your VIP application is accepted by Administrator.";
+                    Message::sendMessage("system", 0, $user->id, "VIP application accepted", RHtmlHelper::encode($content), '');
+                } else {
+                    $censor->fail();
 
-                $user = new User();
-                $user->id = $censor->firstId;
-                $user->load();
-                $content = "Sorry, " . RHtmlHelper::linkAction('user',$user->name,'view',$user->id). "!<br/> Your VIP application is declined by Administrator.";
-                $message = new Message();
-                $message->sendMsg("system", 0, $user->id, "VIP application declined", $content, '');
+                    $user = User::get($censor->firstId);
+                    $content = "Sorry, " . RHtmlHelper::linkAction('user',$user->name,'view',$user->id). "!<br/> Your VIP application is declined by Administrator.";
+                    Message::sendMessage("system", 0, $user->id, "VIP application declined", RHtmlHelper::encode($content), '');
+                }
             }
             $this->redirectAction('user','processVIP');
         }
 
-        $curPage = $this->getHttpRequest()->getQuery('page',1);
-        $pageSize = (isset($_GET['pagesize'])&&is_numeric($_GET['pagesize']))?$_GET['pagesize'] : 5;
+        $curPage = $this->getPage("page");
+        $pageSize = $this->getPageSize("pagesize",5);
 
-        $applications = new Censor();
-        $applications->status = Censor::UNPROCESS;
-        $applications->getTypeIdbyTypeName('apply_vip');
-        $count = $applications->count([]);
-        $data['count'] = $count;
+        $query = Censor::find(['status',Censor::UNPROCESS,'typeId',(new Censor())->getTypeId("apply_vip")]);
+        $count = $data['count'] = $query->count();
 
-        $applications = $applications->find(($curPage-1)*$pageSize,$pageSize,array('key'=>$applications->columns["id"],"order"=>'desc'));
+        $applications = $query->order_desc("id")->range(($curPage-1)*$pageSize,$pageSize);
 
         $data['applications'] = $applications;
 
         $users = [];
         foreach ($applications as $apply) {
-            $user = new User();
-            $user->id = $apply->firstId;
-            $user->load();
+            $user = User::get($apply->firstId);
             $users[] = $user;
         }
 
@@ -466,5 +451,32 @@ class UserController extends BaseController
         $data['pager'] = $pager;
 
         $this->render('process_vip',$data,false);
+    }
+
+    public function actionFind() {
+        $this->layout = 'user';
+        $page = $this->getPage("page");
+        $pageSize = $this->getPageSize("pagesize",24);
+
+        $searchStr = '';
+        if (Rays::isPost()) $searchStr = ($_POST['searchstr']);
+        else if(isset($_GET['search'])) $searchStr = $_GET['search'];
+
+        $query = User::find();
+        if ($name = trim($searchStr)) {
+            $names = preg_split("/[\s]+/", $name);
+            foreach ($names as $key) {
+                $query = $query->like("name", $key);
+            }
+        }
+
+        $count = $query->count();
+        $users = $query->range(($page-1)*$pageSize,$pageSize);
+
+        $url = RHtmlHelper::siteUrl('user/find'.($searchStr!='')?'?search='.urlencode($searchStr):"");
+        $pager = new RPagerHelper('page',$count,$pageSize, $url,$page);
+
+        $this->setHeaderTitle("Find User");
+        $this->render("find", ['users' => $users,'searchstr'=>$searchStr,'pager'=>$pager->showPager()], false);
     }
 }

@@ -1,6 +1,7 @@
 <?php
 /**
  * SiteController class file.
+ *
  * @author: Raysmond
  */
 
@@ -19,55 +20,52 @@ class SiteController extends BaseController
         $this->userModel = new User();
     }
 
-    public function beforeAction($action)
-    {
-        //$this->addJs("/public/js/customJs.js");
-        //$this->addCss("/public/css/customCss.css");
-        return parent::beforeAction($action);
-    }
-
-    /**
-     * Home page
-     * @param null $params
-     */
     public function actionIndex($params = null)
     {
-        $users = $this->userModel->find();
         $this->setHeaderTitle("Welcome to FDUGroup");
-        $this->render("index", $users, false);
+        $this->redirectAction('group','find');
+        //$this->render("index", array(), false);
     }
 
-    /**
-     * View page
-     * @param null $params
-     */
-    public function actionView($params = null)
-    {
-        echo "<br/>action view executed by SiteController..<br/>";
-        if ($params != null)
-            print_r($params);
-        $this->setHeaderTitle("View Page");
-    }
-
-    /**
-     * About page
-     */
     public function actionAbout()
     {
         $this->setHeaderTitle("About FDUGroup");
         $this->render('about', null, false);
     }
 
-    /**
-     * Contact page
-     */
     public function actionContact()
     {
         $this->setHeaderTitle("Contact with FDUGroup");
-        $data = array(
-            'githubLink' => "https://github.com/Raysmond/FDUGroup",
-        );
+        $data = ['githubLink' => "https://github.com/Raysmond/FDUGroup"];
 
         $this->render('contact', $data, false);
+    }
+
+    public function actionHelp(){
+        $this->setHeaderTitle("Site help");
+        $data = array();
+        $this->render('help',$data,false);
+    }
+
+    public function actionException(Exception $e){
+        if(Rays::isAjax()){
+            print $e;
+            exit;
+        }
+        $this->layout = 'error';
+        switch($e->getCode()){
+            case 404:
+                $this->render('404', ['message'=>$e->getMessage()]);
+                Rays::log('Page not found! ('.$e->getMessage().')', "warning", "system");
+                break;
+            default:
+                if(Rays::app()->isDebug()){
+                    print $e;
+                }
+                else{
+                    $this->render("exception", ['code'=>$e->getCode(),'message'=>$e->getMessage()]);
+                }
+        }
+        Rays::logger()->flush();
     }
 }

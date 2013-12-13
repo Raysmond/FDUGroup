@@ -40,9 +40,17 @@ class RRouter
         $this->queryUrl = parse_url($_SERVER['REQUEST_URI']);
     }
 
-    public function getRouteUrl()
+    /**
+     * Get router from uri
+     * @param string $uriInfo
+     * @return array
+     */
+    public function getRouteUrl($uriInfo='')
     {
-        $this->processUrl();
+        if($uriInfo=='')
+            $uriInfo = Rays::app()->getHttpRequest()->getRequestUriInfo();
+
+        $this->processUrl($uriInfo);
         return $this->_routeUrl;
     }
 
@@ -51,20 +59,26 @@ class RRouter
         $this->_routeUrl = $route;
     }
 
-    public function processUrl()
+    public function processUrl($uriInfo)
     {
         // what if there're more url types
-        $this->processQueryUrl();
+        $route = $this->processQueryUrl($uriInfo);
+
+        $this->setRouteUrl($route);
+        $this->_controller = isset($route['controller'])?$route['controller']:null;
+        $this->_action = isset($route['action'])?$route['action']:null;
+        $this->_params = isset($route['params'])?$route['params']:null;
+
+        // $this->processAliasUrl($uriInfo);
     }
 
     /**
      * Processes the query uri and transforms the params into route
+     * @param string $query like 'user/view/1'
+     * @return array $route
      */
-    public function processQueryUrl()
+    public function processQueryUrl($query)
     {
-        // uri info form:
-        // user/view/1
-        $query = Rays::app()->getHttpRequest()->getRequestUriInfo();
         if(($pos = strpos($query,"?")))
             $query = substr($query,0,$pos);
 
@@ -73,10 +87,10 @@ class RRouter
 
         $len = count($queryArr);
         if ($len > 0) {
-            $this->_controller = $route['controller'] = $queryArr[0];
+            $route['controller'] = $queryArr[0];
         }
         if ($len > 1) {
-            $this->_action = $route['action'] = $queryArr[1];
+            $route['action'] = $queryArr[1];
         }
         if ($len > 2) {
             $route['params'] = array();
@@ -84,9 +98,8 @@ class RRouter
                 if(isset($queryArr[$i])&&$queryArr[$i]!='')
                 $route['params'][$i - 2] = $queryArr[$i];
             }
-            $this->_params = $route['params'];
         }
-        $this->setRouteUrl($route);
+        return $route;
     }
 
     /**
@@ -115,5 +128,4 @@ class RRouter
     {
         return $this->_params;
     }
-
 }

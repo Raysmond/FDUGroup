@@ -1,96 +1,98 @@
 <?php
 /**
  * CategoryController class file.
+ *
  * @author: Raysmond
  */
 
-class CategoryController extends BaseController{
+class CategoryController extends BaseController
+{
     public $layout = "index";
     public $defaultAction = "index";
 
     public $access = array(
-        Role::ADMINISTRATOR=>array('new','edit','admin'),
+        Role::ADMINISTRATOR => array('new', 'edit', 'admin'),
     );
 
     /**
      * View all groups under the category
      * @param string $categoryId
      */
-    public function actionGroups($categoryId='')
+    public function actionGroups($categoryId = '')
     {
-        if($categoryId==''||!is_numeric($categoryId)){
-            $this->page404();
-            return;
+        RAssert::not_empty($categoryId);
+        $category = Category::get($categoryId);
+        RAssert::not_null($category);
+
+        $page = $this->getPage("page",1);
+        $pageSize = $this->getPageSize("pagesize", 5);
+
+        $groups = Group::getGroupsOfCategory($categoryId,($page-1)*$pageSize,$pageSize);
+
+        if(Rays::isAjax()){
+            if (!count($groups)) {
+                echo 'nomore';
+            } else {
+                $this->renderPartial("_groups_list", array("groups"=>$groups),false);
+            }
+            exit;
         }
-        $category = new Category();
-        $category->load($categoryId);
-        if($category->load($categoryId)===null){
-            $this->page404();
-            return;
-        }
-        else{
-            $groups = new Group();
-            $groups->categoryId = $categoryId;
-            $groups = $groups->find();
-            $this->render('groups',array('category'=>$category,'groups'=>$groups),false);
-        }
+
+        $this->addCss("/public/css/group.css");
+        $this->addJs("/public/js/masonry.pkgd.min.js");
+        $this->render('groups', ['category' => $category, 'groups' => $groups], false);
+
     }
 
     /**
      * Category administration
      */
-    public function actionAdmin(){
+    public function actionAdmin()
+    {
         $data = array();
 
-        if($this->getHttpRequest()->isPostRequest()){
-            if(isset($_POST['sub_items'])){
+        if (Rays::isPost()) {
+            if (isset($_POST['sub_items'])) {
                 $items = $_POST['sub_items'];
-                if(is_array($items)){
-                    foreach($items as $item){
-                        if(!is_numeric($item)) return;
-                        else{
-                            $cat = new Category();
-                            $cat->id = $item;
-                            $cat->load();
-                            if($cat->pid==0) continue;
+                if (is_array($items)) {
+                    foreach ($items as $item) {
+                        if (!is_numeric($item)) return;
+                        else {
+                            $cat = Category::get($item);
+                            if ($cat->pid == 0) continue;
                             $cat->delete();
                         }
                     }
                 }
             }
 
-            if(isset($_POST['cat-name'])&&isset($_POST['parent-id'])){
+            if (isset($_POST['cat-name']) && isset($_POST['parent-id'])) {
                 $name = trim($_POST['cat-name']);
                 $pid = $_POST['parent-id'];
-                if(is_numeric($pid)){
-                    if($name==''){
-                        $this->flash('error','Category name cannot be blank.');
-                    }
-                    else{
-                        $parent = new Category();
-                        $result = $parent->load($pid);
-                        if($result!=null){
+                if (is_numeric($pid)) {
+                    if ($name == '') {
+                        $this->flash('error', 'Category name cannot be blank.');
+                    } else {
+                        $result = Category::get($pid);
+                        if ($result != null) {
                             $newCat = new Category();
                             $newCat->name = RHtmlHelper::encode(trim($name));
                             $newCat->pid = $pid;
-                            $newCat->insert();
-                            $this->flash('message','Category '.$name." was created successfully.");
-                        }
-                        else{
-                            $this->flash('error','Parent category not exists.');
+                            $newCat->save();
+                            $this->flash('message', 'Category ' . $name . " was created successfully.");
+                        } else {
+                            $this->flash('error', 'Parent category not exists.');
                         }
                     }
                 }
             }
         }
 
-        $category = new Category();
-        $category->pid = '0';
-        $data['categories'] = $category->find();
+        $data['categories'] = Category::find()->all();
 
         $this->layout = 'admin';
         $this->setHeaderTitle('Category administration');
-        $this->render('admin',$data,false);
+        $this->render('admin', $data, false);
     }
 
 }

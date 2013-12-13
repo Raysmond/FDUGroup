@@ -11,7 +11,7 @@ class rating_plus_module extends RModule
     public $entityId = null;
     public $count = null;
 
-    public $buttonClass = 'btn btn-default btn-sm';
+    public $buttonClass = '';
 
     private $url = 'rating/plus';
 
@@ -48,13 +48,13 @@ class rating_plus_module extends RModule
 
         $html = '';
         if ($this->checkEntity()) {
-            $html .= '<button type="button" '
+            $html .= '<a title="Love this" '
                 . 'onclick="javascript:plusEntity(\''
                 . $actionUrl . '\',\'' . $this->entityType . '\',\'' . $this->entityId . '\')" '
                 . 'class="rating-plus-button '.$this->buttonClass.'">'
-                . '<span class="glyphicon glyphicon-thumbs-up"></span> '
-                . '<span id="' . $counterId . '" class="">(' . $this->count . ')</span>'
-                . '</button>';
+                . '<span class="glyphicon glyphicon-heart"></span> '
+                . '<span id="' . $counterId . '" class="">' . $this->count . '</span>'
+                . '</a>';
         }
         return $html;
     }

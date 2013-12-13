@@ -1,0 +1,20 @@
+<?php
+/**
+ * Class posts_category_module
+ *
+ * @author: Raysmond
+ */
+class posts_category_module extends RModule
+{
+
+    public $access = array("post/find", "post/find/*", "post/find?*");
+
+    public function module_content()
+    {
+        return $this->render("posts_category",
+            array(
+                'categories' => Category::find("pid","0")->all(),
+                'id' => Rays::router()->getParams()[0]
+            ));
+    }
+}

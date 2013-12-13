@@ -1,8 +1,8 @@
 <?php
 /**
- * Base log class
+ * RLog class
+ *
  * @auther: Raysmond
- * @date: 13-11-28
  */
 
 class RLog

@@ -1,0 +1,14 @@
+<?php
+/**
+ * Class follow_us_module
+ *
+ * @author: Raysmond
+ */
+
+class follow_us_module extends RModule{
+    public $access = array('site/about','site/contact');
+
+    public function module_content(){
+        return $this->render("follow_us");
+    }
+}

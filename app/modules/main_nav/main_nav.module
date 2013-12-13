@@ -24,6 +24,7 @@ class main_nav_module extends RModule
             'appName' => $appName,
             'isAdmin' => $isAdmin
         );
+
         return $this->render('main_nav', $data);
     }
 }

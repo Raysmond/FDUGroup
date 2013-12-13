@@ -49,6 +49,8 @@ return array(
 
     'defaultAction' => 'index',
 
+    'exceptionAction' => 'site/exception',
+
     'cache' => array(
         'cache_dir' => '/cache',
         'cache_prefix' => "cache_",

@@ -2,24 +2,40 @@
 /**
  * RController class file.
  * This is the base controller for all controllers in the framework.
+ *
  * @author: Raysmond
  */
 
 class RController
 {
-    // the layout for the controller
+    /**
+     * The layout used in the controller
+     * @var string the layout view file in 'view/layout' directory
+     */
     public $layout = "index";
 
-    // default action is provided if there's no action requested from the URL
+    /**
+     * default action is provided if there's no action requested from the URL
+     * @var string
+     */
     public $defaultAction = "index";
 
-    // current action id
+    /**
+     * current action id
+     * @var string
+     */
     private $_action;
 
-    // Parameters passed to the action methd
-    private $_params;
+    /**
+     * Parameters passed to the action method
+     * @var array
+     */
+    private $_params = array();
 
-    // Header title within the <title> tag in HTML
+    /**
+     * Header title within the <title> tag in HTML
+     * @var string
+     */
     private $_headerTitle;
 
     /**
@@ -33,7 +49,10 @@ class RController
      */
     public $access = array();
 
-    // the unique ID of the controller
+    /**
+     * the unique ID of the controller
+     * @var string
+     */
     private $_id = '';
 
     /**
@@ -147,12 +166,19 @@ class RController
 
     /**
      * Get view file
-     * @param $viewName
+     * @param $viewName if no '.' is in the the $viewName string, then the method will get view file under
+     *  the directory of current controller Id within the base view directory, otherwise, the method will
+     *  get the view file from the base view directory
      * @return string the file name of the view or false if the file not exists
      */
     public function getViewFile($viewName)
     {
-        $viewFile = Rays::app()->viewPath . "/" . $this->getId() . "/" . $viewName . ".php";
+        $viewFile = Rays::app()->viewPath . "/";
+        if(strpos($viewName, ".")>0)
+            $viewFile .= str_replace("." , "/" , $viewName) . ".php";
+        else
+            $viewFile .=  $this->getId() . "/" . $viewName . ".php";
+
         if (file_exists($viewFile))
             return $viewFile;
         else
@@ -230,8 +256,11 @@ class RController
      * @param $action string action ID
      * @param $params array parameters
      */
-    public function runAction($action, $params)
+    public function runAction($action='', $params=array())
     {
+        if($action=='')
+            $action = $this->defaultAction;
+
         $this->setCurrentAction($action);
         $this->setActionParams($params);
 
@@ -240,15 +269,11 @@ class RController
         }
 
         if(!$this->userCanAccessAction()){
-
             if(!Rays::app()->isUserLogin()){
-                $this->flash("message","Please login first.");
                 $this->redirectAction('user','login');
                 return;
             }
-            $this->flash("error","Sorry, you're not authorized to view the requested page.");
-            Rays::app()->page404();
-            return;
+            throw new RPageNotFoundException("Sorry, you're not authorized to view the requested page.");
         }
 
         $methodName = $this->generateActionMethod();
@@ -287,9 +312,7 @@ class RController
             }
 
         } else {
-            Rays::app()->page404();
-            Rays::log("Page not found! On action matched.",RLog::LEVEL_WARNING,"system");
-            Rays::logger()->flush();
+            throw new RPageNotFoundException("No actions matches the HTTP request!");
         }
         $this->afterAction();
     }
@@ -516,5 +539,4 @@ class RController
             $module->run();
         }
     }
-
 }
