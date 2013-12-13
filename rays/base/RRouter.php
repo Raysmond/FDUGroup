@@ -22,54 +22,51 @@
 
 class RRouter
 {
-    // query url
-    public $queryUrl;
-
     /**
      * @var array normalized route uri array
      */
     private $_routeUrl = array();
 
+    /**
+     * @var string controller ID
+     */
     private $_controller;
-    private $_action;
-    private $_params;
-
-
-    public function __construct()
-    {
-        $this->queryUrl = parse_url($_SERVER['REQUEST_URI']);
-    }
 
     /**
-     * Get router from uri
-     * @param string $uriInfo
+     * @var string action ID
+     */
+    private $_action;
+
+    /**
+     * @var array parameters array for the action
+     */
+    private $_params;
+
+    /**
+     * Get router information from URI
+     * @param string $uri URI string (like: 'site/index', the corresponding HTTP URL may be 'http://www.example.com/site/index')
      * @return array
      */
-    public function getRouteUrl($uriInfo='')
+    public function getRouteUrl($uri = '')
     {
-        if($uriInfo=='')
-            $uriInfo = Rays::app()->getHttpRequest()->getRequestUriInfo();
+        $uri = ($uri === '') ? Rays::app()->getHttpRequest()->getRequestUriInfo() : $uri;
 
-        $this->processUrl($uriInfo);
+        $this->processUrl($uri);
         return $this->_routeUrl;
     }
 
-    private function setRouteUrl($route)
+    /**
+     * Process the URI string
+     * @param $uri
+     */
+    public function processUrl($uri)
     {
+        $route = $this->processQueryUrl($uri);
+
         $this->_routeUrl = $route;
-    }
-
-    public function processUrl($uriInfo)
-    {
-        // what if there're more url types
-        $route = $this->processQueryUrl($uriInfo);
-
-        $this->setRouteUrl($route);
-        $this->_controller = isset($route['controller'])?$route['controller']:null;
-        $this->_action = isset($route['action'])?$route['action']:null;
-        $this->_params = isset($route['params'])?$route['params']:null;
-
-        // $this->processAliasUrl($uriInfo);
+        $this->_controller = isset($route['controller']) ? $route['controller'] : null;
+        $this->_action = isset($route['action']) ? $route['action'] : null;
+        $this->_params = isset($route['params']) ? $route['params'] : null;
     }
 
     /**
@@ -79,24 +76,24 @@ class RRouter
      */
     public function processQueryUrl($query)
     {
-        if(($pos = strpos($query,"?")))
-            $query = substr($query,0,$pos);
+        if (($pos = strpos($query, "?")))
+            $query = substr($query, 0, $pos);
 
-        $queryArr = explode("/", $query);
+        $query = explode("/", $query);
         $route = array();
+        $len = count($query);
 
-        $len = count($queryArr);
-        if ($len > 0) {
-            $route['controller'] = $queryArr[0];
-        }
-        if ($len > 1) {
-            $route['action'] = $queryArr[1];
-        }
+        if ($len > 0)
+            $route['controller'] = $query[0];
+
+        if ($len > 1)
+            $route['action'] = $query[1];
+
         if ($len > 2) {
             $route['params'] = array();
             for ($i = 2; $i < $len; $i++) {
-                if(isset($queryArr[$i])&&$queryArr[$i]!='')
-                $route['params'][$i - 2] = $queryArr[$i];
+                if ($query[$i])
+                    $route['params'][] = $query[$i];
             }
         }
         return $route;
@@ -106,7 +103,7 @@ class RRouter
      * Get controller from route
      * @return controller ID or null if no controller is provided from the query uri
      */
-    public function getController()
+    public function getControllerId()
     {
         return isset($this->_controller) ? $this->_controller : null;
     }
@@ -115,7 +112,7 @@ class RRouter
      * Get action from route
      * @return string action ID or null if no action is provided from the query uri
      */
-    public function getAction()
+    public function getActionId()
     {
         return isset($this->_action) ? $this->_action : null;
     }

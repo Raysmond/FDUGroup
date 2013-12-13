@@ -1,15 +1,12 @@
 <?php
 /**
  * RHttpRequest class file
+ *
  * @author: Raysmond
  */
 
 class RHttpRequest
 {
-
-    /**
-     * Normalize request
-     */
     public function normalizeRequest()
     {
         // normalize request
@@ -104,7 +101,7 @@ class RHttpRequest
      * Whether the current HTTP request is Ajax request
      * @return bool
      */
-    public function getIsAjaxRequest()
+    public function isAjaxRequest()
     {
         return isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest';
     }

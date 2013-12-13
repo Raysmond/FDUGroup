@@ -20,21 +20,26 @@ class RWebApplication extends RBaseApplication
      */
     public $isCleanUri = false;
 
-    public $modelPath;
     public $controllerPath;
+    public $modelPath;
     public $modulePath;
-
     public $viewPath;
     public $layoutPath;
 
+    /**
+     * Current controller object
+     * @var Object
+     */
     public $controller;
-
     public $router;
     public $httpRequestHandler;
     public $clientManager;
     public $httpSession;
 
-    // current login user
+    /**
+     * Current user who is accessing the web site
+     * @var User|null
+     */
     public $user;
 
     public $flashMessage;

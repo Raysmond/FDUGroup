@@ -78,7 +78,7 @@ class Rays extends RaysFramework{
      */
     public static function isAjax()
     {
-        return static::app()->getHttpRequest()->getIsAjaxRequest();
+        return static::app()->getHttpRequest()->isAjaxRequest();
     }
 
     /**
