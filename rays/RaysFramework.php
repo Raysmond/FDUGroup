@@ -84,11 +84,10 @@ class RaysFramework
      */
     public static function setApp($_app)
     {
-        if (static::$app === null && $_app != null){
+        if (static::$app === null && $_app != null) {
             static::$app = $_app;
             static::initPath();
-        }
-        else {
+        } else {
             die("Application not found!");
         }
     }
@@ -112,11 +111,11 @@ class RaysFramework
     {
         if (!isset(self::$moduleMap[$moduleId])) {
             $path = static::app()->modulePath . "/" . $moduleId . "/" . $moduleId . self::app()->moduleFileExtension;
-            if(is_file($path) && file_exists($path)){
+            if (is_file($path) && file_exists($path)) {
                 self::$moduleMap[$moduleId] = $path;
                 require($path);
             } else
-                throw new RException("Module class (".$moduleId."_module) file ($path) not exist.");
+                throw new RException("Module class (" . $moduleId . "_module) file ($path) not exist.");
         }
     }
 
@@ -126,8 +125,7 @@ class RaysFramework
      */
     public static function autoImports($imports = array())
     {
-        foreach($imports as $import)
-        {
+        foreach ($imports as $import) {
             static::import($import);
         }
     }
@@ -146,11 +144,11 @@ class RaysFramework
         $files = str_replace('.', '/', $files);
         if ($files) {
             $arr = explode('/', $files);
-            $baseDir = ($arr[0]=="system")? SYSTEM_PATH : static::app()->getBaseDir();
-            if($arr[0]=="system")
-                $files = substr($files,7);
-            if($arr[0] =="application")
-                $files = substr($files,12);
+            $baseDir = ($arr[0] == "system") ? SYSTEM_PATH : static::app()->getBaseDir();
+            if ($arr[0] == "system")
+                $files = substr($files, 7);
+            if ($arr[0] == "application")
+                $files = substr($files, 12);
 
             $fileName = end($arr);
             unset($arr);
@@ -195,7 +193,7 @@ class RaysFramework
         if (isset(self::$classMap[$className]))
             require(self::$classMap[$className]);
         else {
-            $className = end(explode("\\",$className));
+            $className = end(explode("\\", $className));
             foreach (self::$_includePaths as $path) {
                 $classFile = $path . DIRECTORY_SEPARATOR . $className . '.php';
                 if (is_file($classFile)) {
@@ -212,9 +210,9 @@ class RaysFramework
      * @param string $level the level of the message
      * @param string $category
      */
-    public static function log($message,$level='info',$category='system')
+    public static function log($message, $level = RLog::LEVEL_INFO, $category = 'system')
     {
-        static::$logger->log($message,$level,$category);
+        static::$logger->log($message, $level, $category);
     }
 
     /**

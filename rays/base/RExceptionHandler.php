@@ -28,7 +28,7 @@ class RExceptionHandler {
             Rays::app()->runControllerAction(self::$exceptionAction,$e);
             return;
         }
-        print "FDUGroup Exception: <br />";
+        print "Exception: <br />";
         print $e;
     }
 }
