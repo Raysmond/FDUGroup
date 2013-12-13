@@ -60,7 +60,7 @@ class RWebApplication extends RBaseApplication
         if (isset($config['isCleanUri']))
             $this->isCleanUri = $config['isCleanUri'];
 
-        Rays::setApplication($this);
+        Rays::setApp($this);
 
     }
 

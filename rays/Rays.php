@@ -1,12 +1,13 @@
 <?php
+
+require(dirname(__FILE__) . '/RaysFramework.php');
+
 /**
- * Rays framework bootstrap file.
+ * Class Rays provide common functions for the whole web application
+ *
  * @author: Raysmond
  */
-
-require(dirname(__FILE__) . '/RaysBase.php');
-
-class Rays extends RaysBase{
+class Rays extends RaysFramework{
 
     /**
      * Get the current login user or null for anonymous users

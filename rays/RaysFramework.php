@@ -12,28 +12,43 @@ define('SYSTEM_CORE_PATH', SYSTEM_PATH . '/base');
 define('HELPER_PATH', SYSTEM_PATH . '/helpers');
 
 
-
-/**
- * Class RaysBase is a basic helper class for common framework functionality.
- *
- * @author: Raysmond
- */
-class RaysBase
+class RaysFramework
 {
+    /**
+     * The web application
+     * @var
+     */
+    public static $app;
 
-    public static $classMap = array();
-
-    public static $moduleMap = array();
-
-    public static $imports = array();
-
-    public static $_app;
-
-    public static $copyright;
-
+    /**
+     * The whole system and application log helper
+     * @var
+     */
     public static $logger;
 
+    /**
+     * Application start time
+     * @var
+     */
     public static $startTime;
+
+    /**
+     * Class to file map. Map key is the class name and value is the full class file path
+     * @var array
+     */
+    public static $classMap = array();
+
+    /**
+     * Module file map
+     * @var array
+     */
+    public static $moduleMap = array();
+
+    /**
+     * Auto-import files
+     * @var array
+     */
+    public static $imports = array();
 
     public static $_includePaths = array(
         SYSTEM_PATH,
@@ -41,33 +56,21 @@ class RaysBase
         HELPER_PATH,
     );
 
-    public static function log($message,$level='info',$category='system')
-    {
-        static::$logger->log($message,$level,$category);
-    }
-
-    public static function logger()
-    {
-        return static::$logger;
-    }
-
-    public static function setApplication($app)
-    {
-        if (static::$_app === null && $app != null){
-            static::$_app = $app;
-            static::initPath();
-        }
-        else {
-            die("Application not found!");
-        }
-    }
-
+    /**
+     * Get the application object
+     * @return RWebApplication
+     */
     public static function app()
     {
-        return static::$_app;
+        return static::$app;
     }
 
-    public static function createApplication($config)
+    /**
+     * Create a new web application
+     * @param $config
+     * @return RWebApplication
+     */
+    public static function newApp($config)
     {
         static::$startTime = microtime(true);
         static::$logger = new RLog();
@@ -75,6 +78,24 @@ class RaysBase
         return new RWebApplication($config);
     }
 
+    /**
+     * Set the current application
+     * @param $_app
+     */
+    public static function setApp($_app)
+    {
+        if (static::$app === null && $_app != null){
+            static::$app = $_app;
+            static::initPath();
+        }
+        else {
+            die("Application not found!");
+        }
+    }
+
+    /**
+     * Initialize the application files include path
+     */
     public static function initPath()
     {
         static::$_includePaths[] = static::app()->controllerPath;
@@ -82,20 +103,27 @@ class RaysBase
         static::$_includePaths[] = static::app()->modulePath;
     }
 
-    public static function getFrameworkPath()
-    {
-        return SYSTEM_PATH;
-    }
-
+    /**
+     * Import a module
+     * @param $moduleId
+     * @throws RException
+     */
     public static function importModule($moduleId)
     {
         if (!isset(self::$moduleMap[$moduleId])) {
             $path = static::app()->modulePath . "/" . $moduleId . "/" . $moduleId . self::app()->moduleFileExtension;
-            self::$moduleMap[$moduleId] = $path;
-            require($path);
+            if(is_file($path) && file_exists($path)){
+                self::$moduleMap[$moduleId] = $path;
+                require($path);
+            } else
+                throw new RException("Module class (".$moduleId."_module) file ($path) not exist.");
         }
     }
 
+    /**
+     * Import files
+     * @param array $imports
+     */
     public static function autoImports($imports = array())
     {
         foreach($imports as $import)
@@ -178,15 +206,28 @@ class RaysBase
         }
     }
 
-    public static function getCopyright()
+    /**
+     * Generate a new log
+     * @param $message the log message
+     * @param string $level the level of the message
+     * @param string $category
+     */
+    public static function log($message,$level='info',$category='system')
     {
-        if (!isset(self::$copyright)) {
-            return "© Copyright " . static::app()->name . " 2013, All Rights Reserved.";
-        } else return self::$copyright;
+        static::$logger->log($message,$level,$category);
+    }
+
+    /**
+     * Get the log object
+     * @return RLog
+     */
+    public static function logger()
+    {
+        return static::$logger;
     }
 }
 
-spl_autoload_register(array('RaysBase', 'autoload'));
+spl_autoload_register(array('RaysFramework', 'autoload'));
 
 set_exception_handler(array("RExceptionHandler", "handleException"));
 

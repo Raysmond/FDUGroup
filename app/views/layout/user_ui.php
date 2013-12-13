@@ -46,7 +46,7 @@ $this->module('main_nav',array('id'=>'main_nav','name'=>'Main navigation'));
 
     <div id="footer" class="container user-login-register-footer">
         <hr>
-        <div class="copyright col-lg-5"><?php echo RHtmlHelper::encode(Rays::getCopyright()); ?></div>
+        <div class="copyright col-lg-5"><?php echo "© Copyright " . Rays::app()->name . " 2013, All Rights Reserved."; ?></div>
 
         <div class="footer-links col-lg-7">
             <ul>

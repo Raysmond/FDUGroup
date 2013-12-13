@@ -138,7 +138,7 @@ $baseUrl = Rays::app()->getBaseUrl();
     <hr>
 
     <footer>
-        <p><?php echo RHtmlHelper::encode(Rays::getCopyright()); ?></p>
+        <p><?php echo "© Copyright " . Rays::app()->name . " 2013, All Rights Reserved."; ?></p>
     </footer>
 
 </div>

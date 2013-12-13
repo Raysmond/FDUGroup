@@ -9,4 +9,4 @@ $config = dirname(__FILE__).'/app/Config.php';
 
 require_once($rays);
 
-Rays::createApplication($config)->run();
+Rays::newApp($config)->run();
