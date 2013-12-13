@@ -21,7 +21,7 @@ class user_panel_module extends RModule
             'isOwn' => (Rays::isLogin() && $this->user === null) || (Rays::isLogin() && $this->user !== null && Rays::user()->id == $this->user->id)
         );
         $data = array_merge($data, $this->params);
-        Rays::js("/public/js/jquery.dotdotdot.min.js");
+        //Rays::js("/public/js/jquery.dotdotdot.min.js");
         return $this->render('user_panel', $data);
     }
 }

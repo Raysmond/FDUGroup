@@ -25,7 +25,7 @@ class CategoryController extends BaseController
         RAssert::not_null($category);
 
         $page = $this->getPage("page",1);
-        $pageSize = $this->getPageSize("pagesize", 5);
+        $pageSize = $this->getPageSize("pagesize", 10);
 
         $groups = Group::getGroupsOfCategory($categoryId,($page-1)*$pageSize,$pageSize);
 

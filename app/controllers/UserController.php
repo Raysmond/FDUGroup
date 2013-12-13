@@ -109,7 +109,7 @@ class UserController extends BaseController
             $this->addJs('/public/js/masonry.pkgd.min.js');
         }
 
-        $this->addJs("/public/js/jquery.dotdotdot.min.js");
+        //$this->addJs("/public/js/jquery.dotdotdot.min.js");
         $this->setHeaderTitle($user->name);
         $this->render('view', $data, false);
 
