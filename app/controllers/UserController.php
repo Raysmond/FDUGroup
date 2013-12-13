@@ -66,7 +66,7 @@ class UserController extends BaseController
             $friend = new Friend();
             $friend->uid = Rays::user()->id;
             $friend->fid = $user->id;
-            $data['canAdd'] = !Friend::isFriend($loginUser->id,$userId);
+            $data['canAdd'] = $loginUser->id != $user->id && !Friend::isFriend($loginUser->id,$userId);
             $data['canCancel'] = ($loginUser->id != $user->id && !$data['canAdd']);
         }
         $page = $this->getPage("page");
