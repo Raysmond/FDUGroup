@@ -8,7 +8,7 @@
     <div class="panel-heading">
         <div class="heading-actions" style="float: right;">
             <?php
-                if($isManager){
+                if(Rays::user()->isAdmin()||$isManager){
                     echo RHtmlHelper::linkAction('group',"Edit",'edit',$group->id,array('class'=>'btn btn-xs btn-success'));
                     echo '&nbsp;';
                     echo RHtmlHelper::linkAction('group',"Invite",'invite',$group->id,array('class'=>'btn btn-xs btn-info'));
