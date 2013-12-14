@@ -50,7 +50,7 @@
         echo RFormHelper::label("Password confirm", 'password-confirm');
         echo RFormHelper::input(
             array('id' => 'password-confirm',
-                'name' => 'password-confrim',
+                'name' => 'password-confirm',
                 'type' => 'password',
                 'class' => 'form-control',
                 'placeholder' => "Password confirm"));
