@@ -1,7 +1,7 @@
 <?php
 /**
- * Active groups module
- * @author songrenchu, Xiangyan
+ * Created by PhpStorm.
+ * User: songrenchu
  */
 class active_groups_module extends RModule {
 
@@ -22,13 +22,15 @@ class active_groups_module extends RModule {
                 return array();
             }
 
-            $query = Group::find()->join("category")->order_desc("memberCount");
+            $where = "[categoryId] in (";
+            $args = [];
             $subs = $category->children();
-            $cidList = array();
             foreach ($subs as $sCat) {
-                $cidList[] = $sCat->id;
+                $where.='?,';
+                $args[] = $sCat->id;
             }
-            $groups = $query->in("categoryId", $cidList)->range(0, 5);
+            $where=substr($where,0,strlen($where)-1).')';
+            $groups = Group::find()->join("category")->order_desc("memberCount")->where($where,$args)->range(0,5);//->where($whereIds)->range(0, 5);
         }
         else{
             $groups = Group::find()->join("category")->order_desc("memberCount")->range(0,5);
