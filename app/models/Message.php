@@ -69,9 +69,4 @@ class Message extends RModel {
         $message->save();
         return $message;
     }
-
-    public static function countUnreadMsgs($receiverId)
-    {
-        return Message::find(array("receiverId", $receiverId, "status", Message::STATUS_UNREAD))->count();
-    }
 }

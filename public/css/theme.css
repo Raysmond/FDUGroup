@@ -139,13 +139,6 @@ a.highlight:hover{
     background-color: #d5d5d5 !important;
 }
 
-#account-dropdown .username {
-    margin-right: 40px;
-}
-
-#account-dropdown img{
-    margin-top: -10px;
-}
 
 .topic-meta a,.post-meta a, .group-meta a {
     color:#ff6b6b;

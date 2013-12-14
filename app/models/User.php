@@ -19,6 +19,11 @@ class User extends RModel
 
     const ENTITY_TYPE = 4;
 
+    /**
+     * @var array map some data for cache
+     */
+    private static $_map = array();
+
     public static $labels = array(
         "id" => "ID",
         'roleId' => 'Role',
@@ -130,8 +135,10 @@ class User extends RModel
     {
         if (!isset($this->id))
             return 0;
-        $msg = new Message();
-        return $msg->countUnreadMsgs($this->id);
+        if(!isset(self::$_map["message_unread_count"])){
+            self::$_map["message_unread_count"] = Message::find(array("receiverId", $this->id, "status", Message::STATUS_UNREAD))->count();
+        }
+        return self::$_map["message_unread_count"];
     }
 
     /**

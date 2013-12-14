@@ -40,30 +40,32 @@
 
                     }
                     else{
+                        $countMessages = Rays::user()->countUnreadMsgs();
                         if($isAdmin){
                             echo '<li>'.RHtmlHelper::linkAction('admin','Admin',null,null,array('style'=>'font-weight: bold;'))."</li>";
                         }
                         ?>
                         <li class="dropdown">
                             <a href="#" id="account-dropdown" class="dropdown-toggle" data-toggle="dropdown" >
-                                <span class="username"><?=$user->name?></span>
                                 <?php
                                 $pic = (isset($user->picture)&&$user->picture!='')?$user->picture:"public/images/default_pic.png";
                                 $pic = RImageHelper::styleSrc($pic,User::getPicOptions());
                                 ?>
                                 <?=RHtmlHelper::showImage($pic,$user->name,array('class'=>'img-thumbnails'))?>
+                                <span class="username"><?=$user->name?></span>
+                                <span class="badge"><?=$countMessages?></span>
                             </a>
                             <ul class="dropdown-menu">
                                 <li><?=RHtmlHelper::linkAction("user","Home Page","home")?></li>
                                 <li><?=RHtmlHelper::linkAction("user","Personal Page","view",$user->id)?></li>
                                 <li role="presentation" class="divider"></li>
                                 <?php
-                                if(($count = Rays::app()->getLoginUser()->countUnreadMsgs())==0){
+                                if($countMessages==0){
                                     echo "<li>".RHtmlHelper::linkAction("message","Messages","view",null)."</li>";
                                 }
                                 else{
                                     echo '<li><a href="'.RHtmlHelper::siteUrl('message/view').'">';
-                                    echo 'Messages&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="badge">'.$count.'</span></a></li>';
+                                    echo 'Messages&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="badge">'.$countMessages.'</span></a></li>';
                                 }
                                 ?>
                                 <li role="presentation" class="divider"></li>
