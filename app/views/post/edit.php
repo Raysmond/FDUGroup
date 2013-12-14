@@ -12,7 +12,7 @@
             ?>
         </div>
         <h1 class="panel-title">
-            <?=$type=='edit'?$topic->title:"New topic"?>
+            <?=$type=='edit'?$topic->title:"New post"?>
         </h1>
     </div>
 

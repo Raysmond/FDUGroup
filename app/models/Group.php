@@ -60,7 +60,7 @@ class Group extends RModel
             return array();
         }
 
-        $query = Group::find();
+        $query = Group::find()->order_desc('id');
         if ($withSubCategory) {
             $subs = $category->children();
             $where = "[categoryId] in (?";

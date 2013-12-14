@@ -7,7 +7,7 @@
             <div style="float: right;">
                 <?php
                     if($canPost)
-                        echo RHtmlHelper::linkAction('post', '+ New topic', 'new', $group->id, array('class' => 'btn btn-sm btn-success'));
+                        echo RHtmlHelper::linkAction('post', '+ New post', 'new', $group->id, array('class' => 'btn btn-sm btn-success'));
                 ?>
             </div>
         </div>
