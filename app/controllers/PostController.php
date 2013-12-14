@@ -66,7 +66,7 @@ class PostController extends BaseController
 
         $this->layout = 'user';
         $this->addCss('/public/css/post.css');
-        $this->setHeaderTitle("New topic");
+        $this->setHeaderTitle("New post");
         $this->render("edit", $data, false);
     }
 
