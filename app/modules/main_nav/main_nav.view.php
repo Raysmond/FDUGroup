@@ -53,7 +53,9 @@
                                 ?>
                                 <?=RHtmlHelper::showImage($pic,$user->name,array('class'=>'img-thumbnails'))?>
                                 <span class="username"><?=$user->name?></span>
+                                <?php if($countMessages!=0): ?>
                                 <span class="badge"><?=$countMessages?></span>
+                                <?php endif; ?>
                             </a>
                             <ul class="dropdown-menu">
                                 <li><?=RHtmlHelper::linkAction("user","Home Page","home")?></li>
