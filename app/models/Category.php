@@ -43,7 +43,9 @@ class Category extends Tree
      */
     public function getActivePosts($categoryId = null, $start = 0, $limit = 0)
     {
-        $query = Topic::find()->join("user")->join("group")->order_desc("id");
+        $query = Topic::find()->join("user")->join("group")->join("rating")->join("counter");
+//        $query = $query->order_desc("id");
+        $query = $query->order("desc","UNIX_TIMESTAMP([Topic.createdTime])/10000 + 10* IFNULL([RatingStatistic.value],0) + 10*[Topic.commentCount] + 5*[Counter.dayCount] + [Counter.totalCount]/100");
         if ($categoryId !== null) {
             $this->id = $categoryId;
             $subs = $this->children();

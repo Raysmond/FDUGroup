@@ -1,9 +1,16 @@
 <?php if (!count($groups)) {
-    echo "<div  class='panel panel-default'><div class='panel-heading'><h1 class='panel-title'>Search for: ".$searchstr."</h1></div><div class=\"panel-body\">No groups found!</div></div>";
+    ?>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h1 class="panel-title">Search for: <?= $searchstr ?></h1>
+        </div>
+        <div class="panel-body">No groups found!</div>
+    </div>
+<?php
 } else {
-?>
-<div>
-    <div class="find-groups">
+    ?>
+    <div>
+        <div class="find-groups">
 
             <div id="waterfall-groups" class="waterfall">
                 <?php
@@ -14,10 +21,11 @@
             <div class="clearfix"></div>
             <div class="load-more-groups-processing" id="loading-groups">
                 <div class="horizon-center">
-                    <img class="loading-24-24" src="<?=RHtmlHelper::siteUrl('/public/images/loading.gif')?>" /> loading...
+                    <img class="loading-24-24" src="<?= RHtmlHelper::siteUrl('/public/images/loading.gif') ?>"/>
+                    loading...
                 </div>
             </div>
-<!--            <a id="load-more-groups" href="javascript:loadMoreGroups()" class="btn btn-lg btn-primary btn-block">Load more groups</a>-->
+            <!--            <a id="load-more-groups" href="javascript:loadMoreGroups()" class="btn btn-lg btn-primary btn-block">Load more groups</a>-->
             <a id="load-more-groups" href="javascript:loadMoreGroups()" style="height: 0;width: 0;"></a>
 
             <script>
@@ -72,9 +80,9 @@
 
             </script>
 
-    </div>
+        </div>
 
-</div>
+    </div>
 
 <?php
 }
