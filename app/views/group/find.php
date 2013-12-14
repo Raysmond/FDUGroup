@@ -25,7 +25,7 @@
                     loading...
                 </div>
             </div>
-            <!--            <a id="load-more-groups" href="javascript:loadMoreGroups()" class="btn btn-lg btn-primary btn-block">Load more groups</a>-->
+
             <a id="load-more-groups" href="javascript:loadMoreGroups()" style="height: 0;width: 0;"></a>
 
             <script>
