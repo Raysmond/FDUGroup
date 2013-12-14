@@ -20,7 +20,7 @@ class GroupController extends BaseController
     public function actionFind()
     {
         $page = $this->getPage("page");
-        $pageSize = $this->getPageSize("pagesize",10);
+        $pageSize = $this->getPageSize("pagesize",5);
         $searchStr = Rays::getParam("searchstr",'');
 
         $query = Group::find();
@@ -31,7 +31,6 @@ class GroupController extends BaseController
             }
         }
         $groups = $query->order_desc("id")->range($pageSize * ($page - 1), $pageSize);
-
         if(Rays::isAjax()){
             echo empty($groups)? 'nomore': $this->renderPartial("_groups_list", ["groups"=>$groups], true);
             exit;

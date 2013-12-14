@@ -17,7 +17,8 @@
                     <img class="loading-24-24" src="<?=RHtmlHelper::siteUrl('/public/images/loading.gif')?>" /> loading...
                 </div>
             </div>
-            <a id="load-more-groups" href="javascript:loadMoreGroups()" class="btn btn-lg btn-primary btn-block">Load more groups</a>
+<!--            <a id="load-more-groups" href="javascript:loadMoreGroups()" class="btn btn-lg btn-primary btn-block">Load more groups</a>-->
+            <a id="load-more-groups" href="javascript:loadMoreGroups()" style="height: 0;width: 0;"></a>
 
             <script>
                 var $container = $('#waterfall-groups');
@@ -27,7 +28,7 @@
                 var nomore = false;
                 $(document).ready(function () {
                     $('#loading-groups').hide(0);
-                    $('#load-more-groups').hide(0);
+                    //$('#load-more-groups').hide(0);
                     $container.masonry({
                         columnWidth: 0,
                         itemSelector: '.item'
