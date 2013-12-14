@@ -252,6 +252,16 @@ class _RModelQueryer {
     }
 
     /**
+     * Add a IN matching constraint
+     * @param string $memberName Member to be matched against
+     * @param array $listOfValues Array of values to be used as value set for in clause.
+     */
+    public function in($memberName, $listOfValues)
+    {
+        return $this->where("[$memberName] IN (" . implode(",", $listOfValues) . ")");
+    }
+
+    /**
      * Add a free-form order clause
      * @param string $order "asc" or "desc", case insensitive
      * @param string $expression An expression used for ordering
