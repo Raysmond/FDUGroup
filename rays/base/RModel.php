@@ -375,8 +375,7 @@ abstract class RModel {
                 $delim = ", ";
             }
         }
-        $sql = "REPLACE INTO ".Rays::app()->getDBPrefix().$model::$table." ($columns) VALUES ($values)";
-
+        $sql = (isset($this->{$model::$primary_key})?"REPLACE":"INSERT")." INTO ".Rays::app()->getDBPrefix().$model::$table." ($columns) VALUES ($values)";
         /* Now prepare SQL statement */
         $stmt = RModel::getConnection()->prepare($sql);
         $args = array();

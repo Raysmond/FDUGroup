@@ -141,6 +141,7 @@ class UserController extends BaseController
         $this->layout = 'user_ui';
         $this->setHeaderTitle("Register");
         $form = '';
+        $data = [];
         if (Rays::isPost()) {
             // validate the form data
             $rules = array(
@@ -152,24 +153,31 @@ class UserController extends BaseController
             $validation = new RFormValidationHelper($rules);
             if ($validation->run()) {
                 $user = User::register($_POST['username'], md5($_POST['password']), $_POST['email']);
-                $user->sendWelcomeMessage();
+                if($user->id){
+                    $user->sendWelcomeMessage();
 
-                /*
-                Rays::import("extensions.phpmailer.*");
-                $emailResult = MailHelper::sendEmail("Welcome to FDUGroup family","<b>Welcome to FDUGroup family</b><br/>-- FDUGroup team <br/>".date('Y-m-d H:i:s'),$_POST['email']);
-                if($emailResult!==true){
-                    var_dump($emailResult);
-                    exit;
+                    /*
+                    Rays::import("extensions.phpmailer.*");
+                    $emailResult = MailHelper::sendEmail("Welcome to FDUGroup family","<b>Welcome to FDUGroup family</b><br/>-- FDUGroup team <br/>".date('Y-m-d H:i:s'),$_POST['email']);
+                    if($emailResult!==true){
+                        var_dump($emailResult);
+                        exit;
+                    }
+                    */
+
+                    $this->flash("message", "Hello," . $user->name . ", please " . RHtmlHelper::linkAction('user', 'login', 'login') . " !");
+                    $this->redirectAction('user', 'view', $user->id);
                 }
-                */
+                else{
+                    $this->flash("error","Register failed! User name or email already exists.");
+                }
 
-                $this->flash("message", "Hello," . $user->name . ", please " . RHtmlHelper::linkAction('user', 'login', 'login') . " !");
-                $this->redirectAction('user', 'view', $user->id);
             } else {
-                $this->render('register',
-                    array('validation_errors' => $validation->getErrors(), 'registerForm' => $_POST), false);
+                $data['validation_errors'] = $validation->getErrors();
             }
-        } else $this->render('register', null, false);
+        }
+        if(Rays::isPost()) $data['registerForm'] = $_POST;
+        $this->render('register', $data, false);
     }
 
 
