@@ -1,7 +1,8 @@
 <?php
 /**
  * Class RPagerHelper
- * @author: Raysmond
+ *
+ * @author: Raysmond, Xiangyan Sun
  */
 class RPagerHelper
 {

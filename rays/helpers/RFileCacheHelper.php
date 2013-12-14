@@ -1,9 +1,8 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: Raysmond
- * Date: 13-11-25
- * Time: PM8:04
+ * RFileCacheHelper helper class
+ *
+ * @author: Raysmond
  */
 
 class RFileCacheHelper implements RICacheHelper

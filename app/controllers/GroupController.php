@@ -20,7 +20,7 @@ class GroupController extends BaseController
     public function actionFind()
     {
         $page = $this->getPage("page");
-        $pageSize = $this->getPageSize("pagesize",5);
+        $pageSize = $this->getPageSize("pagesize",10);
         $searchStr = Rays::getParam("searchstr",'');
 
         $query = Group::find();

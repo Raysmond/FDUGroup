@@ -1,13 +1,11 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: songrenchu
+ * RStringHelper class
+ *
+ * @author: Renchu Song
  */
 
 class RStringHelper {
-    public static function substring($str, $start = 0, $limit = null) {
-
-    }
 
     public static function utf8_substring($str,$start=0, $len = null){
         $len = $len===null? strlen($str): $len;

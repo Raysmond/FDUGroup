@@ -1,9 +1,8 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: Raysmond
- * Date: 13-11-25
- * Time: PM8:07
+ * RCacheFactory helper class
+ *
+ * @author: Raysmond
  */
 
 class RCacheFactory {

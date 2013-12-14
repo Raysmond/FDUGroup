@@ -1,6 +1,7 @@
 <?php
 /**
  * RImageHelper class file.
+ *
  * @author: Raysmond
  */
 
