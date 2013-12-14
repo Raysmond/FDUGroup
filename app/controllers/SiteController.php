@@ -23,7 +23,12 @@ class SiteController extends BaseController
     public function actionIndex($params = null)
     {
         $this->setHeaderTitle("Welcome to FDUGroup");
-        $this->redirectAction('group','find');
+        if(Rays::isLogin()){
+            $this->redirectAction("user","home");
+        }
+        else
+            $this->redirectAction('group','find');
+
         //$this->render("index", array(), false);
     }
 

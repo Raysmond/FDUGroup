@@ -29,8 +29,13 @@
         <div class="clearfix" style="margin-bottom: 10px;"></div>
         <div class="message-container message-list">
         <?php
-        foreach($msgs as $msg)
-        {
+        if(empty($msgs)){
+            ?>
+            <div style="font-weight: bold;text-align: center; padding: 20px 0;">No messages.</div>
+            <?php
+        }
+        else
+        foreach($msgs as $msg){
         ?>
         <div id="message-item-<?=$msg->id?>" class="message-item panel panel-info <?=($msg->status==Message::STATUS_UNREAD)?"message-unread":""?>">
             <div class="panel-heading">
