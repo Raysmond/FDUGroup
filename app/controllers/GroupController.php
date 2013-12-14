@@ -131,10 +131,10 @@ class GroupController extends BaseController
                 $data['buildForm'] = $form;
             }
         }
-
+        $data['categories'] = Category::find()->all();
         $this->layout = 'user';
         $this->setHeaderTitle("Build my group");
-        $this->render('build', ['categories'=>Category::find()->all()], false);
+        $this->render('build', $data, false);
     }
 
     /**

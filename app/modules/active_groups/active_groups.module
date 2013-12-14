@@ -17,25 +17,20 @@ class active_groups_module extends RModule {
         $groups = array();
         if(isset($cid)&&is_numeric($cid)){
             $category = Category::get($cid);
+
             if ($category == null) {
                 return array();
             }
 
-            $query = Group::find()->join("category")->order_desc("memberCount");
-            $whereIds = Group::$mapping["categoryId"] . " in(";
+            $whereIds = Group::$mapping["categoryId"] . " in (". $cid;
             $subs = $category->children();
-            $count = count($subs);
-            $i = 0;
             foreach ($subs as $sCat) {
-                $cidList[] = $sCat->id;
-                $whereIds .= $sCat->id;
-                if (++$i < $count) $whereIds .= ',';
+                $whereIds .= ','.$sCat->id;
             }
             $whereIds .= ')';
             unset($subs);
 
-            $query = $query->where($whereIds);
-            $groups = $query->range(0, 5);
+            $groups = Group::find()->join("category")/*->order_desc("memberCount")*/->where($whereIds)->range(0,5);//->where($whereIds)->range(0, 5);
         }
         else{
             $groups = Group::find()->join("category")->order_desc("memberCount")->range(0,5);
