@@ -212,8 +212,9 @@ class Group extends RModel
                         $censor = new Censor();
                         $censor = $censor->joinGroupApplication($userId, $group->id);
                         $html .= '<div class="col-lg-3 recommend-group-item" style="padding: 5px;overflow: hidden;">';
-                        if (!isset($group->picture) || $group->picture == '') $group->picture = Group::$defaults['picture'];
-                        $html .= RHtmlHelper::showImage($group->picture, $group->name);
+                        $picture = (isset($group->picture)&&$group->picture!='')?$group->picture:Group::$defaults['picture'];
+                        $src = RImageHelper::styleSrc($picture,Group::getPicOptions());
+                        $html .= RHtmlHelper::showImage($src, $group->name);
                         $html .= '<br/>' . RHtmlHelper::linkAction('group', $group->name, 'detail', $group->id);
                         $html .= '<br/>' . RHtmlHelper::linkAction('group', 'Accept', 'accept', $censor->id, array('class' => 'btn btn-xs btn-success'));
                         $html .= '</div>';
