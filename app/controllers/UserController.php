@@ -208,6 +208,10 @@ class UserController extends BaseController
                 $user->name = $_POST['username'];
                 foreach (User::$mapping as $objCol => $dbCol) {
                     if (isset($_POST[$objCol])) {
+                        if($objCol=="password"){
+                            $user->password = md5($_POST[$objCol]);
+                            continue;
+                        }
                         $user->$objCol = $_POST[$objCol];
                     }
                 }
