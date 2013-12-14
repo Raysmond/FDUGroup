@@ -481,17 +481,21 @@ class GroupController extends BaseController
             $action = Rays::getParam('action', null);
             if ($action) {
                 $name = Rays::getParam('name', null);
+
+                $query = Group::find();
+                $queryUser = User::find();
+
                 $like = array();
                 if (isset($name) && $name != '') {
                     $names = explode(' ', $name);
                     foreach ($names as $val) {
-                        array_push($like, array('key' => 'name', 'value' => $val));
+                        $query = $query->like("name",$val);
+                        $queryUser = $queryUser->like("name",$val);
                     }
                 }
                 switch ($action) {
                     case "search_groups":
-                        $group = new Group();
-                        $groups = $group->find(0, 0, array(), $like);
+                        $groups = $query->range(0,20);
                         $results = array();
                         foreach($groups as $item){
                             $result['id'] = $item->id;
@@ -504,8 +508,7 @@ class GroupController extends BaseController
                         exit;
                         break;
                     case "search_users":
-                        $user = new User();
-                        $users = $user->find(0, 0, array(), $like);
+                        $users = $queryUser->range(0,20);
                         $results = array();
                         foreach($users as $item){
                             $result['id'] = $item->id;

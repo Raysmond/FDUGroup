@@ -198,19 +198,31 @@ class Group extends RModel
     {
         foreach ($users as $userId) {
             $html = '<div class="row recommend-groups">';
-            foreach ($groups as $groupId) {
-                $group = Group::get($groupId);
-                if (null != $group) {
-                    $censor = new Censor();
-                    $censor = $censor->joinGroupApplication($userId, $group->id);
-                    $html .= '<div class="col-lg-3 recommend-group-item" style="padding: 5px;">';
-                    if (!isset($group->picture) || $group->picture == '') $group->picture = Group::$defaults['picture'];
-                    $html .= RHtmlHelper::showImage($group->picture, $group->name);
-                    $html .= '<br/>' . RHtmlHelper::linkAction('group', $group->name, 'detail', $group->id);
-                    $html .= '<br/>' . RHtmlHelper::linkAction('group', 'Accept', 'accept', $censor->id, array('class' => 'btn btn-xs btn-success'));
-                    $html .= '</div>';
+            $count = 0;
+
+            if(!empty($groups)){
+                foreach ($groups as $groupId) {
+                    if($count%4==0){
+                        if($count>0)
+                            $html.='</div><div class="clearfix" style="margin-top: 15px;"></div>';
+                        $html.='<div class="row">';
+                    }
+                    $group = Group::get($groupId);
+                    if (null != $group) {
+                        $censor = new Censor();
+                        $censor = $censor->joinGroupApplication($userId, $group->id);
+                        $html .= '<div class="col-lg-3 recommend-group-item" style="padding: 5px;overflow: hidden;">';
+                        if (!isset($group->picture) || $group->picture == '') $group->picture = Group::$defaults['picture'];
+                        $html .= RHtmlHelper::showImage($group->picture, $group->name);
+                        $html .= '<br/>' . RHtmlHelper::linkAction('group', $group->name, 'detail', $group->id);
+                        $html .= '<br/>' . RHtmlHelper::linkAction('group', 'Accept', 'accept', $censor->id, array('class' => 'btn btn-xs btn-success'));
+                        $html .= '</div>';
+                        $count++;
+                    }
                 }
+                $html.='</div>';
             }
+
             $html .= '</div>';
             $html .= '<div class="recommend-content">' . RHtmlHelper::encode($words) . '</div>';
             Message::sendMessage('system', 0, $userId, 'Groups recommendation', $html, date('Y-m-d H:i:s'));
