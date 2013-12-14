@@ -134,7 +134,7 @@ class MessageController extends BaseController
      * @access authenticated user
      * @param string $msgType
      */
-    public function actionView($msgType = 'all')
+    public function actionView($msgType = 'unread')
     {
         $this->setHeaderTitle("My Messages");
         $userId = Rays::user()->id;
@@ -181,6 +181,17 @@ class MessageController extends BaseController
     public function actionTrash($msgId)
     {
         $message = Message::get($msgId);
+        if(Rays::isAjax() && $message!=null){
+            if (Rays::user()->id != $message->receiverId) {
+                echo "Sorry. You don't have the right to put the message to trash.";
+                exit;
+            }
+            $message->status = Message::STATUS_TRASH;
+            $message->save();
+            echo 'success';
+            exit;
+        }
+
         RAssert::not_null($message);
         $user = Rays::user();
         if (($message->receiverId == $user->id) || $user->isAdmin()) {
@@ -193,6 +204,15 @@ class MessageController extends BaseController
     public function actionDelete($msgId)
     {
         $message = Message::get($msgId);
+        if(Rays::isAjax() && $message!=null){
+            if (Rays::user()->id != $message->receiverId) {
+                echo "Sorry. You don't have the right to delete the message.";
+                exit;
+            }
+            $message->delete();
+            echo 'success';
+            exit;
+        }
         RAssert::not_null($message);
         $user = Rays::user();
         if (($message->receiverId == $user->id || $user->isAdmin())) {
