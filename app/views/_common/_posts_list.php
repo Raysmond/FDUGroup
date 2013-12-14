@@ -90,12 +90,13 @@
                             }
                         }
                         echo '&nbsp;';
+                        $likes = (isset($topic->rating->value)&&$topic->rating->value!=null)?$topic->rating->value: '0';
                         $this->module("rating_plus",
                             array(
                                 'id' => 'rating_plus',
                                 'entityType' => Topic::ENTITY_TYPE,
                                 'entityId' => $topic->id,
-//                                'count' => $topic['plusCount']
+                                'count' => $likes
                             ));
                         ?>
                     </div>

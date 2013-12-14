@@ -307,7 +307,7 @@ class UserController extends BaseController
         $users = $query->order_desc("id")->order_desc("id")->range($pageSize * ($page - 1), $pageSize);
 
         $url = RHtmlHelper::siteUrl('user/admin' . ($searchStr != null ? ('?search=' . urlencode(trim($searchStr))) : ""));
-        if ($searchStr != null) $url .= '?search=' . urlencode(trim($searchStr));
+        if ($topic->rating->value != null) $url .= '?search=' . urlencode(trim($searchStr));
 
         $pager = new RPagerHelper('page', $count, $pageSize, $url, $page);
 
