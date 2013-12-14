@@ -20,12 +20,13 @@
 
         echo RFormHelper::label('To user: ','receiver',array());
         echo '&nbsp;&nbsp;';
+        $disabled = isset($toUser)?"disabled":"enabled";
         echo RFormHelper::input(
             array('id'=>'receiver',
                 'name'=>'receiver',
                 'class'=>'form-control',
                 'placeholder'=>'Receiver',
-            ),$form);
+            ), isset($toUser)?$toUser->name : $form);
 
         echo '<br/>';
 

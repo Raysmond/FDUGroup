@@ -15,12 +15,15 @@ Rays::css("/public/css/post.css");
             <?=$this->module('user_panel',array('userId'=>$user->id, 'viewUser' => true));?>
             <div class="navbar-right">
                 <?php
-                if (isset($canAdd)&&$canAdd) {
+                if (isset($canAdd) && $canAdd) {
                     echo RHtmlHelper::linkAction('friend', '+ Add friend', 'add', $user->id, array('class' => 'btn btn-xs btn-info'));
                 }
-                if (isset($canCancel)&&$canCancel) {
+                if (isset($canCancel) && $canCancel) {
+                    echo RHtmlHelper::linkAction('message','+ Send a message','send',['private',$user->id],array('class' => 'btn btn-xs btn-success'));
+                    echo '&nbsp;&nbsp;';
                     echo RHtmlHelper::linkAction('friend', '- Cancel friend', 'cancel', $user->id, array('class' => 'btn btn-xs btn-danger'));
                 }
+
                 echo '<div class="clearfix"></div>';
                 ?>
             </div>

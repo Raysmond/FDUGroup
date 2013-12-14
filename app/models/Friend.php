@@ -20,7 +20,7 @@ class Friend extends RModel
 
     public static function isFriend($uid1,$uid2)
     {
-        return ($uid1 !== $uid2 && Friend::find(array("uid", $uid1, "fid", $uid2))->first() != null);
+        return ($uid1 != $uid2 && Friend::find(array("uid", $uid1, "fid", $uid2))->first() != null);
     }
 
     public function getFriends($uid = '', $friendLimit = '', $excludeIds = array(), $friendStart = 0)

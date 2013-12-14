@@ -37,15 +37,15 @@ class MessageController extends BaseController
 
     // to be implemented
     // permissions should be considered
-    public function actionSend($type = null)
+    public function actionSend($type = 'private', $toUserId = null)
     {
         $types = array('system', 'user', 'private', 'group');
-        if (!$type) {
-            $type = 'private';
-        }
         RAssert::is_true(in_array($type, $types));
 
         $data = array('type' => $type);
+        if($toUserId!=null){
+            $data['toUser'] = User::get($toUserId);
+        }
 
         if (Rays::isPost()) {
             if (isset($_POST['new'])) {

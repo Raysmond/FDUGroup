@@ -37,10 +37,22 @@
                 <div style="float:right;margin-top: -2px;">
                     <?php
                     if($msg->receiverId==Rays::app()->getLoginUser()->id){
-                        if($msg->status==Message::STATUS_UNREAD) echo RHtmlHelper::linkAction('message',"",'read',$msg->id,array('title' => 'Mark as read', 'class'=>'glyphicon glyphicon-ok message-read'));
+
+                        if(($msg->type->name=="private" || $msg->type->name=="user")&&$msg->senderId!=Rays::user()->id){
+                            echo RHtmlHelper::linkAction("message","","send",['private',$msg->senderId],array('title'=>'Reply',"class"=>'glyphicon glyphicon-send'));
+                            echo '&nbsp;&nbsp;&nbsp;';
+                        }
+
+                        if($msg->status==Message::STATUS_UNREAD)
+                            echo RHtmlHelper::linkAction('message',"",'read',$msg->id,array('title' => 'Mark as read', 'class'=>'glyphicon glyphicon-ok message-read'));
+
                         echo '&nbsp;&nbsp;';
-                        if($msg->status!=Message::STATUS_TRASH) echo RHtmlHelper::linkAction('message',"",'trash',$msg->id,array('title'=> 'Mark as trash', 'class'=>'glyphicon glyphicon-trash message-trash'));
-                        if($type=='trash') echo RHtmlHelper::linkAction('message',"",'delete',$msg->id,array('title' => 'Delete', 'class'=>'glyphicon glyphicon-remove message-trash'));
+
+                        if($msg->status!=Message::STATUS_TRASH)
+                            echo RHtmlHelper::linkAction('message',"",'trash',$msg->id,array('title'=> 'Mark as trash', 'class'=>'glyphicon glyphicon-trash message-trash'));
+
+                        if($type=='trash')
+                            echo RHtmlHelper::linkAction('message',"",'delete',$msg->id,array('title' => 'Delete', 'class'=>'glyphicon glyphicon-remove message-trash'));
                     }
                     ?>
                 </div>

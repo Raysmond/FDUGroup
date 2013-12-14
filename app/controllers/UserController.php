@@ -25,7 +25,6 @@ class UserController extends BaseController
         $data = array();
 
         if (Rays::isPost()) {
-            $user = new User();
             $login = User::login($_POST);
             if ($login instanceof User) {
                 $this->getSession()->set("user", $login->id);
