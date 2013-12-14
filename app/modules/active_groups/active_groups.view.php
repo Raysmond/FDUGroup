@@ -21,7 +21,7 @@
                     </div>
                     <div class="popular-group-cat">
                         <a href="<?=RHtmlHelper::siteUrl('category/groups/'.$group->categoryId)?>">
-                            <?= Category::get($group->categoryId)->name?>
+                            <?= $group->category->name?>
                         </a>
                     </div>
                 </li>

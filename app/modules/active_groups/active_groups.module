@@ -21,7 +21,7 @@ class active_groups_module extends RModule {
                 return array();
             }
 
-            $query = Group::find()->order_desc("memberCount");
+            $query = Group::find()->join("category")->order_desc("memberCount");
             $whereIds = Group::$mapping["categoryId"] . " in(";
             $subs = $category->children();
             $count = count($subs);
@@ -38,7 +38,7 @@ class active_groups_module extends RModule {
             $groups = $query->range(0, 5);
         }
         else{
-            $groups = Group::find()->order_desc("memberCount")->range(0,5);
+            $groups = Group::find()->join("category")->order_desc("memberCount")->range(0,5);
         }
 
         return $this->render('active_groups',['groups'=>$groups]);

@@ -32,11 +32,21 @@ class Friend extends RModel
         $friendsCount = $query->count();
         $friends = $query->order_desc("id")->range($friendStart, $friendLimit);
         $result = array();
-        foreach ($friends as $friend) {
-            if (!in_array($friend->fid, $excludeIds)) {
-                $result[] = User::get($friend->fid);
+        $friendsQuery = User::find()->order_desc("id");
+        $arg = [];
+        if(!empty($friends)){
+            $where = "[id] IN (";
+            foreach ($friends as $friend) {
+                if (!in_array($friend->fid, $excludeIds)) {
+                    $where.="?,";
+                    $arg[] = $friend->fid;
+                }
             }
+            $where = substr($where,0,strlen($where)-1);
+            $where.=')';
+            $friendsQuery = $friendsQuery->where($where,$arg);
         }
+        $result = $friendsQuery->all();
         return [$result, $friendsCount];
     }
 
