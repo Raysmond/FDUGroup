@@ -107,7 +107,7 @@
 
             foreach ($groups as $group) {
                 echo '<tr>';
-                echo '<td><input name="checked_groups[]" type="checkbox" value="$group->id" /></td>';
+                echo '<td><input name="checked_groups[]" type="checkbox" value="'.$group->id.'" /></td>';
                 echo "<td>$group->id</td>";
                 echo '<td>'.RHtmlHelper::linkAction('user', $group->groupCreator->name, 'view', $group->groupCreator->id).'</td>';
                 echo '<td>'.RHtmlHelper::linkAction('category', $group->category->name, 'groups', $group->category->id).'</td>';

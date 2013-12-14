@@ -364,12 +364,14 @@ class GroupController extends BaseController
     public function actionDelete($groupId)
     {
         $group = Group::get($groupId);
+        RAssert::not_null($group);
 
         $userId = Rays::user()->id;
-        if ($group->creator == $userId) {
+        if (Rays::user()->isAdmin() || $group->creator == $userId) {
 
             // Execute delete group transaction
-            $group->deleteGroup();
+            Group::deleteGroup($group);
+
 
             // Delete group's picture from local file system
             if (isset($group->picture) && $group->picture != '') {
@@ -378,7 +380,7 @@ class GroupController extends BaseController
                     unlink($picture);
             }
             $this->flash("message", "Group " . $group->name . " was deleted.");
-            $this->redirectAction("group", "view");
+            $this->redirectAction("group", "mygroups");
         } else {
             $this->flash("error", "Sorry. You don't have the right to delete the group!");
             $this->redirectAction('group', 'detail', $group->id);
@@ -398,9 +400,7 @@ class GroupController extends BaseController
                 $groups = $_POST['checked_groups'];
                 foreach($groups as $group){
                     if(!is_numeric($group)) break;
-                    $groupObj = new Group();
-                    $groupObj->id = $group;
-                    $groupObj->deleteGroup();
+                    Group::deleteGroup(Group::get($group));
                 }
             }
         }

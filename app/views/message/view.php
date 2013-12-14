@@ -69,11 +69,17 @@
                          $sender = null;
                          if($msg->type->name == "user" || $msg->type->name =="private"){
                              $sender = User::get($msg->senderId);
-                             echo "From: ".RHtmlHelper::linkAction('user',$sender->name,'view',$sender->id);
+                             if($sender!=null)
+                                echo "From: ".RHtmlHelper::linkAction('user',$sender->name,'view',$sender->id);
+                             else
+                                 echo "From: Unknown user";
                          }
                          else if($msg->type->name == "group"){
                              $sender = Group::get($msg->senderId);
-                             echo "From: ".RHtmlHelper::linkAction('group',$sender->name,'detail',$sender->id);
+                             if($sender!=null)
+                                echo "From: ".RHtmlHelper::linkAction('group',$sender->name,'detail',$sender->id);
+                             else
+                                 echo "From: Unknown group";
                          }
                          else{
                             echo "From: Unknown";

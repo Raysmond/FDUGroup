@@ -153,39 +153,18 @@ class Group extends RModel
         return null;
     }
 
-    public function deleteGroup()
-    {
-        if (isset($this->id) && $this->id != '') {
-            $groupUsers = new GroupUser();
-            $groupUsers->groupId = $this->id;
+    public static function deleteGroup(Group $group){
+        Rating::where("[entityId] = ? AND [entityType] = ?",[$group->id,Group::ENTITY_TYPE])->delete();
+        RatingStatistic::where("[entityId] = ? AND [entityType] = ?",[$group->id,Group::ENTITY_TYPE])->delete();
+        Counter::where("[entityId] = ? AND [entityTypeId] = ?",[$group->id,Group::ENTITY_TYPE])->delete();
 
-            $topics = new Topic();
-            $topics->groupId = $this->id;
-            $_topics = $topics->find();
-            $comment = new Comment();
-            foreach ($_topics as $topic) {
-                $sql = "delete from {$comment->table} where {$comment->columns['topicId']} = {$topic->id}";
-                Data::executeSQL($sql);
-            }
-            $sql = "delete from {$topics->table} where {$topics->columns['groupId']} = {$this->id}";
-            Data::executeSQL($sql);
+        $topics = Topic::find("groupId",$group->id)->all();
+        foreach($topics as $topic){
+            $topic->delete();
+        }
 
-            $sql = "delete from {$groupUsers->table} where {$groupUsers->columns['groupId']} = {$this->id}";
-            Data::executeSQL($sql);
-            $friends = new FriendsGroup();
-            $sql = "delete from {$friends->table} where {$friends->columns['groupId1']} = {$this->id} or {$friends->columns['groupId2']} = {$this->id} ";
-            Data::executeSQL($sql);
-
-            $this->delete();
-
-            $counter = new Counter();
-            $counter = $counter->loadCounter($this->id, self::ENTITY_TYPE);
-            if ($counter != null)
-                $counter->delete();
-
-            return true;
-        } else
-            return false;
+        GroupUser::where("[groupId]",[$group->id])->delete();
+        $group->delete();
     }
 
     public static function inviteFriends($groupId, $user, $invitees = array(), $invitationMsg)
@@ -237,6 +216,7 @@ class Group extends RModel
             Message::sendMessage('system', 0, $userId, 'Groups recommendation', $html, date('Y-m-d H:i:s'));
         }
     }
+
 
     public static function getPicOptions()
     {

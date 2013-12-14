@@ -63,14 +63,9 @@ class Topic extends RModel
         $tid = $this->id;
 
         // delete view counter
-        $counter = Counter::find(["entityId",$tid,"entityTypeId",Topic::ENTITY_TYPE])->first();
-        if($counter!=null)
-            $counter->delete();
-
-        // delete plus-rating data
-        $plus = new RatingPlus(Topic::ENTITY_TYPE,$tid);
-        $plus->delete();
-
+        Counter::where("[entityId] = ? AND [entityTypeId] = ?",[$tid,Topic::ENTITY_TYPE])->delete();
+        Rating::where("[entityId] = ? AND [entityType] = ?",[$tid,Topic::ENTITY_TYPE])->delete();
+        RatingStatistic::where("[entityId] = ? AND [entityType] = ?",[$tid,Topic::ENTITY_TYPE])->delete();
         Comment::where("[topicId] = ?", $tid)->delete();
 
         parent::delete();
