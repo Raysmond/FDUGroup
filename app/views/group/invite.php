@@ -42,7 +42,7 @@
         echo RFormHelper::textarea(array('class'=>'form-control','rows'=>'3','name'=>'invitation','placeholder'=>'Say something!'));
         echo '<br/>';
         echo RFormHelper::input(
-            array('class'=>'btn btn-lg btn-primary btn-block','type'=>'submit','value'=>'Invite Now'));
+            array('class'=>'btn btn-lg btn-primary','type'=>'submit','value'=>'Invite Now'));
         echo RFormHelper::endForm();
         ?>
     </div>

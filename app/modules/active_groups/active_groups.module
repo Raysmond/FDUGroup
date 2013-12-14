@@ -22,8 +22,8 @@ class active_groups_module extends RModule {
                 return array();
             }
 
-            $where = "[categoryId] in (";
-            $args = [];
+            $where = "[categoryId] in (?,";
+            $args = [$cid];
             $subs = $category->children();
             foreach ($subs as $sCat) {
                 $where.='?,';
