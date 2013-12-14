@@ -22,15 +22,15 @@ class active_groups_module extends RModule {
                 return array();
             }
 
-            $whereIds = Group::$mapping["categoryId"] . " in (". $cid;
+            $where = "[categoryId] in (";
+            $args = [];
             $subs = $category->children();
             foreach ($subs as $sCat) {
-                $whereIds .= ','.$sCat->id;
+                $where.='?,';
+                $args[] = $sCat->id;
             }
-            $whereIds .= ')';
-            unset($subs);
-
-            $groups = Group::find()->join("category")/*->order_desc("memberCount")*/->where($whereIds)->range(0,5);//->where($whereIds)->range(0, 5);
+            $where=substr($where,0,strlen($where)-1).')';
+            $groups = Group::find()->join("category")->order_desc("memberCount")->where($where,$args)->range(0,5);//->where($whereIds)->range(0, 5);
         }
         else{
             $groups = Group::find()->join("category")->order_desc("memberCount")->range(0,5);

@@ -7,7 +7,7 @@ if (!count($groups)) {
 
     <div id="waterfall-groups" class="waterfall">
         <?php
-        $this->renderPartial("_groups_list", array('groups' => $groups), false);
+        $this->renderPartial("_common._groups_list", array('groups' => $groups), false);
         ?>
     </div>
 
