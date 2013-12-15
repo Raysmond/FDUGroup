@@ -17,7 +17,7 @@ class MessageController extends BaseController
     // to be implemented
     public function actionDetail($msgId = '')
     {
-        $message = Message::get($msgId);
+        $message = Message::find($msgId)->join("type")->first();
         RAssert::not_null($message);
 
         $loginId = Rays::user()->id;
@@ -27,10 +27,8 @@ class MessageController extends BaseController
             return;
         }
 
-        /* TODO: Auto join */
         $message->status = Message::STATUS_READ;
         $message->save();
-        $message->type = MessageType::get($message->typeId);
 
         $this->render('detail', array('message' => $message), false);
     }

@@ -81,11 +81,7 @@ class GroupController extends BaseController
         $counter = $group->increaseCounter();
 
         // get latest 20 posts in the group
-        $posts = Topic::find("groupId", $groupId)->order_desc("createdTime")->range(0, 20);
-        // TODO: User join
-        foreach ($posts as $post) {
-            $post->user = User::get($post->userId);
-        }
+        $posts = Topic::find("groupId", $groupId)->join("user")->order_desc("createdTime")->range(0, 20);
 
         $data = ['group'=>$group, 'counter'=>$counter->totalCount, 'latestPosts'=>$posts];
 
