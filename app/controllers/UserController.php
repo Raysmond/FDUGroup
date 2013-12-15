@@ -206,20 +206,21 @@ class UserController extends BaseController
             if (isset($_POST['password']) && ($_POST['password'] != '')) {
                 array_push($config, array('field' => 'password', 'label' => 'New Password', 'rules' => 'trim|required|min_length[6]|max_length[20]'));
                 array_push($config, array('field' => 'password-confirm', 'label' => 'New Password Confirm', 'rules' => 'trim|required|min_length[6]|max_length[20]|equals[password]'));
-            } else {
-                $_POST['password'] = $user->password;
             }
 
             $validation = new RFormValidationHelper($config);
 
             if ($validation->run()) {
+                if(isset($_POST['password']) && $_POST['password']!=''){
+                    // set new password
+                    $user->password = md5($_POST['password']);
+                }
+
                 $user->name = $_POST['username'];
                 foreach (User::$mapping as $objCol => $dbCol) {
+                    if(in_array($objCol,["password","email","id","roleId","credit","private"]))
+                        continue;
                     if (isset($_POST[$objCol])) {
-                        if($objCol=="password"){
-                            $user->password = md5($_POST[$objCol]);
-                            continue;
-                        }
                         $user->$objCol = $_POST[$objCol];
                     }
                 }
