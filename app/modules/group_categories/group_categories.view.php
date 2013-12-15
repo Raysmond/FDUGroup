@@ -17,10 +17,15 @@
             <?php
         }
         ?>
-        <a class="btn btn-sx parent-category" href="javascript:$('#category-children-level-bar').slideToggle();">
+        <a class="btn btn-sx parent-category" href="javascript:packCategory();">
             <?=RHtmlHelper::showImage('files/images/category/more.png', '', ['style'=>'width:24px;height:24px;'])?>&nbsp;
             更多...
         </a>
+        <script>
+            function packCategory() {
+                $('#category-children-level-bar').slideToggle();
+            }
+        </script>
     </div>
     <div id="category-children-level-bar" style="display:none;">
         <?php
