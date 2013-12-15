@@ -14,7 +14,7 @@
                 echo RFormHelper::hidden(array(
                         'id' => 'last-loaded-time',
                         'name' => 'last-loaded-time',
-                        'value' => $topics[count($topics) - 1]['top_created_time'])
+                        'value' => $topics[count($topics) - 1]->createdTime)
                 );
                 echo RHtmlHelper::link(
                     'Load more posts',

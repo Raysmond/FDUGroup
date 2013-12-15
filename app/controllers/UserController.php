@@ -337,18 +337,24 @@ class UserController extends BaseController
         $data = array('user' => $user);
         $defaultSize = 10;
 
+        $friends = Friend::find("uid", $user->id)->all();
+        foreach($friends as $friend){
+            $ids[] = $friend->fid;
+        }
+        $ids[] = $user->id;
+        $query = Topic::find()->join("user")->join("group")->join("rating")->in("User.id", $ids)->order_desc("id");
+
         // ajax request
         // load more posts
         if (Rays::isAjax()) {
-            $topics = new Topic();
             $lastLoadedTime = @$_POST['lastLoadedTime'];
             $lastLoadedTime = $lastLoadedTime != '' ? $lastLoadedTime : null;
 
-            $topics = $topics->getUserFriendsTopics($user->id, $defaultSize,$lastLoadedTime);
+            $topics = $query->where("[createdTime] < ?", $lastLoadedTime)->range(0, $defaultSize);
             $result = array();
             if(count($topics)>0){
                 $result['content'] = $this->renderPartial('_posts_list',array('topics'=>$topics),true);
-                $result['lastLoadTime'] = $topics[count($topics)-1]['top_created_time'];
+                $result['lastLoadTime'] = $topics[count($topics)-1]->createdTime;
                 echo json_encode($result);
             }
             else{
@@ -357,8 +363,7 @@ class UserController extends BaseController
             exit;
         }
 
-        $topics = new Topic();
-        $data['topics'] = $topics->getUserFriendsTopics($user->id, $defaultSize);
+        $data['topics'] = $query->range(0, $defaultSize);
 
         $this->setHeaderTitle($user->name);
         $this->addCss('/public/css/post.css');
