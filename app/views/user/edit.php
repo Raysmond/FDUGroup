@@ -16,7 +16,7 @@
             echo RHtmlHelper::showValidationErrors($validation_errors);
         }
 
-        echo RFormHelper::openForm('user/edit/',
+        echo RFormHelper::openForm('user/edit/'.$user->id,
             array('id' => 'user-edit-form', 'enctype' => 'multipart/form-data'));
 
         echo RFormHelper::label("User name", 'username');
