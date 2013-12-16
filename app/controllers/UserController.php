@@ -191,7 +191,7 @@ class UserController extends BaseController
         $user = User::get($userId);
         RAssert::not_null($user);
 
-        if (Rays::user()->roleId != Role::ADMINISTRATOR_ID || Rays::user()->id!=$userId) {
+        if (Rays::user()->roleId != Role::ADMINISTRATOR_ID && Rays::user()->id!=$userId) {
             $this->flash("error", "You don't have the right to change the user information!");
             $this->redirectAction('user', 'view', $userId);
         }
