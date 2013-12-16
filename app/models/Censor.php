@@ -29,22 +29,30 @@ class Censor extends RModel
         'type' => array("CensorType", "[typeId] = [CensorType.typeId]")
     );
 
+    const TYPE_APPLY_VIP = "apply_vip";
+    const TYPE_ADD_FRIEND = "add_friend";
+    const TYPE_JOIN_GROUP = "join_group";
+    const TYPE_JOIN_GROUP_INVITE = "join_group_invite";
+    const TYPE_POST_ADS = "post_ads";
+
+    private static $_type_id_mapping = array();
+
     public static function load($id = null)
     {
         $result = Censor::find("id", $id)->join("type")->first();
         if ($result !== null) {
             $result->sender = User::get($result->firstId);
             switch ($result->type->typeName) {
-                case 'add_friend':
+                case self::TYPE_ADD_FRIEND:
                     $result->related = User::get($result->secondId);
                     break;
-                case 'apply_vip':
+                case self::TYPE_APPLY_VIP:
                     $result->related = null;
                     break;
-                case 'join_group':
+                case self::TYPE_JOIN_GROUP:
                     $result->related = Group::get($result->secondId);
                     break;
-                case 'post_ads':
+                case self::TYPE_POST_ADS:
                     /* TODO */
                     break;
             }
@@ -52,15 +60,20 @@ class Censor extends RModel
         return $result;
     }
 
-    private static $_type_id_mapping = array();
-
     public function getTypeId($typeName)
     {
         if (!isset(self::$_type_id_mapping[$typeName])) {
-            self::$_type_id_mapping[$typeName] = CensorType::find("typeName", $typeName)->first()->typeId;
+            // load all types into memory since there are limited types
+            $types = CensorType::find()->all();
+            foreach($types as $type){
+                self::$_type_id_mapping[$type->typeName] = $type->typeId;
+            }
         }
-        $this->typeId = self::$_type_id_mapping[$typeName];
-        return self::$_type_id_mapping[$typeName];
+        if(isset(self::$_type_id_mapping[$typeName])){
+            $this->typeId = self::$_type_id_mapping[$typeName];
+            return self::$_type_id_mapping[$typeName];
+        }
+        return null;
     }
 
     public function postApplication($typeName, $firstId, $secondId = null, $content = null, $sendTime = null, $status = self::UNPROCESS)
@@ -94,45 +107,45 @@ class Censor extends RModel
 
     public function addFriendApplication($userFrom, $userTo)
     {
-        $this->postApplication('add_friend', $userFrom, $userTo);
+        $this->postApplication(self::TYPE_ADD_FRIEND, $userFrom, $userTo);
         return $this;
     }
 
     public function addFriendExist($userFrom, $userTo)
     {
-        return Censor::find(['typeId', $this->getTypeId('add_friend'), 'firstId', $userFrom, "secondId", $userTo, "status", self::UNPROCESS])->first();
+        return Censor::find(['typeId', $this->getTypeId(self::TYPE_ADD_FRIEND), 'firstId', $userFrom, "secondId", $userTo, "status", self::UNPROCESS])->first();
     }
 
     public function joinGroupApplication($userId, $groupId)
     {
-        $this->postApplication('join_group', $userId, $groupId);
+        $this->postApplication(self::TYPE_JOIN_GROUP, $userId, $groupId);
         return $this;
     }
 
     public function joinGroupExist($userId, $groupId)
     {
-        return Censor::find(['typeId', $this->getTypeId('join_group'), 'firstId', $userId, "secondId", $groupId, "status", self::UNPROCESS])->first();
+        return Censor::find(['typeId', $this->getTypeId(self::TYPE_JOIN_GROUP), 'firstId', $userId, "secondId", $groupId, "status", self::UNPROCESS])->first();
     }
 
     public function applyVIPApplication($userId, $content)
     { //apply for VIP
-        $this->postApplication('apply_vip', $userId, null, $content);
+        $this->postApplication(self::TYPE_APPLY_VIP, $userId, null, $content);
         return $this;
     }
 
     public function applyVIPExist($userId)
     {
-        return Censor::find(['typeId', $this->getTypeId('apply_vip'), 'firstId', $userId, "status", self::UNPROCESS])->first();
+        return Censor::find(['typeId', $this->getTypeId(self::TYPE_APPLY_VIP), 'firstId', $userId, "status", self::UNPROCESS])->first();
     }
 
     public function joinGroupInvitationApplication($userId, $groupId)
     {
-        $this->postApplication('join_group_invite', $userId, $groupId);
+        $this->postApplication(self::TYPE_JOIN_GROUP_INVITE, $userId, $groupId);
         return $this;
     }
 
     public function joinGroupInvitationExist($userId, $groupId)
     {
-        return Censor::find(['typeId', $this->getTypeId('join_group_invite'), 'firstId', $userId, "secondId", $groupId, "status", self::UNPROCESS])->first();
+        return Censor::find(['typeId', $this->getTypeId(self::TYPE_JOIN_GROUP_INVITE), 'firstId', $userId, "secondId", $groupId, "status", self::UNPROCESS])->first();
     }
 }
