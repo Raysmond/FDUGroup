@@ -9,6 +9,8 @@
                 echo RHtmlHelper::linkAction('post',$post->title,'view',$post->id);
                 echo '</li>';
             }
+            if (empty($posts))
+                echo '<p>No posts viewed today.</p>';
             ?>
         </ul>
     </div>
