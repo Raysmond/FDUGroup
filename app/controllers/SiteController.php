@@ -73,4 +73,20 @@ class SiteController extends BaseController
         }
         Rays::logger()->flush();
     }
+
+    public function actionJoinGroup(){
+        $groups = Group::find()->all();
+        $users = User::find()->all();
+
+        foreach($groups as $group){
+            foreach($users as $user){
+                $groupUser = new GroupUser();
+                $groupUser->userId = $user->id;
+                $groupUser->groupId = $group->id;
+                $groupUser->status = 1;
+                $groupUser->joinTime = date("Y-m-d H:i:s");
+                $groupUser->save();
+            }
+        }
+    }
 }
