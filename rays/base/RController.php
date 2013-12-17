@@ -265,55 +265,23 @@ class RController
         $this->setActionParams($params);
 
         if ($this->beforeAction($action) == false) {
-            return;
+            return false;
         }
 
         if(!$this->userCanAccessAction()){
             if(!Rays::app()->isUserLogin()){
                 $this->redirectAction('user','login');
-                return;
+                return false;
             }
             throw new RPageNotFoundException("Sorry, you're not authorized to view the requested page.");
         }
 
         $methodName = $this->generateActionMethod();
-        $len = count($this->_params);
 
-        // It's shame to run action methods this way,
-        // but I didn't figure out other better way
-        if (method_exists($this, $methodName)) {
-            $p = $this->_params;
-            if ($len == 0)
-                $this->$methodName();
-            else if ($len == 1)
-                $this->$methodName($p[0]);
-            else if ($len == 2)
-                $this->$methodName($p[0], $p[1]);
-            else if ($len == 3)
-                $this->$methodName($p[0], $p[1], $p[1]);
-            else if ($len == 4)
-                $this->$methodName($p[0], $p[1], $p[2], $p[3]);
-            else if ($len == 5)
-                $this->$methodName($p[0], $p[1], $p[2], $p[3], $p[4]);
-            else if ($len == 6)
-                $this->$methodName($p[0], $p[1], $p[2], $p[3], $p[4], $p[5]);
-            else if ($len == 7)
-                $this->$methodName($p[0], $p[1], $p[2], $p[3], $p[4], $p[5], $p[6]);
-            else if ($len == 8)
-                $this->$methodName($p[0], $p[1], $p[2], $p[3], $p[4], $p[5], $p[6], $p[7]);
-            else if ($len == 9)
-                $this->$methodName($p[0], $p[1], $p[2], $p[3], $p[4], $p[5], $p[6], $p[7], $p[8]);
-            else if ($len == 10)
-                $this->$methodName($p[0], $p[1], $p[2], $p[3], $p[4], $p[5], $p[6], $p[7], $p[8], $p[9]);
-            else{
-                // Pass the params array to the action
-                $this->$methodName($p);
-                //die("Too many parameters...");
-            }
-
-        } else {
-            throw new RPageNotFoundException("No actions matches the HTTP request!");
-        }
+        if (method_exists($this, $methodName))
+            call_user_func_array(array($this, $methodName), $this->_params);
+        else
+            throw new RPageNotFoundException("No actions match the HTTP request!");
         $this->afterAction();
     }
 
