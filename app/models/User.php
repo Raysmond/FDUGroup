@@ -19,6 +19,8 @@ class User extends RModel
 
     const ENTITY_TYPE = 4;
 
+    const PICTURE_DIR = "files/images/users";
+
     /**
      * @var array map some data for cache
      */

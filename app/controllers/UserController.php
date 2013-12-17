@@ -134,13 +134,11 @@ class UserController extends BaseController
      */
     public function actionRegister()
     {
-        if(Rays::isLogin()){
-            $this->actionHome();
-            return;
-        }
+        if(Rays::isLogin())
+            $this->redirectAction("user","home");
+
         $this->layout = 'user_ui';
         $this->setHeaderTitle("Register");
-        $form = '';
         $data = [];
         if (Rays::isPost()) {
             // validate the form data
@@ -229,10 +227,8 @@ class UserController extends BaseController
 
                 // if picture selected
                 if (isset($_FILES['user_picture']) && ($_FILES['user_picture']['name'] != '')) {
-                    //print_r($_FILES['user_picture']);
-                    $upload = new RUploadHelper(array(
-                        "file_name" => "pic_u_" . $user->id . RUploadHelper::get_extension($_FILES['user_picture']['name']),
-                        "upload_path" => Rays::app()->getBaseDir() . "/../files/images/users/"));
+                    $pictureName = "pic_u_" . $user->id . RUploadHelper::get_extension($_FILES['user_picture']['name']);
+                    $upload = new RUploadHelper(["file_name" => $pictureName, "upload_path" => Rays::app()->getBaseDir() . "/../". User::PICTURE_DIR]);
                     $upload->upload('user_picture');
 
                     if ($upload->error != '') {
@@ -243,13 +239,14 @@ class UserController extends BaseController
                         RImageHelper::updateStyle($user->picture, User::getPicOptions());
                     }
                 }
-                $this->redirect(Rays::referrerUri());
-                return;
+                if(Rays::user()->id == $user->id)
+                    $this->redirectAction("user","profile");
+                else
+                    $this->redirectAction("user","view",[$user->id,"profile"]);
             } else {
                 $errors = $validation->getErrors();
                 $data['validation_errors'] = $errors;
                 $data['editForm'] = $_POST;
-
             }
         }
 

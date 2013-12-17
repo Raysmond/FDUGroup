@@ -2,7 +2,6 @@
 .idea
 .svn
 cache_*.html
-files/userfiles/*
-files/images/styles/*
+files
 public/images/styles
 public/userfiles
