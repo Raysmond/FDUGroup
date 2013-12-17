@@ -7,17 +7,12 @@
 
 class SiteController extends BaseController
 {
-
     public $layout = "index";
-
     public $defaultAction = "index";
 
-    public $userModel;
-
-    public function __construct($id = null)
+    function actionWelcome($name)
     {
-        parent::__construct($id);
-        $this->userModel = new User();
+        $this->render("welcome",["name"=>$name]);
     }
 
     public function actionIndex($params = null)
@@ -28,8 +23,6 @@ class SiteController extends BaseController
         }
         else
             $this->redirectAction('group','find');
-
-        //$this->render("index", array(), false);
     }
 
     public function actionAbout()

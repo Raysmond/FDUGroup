@@ -331,6 +331,7 @@ class RController
 
     /**
      * Set header title for the page
+     * TODO: remove from framework
      * <title></title>
      * @param $title
      */
@@ -394,15 +395,6 @@ class RController
     public function generateActionMethod()
     {
         return "action" . ucfirst($this->_action);
-    }
-
-    /**
-     * Get http request handler
-     * @return mixed
-     */
-    public function getHttpRequest()
-    {
-        return Rays::app()->getHttpRequest();
     }
 
     /**

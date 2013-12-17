@@ -24,7 +24,7 @@ class BaseController extends RController
         //echo '<center style="color: gray;padding: 10px;">'."Page generated in ".(($time-Rays::$startTime)*1000) . " ms"."</center>";
 
         $accessLog = new AccessLog();
-        $accessLog->host = $this->getHttpRequest()->getUserHostAddress();
+        $accessLog->host = Rays::httpRequest()->getUserHostAddress();
         $accessLog->path = Rays::uri();
         $accessLog->userId = Rays::isLogin()? Rays::user()->id : 0;;
         $accessLog->title = $this->getHeaderTitle();
@@ -45,7 +45,7 @@ class BaseController extends RController
         if (!empty($logs)) {
             foreach ($logs as $log) {
                 $sysLog = new SystemLog();
-                $sysLog->host = $this->getHttpRequest()->getUserHostAddress();
+                $sysLog->host = Rays::httpRequest()->getUserHostAddress();
                 $sysLog->userId = Rays::isLogin()? Rays::user()->id : 0;
                 $sysLog->referrerUri = Rays::referrerUri();
                 $sysLog->path = Rays::uri();

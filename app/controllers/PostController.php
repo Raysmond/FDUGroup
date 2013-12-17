@@ -248,7 +248,7 @@ class PostController extends BaseController
         $data = array();
 
         // delete request
-        if($this->getHttpRequest()->isPostRequest()){
+        if(Rays::httpRequest()->isPostRequest()){
             if(isset($_POST['checked_topics'])){
                 $checkedTopics = $_POST['checked_topics'];
                 foreach($checkedTopics as $item){

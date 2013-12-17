@@ -110,7 +110,7 @@ class RaysFramework
     public static function importModule($moduleId)
     {
         if (!isset(self::$moduleMap[$moduleId])) {
-            $path = static::app()->modulePath . "/" . $moduleId . "/" . $moduleId . self::app()->moduleFileExtension;
+            $path = static::app()->modulePath . "/" . $moduleId . "/" . $moduleId . RWebApplication::MODULE_FILE_EXTENSION;
             if (is_file($path) && file_exists($path)) {
                 self::$moduleMap[$moduleId] = $path;
                 require($path);

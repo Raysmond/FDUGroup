@@ -1,15 +1,23 @@
 <?php
 /**
- * RWebApplication class file
- * User: Raysmond
+ * Class RWebApplication. This is the class for all application instance.
+ *
+ * @author: Raysmond
  */
 
 class RWebApplication extends RBaseApplication
 {
-
+    /**
+     * @var string the default controller for the application
+     */
     public $defaultController = 'site';
+
+    /**
+     * @var string the default layout file name for controllers
+     */
     public $layout = 'main';
-    public $moduleFileExtension = ".module";
+
+    const MODULE_FILE_EXTENSION = ".module";
 
     /**
      * Whether or not user clean uri
@@ -20,10 +28,29 @@ class RWebApplication extends RBaseApplication
      */
     public $isCleanUri = false;
 
+    /**
+     * @var string the controllers directory path for the application
+     */
     public $controllerPath;
+
+    /**
+     * @var string the models directory path for the application
+     */
     public $modelPath;
+
+    /**
+     * @var string the modules directory path for the application
+     */
     public $modulePath;
+
+    /**
+     * @var string the view directory path for the application
+     */
     public $viewPath;
+
+    /**
+     * @var string the layout directory path for the application
+     */
     public $layoutPath;
 
     /**
@@ -31,9 +58,25 @@ class RWebApplication extends RBaseApplication
      * @var Object
      */
     public $controller;
+
+    /**
+     * @var RRouter the URL router
+     */
     public $router;
+
+    /**
+     * @var RHttpRequest HTTP request handler
+     */
     public $httpRequestHandler;
+
+    /**
+     * @var RClient client manager for CSS and JavaScript
+     */
     public $clientManager;
+
+    /**
+     * @var RSessionManager the session manager
+     */
     public $httpSession;
 
     /**
@@ -42,8 +85,16 @@ class RWebApplication extends RBaseApplication
      */
     public $user;
 
+    /**
+     * @var array the flash messages array
+     */
     public $flashMessage;
 
+    /**
+     * Initialization for the whole web application
+     *
+     * @param null $config
+     */
     public function init($config = null)
     {
         parent::init($config);
@@ -200,16 +251,28 @@ class RWebApplication extends RBaseApplication
         }
     }
 
+    /**
+     * Whether the user has login
+     * @return bool
+     */
     public function isUserLogin()
     {
         return $this->getHttpSession()->get("user") != false;
     }
 
+    /**
+     * Whether is clean URI
+     * @return bool
+     */
     public function isCleanUri()
     {
         return $this->isCleanUri != false;
     }
 
+    /**
+     * Get the current controller who is handling the HTTP request
+     * @return Object
+     */
     public function getController(){
         return $this->controller;
     }

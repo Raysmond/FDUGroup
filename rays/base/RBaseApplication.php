@@ -189,46 +189,94 @@ class RBaseApplication
         return $this->_appPath;
     }
 
+    /**
+     * Get base path of the application. For example: /FUDGroup
+     * @return string
+     */
     public function getBasePath()
     {
         return $this->_basePath;
     }
 
+    /**
+     * Set the base path of the web application
+     * @param $path
+     */
     public function setBasePath($path)
     {
         $this->_basePath = $path;
     }
 
+    /**
+     * Get the base directory of the application
+     * @return string
+     */
     public function getBaseDir()
     {
         return $this->_baseDir;
     }
 
+    /**
+     * Get the name of the application
+     * @return string
+     */
     public function getName()
     {
         return $this->name;
     }
 
+    /**
+     * Set the name of the application
+     * @param $_name
+     */
     public function setName($_name)
     {
         $this->name = $_name;
     }
 
+    /**
+     * Get the database configuration array.
+     * @return array
+     */
     public function getDbConfig()
     {
         return $this->_db;
     }
 
+    /**
+     * Set the database configuration
+     *
+     * @param array $db
+     * For example:
+     * <code>
+     * array(
+     *   'host' => '127.0.0.1',
+     *   'user' => 'fdugroup',
+     *   'password' => 'fdugroup',
+     *   'db_name' => 'fdugroup',
+     *   'table_prefix' => '',
+     *   'charset' => 'utf8',
+     *   ),
+     * </code>
+     */
     public function setDbConfig($db)
     {
         $this->_db = $db;
     }
 
+    /**
+     * Get the whole configuration array of the application
+     * @return array
+     */
     public function getConfig()
     {
         return $this->_config;
     }
 
+    /**
+     * Set the configuration of the application
+     * @param $config
+     */
     public function setConfig($config)
     {
         if (is_string($config))
@@ -236,37 +284,74 @@ class RBaseApplication
         $this->_config = $config;
     }
 
+    /**
+     * Set the default time zone of the application
+     * @param $timeZone
+     */
     public function setTimeZone($timeZone)
     {
         $this->timeZone = $timeZone;
     }
 
+    /**
+     * Get the time zone of the application
+     * @return string
+     */
     public function getTimeZone()
     {
         return $this->timeZone;
     }
 
+    /**
+     * Get the database table prefix from database configuration
+     * @return string
+     */
     public function getDBPrefix()
     {
         return isset($this->_db['table_prefix'])?$this->_db['table_prefix']:"";
     }
 
+    /**
+     * Get cache configuration array
+     * @return array
+     */
     public function getCacheConfig()
     {
         return $this->_cache;
     }
 
+    /**
+     * Set the cache configuration for the application
+     * @param $config
+     */
+    public function setCacheConfig($config){
+        $this->_cache = $config;
+    }
+
+    /**
+     * Get Exception action
+     * like: "site/exception", the "site" means the controller ID and the "exception" means the action ID in SiteController
+     * @return string
+     */
     public function getExceptionAction()
     {
         return $this->_exceptionAction;
     }
 
+    /**
+     * Set the Exception action
+     * @param string $action
+     */
     public function setExceptionAction($action="")
     {
         $this->_exceptionAction = $action;
         RExceptionHandler::setExceptionAction($action);
     }
 
+    /**
+     * Whether the application is in debug mode.
+     * @return bool
+     */
     public function isDebug()
     {
         return $this->debug === true? true: false;

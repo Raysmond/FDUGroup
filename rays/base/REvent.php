@@ -19,6 +19,11 @@ class REvent
      */
     private $params;
 
+    /**
+     * Event constructor
+     * @param $sender the sender object of the event
+     * @param $params the params of the event
+     */
     public function __construct($sender, $params)
     {
         $this->sender = $sender;
