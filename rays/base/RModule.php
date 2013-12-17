@@ -7,24 +7,37 @@
 
 class RModule
 {
-    // The name of the module
+    /**
+     * @var string The name of the module
+     */
     public $name;
 
-    // The unique ID of the module
+    /**
+     * @var string The unique ID of the module
+     */
     private $_id;
 
-    // The path of the module directory
+    /**
+     * @var string The path of the module directory
+     */
     private $_path;
 
+    /**
+     * @var string|null the base uri of the modules path. For example: "http://localhost/FDUGroup/app/modules"
+     */
     static $moduleBaseUri = null;
 
-    // The module shall appear in what pages
-    // For example:
-    // array('site/about','user/*')
-    // * cannot be the first character
-    // <front> for the front page
+    /**
+     * @var array  The module shall appear in what pages
+     * For example:
+     * <code>array('site/about','user/*') </code>
+     * <front> for the front page
+     */
     public $access = array();
 
+    /**
+     * @var array  Unlike $access, those pages that match the URI declared here will not see the module
+     */
     public $denyAccess = array();
 
     public function __construct($params = array())
@@ -81,6 +94,10 @@ class RModule
         return '';
     }
 
+    /**
+     * Get the module directory
+     * @return string
+     */
     public function getModuleDir()
     {
         if (!isset($this->_path)) {
@@ -89,6 +106,10 @@ class RModule
         return $this->_path;
     }
 
+    /**
+     * Get the module URL path
+     * @return string
+     */
     public function getModulePath()
     {
         return static::getModuleBasePath() . '/' . $this->getId();
