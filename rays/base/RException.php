@@ -1,6 +1,6 @@
 <?php
 /**
- * RException class
+ * Representing an exception object
  *
  * @author: Raysmond
  */

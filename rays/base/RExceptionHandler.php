@@ -13,14 +13,17 @@ class RExceptionHandler {
      */
     public static $exceptionAction = "";
 
+    /**
+     * Set the action to do when the handler is called
+     * @param RAction $action Action object
+     */
     public static function setExceptionAction($action=''){
         self::$exceptionAction = $action;
     }
 
     /**
-     * Handle exceptions, if no exception actions provided, default PHP 'print' method will be called
-     *
-     * @param Exception $e
+     * Exception handler. Will call provided action. If none provided, will simply print out the exception object.
+     * @param Exception $e Exception object to be handled
      */
     public static function handleException(Exception $e)
     {

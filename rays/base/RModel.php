@@ -1,11 +1,5 @@
 <?php
 /**
- * Base data model of the ActiveRecord pattern.
- *
- * @author Xiangyan Sun
- */
-
-/**
  * _RModelQueryer
  * Continuous-passing style SQL query builder.
  */
@@ -314,7 +308,100 @@ class _RModelQueryer {
     }
 }
 
+/**
+ * Base data model of the ActiveRecord pattern.
+ *
+ * This is the base class for all data models in Rays.
+ *
+ * <b>Basic usage</b>
+ *
+ * When declaring a data model class, three public static fields must be defined:
+ *
+ * <var>$primary_key</var>: Primary key of this data model in database
+ *
+ * <var>$table</var>: Table name of this data model in database
+ *
+ * <var>$mapping</var>: An associative array consisting of object field to database column mapping
+ *
+ * An optional static field, if database join function is needed, is required:
+ *
+ * <var>$relation</var>: An associative array consisting of database relation definitions.
+ *
+ * Every entry is in format ($member => array($class, $constraint])),
+ * which <var>$member</var> is the field to store joined object,
+ * <var>$class</var> is the data model of the joined table,
+ * and <var>$constraint</var> is the constraint used on JOIN clause.
+ *
+ * For example:
+ * <code>
+ * class Person {
+ *     public $id, $name, $email, $roleId;
+ *     public static $primary_key = "person";
+ *     public static $table = "person";
+ *     public static $mapping = array(
+ *         "id" => "p_id",
+ *         "name" => "p_name",
+ *         "email" => "p_email",
+ *         "roleId" => "p_roleId"
+ *     );
+ *     public static $relation = array(
+ *         "role" => array("Role", "[roleId] == [Role.id]")
+ *     );
+ * }
+ * </code>
+ *
+ * There are mainly three ways to obtain an instance in a data model.
+ *
+ * 1. Use the default constructor. This will get an un-initialized instance of the object.
+ *    This is mainly used for data insertion. When you are done with the fields, use
+ *    {@link save} to save the data.
+ * 2. Use the {@link get} method. Pass in the primary key of the object you want, and you will
+ *    get an object instance with the provided primary key.
+ * 3. Use the queryer, this way is described below.
+ *
+ * An object of a data model usually represents a single table row in a database.
+ * When you have an object instance of the model, you can access the fields directly.
+ * Use {@link save} to insert or update the data. Or use {@link delete} to delete the entire row.
+ *
+ * <b>Queryer</b>
+ *
+ * The most powerful and innovative feature of the data model is the ability to use a <i>queryer</i>,
+ * or a smart <i>SQL query builder</i>.
+ *
+ * To get a query for the model, use the static {@link find} or {@link where} function.
+ *
+ * Within a queryer object, use <b>filter</b> methods to add clauses and constraints to the SQL query.
+ *
+ * Use "<i>?</i>" in expressions and pass in an extra argument value/array to safely bind values without
+ * worrying about security issues like SQL injection.
+ *
+ * Use <i>[field]</i> syntax to reference to a member field. The queryer will automatically
+ * replace it to matching database column using the <i>$mapping</i> table, eliminating the need
+ * of manually field mapping.
+ *
+ * When done with the query, use <b>sink</b> methods to execute the query and extract results.
+ *
+ * For example:
+ *
+ * <code>
+ * Person::find("id", 10)->first();
+ * // Get the person whose id equals 10
+ * Person::where("[id] = ?", 10)->first();
+ * // Get the person whose id equals 10, alternative form
+ * Person::find()->like("name", "foobar")->all();
+ * // Get all persons whose name matches foobar
+ * Person::find()->order_desc("id")->range(0, 10);
+ * // Get all persons sorted using id, return first 10 results
+ * Person::find()->join("role")->all();
+ * // Get all persons, also joins related role object into role field
+ * </code>
+ *
+ * @author Xiangyan Sun
+ */
 abstract class RModel {
+    /**
+     * Database connection
+     */
     private static $connection = null;
 
     /**
