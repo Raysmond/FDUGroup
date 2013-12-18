@@ -4,7 +4,6 @@
  *
  * @author: Raysmond
  */
-
 class RSessionManager
 {
 

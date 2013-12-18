@@ -101,11 +101,13 @@ class RWebApplication extends RBaseApplication
 
         $config = $this->getConfig();
 
-        $this->modelPath = $this->getBaseDir().'/models';
-        $this->controllerPath = $this->getBaseDir().'/controllers';
-        $this->viewPath = $this->getBaseDir().'/views';
-        $this->layoutPath = $this->getBaseDir().'/views/layout';
-        $this->modulePath = $this->getBaseDir().'/modules';
+        // Initialize app directories
+        $dir = $this->getBaseDir();
+        $this->modelPath = $dir.'/models';
+        $this->controllerPath =$dir.'/controllers';
+        $this->viewPath = $dir.'/views';
+        $this->layoutPath = $dir.'/views/layout';
+        $this->modulePath = $dir.'/modules';
 
         if (isset($config['defaultController']))
             $this->defaultController = $config['defaultController'];
@@ -117,7 +119,6 @@ class RWebApplication extends RBaseApplication
             $this->isCleanUri = $config['isCleanUri'];
 
         Rays::setApp($this);
-
     }
 
     /**
@@ -133,13 +134,13 @@ class RWebApplication extends RBaseApplication
 
         $this->httpRequestHandler->normalizeRequest();
         $this->runController($this->router->getRouteUrl());
-
     }
 
 
     /**
      * Create and run the requested controller
      * @param array $route array router information
+     * @throws RPageNotFoundException
      */
     public function runController($route=array())
     {
@@ -156,14 +157,11 @@ class RWebApplication extends RBaseApplication
             $_controller = new $_controller;
             $_controller->setId($route['controller']);
             $this->controller = $_controller;
-            $action = isset($route['action'])?$route['action']:'';
-            $params = isset($route['params'])?$route['params']:array();
+            $action = isset($route['action']) ? $route['action'] : '';
+            $params = isset($route['params']) ? $route['params'] : array();
             $_controller->runAction($action, $params);
-        } else {
-            // No controller found
-            // die("Controller(" . $_controller . ") not exists....");
-            $this->page404();
-        }
+        } else
+            throw new RPageNotFoundException("No controllers found!");
     }
 
     /**
@@ -206,6 +204,10 @@ class RWebApplication extends RBaseApplication
         return $this->httpRequestHandler;
     }
 
+    /**
+     * Get router
+     * @return RRouter
+     */
     public function getRouter()
     {
         return $this->router;

@@ -1,9 +1,4 @@
 <?php
-/**
- * Base framework bootstrap file
- *
- * @author: Raysmond
- */
 
 define('SYSTEM_PATH', dirname(__FILE__));
 
@@ -11,7 +6,12 @@ define('SYSTEM_CORE_PATH', SYSTEM_PATH . '/base');
 
 define('HELPER_PATH', SYSTEM_PATH . '/helpers');
 
-
+/**
+ * Base framework bootstrap file. It's implemented as a singleton to provide some common functionality for the whole
+ * web application, for example, class naming, classes autoload, importing classes, creating and running the application and etc.
+ *
+ * @author: Raysmond
+ */
 class RaysFramework
 {
     /**

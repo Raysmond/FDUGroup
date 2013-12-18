@@ -4,7 +4,6 @@
  *
  * @auther: Raysmond
  */
-
 class RLog
 {
     const LEVEL_INFO = "info";

@@ -3,7 +3,7 @@
 require(dirname(__FILE__) . '/RaysFramework.php');
 
 /**
- * Class Rays provide common functions for the whole web application
+ * Class Rays provide common functions for the whole web application.
  *
  * @author: Raysmond
  */

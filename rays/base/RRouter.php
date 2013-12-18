@@ -19,7 +19,6 @@
  * Of course, if there are more than one parameter, than the other parameters will be added
  * to the array of 'params'.
  */
-
 class RRouter
 {
     /**
