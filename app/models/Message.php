@@ -30,29 +30,6 @@ class Message extends RModel {
         'type' => array("MessageType", "[typeId] = [MessageType.id]")
     );
 
-    /*public function load($id=null)
-    {
-        $result = parent::load($id);
-        if($result==null) return null;
-        $this->type = new MessageType();
-        $this->type->typeId = $this->typeId;
-        $this->type->load();
-        if($this->type->typeName!='system'){
-            if($this->type->typeName=='user'){
-                $this->sender = new User();
-                $this->sender->id = $this->senderId;
-            }
-            else if($this->type->typeName=='group'){
-                $this->sender = new Group();
-                $this->sender->id = $this->senderId;
-            }
-        }
-        else{
-            $this->sender = 'system';
-        }
-        return $this;
-    }*/
-
     public static function sendMessage($typeName,$senderId,$receiverId,$title,$content,$sendTime=null,$status=1)
     {
         $message = new Message();

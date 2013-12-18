@@ -180,17 +180,16 @@ class PostController extends BaseController
                     $user->id,
                     $exactComment->userId,
                     'New reply',
-                    $user->name . ' has replied to your comment ' . RHtmlHelper::linkAction('post', $topic->title, 'view', $topic->id . '?reply=' . $cid),
-                    date('Y-m-d H:i:s')
+                    $user->name . ' has replied to your comment ' . RHtmlHelper::linkAction('post', $topic->title, 'view', $topic->id . '?reply=' . $cid)
                 );
-            } //send message to topic author
+            }
             else if ($topic->userId !== $user->id) {
+                //send message to topic author
                 Message::sendMessage(
                     'user',
                     $user->id,
                     $topic->userId, 'New Comment',
-                    $user->name . ' has replied to your topic ' . RHtmlHelper::linkAction('post', $topic->title, 'view', $topic->id . '?reply=' . $cid),
-                    date('Y-m-d H:i:s')
+                    $user->name . ' has replied to your topic ' . RHtmlHelper::linkAction('post', $topic->title, 'view', $topic->id . '?reply=' . $cid)
                 );
             }
         }
