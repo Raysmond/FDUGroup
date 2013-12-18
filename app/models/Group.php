@@ -153,19 +153,18 @@ class Group extends RModel
         return null;
     }
 
-    // TODO: fatal bug, delete a group will delete all group users relationship
     public static function deleteGroup(Group $group){
-//        Rating::where("[entityId] = ? AND [entityType] = ?",[$group->id,Group::ENTITY_TYPE])->delete();
-//        RatingStatistic::where("[entityId] = ? AND [entityType] = ?",[$group->id,Group::ENTITY_TYPE])->delete();
-//        Counter::where("[entityId] = ? AND [entityTypeId] = ?",[$group->id,Group::ENTITY_TYPE])->delete();
-//
-//        $topics = Topic::find("groupId",$group->id)->all();
-//        foreach($topics as $topic){
-//            $topic->delete();
-//        }
-//
-//        GroupUser::where("[groupId]",[$group->id])->delete();
-//        $group->delete();
+        Rating::where("[entityId] = ? AND [entityType] = ?",[$group->id,Group::ENTITY_TYPE])->delete();
+        RatingStatistic::where("[entityId] = ? AND [entityType] = ?",[$group->id,Group::ENTITY_TYPE])->delete();
+        Counter::where("[entityId] = ? AND [entityTypeId] = ?",[$group->id,Group::ENTITY_TYPE])->delete();
+
+        $topics = Topic::find("groupId",$group->id)->all();
+        foreach($topics as $topic){
+            $topic->delete();
+        }
+
+        GroupUser::where("[groupId] = ?", $group->id)->delete();
+        $group->delete();
     }
 
     public static function inviteFriends($groupId, $user, $invitees = array(), $invitationMsg)
@@ -176,7 +175,6 @@ class Group extends RModel
             $censor = new Censor();
             $censor->joinGroupApplication($friendId, $group->id);
 
-            $msg = new Message();
             $content = RHtmlHelper::linkAction('user', $user->name, 'view', $user->id)
                 . ' invited you to join group '
                 . RHtmlHelper::linkAction('group', $group->name, 'detail', $group->id)
@@ -185,7 +183,7 @@ class Group extends RModel
                 . '</br>'
                 . $invitationMsg;
             $content = RHtmlHelper::encode($content);
-            Message::sendMessage('group', $user->id, $friendId, 'new group invitation', $content);
+            Message::sendMessage('user', $user->id, $friendId, 'new group invitation', $content);
 
         }
     }
