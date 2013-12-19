@@ -206,47 +206,9 @@ class RController
      * Whether the current user has the right to view the page
      * @return bool
      */
-    protected function userCanAccessAction()
+    public function userCanAccessAction()
     {
-        $roleId = Role::ANONYMOUS_ID;
-        if(Rays::app()->isUserLogin())
-            $roleId = Rays::app()->getLoginUser()->roleId;
-
-        $definedRoleId = Role::ANONYMOUS_ID;
-
-        if(isset($this->access[Role::ADMINISTRATOR]))
-        {
-            if(in_array($this->_action,$this->access[Role::ADMINISTRATOR]))
-                $definedRoleId = Role::ADMINISTRATOR_ID;
-        }
-
-        if(isset($this->access[Role::AUTHENTICATED]))
-        {
-            if(in_array($this->_action,$this->access[Role::AUTHENTICATED]))
-                $definedRoleId = Role::AUTHENTICATED_ID;
-        }
-
-        if(isset($this->access[Role::ANONYMOUS]))
-        {
-            if(in_array($this->_action,$this->access[Role::ANONYMOUS]))
-                $definedRoleId = Role::ANONYMOUS_ID;
-        }
-
-        if(isset($this->access[Role::VIP]))
-        {
-            if(in_array($this->_action,$this->access[Role::VIP]))
-                $definedRoleId = Role::VIP_ID;
-        }
-
-        //authority access allowance table (need authority , own authority)
-        $authorityAllowTable = [
-            [Role::ADMINISTRATOR_ID, Role::ADMINISTRATOR_ID],
-            [Role::VIP_ID, Role::ADMINISTRATOR_ID], [Role::VIP_ID, Role::VIP_ID],
-            [Role::AUTHENTICATED_ID, Role::ADMINISTRATOR_ID], [Role::AUTHENTICATED_ID, Role::VIP_ID], [Role::AUTHENTICATED_ID, Role::AUTHENTICATED_ID],
-            [Role::ANONYMOUS_ID, Role::ADMINISTRATOR_ID], [Role::ANONYMOUS_ID, Role::VIP_ID], [Role::ANONYMOUS_ID, Role::AUTHENTICATED_ID], [Role::ANONYMOUS_ID, Role::ANONYMOUS_ID],
-        ];
-
-        return in_array([$definedRoleId, $roleId], $authorityAllowTable);
+        return true;
     }
 
     /**
@@ -268,10 +230,6 @@ class RController
         }
 
         if(!$this->userCanAccessAction()){
-            if(!Rays::app()->isUserLogin()){
-                $this->redirectAction('user','login');
-                return false;
-            }
             throw new RPageNotFoundException("Sorry, you're not authorized to view the requested page.");
         }
 
