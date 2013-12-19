@@ -16,7 +16,7 @@
             echo RHtmlHelper::showValidationErrors($validation_errors);
         }
 
-        echo RFormHelper::openForm('user/edit/',
+        echo RFormHelper::openForm('user/edit/'.$user->id,
             array('id' => 'user-edit-form', 'enctype' => 'multipart/form-data'));
 
         echo RFormHelper::label("User name", 'username');
@@ -50,7 +50,7 @@
         echo RFormHelper::label("Password confirm", 'password-confirm');
         echo RFormHelper::input(
             array('id' => 'password-confirm',
-                'name' => 'password-confrim',
+                'name' => 'password-confirm',
                 'type' => 'password',
                 'class' => 'form-control',
                 'placeholder' => "Password confirm"));

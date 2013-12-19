@@ -21,7 +21,7 @@ foreach ($groups as $group) {
             <?php
             $group->intro = strip_tags(RHtmlHelper::decode($group->intro));
             if (mb_strlen($group->intro) > 100) {
-                echo '<p>' . mb_substr($group->intro, 0, rand(60, 150), 'UTF-8') . '...</p>';
+                echo '<p>' . preg_replace('/&.{0,5}\.\.\.$/', '...', mb_substr($group->intro, 0, rand(60, 150), 'UTF-8') . '...').'</p>';
             } else {
                 echo '<p>' . $group->intro . '</p>';
             }

@@ -13,18 +13,16 @@
     <div class="panel-body">
 
     <ul class="nav nav-pills nav-stacked">
-        <li><a href="#register_and_login">Register and login</a></li>
-        <li><a href="#find_group">Find group</a></li>
-        <li><a href="#my_group">My group</a></li>
-        <li><a href="#homepage">Home Page</a></li>
-        <li><a href="#postmanagement">Post Management</a></li>
-        <li><a href="#profile">User Profile</a></li>
+        <li><a href="#find-groups">Find groups</a></li>
+        <li><a href="#groups-management">Groups management</a></li>
+        <li><a href="#create-groups">Create groups</a></li>
+        <li><a href="#posts">Posts</a></li>
+        <li><a href="#friends">Friends</a></li>
+        <li><a href="#messages">Messages</a></li>
         <li><a href="#friend">Friend</a></li>
-        <li><a href="#personalpage">Personal Page</a></li>
-        <li><a href="#management">Message Management</a></li>
-        <li><a href="#vip">VIP Apply</a></li>
-        <li><a href="#AdSense">AdSense</a></li>
-        <li><a href="#publish">About Publish</a></li>
+        <li><a href="#profile">Profile</a></li>
+        <li><a href="#advertisement">Advertisement</a></li>
+        <li><a href="#about-publish">About Publish</a></li>
 
     </ul>
 

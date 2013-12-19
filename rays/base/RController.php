@@ -2,24 +2,39 @@
 /**
  * RController class file.
  * This is the base controller for all controllers in the framework.
+ *
  * @author: Raysmond
  */
-
 class RController
 {
-    // the layout for the controller
+    /**
+     * The layout used in the controller
+     * @var string the layout view file in 'view/layout' directory
+     */
     public $layout = "index";
 
-    // default action is provided if there's no action requested from the URL
+    /**
+     * default action is provided if there's no action requested from the URL
+     * @var string
+     */
     public $defaultAction = "index";
 
-    // current action id
+    /**
+     * current action id
+     * @var string
+     */
     private $_action;
 
-    // Parameters passed to the action methd
-    private $_params;
+    /**
+     * Parameters passed to the action method
+     * @var array
+     */
+    private $_params = array();
 
-    // Header title within the <title> tag in HTML
+    /**
+     * Header title within the <title> tag in HTML
+     * @var string
+     */
     private $_headerTitle;
 
     /**
@@ -33,7 +48,10 @@ class RController
      */
     public $access = array();
 
-    // the unique ID of the controller
+    /**
+     * the unique ID of the controller
+     * @var string
+     */
     private $_id = '';
 
     /**
@@ -237,67 +255,32 @@ class RController
      * @param $action string action ID
      * @param $params array parameters
      */
-    public function runAction($action, $params)
+    public function runAction($action='', $params=array())
     {
+        if($action=='')
+            $action = $this->defaultAction;
+
         $this->setCurrentAction($action);
         $this->setActionParams($params);
 
         if ($this->beforeAction($action) == false) {
-            return;
+            return false;
         }
 
         if(!$this->userCanAccessAction()){
-
             if(!Rays::app()->isUserLogin()){
-                $this->flash("message","Please login first.");
                 $this->redirectAction('user','login');
-                return;
+                return false;
             }
-            $this->flash("error","Sorry, you're not authorized to view the requested page.");
-            Rays::app()->page404();
-            return;
+            throw new RPageNotFoundException("Sorry, you're not authorized to view the requested page.");
         }
 
         $methodName = $this->generateActionMethod();
-        $len = count($this->_params);
 
-        // It's shame to run action methods this way,
-        // but I didn't figure out other better way
-        if (method_exists($this, $methodName)) {
-            $p = $this->_params;
-            if ($len == 0)
-                $this->$methodName();
-            else if ($len == 1)
-                $this->$methodName($p[0]);
-            else if ($len == 2)
-                $this->$methodName($p[0], $p[1]);
-            else if ($len == 3)
-                $this->$methodName($p[0], $p[1], $p[1]);
-            else if ($len == 4)
-                $this->$methodName($p[0], $p[1], $p[2], $p[3]);
-            else if ($len == 5)
-                $this->$methodName($p[0], $p[1], $p[2], $p[3], $p[4]);
-            else if ($len == 6)
-                $this->$methodName($p[0], $p[1], $p[2], $p[3], $p[4], $p[5]);
-            else if ($len == 7)
-                $this->$methodName($p[0], $p[1], $p[2], $p[3], $p[4], $p[5], $p[6]);
-            else if ($len == 8)
-                $this->$methodName($p[0], $p[1], $p[2], $p[3], $p[4], $p[5], $p[6], $p[7]);
-            else if ($len == 9)
-                $this->$methodName($p[0], $p[1], $p[2], $p[3], $p[4], $p[5], $p[6], $p[7], $p[8]);
-            else if ($len == 10)
-                $this->$methodName($p[0], $p[1], $p[2], $p[3], $p[4], $p[5], $p[6], $p[7], $p[8], $p[9]);
-            else{
-                // Pass the params array to the action
-                $this->$methodName($p);
-                //die("Too many parameters...");
-            }
-
-        } else {
-            Rays::app()->page404();
-            Rays::log("Page not found! No action matched.",RLog::LEVEL_WARNING,"system");
-            Rays::logger()->flush();
-        }
+        if (method_exists($this, $methodName))
+            call_user_func_array(array($this, $methodName), $this->_params);
+        else
+            throw new RPageNotFoundException("No actions match the HTTP request!");
         $this->afterAction();
     }
 
@@ -347,6 +330,7 @@ class RController
 
     /**
      * Set header title for the page
+     * TODO: remove from framework
      * <title></title>
      * @param $title
      */
@@ -410,15 +394,6 @@ class RController
     public function generateActionMethod()
     {
         return "action" . ucfirst($this->_action);
-    }
-
-    /**
-     * Get http request handler
-     * @return mixed
-     */
-    public function getHttpRequest()
-    {
-        return Rays::app()->getHttpRequest();
     }
 
     /**
@@ -523,5 +498,4 @@ class RController
             $module->run();
         }
     }
-
 }

@@ -1,22 +1,41 @@
 <?php
 /**
- * RClient class file.
+ * RClient class file. This class if mainly for registering CSS and JavaScript.
+ *
  * @author: Raysmond
  */
-
 class RClient
 {
 
+    /**
+     * @var array the core css array
+     */
     public $coreCss = array();
 
+    /**
+     * @var array the normal css array
+     */
     public $css = array();
 
+    /**
+     * @var array the core JavaScript array
+     */
     public $coreScript = array();
 
+    /**
+     * @var array the normal JavaScript array
+     */
     public $script = array();
 
-    private $_headerTitle;
+    /**
+     * @var string the header title which is in the <head><title></title></head> in a HTML document
+     */
+    private $_headerTitle = "";
 
+    /**
+     * Register a core css file
+     * @param $cssPath
+     */
     public function registerCoreCss($cssPath)
     {
         if (!$this->isRegisteredCoreCss($cssPath)) {
@@ -24,6 +43,10 @@ class RClient
         }
     }
 
+    /**
+     * Register a normal css file
+     * @param $cssPath
+     */
     public function registerCss($cssPath)
     {
         if (!$this->isRegisteredCss($cssPath)) {
@@ -31,6 +54,10 @@ class RClient
         }
     }
 
+    /**
+     * Register a core JavaScript file
+     * @param $scriptPath
+     */
     public function registerCoreScript($scriptPath)
     {
         if (!$this->isRegisteredCoreScript($scriptPath)) {
@@ -38,6 +65,10 @@ class RClient
         }
     }
 
+    /**
+     * Register a normal JavaScript file
+     * @param $scriptPath
+     */
     public function registerScript($scriptPath)
     {
         if (!$this->isRegisteredScript($scriptPath)) {

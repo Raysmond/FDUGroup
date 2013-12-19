@@ -16,8 +16,6 @@ class BaseController extends RController
     public function page404()
     {
         Rays::app()->page404();
-        Rays::log('Page not found!', "warning", "system");
-        Rays::logger()->flush();
     }
 
     public function afterAction()
@@ -26,12 +24,13 @@ class BaseController extends RController
         //echo '<center style="color: gray;padding: 10px;">'."Page generated in ".(($time-Rays::$startTime)*1000) . " ms"."</center>";
 
         $accessLog = new AccessLog();
-        $accessLog->host = $this->getHttpRequest()->getUserHostAddress();
+        $accessLog->host = Rays::httpRequest()->getUserHostAddress();
         $accessLog->path = Rays::uri();
         $accessLog->userId = Rays::isLogin()? Rays::user()->id : 0;;
         $accessLog->title = $this->getHeaderTitle();
         $accessLog->uri = Rays::referrerUri();
-        $accessLog->insert();
+        $accessLog->timestamp = date('Y-m-d H:i:s');
+        $accessLog->save();
     }
 
     /**
@@ -46,7 +45,7 @@ class BaseController extends RController
         if (!empty($logs)) {
             foreach ($logs as $log) {
                 $sysLog = new SystemLog();
-                $sysLog->host = $this->getHttpRequest()->getUserHostAddress();
+                $sysLog->host = Rays::httpRequest()->getUserHostAddress();
                 $sysLog->userId = Rays::isLogin()? Rays::user()->id : 0;
                 $sysLog->referrerUri = Rays::referrerUri();
                 $sysLog->path = Rays::uri();
@@ -68,7 +67,7 @@ class BaseController extends RController
                 if ($level === null) continue;
                 $sysLog->severity = $level;
                 $sysLog->type = $log['type'];
-                $sysLog->insert();
+                $sysLog->save();
                 unset($sysLog);
             }
         }
@@ -85,7 +84,7 @@ class BaseController extends RController
 
     const DEFAULT_PAGE_SIZE = 10;
 
-    public function getPageSize($key, $default = DEFAULT_PAGE_SIZE)
+    public function getPageSize($key, $default = BaseController::DEFAULT_PAGE_SIZE)
     {
         $size = Rays::getParam($key, $default);
         if (!is_numeric($size) || $size < 1) {

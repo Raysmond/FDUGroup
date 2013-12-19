@@ -1,15 +1,23 @@
 <?php
 /**
- * RWebApplication class file
- * User: Raysmond
+ * Class RWebApplication. This is the class for all application instance.
+ *
+ * @author: Raysmond
  */
 
 class RWebApplication extends RBaseApplication
 {
-
+    /**
+     * @var string the default controller for the application
+     */
     public $defaultController = 'site';
+
+    /**
+     * @var string the default layout file name for controllers
+     */
     public $layout = 'main';
-    public $moduleFileExtension = ".module";
+
+    const MODULE_FILE_EXTENSION = ".module";
 
     /**
      * Whether or not user clean uri
@@ -20,36 +28,86 @@ class RWebApplication extends RBaseApplication
      */
     public $isCleanUri = false;
 
-    public $modelPath;
+    /**
+     * @var string the controllers directory path for the application
+     */
     public $controllerPath;
+
+    /**
+     * @var string the models directory path for the application
+     */
+    public $modelPath;
+
+    /**
+     * @var string the modules directory path for the application
+     */
     public $modulePath;
 
+    /**
+     * @var string the view directory path for the application
+     */
     public $viewPath;
+
+    /**
+     * @var string the layout directory path for the application
+     */
     public $layoutPath;
 
+    /**
+     * Current controller object
+     * @var Object
+     */
     public $controller;
 
+    /**
+     * @var RRouter the URL router
+     */
     public $router;
+
+    /**
+     * @var RHttpRequest HTTP request handler
+     */
     public $httpRequestHandler;
+
+    /**
+     * @var RClient client manager for CSS and JavaScript
+     */
     public $clientManager;
+
+    /**
+     * @var RSessionManager the session manager
+     */
     public $httpSession;
 
-    // current login user
+    /**
+     * Current user who is accessing the web site
+     * @var User|null
+     */
     public $user;
 
+    /**
+     * @var array the flash messages array
+     */
     public $flashMessage;
 
+    /**
+     * Initialization for the whole web application
+     *
+     * @param null $config
+     */
     public function init($config = null)
     {
         parent::init($config);
 
         $config = $this->getConfig();
 
-        $this->modelPath = $this->getBaseDir().'/models';
-        $this->controllerPath = $this->getBaseDir().'/controllers';
-        $this->viewPath = $this->getBaseDir().'/views';
-        $this->layoutPath = $this->getBaseDir().'/views/layout';
-        $this->modulePath = $this->getBaseDir().'/modules';
+        // Initialize app directories
+        $dir = $this->getBaseDir();
+        $this->modelPath = $dir.'/models';
+        $this->controllerPath =$dir.'/controllers';
+        $this->viewPath = $dir.'/views';
+        $this->layoutPath = $dir.'/views/layout';
+        $this->modulePath = $dir.'/modules';
 
         if (isset($config['defaultController']))
             $this->defaultController = $config['defaultController'];
@@ -60,7 +118,7 @@ class RWebApplication extends RBaseApplication
         if (isset($config['isCleanUri']))
             $this->isCleanUri = $config['isCleanUri'];
 
-        Rays::setApplication($this);
+        Rays::setApp($this);
     }
 
     /**
@@ -76,15 +134,15 @@ class RWebApplication extends RBaseApplication
 
         $this->httpRequestHandler->normalizeRequest();
         $this->runController($this->router->getRouteUrl());
-
     }
 
 
     /**
      * Create and run the requested controller
-     * @param $route array router information
+     * @param array $route array router information
+     * @throws RPageNotFoundException
      */
-    private function runController($route = array())
+    public function runController($route=array())
     {
         $_controller = '';
         if (isset($route['controller']) && $route['controller'] != '') {
@@ -99,12 +157,34 @@ class RWebApplication extends RBaseApplication
             $_controller = new $_controller;
             $_controller->setId($route['controller']);
             $this->controller = $_controller;
-            $_controller->runAction($this->router->getAction(), $this->router->getParams());
-        } else {
-            // No controller found
-            // die("Controller(" . $_controller . ") not exists....");
-            $this->page404();
+            $action = isset($route['action']) ? $route['action'] : '';
+            $params = isset($route['params']) ? $route['params'] : array();
+            $_controller->runAction($action, $params);
+        } else
+            throw new RPageNotFoundException("No controllers found!");
+    }
+
+    /**
+     * Run a controller action
+     *
+     * @param $controllerAction
+     * for example:
+     * runControllerAction('site/index',['arg1'])
+     * </pre>
+     *
+     * @param array $params
+     */
+    public function runControllerAction($controllerAction,$params = array()){
+        $route = $this->router->getRouteUrl($controllerAction);
+        if(!is_array($params)){
+            $params = array($params);
         }
+        if(isset($route['params'])){
+            $route['params'] = array_merge($route['params'], $params);
+        }
+        else
+            $route['params'] = $params;
+        self::runController($route);
     }
 
     /**
@@ -112,8 +192,7 @@ class RWebApplication extends RBaseApplication
      */
     public function page404()
     {
-        $controller = new RController();
-        $controller->render("404");
+        throw new RPageNotFoundException();
     }
 
     /**
@@ -125,6 +204,10 @@ class RWebApplication extends RBaseApplication
         return $this->httpRequestHandler;
     }
 
+    /**
+     * Get router
+     * @return RRouter
+     */
     public function getRouter()
     {
         return $this->router;
@@ -159,23 +242,39 @@ class RWebApplication extends RBaseApplication
     {
         if ($this->isUserLogin() && !isset($this->user)) {
             $id = $this->getHttpSession()->get("user");
-            $user = new User();
-            $user->load($id);
-            $user->role->load();
-            return $user;
-        } else return null;
+            $this->user = User::find($id)->join("role")->first();
+            return $this->user;
+        }
+        else if (isset($this->user)) {
+            return $this->user;
+        }
+        else {
+            return null;
+        }
     }
 
+    /**
+     * Whether the user has login
+     * @return bool
+     */
     public function isUserLogin()
     {
         return $this->getHttpSession()->get("user") != false;
     }
 
+    /**
+     * Whether is clean URI
+     * @return bool
+     */
     public function isCleanUri()
     {
         return $this->isCleanUri != false;
     }
 
+    /**
+     * Get the current controller who is handling the HTTP request
+     * @return Object
+     */
     public function getController(){
         return $this->controller;
     }

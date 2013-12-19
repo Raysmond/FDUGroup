@@ -1,10 +1,10 @@
 <?php
 /**
  * RFormValidation helper class file.
+ *
  * @author: Raysmond
  */
 
-// need to be implemented
 class RFormValidationHelper
 {
     protected $_fields = array();

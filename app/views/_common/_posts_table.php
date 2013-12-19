@@ -1,4 +1,5 @@
 <?php
+
 if (empty($posts)) {
     echo "<p>No posts!</p>";
 } else {
@@ -37,3 +38,88 @@ if (empty($posts)) {
     </table>
 <?php
 }
+?>
+<script>
+$(document).ready(function() {
+    $(".post-list-td1").dotdotdot({
+            /*	The HTML to add as ellipsis. */
+            ellipsis	: '... ',
+
+            /*	How to cut off the text/html: 'word'/'letter'/'children' */
+            wrap		: 'letter',
+
+            /*	Wrap-option fallback to 'letter' for long words */
+            fallbackToLetter: true,
+
+            /*	jQuery-selector for the element to keep and put after the ellipsis. */
+            after		: null,
+
+            /*	Whether to update the ellipsis: true/'window' */
+            watch		: false,
+
+            /*	Optionally set a max-height, if null, the height will be measured. */
+            height		: 25
+        }
+    );
+    $(".post-list-td2").dotdotdot({
+            /*	The HTML to add as ellipsis. */
+            ellipsis	: '... ',
+
+            /*	How to cut off the text/html: 'word'/'letter'/'children' */
+            wrap		: 'letter',
+
+            /*	Wrap-option fallback to 'letter' for long words */
+            fallbackToLetter: true,
+
+            /*	jQuery-selector for the element to keep and put after the ellipsis. */
+            after		: null,
+
+            /*	Whether to update the ellipsis: true/'window' */
+            watch		: false,
+
+            /*	Optionally set a max-height, if null, the height will be measured. */
+            height		: 25
+        }
+    );
+    $(".post-list-td3").dotdotdot({
+            /*	The HTML to add as ellipsis. */
+            ellipsis	: '... ',
+
+            /*	How to cut off the text/html: 'word'/'letter'/'children' */
+            wrap		: 'letter',
+
+            /*	Wrap-option fallback to 'letter' for long words */
+            fallbackToLetter: true,
+
+            /*	jQuery-selector for the element to keep and put after the ellipsis. */
+            after		: null,
+
+            /*	Whether to update the ellipsis: true/'window' */
+            watch		: false,
+
+            /*	Optionally set a max-height, if null, the height will be measured. */
+            height		: 25
+        }
+    );
+    $(".post-list-td4").dotdotdot({
+            /*	The HTML to add as ellipsis. */
+            ellipsis	: '... ',
+
+            /*	How to cut off the text/html: 'word'/'letter'/'children' */
+            wrap		: 'letter',
+
+            /*	Wrap-option fallback to 'letter' for long words */
+            fallbackToLetter: true,
+
+            /*	jQuery-selector for the element to keep and put after the ellipsis. */
+            after		: null,
+
+            /*	Whether to update the ellipsis: true/'window' */
+            watch		: false,
+
+            /*	Optionally set a max-height, if null, the height will be measured. */
+            height		: 25
+        }
+    );
+});
+</script>

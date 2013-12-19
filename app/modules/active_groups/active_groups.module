@@ -13,22 +13,29 @@ class active_groups_module extends RModule {
      */
     public function module_content() {
         $cid = Rays::router()->getParams()[0];
-        $p = [];
-        if (isset($cid) && $cid !== null) {
-            $p = ['categoryId' => [$cid]];
-            foreach ((new Category())->load($cid)->children() as $sCat) {
-                $p['categoryId'][] = $sCat->id;
+
+        $groups = array();
+        if(isset($cid)&&is_numeric($cid)){
+            $category = Category::get($cid);
+
+            if ($category == null) {
+                return array();
             }
+
+            $where = "[categoryId] in (?,";
+            $args = [$cid];
+            $subs = $category->children();
+            foreach ($subs as $sCat) {
+                $where.='?,';
+                $args[] = $sCat->id;
+            }
+            $where=substr($where,0,strlen($where)-1).')';
+            $groups = Group::find()->join("category")->order_desc("memberCount")->where($where,$args)->range(0,5);//->where($whereIds)->range(0, 5);
         }
-        $groups = new Group();
-        $groups = $groups->find(0, 5, ['key' => $groups->columns['memberCount'], 'order' => 'desc'], [], $p);
-        if (!count($groups)) {
-            $groups = new Group();
-            $groups = $groups->find(0, 5, ['key' => $groups->columns['memberCount'], 'order' => 'desc']);
+        else{
+            $groups = Group::find()->join("category")->order_desc("memberCount")->range(0,5);
         }
-        return $this->render('active_groups',
-            array(
-                'groups'=>$groups,
-            ));
+
+        return $this->render('active_groups',['groups'=>$groups]);
     }
 }

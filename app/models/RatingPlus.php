@@ -1,14 +1,15 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: Raysmond
- * Date: 13-11-25
- * Time: PM12:45
+ * RatingPlus model.
+ * It's not a basic data model. Both Rating and RatingStatistic data model are used here to generate a logical model
+ * aiming to provide 'plus'(or 'like') functionality model.
+ *
+ * @author: Raysmond
  */
 
 class RatingPlus
 {
-    public $entityType = null, $entityId = null, $userId = 0,$host;
+    public $entityType = null, $entityId = null, $userId = 0, $host;
     private $_rating = null;
     private $_ratingId = null;
 
@@ -29,21 +30,25 @@ class RatingPlus
     public function rate()
     {
         if ($this->check()) {
-            $plus = new Rating();
-            $plus->entityId = $this->entityId;
-            $plus->entityType = $this->entityType;
-            $plus->userId = $this->userId;
-            $plus->host = $this->host;
-            $plus->valueType = self::VALUE_TYPE;
-            $plus->value = self::VALUE;
-            $plus->tag = self::TAG;
-            if(count($plus->find())==0){
-                $ratingId = $plus->insert();
-                if ($ratingId !== null && is_numeric($ratingId)) {
-                    $this->_ratingId = $ratingId;
+            $rating = Rating::find("tag", self::TAG)->find("valueType", self::VALUE_TYPE)->find("value", self::VALUE);
+            $rating = $rating->find("entityId", $this->entityId)->find("entityType", $this->entityType)->find("userId", $this->userId);
+            $rating = $rating->first();
+            if ($rating == null) {
+                $rating = new Rating();
+                $rating->tag = self::TAG;
+                $rating->valueType = self::VALUE_TYPE;
+                $rating->value = self::VALUE;
+                $rating->host = $this->host;
+                $rating->entityId = $this->entityId;
+                $rating->entityType = $this->entityType;
+                $rating->userId = $this->userId;
+                $rating->timestamp = date('Y-m-d H:i:s');
+                $rating->save();
+                if (isset($rating->id) && $rating->id) {
                     $this->updatePlusCounter();
                     return true;
                 }
+
             }
         }
         return false;
@@ -51,88 +56,60 @@ class RatingPlus
 
     public static function countUserPostsPlus($userId)
     {
-        $plus = new Rating();
-        $plus->entityType = Topic::$entityType;
-        $plus->userId = $userId;
-        $plus->valueType = self::VALUE_TYPE;
-        $plus->value = self::VALUE;
-        $plus->tag = self::TAG;
-
-        return $plus->count();
+        return Rating::find(["entityType", Topic::ENTITY_TYPE, "userId", $userId, "valueType", self::VALUE_TYPE, "value", self::VALUE, "tag", self::TAG])->count();
     }
 
-    public static function getUserPlusTopics($userId,$start=0,$limit=0)
+    public static function getUserPlusTopics($userId, $start = 0, $limit = 0)
     {
-        $plus = new Rating();
-        $plus->entityType = Topic::$entityType;
-        $plus->userId = $userId;
-        $plus->valueType = self::VALUE_TYPE;
-        $plus->value = self::VALUE;
-        $plus->tag = self::TAG;
+        $ratings = Rating::find(["entityType", Topic::ENTITY_TYPE, "userId", $userId, "valueType", self::VALUE_TYPE, "value", self::VALUE, "tag", self::TAG])->all();
+        if ($ratings == null || empty($ratings))
+            return array();
 
-        $topicList = $plus->find();
-        $topicIdList = array_map(function ($value) {
-            return $value->entityId;
-        }, $topicList);
-
-        $likeTopics = new Topic();
-        if (count($topicList) > 0) {
-            $likeTopics = $likeTopics->find($start, $limit,
-                ['key' => $likeTopics->columns['id'], 'order' => 'desc'],
-                null,
-                ['id' => $topicIdList]
-            );
-
-            foreach($likeTopics as $item){
-                $item->user = new User();
-                $item->user->load($item->userId);
-                $item->group = new Group();
-                $item->group->load($item->groupId);
+        $query = Topic::find()->join("user")->join("group")->order_desc("id");
+        if ($ratings != null && !empty($ratings)) {
+            $where = "[id] in (";
+            $args = array();
+            for ($count = count($ratings), $i = 0; $i < $count; $i++) {
+                $where .= "?" . (($i < $count - 1) ? "," : "");
+                $args[] = $ratings[$i]->entityId;
             }
-        } else {
-            $likeTopics = array();
+            unset($ratings);
+            $where .= ")";
+            $query = $query->where($where, $args);
         }
-
-        return $likeTopics;
+        return ($start != 0 || $limit != 0) ? $query->range($start, $limit) : $query->all();
     }
 
     /**
      * Plus counter for every plus rating
      */
-    private function updatePlusCounter(){
-        $counter = new RatingStatistic();
-        $counter->entityType = $this->entityType;
-        $counter->entityId = $this->entityId;
-        $counter->type = 'count';
-        $counter->valueType = self::VALUE_TYPE;
-        $counter->tag = self::TAG;
-        $result = $counter->find();
-        if(count($result)===0){
-            $counter->value = 1;
-            $id = $counter->insert();
-            $counter->id = $id;
+    private function updatePlusCounter()
+    {
+        $result = RatingStatistic::find(["type", "count", "valueType", self::VALUE_TYPE, "tag", self::TAG, "entityType", $this->entityType, "entityId", $this->entityId])->first();
+
+        if ($result == null) {
+            $result = new RatingStatistic();
+            $result->entityType = $this->entityType;
+            $result->entityId = $this->entityId;
+            $result->type = "count";
+            $result->value = 1;
+            $result->valueType = self::VALUE_TYPE;
+            $result->tag = self::TAG;
+            $result->timestamp = date('Y-m-d H:i:s');
+            $result->save();
+        } else {
+            $result->value++;
+            $result->timestamp = date('Y-m-d H:i:s');
+            $result->save();
         }
-        else{
-            $counter = $result[0];
-            $counter->value++;
-            $counter->timestamp = date('Y-m-d H:i:s');
-            $counter->update();
-        }
-        $this->_counter = $counter;
+        $this->_counter = $result;
     }
 
-    public function getCounter(){
-        if($this->_counter===null){
-            $counter = new RatingStatistic();
-            $counter->entityType = $this->entityType;
-            $counter->entityId = $this->entityId;
-            $counter->type = 'count';
-            $counter->valueType = self::VALUE_TYPE;
-            $counter->tag = self::TAG;
-            $result = $counter->find();
-            if(count($result)!==0){
-                $this->_counter = $result[0];
-            }
+    public function getCounter()
+    {
+        if ($this->_counter === null) {
+            $result = RatingStatistic::find(["type", "count", "valueType", self::VALUE_TYPE, "tag", self::TAG, "entityType", $this->entityType, "entityId", $this->entityId])->first();
+            $this->_counter = $result;
         }
         return $this->_counter;
     }
@@ -140,14 +117,7 @@ class RatingPlus
     public function getRating()
     {
         if ($this->_ratingId !== null && $this->_rating === null) {
-            $this->_rating = new Rating();
-            $this->_rating->id = $this->_ratingId;
-            $result = $this->_rating->load();
-            if ($result !== null) {
-                $this->_rating = $result;
-            } else {
-                $this->_rating = null;
-            }
+            $this->_rating = Rating::get($this->_ratingId);
         }
         return $this->_rating;
     }
@@ -159,5 +129,15 @@ class RatingPlus
                 return true;
         }
         return false;
+    }
+
+    /**
+     * Delete plus-rating data
+     */
+    public function delete(){
+        if (isset($this->entityType) && isset($this->entityId)) {
+            Rating::where("[entityId] = ? AND [entityType] = ?",[$this->entityId,$this->entityType])->delete();
+            RatingStatistic::where("[entityId] = ? AND [entityType] = ?",[$this->entityId,$this->entityType])->delete();
+        }
     }
 } 

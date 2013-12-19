@@ -15,12 +15,15 @@ Rays::css("/public/css/post.css");
             <?=$this->module('user_panel',array('userId'=>$user->id, 'viewUser' => true));?>
             <div class="navbar-right">
                 <?php
-                if (isset($canAdd)&&$canAdd) {
+                if (isset($canAdd) && $canAdd) {
                     echo RHtmlHelper::linkAction('friend', '+ Add friend', 'add', $user->id, array('class' => 'btn btn-xs btn-info'));
                 }
-                if (isset($canCancel)&&$canCancel) {
+                if (isset($canCancel) && $canCancel) {
+                    echo RHtmlHelper::linkAction('message','+ Send a message','send',['private',$user->id],array('class' => 'btn btn-xs btn-success'));
+                    echo '&nbsp;&nbsp;';
                     echo RHtmlHelper::linkAction('friend', '- Cancel friend', 'cancel', $user->id, array('class' => 'btn btn-xs btn-danger'));
                 }
+
                 echo '<div class="clearfix"></div>';
                 ?>
             </div>
@@ -49,7 +52,7 @@ Rays::css("/public/css/post.css");
                 ?>
                 <ul class="list-group">
                     <?php
-                    foreach ($user->columns as $objCol => $dbCol) {
+                    foreach (User::$mapping as $objCol => $dbCol) {
                         if ($user->$objCol && !in_array($objCol, $skip)) {
                             echo "<li class='list-group-item'>";
                             switch ($objCol) {
@@ -93,7 +96,7 @@ Rays::css("/public/css/post.css");
                                         <img class="loading-24-24" src="<?=RHtmlHelper::siteUrl('/public/images/loading.gif')?>" /> loading...
                                     </div>
                                 </div>
-                                <a id="load-more-groups" href="javascript:loadMoreGroups()" class="btn btn-lg btn-primary btn-block">Load more groups</a>
+                                <a id="load-more-groups" href="javascript:loadMoreGroups()" style="height: 0;width: 0;"></a>
                             </div>
 
                             <script>
@@ -105,7 +108,7 @@ Rays::css("/public/css/post.css");
 
                                 $(document).ready(function(){
                                     $('#loading-groups').hide(0);
-                                    $('#load-more-groups').hide(0);
+                                    //$('#load-more-groups').hide(0);
                                     $container.masonry({
                                         columnWidth: 0,
                                         itemSelector: '.item'

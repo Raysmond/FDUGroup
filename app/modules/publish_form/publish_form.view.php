@@ -20,7 +20,7 @@
             <div class="home-actions-item">
                 <a href="<?=RHtmlHelper::siteUrl('post/new')?>" class="">
                     <?=RHtmlHelper::showImage('public/images/post.png','',array('width'=>'48px'))?>
-                     New topic</a>
+                     New post</a>
 
             </div>
 

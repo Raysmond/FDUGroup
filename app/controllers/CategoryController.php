@@ -1,6 +1,7 @@
 <?php
 /**
  * CategoryController class file.
+ *
  * @author: Raysmond
  */
 
@@ -19,24 +20,15 @@ class CategoryController extends BaseController
      */
     public function actionGroups($categoryId = '')
     {
-        $category = new Category();
-        if (!is_numeric($categoryId) || $category->load($categoryId) === null) {
-            $this->page404();
-            return;
-        }
-        $page = Rays::getParam("page",1);
-        $pageSize = 5;
+        RAssert::not_empty($categoryId);
+        $category = Category::get($categoryId);
+        RAssert::not_null($category);
 
-        $groups = new Group();
-        $cidList = [$categoryId];
-        foreach ((new Category())->load($categoryId)->children() as $sCat) {
-            $cidList[] = $sCat->id;
-        }
+        $page = $this->getPage("page",1);
+        $pageSize = $this->getPageSize("pagesize", 10);
 
-        $groups = $groups->find(($page-1)*$pageSize, $pageSize, ['key' => $groups->columns['id'], 'order' => 'desc'], [], ['categoryId' => $cidList]);
+        $groups = Group::getGroupsOfCategory($categoryId,($page-1)*$pageSize,$pageSize);
 
-        $this->addCss("/public/css/group.css");
-        $this->addJs("/public/js/masonry.pkgd.min.js");
         if(Rays::isAjax()){
             if (!count($groups)) {
                 echo 'nomore';
@@ -45,7 +37,10 @@ class CategoryController extends BaseController
             }
             exit;
         }
-        $this->render('groups', array('category' => $category, 'groups' => $groups), false);
+
+        $this->addCss("/public/css/group.css");
+        $this->addJs("/public/js/masonry.pkgd.min.js");
+        $this->render('groups', ['category' => $category, 'groups' => $groups], false);
 
     }
 
@@ -63,9 +58,7 @@ class CategoryController extends BaseController
                     foreach ($items as $item) {
                         if (!is_numeric($item)) return;
                         else {
-                            $cat = new Category();
-                            $cat->id = $item;
-                            $cat->load();
+                            $cat = Category::get($item);
                             if ($cat->pid == 0) continue;
                             $cat->delete();
                         }
@@ -80,13 +73,12 @@ class CategoryController extends BaseController
                     if ($name == '') {
                         $this->flash('error', 'Category name cannot be blank.');
                     } else {
-                        $parent = new Category();
-                        $result = $parent->load($pid);
+                        $result = Category::get($pid);
                         if ($result != null) {
                             $newCat = new Category();
                             $newCat->name = RHtmlHelper::encode(trim($name));
                             $newCat->pid = $pid;
-                            $newCat->insert();
+                            $newCat->save();
                             $this->flash('message', 'Category ' . $name . " was created successfully.");
                         } else {
                             $this->flash('error', 'Parent category not exists.');
@@ -96,9 +88,7 @@ class CategoryController extends BaseController
             }
         }
 
-        $category = new Category();
-        $category->pid = '0';
-        $data['categories'] = $category->find();
+        $data['categories'] = Category::find()->all();
 
         $this->layout = 'admin';
         $this->setHeaderTitle('Category administration');

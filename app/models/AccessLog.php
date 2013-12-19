@@ -1,38 +1,26 @@
 <?php
 /**
- * Access log
+ * AccessLog data model
+ *
  * @author: Raysmond
- * Date: 13-11-25
  */
 
-class AccessLog extends Data
+class AccessLog extends RModel
 {
 
     public $id, $userId, $host, $title, $path, $uri, $timestamp = null;
 
-    public function __construct()
-    {
-        $options = array(
-            'key' => 'id',
-            'table' => 'accesslog',
-            'columns' => array(
-                'id' => 'aid',
-                'userId' => 'u_id',
-                'host' => 'host',
-                'title' => 'title',
-                'path' => 'path',
-                'uri' => 'uri',
-                'timestamp' => 'timestamp'
-            )
-        );
-        parent::init($options);
-    }
+    public static $primary_key = "id";
 
-    public function insert()
-    {
-        if (!isset($this->timestamp) || $this->timestamp === '') {
-            $this->timestamp = date('Y-m-d H:i:s');
-        }
-        return parent::insert();
-    }
+    public static $table = "accesslog";
+
+    public static $mapping = array(
+        'id' => 'aid',
+        'userId' => 'u_id',
+        'host' => 'host',
+        'title' => 'title',
+        'path' => 'path',
+        'uri' => 'uri',
+        'timestamp' => 'timestamp'
+    );
 }

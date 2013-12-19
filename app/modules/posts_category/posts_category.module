@@ -1,5 +1,9 @@
 <?php
-
+/**
+ * Class posts_category_module
+ *
+ * @author: Raysmond
+ */
 class posts_category_module extends RModule
 {
 
@@ -9,7 +13,7 @@ class posts_category_module extends RModule
     {
         return $this->render("posts_category",
             array(
-                'categories' => (new Category())->find(0, 0, null, null, ["pid" => '0']),
+                'categories' => Category::find("pid","0")->all(),
                 'id' => Rays::router()->getParams()[0]
             ));
     }

@@ -1,13 +1,11 @@
 <?php
 /**
- * Created by JetBrains PhpStorm.
- * User: Raysmond
- * Date: 13-10-15
- * Time: PM3:11
- * To change this template use File | Settings | File Templates.
+ * Data model for user role, e.g. normal user, administrators
+ * @author Raysmond, Xiangyan Sun
  */
 
-class Role extends Data{
+class Role extends RModel
+{
     const ADMINISTRATOR = 'administrator';
     const ANONYMOUS = 'anonymous';
     const AUTHENTICATED = 'authenticated';
@@ -41,22 +39,12 @@ class Role extends Data{
         }
     }
 
-    //const VIP_USER = 4;
+    public $id, $name;
 
-    public $roleId,$roleName;
-
-    public function __construct()
-    {
-        $option = array(
-            'key'=>'roleId',
-            'table'=>'user_role',
-            'columns'=>array(
-                'roleId'=>'rol_id',
-                'roleName'=>'rol_name'
-            )
-        );
-        parent::init($option);
-    }
-
-
+    public static $primary_key = "id";
+    public static $table = "user_role";
+    public static $mapping = array(
+        "id" => "rol_id",
+        "name" => "rol_name"
+    );
 }

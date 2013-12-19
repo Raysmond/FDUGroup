@@ -1,8 +1,18 @@
 <div class="panel panel-default">
 
     <div class="panel-heading">
+        <div class="heading-actions">
+            <?php if($type=='edit')
+                echo RHtmlHelper::linkAction(
+                    'post','Delete','delete',$topic->id.'?returnUrl='.RHtmlHelper::siteUrl('user/myposts'),
+                    array(
+                        'class'=>'btn btn-xs btn-danger',
+                        'onclick'=>'return confirm("Are you sure to delete this topic? This operation cannot be undo!!!")'
+                    ));
+            ?>
+        </div>
         <h1 class="panel-title">
-            New topic
+            <?=$type=='edit'?$topic->title:"New post"?>
         </h1>
     </div>
 
@@ -53,7 +63,7 @@
                 }
                 else{
                     $canCreate = false;
-                    echo 'You haven\'t joint any groups. Go to '.RHtmlHelper::linkAction('group','find','find').' some and join them!' ;
+                    echo "You haven't joined any groups. Go ".RHtmlHelper::linkAction('group','find','find')." some and join them!";
                 }
 
                 ?>

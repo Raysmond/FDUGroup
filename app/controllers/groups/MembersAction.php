@@ -19,10 +19,9 @@ class MembersAction extends RAction
             return;
         }
 
-        $group = new Group();
-        if (($group = $group->load($groupId)) !== null) {
+        if (($group = Group::get($groupId)) !== null) {
 
-            if ($this->getController()->getHttpRequest()->isPostRequest()) {
+            if (Rays::isPost()) {
                 // remove members request
                 if (isset($_POST['selected_members'])) {
                     $ids = $_POST['selected_members'];
@@ -41,13 +40,15 @@ class MembersAction extends RAction
                 }
             }
 
-            $members = $group->groupUsers();
+            $group->category = Category::get($group->categoryId);
+
+            $members = Group::getMembers($group->id);
             $this->getController()->setHeaderTitle("Members in " . $group->name);
             $this->getController()->render(
                 'members',
                 array(
                     'members' => $members,
-                    'manager' => (new User())->load($group->creator),
+                    'manager' => User::get($group->creator),
                     'group' => $group,
                     'memberCount' => count($members),
                     'topicCount' => Group::countTopics($groupId)),

@@ -38,12 +38,11 @@ class new_users_module extends RModule{
      * Override module_content method
      * @return string|void
      */
-    public function module_content(){
+    public function module_content() {
         return $this->render('new_users',array('users'=>$this->findNewUsers()));
     }
 
-    public function findNewUsers(){
-        $user = new User();
-        return $user->find(0,9,array('key'=>'u_id','order'=>'desc'), [], ['status' => User::STATUS_ACTIVE]);
+    public function findNewUsers() {
+        return User::find("status", User::STATUS_ACTIVE)->order_desc("id")->range(0, 9);
     }
 }

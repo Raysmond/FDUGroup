@@ -1,39 +1,72 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: Raysmond
- * Date: 13-11-25
- * Time: PM8:04
+ * RFileCacheHelper helper class
+ *
+ * @author: Raysmond
  */
 
 class RFileCacheHelper implements RICacheHelper
 {
-
-    private $length = 3000;
+    /**
+     * The cache directory
+     * @var null|string
+     */
     public $cacheDir = null;
+
+    /**
+     * Max cache time
+     * @var int
+     */
     public $cacheTime = 3600;
+
+    /**
+     * The prefix for cache file name
+     * @var string
+     */
     public $cachePrefix = 'cache_';
 
+    /**
+     * Constructor method. The args array should like the following:
+     * <code>
+     * $_args = array(
+     *     "cache_dir" = "/cache", // the '/' at the beginning means the base directory of the application
+     *     "cache_time" = 3600, // seconds
+     *     "cache_prefix" = "cache_"
+     * );
+     * </code>
+     * @param array $_args
+     */
     public function __construct($_args = array())
     {
         if ($_args != null) {
             if (isset($_args['cache_dir']))
                 $this->cacheDir = Rays::app()->getBaseDir().'/..'.$_args['cache_dir'].'/';
-            if (isset($_args['length']))
-                $this->length = $_args['length'];
-            if(isset($_args['cacheTime']))
-                $this->cacheTime = $_args['cacheTime'];
-            if(isset($_args['cachePrefix']))
-                $this->cachePrefix = $_args['cachePrefix'];
+            if(isset($_args['cache_time']))
+                $this->cacheTime = $_args['cache_time'];
+            if(isset($_args['cache_prefix']))
+                $this->cachePrefix = $_args['cache_prefix'];
         }
     }
 
+    /**
+     * Get a cached HTML file
+     * @param $cacheId string the ID of the cache
+     * @param $name string the name of cache name
+     * @return string
+     */
     private function getCacheFile($cacheId, $name)
     {
         $path = $this->cacheDir . str_replace('.', '/', $cacheId);
         return $path . '/' . ($name !== null ? $this->cachePrefix . $name . '.html' : $this->cachePrefix.'untitled.html');
     }
 
+    /**
+     * Get the cached content
+     * @param $cacheId string the ID of the cache
+     * @param $name string the name of the cache file
+     * @param null $expireTime max cache time for the content
+     * @return bool|string the cache content or false for not existed or expired cache
+     */
     public function get($cacheId, $name, $expireTime=null)
     {
         $cachedFile = $this->getCacheFile($cacheId, $name);
@@ -48,11 +81,18 @@ class RFileCacheHelper implements RICacheHelper
         return file_get_contents($cachedFile);
     }
 
+    /**
+     * Set cache content
+     * @param $cacheId the ID of the cache. The ID is used for locating the cache directory
+     * @param null $name the name of the cache
+     * @param $_content the cache content
+     * @return int
+     */
     public function set($cacheId, $name = null, $_content)
     {
         $cachedFile = $this->getCacheFile($cacheId, $name);
-
         $path = dirname($cachedFile);
+
         //check and make the $path dir
         if (!file_exists($path)) {
             $dir = dirname($path);

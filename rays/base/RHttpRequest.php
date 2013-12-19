@@ -1,12 +1,11 @@
 <?php
 /**
  * RHttpRequest class file
+ *
  * @author: Raysmond
  */
-
 class RHttpRequest
 {
-
     public function normalizeRequest()
     {
         // normalize request
@@ -34,31 +33,61 @@ class RHttpRequest
             return stripslashes($data);
     }
 
+    /**
+     * Whether the current HTTP request type is 'POST' or not
+     * @return bool
+     */
     public function isPostRequest()
     {
         return $this->getRequestType() == "POST";
     }
 
+    /**
+     * Get parameter in POST or GET request. GET parameters are returned first.
+     * @param $name parameter name
+     * @param null $defaultValue default value
+     * @return string|null
+     */
     public function getParam($name, $defaultValue = null)
     {
         return isset($_GET[$name]) ? $_GET[$name] : (isset($_POST[$name]) ? $_POST[$name] : $defaultValue);
     }
 
+    /**
+     * Get parameter in GET request
+     * @param $name parameter name
+     * @param null $defaultValue default value
+     * @return string|null
+     */
     public function getQuery($name, $defaultValue = null)
     {
         return isset($_GET[$name]) ? $_GET[$name] : $defaultValue;
     }
 
+    /**
+     * Get parameter in POST request
+     * @param $name parameter name
+     * @param null $defaultValue default value
+     * @return string|null
+     */
     public function getPost($name, $defaultValue = null)
     {
         return isset($_POST[$name]) ? $_POST[$name] : $defaultValue;
     }
 
+    /**
+     * Get query string in GET request
+     * @return string query string
+     */
     public function getQueryString()
     {
         return isset($_SERVER['QUERY_STRING']) ? $_SERVER['QUERY_STRING'] : '';
     }
 
+    /**
+     * Get current HTTP request type
+     * @return string HTTP request type
+     */
     public function getRequestType()
     {
         if (isset($_POST['_method']))
@@ -67,46 +96,76 @@ class RHttpRequest
         return strtoupper(isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : 'GET');
     }
 
-    public function getIsAjaxRequest()
+    /**
+     * Whether the current HTTP request is Ajax request
+     * @return bool
+     */
+    public function isAjaxRequest()
     {
         return isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest';
     }
 
 
+    /**
+     * Get server name
+     * @return string
+     */
     public function getServerName()
     {
         return $_SERVER['SERVER_NAME'];
     }
 
+    /**
+     * Get server port
+     * @return string
+     */
     public function getServerPort()
     {
         return $_SERVER['SERVER_PORT'];
     }
 
 
+    /**
+     * Get referrer uri (the HTTP request came from which uri)
+     * @return string|null referrer uri
+     */
     public function getUrlReferrer()
     {
         return isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : null;
     }
 
 
+    /**
+     * Get user agent of HTTP request
+     * @return null
+     */
     public function getUserAgent()
     {
         return isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : null;
     }
 
-
+    /**
+     * Get user host address
+     * @return string
+     */
     public function getUserHostAddress()
     {
         return isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '127.0.0.1';
     }
 
+    /**
+     * Get user host
+     * @return null
+     */
     public function getUserHost()
     {
         return isset($_SERVER['REMOTE_HOST']) ? $_SERVER['REMOTE_HOST'] : null;
     }
 
-
+    /**
+     * Get current request uri
+     * @return string
+     */
     public function getRequestUri()
     {
         return $_SERVER['REQUEST_URI'];

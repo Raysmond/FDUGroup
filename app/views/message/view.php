@@ -27,20 +27,48 @@
 
         </div>
         <div class="clearfix" style="margin-bottom: 10px;"></div>
-        <div class="message-container">
+        <div class="message-container message-list">
         <?php
-        foreach($msgs as $msg)
-        {
+        if(empty($msgs)){
+            ?>
+            <div style="font-weight: bold;text-align: center; padding: 20px 0;">No messages.</div>
+            <?php
+        }
+        else
+        foreach($msgs as $msg){
         ?>
-        <div class="panel panel-info <?=($msg->status==Message::$STATUS_UNREAD)?"message-unread":""?>">
+        <div id="message-item-<?=$msg->id?>" class="message-item panel panel-info <?=($msg->status==Message::STATUS_UNREAD)?"message-unread":""?>">
             <div class="panel-heading">
                 <div style="float:right;margin-top: -2px;">
                     <?php
                     if($msg->receiverId==Rays::app()->getLoginUser()->id){
-                        if($msg->status==Message::$STATUS_UNREAD) echo RHtmlHelper::linkAction('message',"",'read',$msg->id,array('title' => 'Mark as read', 'class'=>'glyphicon glyphicon-ok message-read'));
+
+                        if(($msg->type->name=="private" || $msg->type->name=="user")&&$msg->senderId!=Rays::user()->id){
+                            echo RHtmlHelper::linkAction("message","","send",['private',$msg->senderId],array('title'=>'Reply',"class"=>'glyphicon glyphicon-send'));
+                            echo '&nbsp;&nbsp;&nbsp;';
+                        }
+
+                        if($msg->status==Message::STATUS_UNREAD){
+                            $url = RHtmlHelper::siteUrl("message/read/".$msg->id);
+                              ?>
+                            <a href="javascript:markStatus('<?=$url?>',<?=$msg->id?>)"><span class="glyphicon glyphicon-ok message-read"></span></a>
+                            <?php
+                        }
                         echo '&nbsp;&nbsp;';
-                        if($msg->status!=Message::$STATUS_TRASH) echo RHtmlHelper::linkAction('message',"",'trash',$msg->id,array('title'=> 'Mark as trash', 'class'=>'glyphicon glyphicon-trash message-trash'));
-                        if($type=='trash') echo RHtmlHelper::linkAction('message',"",'delete',$msg->id,array('title' => 'Delete', 'class'=>'glyphicon glyphicon-remove message-trash'));
+
+                        if($msg->status!=Message::STATUS_TRASH){
+                            $url = RHtmlHelper::siteUrl("message/trash/".$msg->id);
+                            ?>
+                            <a href="javascript:markStatus('<?=$url?>',<?=$msg->id?>)"><span class="glyphicon glyphicon-trash message-trash"></span></a>
+                            <?php
+                        }
+                        if($type=='trash'){
+//                            echo RHtmlHelper::linkAction('message',"",'delete',$msg->id,array('title' => 'Delete', 'class'=>'glyphicon glyphicon-remove message-trash'));
+                            $url = RHtmlHelper::siteUrl("message/delete/".$msg->id);
+                            ?>
+                            <a href="javascript:markStatus('<?=$url?>',<?=$msg->id?>)"><span class="glyphicon glyphicon-remove message-trash"></span></a>
+                        <?php
+                        }
                     }
                     ?>
                 </div>
@@ -49,25 +77,35 @@
                     echo RHtmlHelper::linkAction('message',$title,'detail',$msg->id);
 
                     echo '</div><div class="panel-body">';
-                    $msg->load();
                     echo '<div class="message-meta">';
-                    if($msg->sender=='system'){
+                    if($msg->type->name=='system'){
                         echo "From: 系统消息";
                     }
                     else{
-                        if ($msg->sender !== null)
-                            $msg->sender->load();
-                        if($msg->sender instanceof User){
-                            echo "From: ".RHtmlHelper::linkAction('user',$msg->sender->name,'view',$msg->sender->id);
-                        }
-                        else if($msg->sender instanceof Group){
-                            echo "From: ".RHtmlHelper::linkAction('group',$msg->sender->name,'detail',$msg->sender->id);
-                        }
+                         $sender = null;
+                         if($msg->type->name == "user" || $msg->type->name =="private"){
+                             $sender = User::get($msg->senderId);
+                             if($sender!=null)
+                                echo "From: ".RHtmlHelper::linkAction('user',$sender->name,'view',$sender->id);
+                             else
+                                 echo "From: Unknown user";
+                         }
+                         else if($msg->type->name == "group"){
+                             $sender = Group::get($msg->senderId);
+                             if($sender!=null)
+                                echo "From: ".RHtmlHelper::linkAction('group',$sender->name,'detail',$sender->id);
+                             else
+                                 echo "From: Unknown group";
+                         }
+                         else{
+                            echo "From: Unknown";
+                         }
+
                     }
                     echo '&nbsp;&nbsp;Delivery time: '.$msg->sendTime;
                     echo '&nbsp;&nbsp;Status: '.($msg->status==1?"unread":"read");
                     echo '</div>';
-                    echo '<p>'.RHtmlHelper::decode($msg->content).'</p>';
+                    echo '<div class="message-body" messageId="'.$msg->id.'">'.RHtmlHelper::decode($msg->content).'</div>';
 
                     echo '</div></div>';
                     }
@@ -78,5 +116,39 @@
                     </div>
     </div>
 </div>
+<script>
+    $(document).ready(function () {
+        $(".message-list .message-item .message-body a").click(function () {
+            var id = $(this).parents(".message-body").attr("messageId");
+            if (id) {
+                $.ajax({
+                    url: "<?=RHtmlHelper::siteUrl("message/read")?>",
+                    type: "post",
+                    data: {messageId: id},
+                    success: function (data) {
+                        if (data == "success") {
+                            // do some thing
+                        }
+                    }
+                });
+            }
+            return true;
+        });
+    });
 
+    function markStatus(url,msgId){
+        $.ajax({
+            url: url,
+            type: "POST",
+            success:function(result){
+                if(result=="success"){
+                    $("#message-item-"+msgId).remove();
+                }
+                else{
+                    alert(result);
+                }
+            }
+        });
+    }
+</script>
 

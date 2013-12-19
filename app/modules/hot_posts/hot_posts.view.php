@@ -5,10 +5,12 @@
             <?php
             foreach($posts as $post){
                 echo '<li class="post-item">';
-                echo '<span class="counter">'.$post['daycount'].'</span>';
-                echo RHtmlHelper::linkAction('post',$post['top_title'],'view',$post['top_id']);
+                echo '<span class="counter">'.$post->counter->dayCount.'</span>';
+                echo RHtmlHelper::linkAction('post',$post->title,'view',$post->id);
                 echo '</li>';
             }
+            if (empty($posts))
+                echo '<p>No posts viewed today.</p>';
             ?>
         </ul>
     </div>

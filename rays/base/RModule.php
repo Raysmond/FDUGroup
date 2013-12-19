@@ -1,29 +1,42 @@
 <?php
 /**
  * RModule class file.
+ *
  * @author: Raysmond
  */
-
 class RModule
 {
-    // The name of the module
+    /**
+     * @var string The name of the module
+     */
     public $name;
 
-    // The unique ID of the module
+    /**
+     * @var string The unique ID of the module
+     */
     private $_id;
 
-    // The path of the module directory
+    /**
+     * @var string The path of the module directory
+     */
     private $_path;
 
+    /**
+     * @var string|null the base uri of the modules path. For example: "http://localhost/FDUGroup/app/modules"
+     */
     static $moduleBaseUri = null;
 
-    // The module shall appear in what pages
-    // For example:
-    // array('site/about','user/*')
-    // * cannot be the first character
-    // <front> for the front page
+    /**
+     * @var array  The module shall appear in what pages
+     * For example:
+     * <code>array('site/about','user/*') </code>
+     * <front> for the front page
+     */
     public $access = array();
 
+    /**
+     * @var array  Unlike $access, those pages that match the URI declared here will not see the module
+     */
     public $denyAccess = array();
 
     public function __construct($params = array())
@@ -80,6 +93,10 @@ class RModule
         return '';
     }
 
+    /**
+     * Get the module directory
+     * @return string
+     */
     public function getModuleDir()
     {
         if (!isset($this->_path)) {
@@ -88,6 +105,10 @@ class RModule
         return $this->_path;
     }
 
+    /**
+     * Get the module URL path
+     * @return string
+     */
     public function getModulePath()
     {
         return static::getModuleBasePath() . '/' . $this->getId();
@@ -114,11 +135,19 @@ class RModule
         }
     }
 
+    /**
+     * Add css
+     * @param $cssPath
+     */
     public function addCss($cssPath)
     {
         Rays::app()->getClientManager()->registerCss($cssPath);
     }
 
+    /**
+     * Add js
+     * @param $jsPath
+     */
     public function addJs($jsPath)
     {
         Rays::app()->getClientManager()->registerScript($jsPath);
@@ -132,26 +161,46 @@ class RModule
         return Rays::app()->getHttpRequest()->urlMatch($this->access);
     }
 
+    /**
+     * Whether the module cannot be viewed in the current page or not
+     * @return bool
+     */
     public function denyAccess()
     {
         return empty($this->denyAccess)? false : Rays::app()->getHttpRequest()->urlMatch($this->denyAccess);
     }
 
+    /**
+     * Set the unique ID of the module
+     * @param string $id
+     */
     public function setId($id)
     {
         $this->_id = $id;
     }
 
+    /**
+     * Get the unique ID of the module
+     * @return string
+     */
     public function getId()
     {
         return $this->_id;
     }
 
+    /**
+     * Set the name of the module
+     * @param string $name
+     */
     public function setName($name)
     {
         $this->name = $name;
     }
 
+    /**
+     * Get the name of the module
+     * @return string
+     */
     public function getName()
     {
         return $this->name;

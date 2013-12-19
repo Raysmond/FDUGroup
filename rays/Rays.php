@@ -1,12 +1,13 @@
 <?php
+
+require(dirname(__FILE__) . '/RaysFramework.php');
+
 /**
- * Rays framework bootstrap file.
+ * Class Rays provide common functions for the whole web application.
+ *
  * @author: Raysmond
  */
-
-require(dirname(__FILE__) . '/RaysBase.php');
-
-class Rays extends RaysBase{
+class Rays extends RaysFramework{
 
     /**
      * Get the current login user or null for anonymous users
@@ -77,7 +78,7 @@ class Rays extends RaysBase{
      */
     public static function isAjax()
     {
-        return static::app()->getHttpRequest()->getIsAjaxRequest();
+        return static::app()->getHttpRequest()->isAjaxRequest();
     }
 
     /**
@@ -116,6 +117,17 @@ class Rays extends RaysBase{
     public static function getParam($name,$default)
     {
         return static::app()->getHttpRequest()->getParam($name,$default);
+    }
+
+    /**
+     * Get args of action
+     * @param $index
+     * @return string|null
+     */
+    public static function args($index)
+    {
+        $args = Rays::router()->getParams();
+        return isset($args[$index]) ?$args[$index] : null;
     }
 
 }

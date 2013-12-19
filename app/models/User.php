@@ -1,10 +1,10 @@
 <?php
 /**
- * Class User
- * @author: Raysmond
+ * Data model for users
+ * @author: Raysmond, Xiangyan Sun
  */
 
-class User extends Data
+class User extends RModel
 {
     public static $roles = array('administrator', 'authenticated user', 'anonymous user', 'VIP user');
 
@@ -18,6 +18,13 @@ class User extends Data
     const STATUS_ACTIVE = 1;
 
     const ENTITY_TYPE = 4;
+
+    const PICTURE_DIR = "files/images/users";
+
+    /**
+     * @var array map some data for cache
+     */
+    private static $_map = array();
 
     public static $labels = array(
         "id" => "ID",
@@ -47,43 +54,30 @@ class User extends Data
         'gender' => 0
     );
 
-    public function __construct()
-    {
-        $option = array(
-            "key" => "id",
-            "table" => "users",
-            "columns" => array(
-                "id" => "u_id",
-                'roleId' => 'u_role_id',
-                "name" => "u_name",
-                "mail" => "u_mail",
-                "password" => "u_password",
-                "region" => "u_region",
-                "mobile" => "u_mobile",
-                "qq" => "u_qq",
-                "weibo" => "u_weibo",
-                "registerTime" => "u_register_time",
-                "status" => "u_status",
-                "picture" => "u_picture",
-                "intro" => "u_intro",
-                "homepage" => "u_homepage",
-                "credits" => "u_credits",
-                "gender" => "u_gender",
-                "privacy" => "u_privacy",
-            ),
-
-        );
-        parent::init($option);
-    }
-
-    public function load($id = null)
-    {
-        $result = parent::load($id);
-        if ($result == null) return null;
-        $this->role = new Role();
-        $this->role->roleId = $this->roleId;
-        return $this;
-    }
+    public static $primary_key = "id";
+    public static $table = "users";
+    public static $mapping = array(
+        "id" => "u_id",
+        'roleId' => 'u_role_id',
+        "name" => "u_name",
+        "mail" => "u_mail",
+        "password" => "u_password",
+        "region" => "u_region",
+        "mobile" => "u_mobile",
+        "qq" => "u_qq",
+        "weibo" => "u_weibo",
+        "registerTime" => "u_register_time",
+        "status" => "u_status",
+        "picture" => "u_picture",
+        "intro" => "u_intro",
+        "homepage" => "u_homepage",
+        "credits" => "u_credits",
+        "gender" => "u_gender",
+        "privacy" => "u_privacy",
+    );
+    public static $relation = array(
+        "role" => array("Role", "[roleId] = [Role.id]")
+    );
 
     public static function getGenderName($genderId)
     {
@@ -112,11 +106,16 @@ class User extends Data
             if (isset($this->id) && is_numeric($this->id)) {
                 $this->_wallet = new Wallet();
                 $this->_wallet->userId = $this->id;
-                $result = $this->_wallet->load();
+                $result = Wallet::get($this->id);
                 if ($result === null) {
+                    $this->_wallet->type = Wallet::COIN_DB_NAME;
+                    $this->_wallet->money = 0;
+                    $this->_wallet->frozenMoney = 0;
                     $this->_wallet->timestamp = date('Y-m-d H:i:s');
-                    $this->_wallet->insert();
-                    $this->_wallet->load();
+                    $this->_wallet->save();
+                }
+                else{
+                    $this->_wallet = $result;
                 }
             }
             return $this->_wallet;
@@ -138,8 +137,10 @@ class User extends Data
     {
         if (!isset($this->id))
             return 0;
-        $msg = new Message();
-        return $msg->countUnreadMsgs($this->id);
+        if(!isset(self::$_map["message_unread_count"])){
+            self::$_map["message_unread_count"] = Message::find(array("receiverId", $this->id, "status", Message::STATUS_UNREAD))->count();
+        }
+        return self::$_map["message_unread_count"];
     }
 
     /**
@@ -147,50 +148,45 @@ class User extends Data
      * @param $name
      * @param $password
      * @param $email
+     * @return User user
      */
-    public function register($name, $password, $email)
+    public static function register($name, $password, $email)
     {
-        $this->setDefaults();
-        $this->name = $name;
-        $this->password = $password;
-        $this->mail = $email;
-        $id = $this->insert();
-        $this->load($id);
+        $user = new User();
+        $user->setDefaults();
+        $user->name = $name;
+        $user->password = $password;
+        $user->mail = $email;
+        $user->save();
+        return $user;
     }
 
-    public static function countPosts($userId){
-        $post = new Topic();
-        $post->userId = $userId;
-        return $post->count();
+    public static function countPosts($userId)
+    {
+        return Topic::find("userId", $userId)->count();
     }
 
     public static function countFriends($userId)
     {
-        $friends = new Friend();
-        $friends->uid = $userId;
-        return $friends->count();
+        return Friend::find("uid", $userId)->count();
     }
 
     public static function countGroups($userId)
     {
-        $group = new Group();
-        $group->creator = $userId;
-        return $group->count();
+        return GroupUser::find("userId",$userId)->count();
     }
 
-    public function login($postForm)
-    {
+    /* TODO: Should not pass postForm here */
+    public static function login($postForm) {
         $validation = new RFormValidationHelper(array(
             array('field' => 'username', 'label' => 'User name', 'rules' => 'trim|required'),
             array('field' => 'password', 'label' => 'password', 'rules' => 'trim|required')
         ));
 
         if ($validation->run()) {
-            $login = $this->verifyLogin($postForm['username'], $postForm['password']);
+            $login = User::verifyLogin($postForm['username'], $postForm['password']);
             if ($login instanceof User) {
-                $this->id = $login->id;
-                $this->name = $login->name;
-                return true;
+                return $login;
             } else {
                 return array('verify_error' => $login);
             }
@@ -203,15 +199,13 @@ class User extends Data
      * Verify login information
      * @param $username
      * @param $password
-     * @return string
+     * @return string or User objetct
      */
-    public function verifyLogin($username, $password)
+    public static function verifyLogin($username, $password)
     {
-        $this->name = $username;
-        $user = $this->find();
-        if (count($user) == 0)
+        $user = User::find("name", $username)->first();
+        if ($user == null)
             return "No such user name.";
-        $user = $user[0];
         if ($user->status == self::STATUS_BLOCKED) {
             return "User with name " . $user->name . " has been blocked!";
         }
@@ -227,37 +221,31 @@ class User extends Data
         }
     }
 
-    public function blockUser($userId = '')
-    {
-        $this->setStatus($userId, self::STATUS_BLOCKED);
-    }
-
-    public function activeUser($userId = '')
-    {
-        $this->setStatus($userId, self::STATUS_ACTIVE);
-    }
-
-    private function setStatus($userId = '', $status)
-    {
-        if ($userId != '') $this->id = $userId;
-        if (isset($this->id)) {
-            $this->load();
-            $this->status = $status;
-            $this->update();
+    public static function blockUser($userId) {
+        $user = User::get($userId);
+        if ($user != null) {
+            $user->status = User::STATUS_BLOCKED;
+            $user->save();
         }
     }
 
-    public function sendWelcomeMessage()
-    {
-        $message = new Message();
+    public function activateUser($userId) {
+        $user = User::get($userId);
+        if ($user != null) {
+            $user->status = User::STATUS_ACTIVE;
+            $user->save();
+        }
+    }
+
+    public function sendWelcomeMessage() {
         $title = "Welcome " . $this->name;
-        $content = 'Dear ' . $this->name . " : <br/>"
-            . "Welcome to join the FDUGroup big family!"
-            . '<br/><br/>'
-            . "--- <b>FDUGroup team</b>"
-            . '<br/>'
-            . date('Y-m-d H:i:s');
-        $message->sendMsg('system', 0, $this->id, $title, RHtmlHelper::encode($content), null, 1);
+        $content = 'Dear '.$this->name." : <br/>"
+            ."Welcome to join the FDUGroup big family!"
+            .'<br/><br/>'
+            ."--- <b>FDUGroup team</b>"
+            .'<br/>'
+            .date('Y-m-d H:i:s');
+        Message::sendMessage('system', 0, $this->id, $title, RHtmlHelper::encode($content), null, 1);
     }
 
     public static function getPicOptions()

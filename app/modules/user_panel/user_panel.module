@@ -8,10 +8,7 @@ class user_panel_module extends RModule
     public function __construct($params = array())
     {
         if (isset($params['userId'])) {
-            $user = new User();
-            if ($user->load($params['userId']) !== null) {
-                $this->user = $user;
-            }
+            $this->user = User::get($params['userId']);
         }
 
         $this->params = $params;
@@ -24,6 +21,7 @@ class user_panel_module extends RModule
             'isOwn' => (Rays::isLogin() && $this->user === null) || (Rays::isLogin() && $this->user !== null && Rays::user()->id == $this->user->id)
         );
         $data = array_merge($data, $this->params);
+        //Rays::js("/public/js/jquery.dotdotdot.min.js");
         return $this->render('user_panel', $data);
     }
 }

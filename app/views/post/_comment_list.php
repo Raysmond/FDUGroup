@@ -6,7 +6,14 @@
 
             <!-- user picture -->
             <div class="col-lg-2 user-picture">
-                <?= RHtmlHelper::showImage($commentItem['root']->user->picture, $commentItem['root']->user->name, array('width' => '64px;')) ?>
+                <?php
+                $picture = $commentItem['root']->user->picture;
+                if(!isset($picture) || $picture==''){
+                    $picture = User::$defaults['picture'];
+                }
+                $src = RImageHelper::styleSrc($picture,User::getPicOptions());
+                ?>
+                <?= RHtmlHelper::showImage($src, $commentItem['root']->user->name, array('width' => '64px;')) ?>
             </div>
 
             <!-- comment content -->

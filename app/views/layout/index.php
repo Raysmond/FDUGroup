@@ -24,9 +24,10 @@ $baseUrl = Rays::app()->getBaseUrl();
     <script type="text/javascript" src="<?=$baseUrl?>/public/js/jquery.min.js"></script>
     <script type="text/javascript" src="<?=$baseUrl?>/public/bootstrap-3.0/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="<?=$baseUrl?>/public/js/main.js"></script>
+    <script type="text/javascript" src="<?=$baseUrl; ?>/public/js/jquery.dotdotdot.min.js"></script>
 </head>
 
-<body class="index page-<?=Rays::router()->getController().'-'.Rays::router()->getAction()?>">
+<body class="index page-<?=Rays::router()->getControllerId().'-'.Rays::router()->getActionId()?>">
 <?php
 $this->module('main_nav',array('id'=>'main_nav','name'=>'Main navigation'));
 ?>
@@ -58,8 +59,9 @@ $this->module('main_nav',array('id'=>'main_nav','name'=>'Main navigation'));
         <div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar" role="navigation">
 
             <?php
+            $this->module("follow_us");
             $this->module("help_nav");
-            $this->module("contact_nav");
+            //$this->module("contact_nav");
 
             $this->module("active_groups");
             $this->module("hot_posts");
@@ -70,9 +72,10 @@ $this->module('main_nav',array('id'=>'main_nav','name'=>'Main navigation'));
             ?>
         </div><!--/span-->
     </div><!--/row-->
-    <hr>
+
     <div id="footer" class="row">
-        <div class="copyright col-lg-5"><?php echo RHtmlHelper::encode(Rays::getCopyright()); ?></div>
+        <hr>
+        <div class="copyright col-lg-5"><?php echo "© Copyright " . Rays::app()->name . " 2013, All Rights Reserved."; ?></div>
 
         <div class="footer-links col-lg-7">
             <ul>

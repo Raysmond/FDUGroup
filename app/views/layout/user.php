@@ -25,6 +25,7 @@ $baseUrl = Rays::app()->getBaseUrl();
     <script type="text/javascript" src="<?=$baseUrl?>/public/js/jquery.min.js"></script>
     <script type="text/javascript" src="<?=$baseUrl?>/public/bootstrap-3.0/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="<?=$baseUrl?>/public/js/main.js"></script>
+    <script type="text/javascript" src="<?=$baseUrl; ?>/public/js/jquery.dotdotdot.min.js"></script>
 </head>
 
 <body class="user-home">
@@ -83,7 +84,7 @@ $baseUrl = Rays::app()->getBaseUrl();
     </div><!--/row-->
     <hr>
     <div id="footer" class="row">
-        <div class="copyright col-lg-5"><?php echo RHtmlHelper::encode(Rays::getCopyright()); ?></div>
+        <div class="copyright col-lg-5"><?php echo "© Copyright " . Rays::app()->name . " 2013, All Rights Reserved."; ?></div>
 
         <div class="footer-links col-lg-7">
             <ul>
