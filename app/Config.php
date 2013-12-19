@@ -14,8 +14,8 @@ return array(
 
     'db' => array(
         'host' => 'localhost',
-        'user' => 'root',
-        'password' => 'soaringlabdb203',
+        'user' => 'fdugroup',
+        'password' => 'fdugroup',
         'db_name' => 'fdugroup',
         'table_prefix' => 'group_',
         'charset' => 'utf8',
