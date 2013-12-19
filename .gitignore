@@ -3,5 +3,6 @@
 .svn
 cache_*.html
 files
+files/images
 public/images/styles
 public/userfiles
