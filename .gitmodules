@@ -1,0 +1,3 @@
+[submodule "Rays"]
+	path = Rays
+	url = git://github.com/Raysmond/Rays.git
