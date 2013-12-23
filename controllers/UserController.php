@@ -50,7 +50,7 @@ class UserController extends BaseController
 
     public function actionLogout()
     {
-        $this->getSession()->deleteSession("user");
+        Rays::app()->logout();
         $this->redirect(Rays::baseUrl());
     }
 
