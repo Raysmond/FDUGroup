@@ -40,3 +40,11 @@ Options +FollowSymLinks
   RewriteRule ^ index.php [L]
 
 </IfModule>
+
+<FilesMatch "^(R|Rays)\.php$|\.(module)$|(Controller|\.view)\.php$|^#.*#$|\.php(~|\.sw[op]|\.bak|\.orig\.save)$">
+   deny from all
+</FilesMatch>
+
+<Files ~ "Config.php|^Rays\w+\.php$">
+    deny from all
+</Files>

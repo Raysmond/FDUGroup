@@ -1,0 +1,23 @@
+<?php
+/**
+ * Navigation module
+ * Navigation appears in user home page.
+ * @author: Raysmond
+ */
+
+class user_home_nav_module extends RModule{
+
+    /**
+     * Override module_content method
+     * @return string|void
+     */
+    public function module_content(){
+        $currentUrl = Rays::app()->getHttpRequest()->getRequestUriInfo();
+        $user = Rays::user();
+        return $this->render('user_home_nav',
+            array(
+                'currentUrl'=>$currentUrl,
+                'user'=>$user
+            ));
+    }
+}
