@@ -12,7 +12,7 @@ class user_home_nav_module extends RModule{
      * @return string|void
      */
     public function module_content(){
-        $currentUrl = Rays::app()->getHttpRequest()->getRequestUriInfo();
+        $currentUrl = Rays::app()->request()->getRequestUriInfo();
         $user = Rays::user();
         return $this->render('user_home_nav',
             array(

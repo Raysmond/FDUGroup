@@ -12,7 +12,7 @@ class active_groups_module extends RModule {
      * @return string|void
      */
     public function module_content() {
-        $cid = Rays::router()->getParams()[0];
+        $cid = @Rays::router()->getParams()[0];
 
         $groups = array();
         if(isset($cid)&&is_numeric($cid)){

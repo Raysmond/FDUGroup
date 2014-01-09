@@ -23,7 +23,7 @@
                         echo '<div class="col-lg-2 friend-item" style="height: 90px;">';
                         if(!isset($friend->user->picture)||$friend->user->picture=='') $friend->user->picture = User::$defaults['picture'];
                         $picture = RImage::styleSrc($friend->user->picture,User::getPicOptions());
-                        echo RHtml::showImage($picture,$friend->user->name,array('width'=>'64px'));
+                        echo RHtml::image($picture,$friend->user->name,array('width'=>'64px'));
                         echo '<br/>';
                         echo RForm::input(array('type'=>'checkbox','name'=>'select_friends[]','value'=>$friend->user->id,'class'=>'btn btn-default'));
                         echo RHtml::linkAction('user',$friend->user->name,'view',$friend->user->id);

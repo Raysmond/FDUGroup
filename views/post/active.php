@@ -15,7 +15,7 @@
                 <?php if ($topic->user->picture == '') {
                     $topic->user->picture = User::$defaults['user_picture'];
                 }?>
-                <?= RHtml::showImage($topic->user->picture, $topic->user->name, array('width' => '64px')) ?>
+                <?= RHtml::image($topic->user->picture, $topic->user->name, array('width' => '64px')) ?>
 
             </div>
             <div class="col-lg-11 topic-content">

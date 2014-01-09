@@ -7,7 +7,7 @@
             echo '<div class="user-item col-lg-4">';
             $picture = isset($user->picture) && $user->picture != '' ? $user->picture : User::$defaults['picture'];
             $picture = RImage::styleSrc($picture, User::getPicOptions());
-            echo '<a href="' . RHtml::siteUrl('user/view/' . $user->id) . '">' . RHtml::showImage($picture, $user->name, array('width' => '64px', 'height' => '64px')) . '</a>';
+            echo '<a href="' . RHtml::siteUrl('user/view/' . $user->id) . '">' . RHtml::image($picture, $user->name, array('width' => '64px', 'height' => '64px')) . '</a>';
             $name = $user->name;
             if (mb_strlen($name) > 7) $name = mb_substr($name, 0, 8) . "..";
             echo RHtml::linkAction('user', $name, 'view', $user->id, array('title' => $user->name)) . "  ";

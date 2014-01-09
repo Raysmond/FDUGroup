@@ -10,7 +10,7 @@
             ?>
             <div class="row topic-item">
                 <div class="col-lg-2 topic-picture">
-                    <?= RHtml::showImage(RImage::styleSrc($user->picture, User::getPicOptions()), $user->name, array('width' => '64px')) ?>
+                    <?= RHtml::image(RImage::styleSrc($user->picture, User::getPicOptions()), $user->name, array('width' => '64px')) ?>
                 </div>
                 <div class="col-lg-10 topic-content">
                     <span class="arrow"></span>

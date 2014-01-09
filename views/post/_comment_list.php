@@ -13,7 +13,7 @@
                 }
                 $src = RImage::styleSrc($picture,User::getPicOptions());
                 ?>
-                <?= RHtml::showImage($src, $commentItem['root']->user->name, array('width' => '64px;')) ?>
+                <?= RHtml::image($src, $commentItem['root']->user->name, array('width' => '64px;')) ?>
             </div>
 
             <!-- comment content -->

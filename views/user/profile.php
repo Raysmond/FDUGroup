@@ -57,7 +57,7 @@
                 <?php
                 $pic = (isset($user->picture) && $user->picture != '') ? $user->picture : "public/images/default_pic.png";
                 $thumbnail = RImage::styleSrc($user->picture,$user::getPicOptions());
-                echo RHtml::showImage($thumbnail, $user->name, array('class' => 'img-thumbnail', 'width' => '200px'));
+                echo RHtml::image($thumbnail, $user->name, array('class' => 'img-thumbnail', 'width' => '200px'));
                 ?>
             </div>
         </div>

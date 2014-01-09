@@ -23,13 +23,14 @@ class BaseController extends RController
         //$time = microtime(true);
         //echo '<center style="color: gray;padding: 10px;">'."Page generated in ".(($time-Rays::$startTime)*1000) . " ms"."</center>";
 
-        $accessLog = new AccessLog();
-        $accessLog->host = Rays::httpRequest()->getUserHostAddress();
-        $accessLog->path = Rays::uri();
+        $accessLog = new AccessLog(array(
+            'host'=>Rays::app()->request()->getUserHostAddress(),
+            'path'=>Rays::uri(),
+            'title'=>$this->getHeaderTitle(),
+            'uri'=>Rays::referrerUri(),
+            'timestamp'=>date('Y-m-d H:i:s')
+        ));
         $accessLog->userId = Rays::isLogin()? Rays::user()->id : 0;;
-        $accessLog->title = $this->getHeaderTitle();
-        $accessLog->uri = Rays::referrerUri();
-        $accessLog->timestamp = date('Y-m-d H:i:s');
         $accessLog->save();
     }
 
@@ -44,12 +45,14 @@ class BaseController extends RController
         $logs = $event->getParams();
         if (!empty($logs)) {
             foreach ($logs as $log) {
-                $sysLog = new SystemLog();
-                $sysLog->host = Rays::httpRequest()->getUserHostAddress();
+                $sysLog = new SystemLog(array(
+                    'host'=>Rays::app()->request()->getUserHostAddress(),
+                    'path'=>Rays::uri(),
+                    'title'=>$this->getHeaderTitle(),
+                    'uri'=>Rays::referrerUri(),
+                    'timestamp'=>date('Y-m-d H:i:s')
+                ));
                 $sysLog->userId = Rays::isLogin()? Rays::user()->id : 0;
-                $sysLog->referrerUri = Rays::referrerUri();
-                $sysLog->path = Rays::uri();
-                $sysLog->timestamp = $log['timestamp'];
                 $sysLog->message = $log['message'];
 
                 $level = null;

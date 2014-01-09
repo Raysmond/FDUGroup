@@ -116,7 +116,7 @@
                 echo "<td>$group->createdTime</td>";
                 if (isset($group->picture) && $group->picture != '') {
                     $picture = RImage::styleSrc($group->picture, Group::getPicOptions());
-                    echo '<td>'.RHtml::showImage($picture, $group->name, array("style"=>'width:64px;')).'</td>';
+                    echo '<td>'.RHtml::image($picture, $group->name, array("style"=>'width:64px;')).'</td>';
                 }
                 else{
                     echo '<td></td>';

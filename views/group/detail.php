@@ -31,7 +31,7 @@
             if (isset($group->picture) && $group->picture != '') {
                 echo '<div class="col-xs-3 group-picture">';
                 $picture = RImage::styleSrc($group->picture, Group::getPicOptions());
-                echo RHtml::showImage($picture, $group->name,
+                echo RHtml::image($picture, $group->name,
                     array('class' => 'img-thumbnail', 'style' => 'width:200px;'));
                 echo '</div>';
             }

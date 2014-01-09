@@ -2,7 +2,7 @@
     <div class="col-lg-3">
         <?php
         $groupPic = $group->picture ? $group->picture : Group::$defaults['picture'];
-        echo RHtml::showImage(RImage::styleSrc($groupPic, Group::getPicOptions()), $group->name, array('width' => '120px', 'height' => '120px'));
+        echo RHtml::image(RImage::styleSrc($groupPic, Group::getPicOptions()), $group->name, array('width' => '120px', 'height' => '120px'));
         ?>
     </div>
     <div class="col-lg-9">
@@ -53,7 +53,7 @@
                     <?php
                     $picture = $member->picture ? $member->picture : User::$defaults['picture'];
                     echo '<a href="' . RHtml::siteUrl('user/view/' . $member->id) . '">';
-                    echo RHtml::showImage(RImage::styleSrc($picture, User::getPicOptions()), $member->name, array('width' => '64px', 'height' => '64px'));
+                    echo RHtml::image(RImage::styleSrc($picture, User::getPicOptions()), $member->name, array('width' => '64px', 'height' => '64px'));
                     echo '</a><br/>';
                     if ($isManager && $member->id != $manager->id) {
                         echo RForm::input(array('type' => 'checkbox', 'value' => $member->id, 'name' => 'selected_members[]'));

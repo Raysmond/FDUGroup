@@ -27,7 +27,7 @@ body {
 
 /* Reset the container */
 .container {
-  max-width: none !important;
+  max-width: 970px;
   width: 970px;
 }
 

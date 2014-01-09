@@ -10,7 +10,7 @@
             echo '<div class="user-item col-lg-4" style="overflow: hidden;height: 80px;">';
             $picture = isset($friend->picture)&&$friend->picture!=''?$friend->picture:User::$defaults['picture'];
             $picture = RImage::styleSrc($picture,User::getPicOptions());
-            echo '<a href="'.RHtml::siteUrl('user/view/'.$friend->id).'">'.RHtml::showImage($picture,$friend->name,array('width'=>'58px','height'=>'58px')).'</a>';
+            echo '<a href="'.RHtml::siteUrl('user/view/'.$friend->id).'">'.RHtml::image($picture,$friend->name,array('width'=>'58px','height'=>'58px')).'</a>';
             $name = $friend->name;
             if(mb_strlen($name)>7) $name = mb_substr($name,0,7)."..";
             echo RHtml::linkAction('user', $name, 'view', $friend->id,array('title'=>$friend->name))."  ";

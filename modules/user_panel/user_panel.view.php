@@ -7,7 +7,7 @@
                 ?>
                 <a href="<?= RHtml::siteUrl('user/view/' . $user->id) ?>">
                     <?php
-                    echo RHtml::showImage($thumbnail, $user->name, array('class' => 'img-thumbnail', 'width' => isset($viewUser)?'80px':'120px'))
+                    echo RHtml::image($thumbnail, $user->name, array('class' => 'img-thumbnail', 'width' => isset($viewUser)?'80px':'120px'))
                     ?>
                 </a>
             </div>

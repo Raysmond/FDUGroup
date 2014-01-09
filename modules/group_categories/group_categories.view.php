@@ -11,14 +11,14 @@
             ?>
             <a class="btn btn-sx parent-category
             <?=in_array($category->id, $cid) ? 'active':''?>" href="<?=RHtml::siteUrl('category/groups/'.$category->id)?>">
-                <?=RHtml::showImage('files/images/category/'.$category->id.'.png','', ['style'=>'width:24px;height:24px;'])?>&nbsp;
+                <?=RHtml::image('files/images/category/'.$category->id.'.png','', ['style'=>'width:24px;height:24px;'])?>&nbsp;
                 <?=$category->name?>
             </a>
             <?php
         }
         ?>
         <a class="btn btn-sx parent-category" href="javascript:packCategory();">
-            <?=RHtml::showImage('files/images/category/more.png', '', ['style'=>'width:24px;height:24px;'])?>&nbsp;
+            <?=RHtml::image('files/images/category/more.png', '', ['style'=>'width:24px;height:24px;'])?>&nbsp;
             更多...
         </a>
         <script>

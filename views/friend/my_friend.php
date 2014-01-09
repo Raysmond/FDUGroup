@@ -26,7 +26,7 @@
                 echo '<div class="user-item col-lg-2">';
                 $friend->picture = $friend->picture!=''?$friend->picture:User::$defaults['picture'];
                 $picture = RImage::styleSrc($friend->picture,User::getPicOptions());
-                echo '<a href="' . RHtml::siteUrl('user/view/' . $friend->id) . '">' . RHtml::showImage($picture,$friend->name,array("width"=>"64px","height"=>"64px")). '</a>';
+                echo '<a href="' . RHtml::siteUrl('user/view/' . $friend->id) . '">' . RHtml::image($picture,$friend->name,array("width"=>"64px","height"=>"64px")). '</a>';
                 echo '<br/>';
                 $name = $friend->name;
                 if (mb_strlen($name) > 7) $name = mb_substr($name, 0, 8) . "..";

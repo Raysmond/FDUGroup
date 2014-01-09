@@ -58,7 +58,7 @@ $self->module('main_nav',array('id'=>'main_nav','name'=>'Main navigation'));
         </div>
     </div>
     <div class="site-background">
-        <?=RHtml::showImage('/public/images/background-'.rand(1,4).'.jpg', '',['style' => 'width: 100%; height: auto; top: -312.5px;'])?>
+        <?=RHtml::image('/public/images/background-'.rand(1,4).'.jpg', '',['style' => 'width: 100%; height: auto; top: -312.5px;'])?>
     </div>
 </div><!--/.container-->
 

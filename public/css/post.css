@@ -18,6 +18,7 @@
     border-radius: 6px;
     padding: 0;
     width: 86.33333333333334%;
+    float: right;
     box-shadow: 0px 1px 3px 0px #d5d5d5;
     /*overflow: hidden;*/
 }
@@ -44,6 +45,7 @@
 .posts-list .topic-item .topic-picture{
     width: 13.666666666666664%;
     padding-left: 10px;
+    float: left;
 }
 .posts-list .topic-item .topic-picture img{
     border-radius: 5px;

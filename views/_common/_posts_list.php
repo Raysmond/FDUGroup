@@ -23,7 +23,7 @@
                 $thumbnail = RImage::styleSrc($topic->user->picture, User::getPicOptions());
                 ?>
                 <a href="<?=RHtml::siteUrl("user/view/".$topic->user->id)?>" title="<?=$topic->user->name?>">
-                    <?= RHtml::showImage($thumbnail, $topic->user->name, array('width' => '64px')) ?>
+                    <?= RHtml::image($thumbnail, $topic->user->name, array('width' => '64px')) ?>
                 </a>
 
             </div>

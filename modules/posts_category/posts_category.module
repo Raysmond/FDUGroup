@@ -14,7 +14,7 @@ class posts_category_module extends RModule
         return $this->render("posts_category",
             array(
                 'categories' => Category::find("pid","0")->all(),
-                'id' => Rays::router()->getParams()[0]
+                'id' => @Rays::router()->getParams()[0]
             ));
     }
 }

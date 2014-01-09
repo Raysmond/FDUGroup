@@ -11,7 +11,7 @@ foreach ($groups as $group) {
         <?php if ($group->picture) { ?>
             <div class="group-picture">
                 <a href="<?=RHtml::siteUrl('group/detail/'.$group->id)?>">
-                    <?= RHtml::showImage(RImage::styleSrc($group->picture, Group::getPicOptions()), $group->name); ?>
+                    <?= RHtml::image(RImage::styleSrc($group->picture, Group::getPicOptions()), $group->name); ?>
                 </a>
             </div>
         <?php } ?>

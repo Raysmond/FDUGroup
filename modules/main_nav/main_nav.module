@@ -12,7 +12,7 @@ class main_nav_module extends RModule
     {
         $baseUrl = Rays::app()->getBaseUrl();
         $appName = RHtml::encode(Rays::app()->getName());
-        $currentUrl = Rays::app()->getHttpRequest()->getRequestUriInfo();
+        $currentUrl = Rays::app()->request()->getRequestUriInfo();
         $user = Rays::user();
         $isAdmin = false;
         if ($user != null && $user->roleId == Role::ADMINISTRATOR_ID) $isAdmin = true;

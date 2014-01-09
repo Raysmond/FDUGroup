@@ -25,7 +25,7 @@ class RatingController extends BaseController
                     $userId = 0;
                     if (Rays::isLogin())
                         $userId = Rays::user()->id;
-                    $host = Rays::httpRequest()->getUserHostAddress();
+                    $host = Rays::app()->request()->getUserHostAddress();
 
                     switch ($_POST['plusType']) {
                         case Topic::ENTITY_TYPE:

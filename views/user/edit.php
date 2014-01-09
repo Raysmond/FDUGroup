@@ -118,7 +118,7 @@
         echo '<br/>';
         if($user->picture){
             $picture = RImage::styleSrc($user->picture,User::getPicOptions());
-            echo RHtml::showImage($picture,$user->name,array("width"=>'120px','class'=>'img-thumbnail'));
+            echo RHtml::image($picture,$user->name,array("width"=>'120px','class'=>'img-thumbnail'));
         }
         echo '<br/><br/>';
         echo RForm::input(array('type' => 'file', 'name' => 'user_picture', 'accept' => 'image/gif, image/jpeg,image/png'));

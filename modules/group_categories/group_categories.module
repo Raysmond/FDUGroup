@@ -16,7 +16,7 @@ class group_categories_module extends RModule
             'cid' => [],
         );
 
-        $cid = Rays::router()->getParams()[0];
+        $cid = @Rays::router()->getParams()[0];
         if (isset($cid) && $cid !== null) {
             $data['cid'] [] = $cid;
             $category = Category::get($cid);

@@ -213,7 +213,7 @@ class Group extends RModel
                         $html .= '<div class="col-lg-3 recommend-group-item" style="padding: 5px;overflow: hidden;">';
                         $picture = (isset($group->picture)&&$group->picture!='')?$group->picture:Group::$defaults['picture'];
                         $src = RImage::styleSrc($picture,Group::getPicOptions());
-                        $html .= RHtml::showImage($src, $group->name);
+                        $html .= RHtml::image($src, $group->name);
                         $html .= '<br/>' . RHtml::linkAction('group', $group->name, 'detail', $group->id);
                         $html .= '<br/>' . RHtml::linkAction('group', 'Accept', 'accept', $censor->id, array('class' => 'btn btn-xs btn-success'));
                         $html .= '</div>';

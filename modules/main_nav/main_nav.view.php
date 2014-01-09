@@ -8,7 +8,7 @@
                     <span class="icon-bar"></span>
                 </button>
                 <a id="logo" href="<?=Rays::baseUrl()?>" class="navbar-brand">
-                    <?=RHtml::showImage("public/images/logo.png")?>
+                    <?=RHtml::image("public/images/logo.png")?>
                 </a>
             </div>
             <div class="collapse navbar-collapse">
@@ -16,7 +16,7 @@
                     <?php
                     if(Rays::isLogin()){
                         ?>
-                        <li <?= (Rays::app()->getHttpRequest()->urlMatch(array('user/home','user','user/'), $curUrl)) ? 'class="active"' : "" ?>>
+                        <li <?= (Rays::app()->request()->urlMatch(array('user/home','user','user/'), $curUrl)) ? 'class="active"' : "" ?>>
                             <?= RHtml::linkAction("user","Home","home"); ?>
                         </li>
                     <?php
@@ -51,7 +51,7 @@
                                 $pic = (isset($user->picture)&&$user->picture!='')?$user->picture:"public/images/default_pic.png";
                                 $pic = RImage::styleSrc($pic,User::getPicOptions());
                                 ?>
-                                <?=RHtml::showImage($pic,$user->name,array('class'=>'img-thumbnails'))?>
+                                <?=RHtml::image($pic,$user->name,array('class'=>'img-thumbnails'))?>
                                 <span class="username"><?=$user->name?></span>
                                 <?php if($countMessages!=0): ?>
                                 <span class="badge"><?=$countMessages?></span>

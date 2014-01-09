@@ -55,7 +55,7 @@
 
         if (isset($group)) {
             $picture = $group->picture ? $group->picture : Group::$defaults['picture'];
-            echo RHtml::showImage(
+            echo RHtml::image(
                 RImage::styleSrc($picture, Group::getPicOptions()),
                 $group->name,
                 array('class' => 'img-thumbnail', 'width' => '120px')

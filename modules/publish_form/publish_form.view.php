@@ -13,26 +13,26 @@
         <div class="home-actions">
             <div class="home-actions-item">
                 <a href="<?=RHtml::siteUrl('group/build')?>" class="">
-                    <?=RHtml::showImage('public/images/group.png','',array('width'=>'48px'))?>
+                    <?=RHtml::image('public/images/group.png','',array('width'=>'48px'))?>
                      New group</a>
             </div>
 
             <div class="home-actions-item">
                 <a href="<?=RHtml::siteUrl('post/new')?>" class="">
-                    <?=RHtml::showImage('public/images/post.png','',array('width'=>'48px'))?>
+                    <?=RHtml::image('public/images/post.png','',array('width'=>'48px'))?>
                      New post</a>
 
             </div>
 
             <div class="home-actions-item">
                 <a href="<?=RHtml::siteUrl('user/find')?>" class="">
-                    <?=RHtml::showImage('public/images/friend.png','',array('width'=>'48px'))?>
+                    <?=RHtml::image('public/images/friend.png','',array('width'=>'48px'))?>
                      Find friends</a>
             </div>
 
             <div class="home-actions-item">
                 <a href="<?=RHtml::siteUrl('message/send')?>" class="">
-                    <?=RHtml::showImage('public/images/message.png','',array('width'=>'48px'))?>
+                    <?=RHtml::image('public/images/message.png','',array('width'=>'48px'))?>
                     New message</a>
             </div>
 
